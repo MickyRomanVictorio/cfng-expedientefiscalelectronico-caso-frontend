@@ -1,0 +1,64 @@
+<div class="registrar-reparacion">
+    @if(!tipoAcuerdoActa && !tipoSentencia){
+    <div class="flex align-items-center ml-3 mt-3">
+        <h4 class="cfe-titulo-1">Registrar Salidas Alternas</h4>
+    </div>
+    }
+    <div class="grid">
+        <div class="col-12 md:col-5">
+            <div class="p-grid">
+                <div class="p-col-12 p-md-4">
+                    <app-lista-reparacion-civil
+                     [data]="data"
+                     [salidaAlterna]="salidaAlterna"
+                     [tipoAcuerdoActa]="tipoAcuerdoActa"
+                     [tipoSentencia]="tipoSentencia"
+                     [delitosTramiteSujeto]="delitosTramiteSujeto"  
+                     [modoLectura]="modoLectura"
+                     [dataReparacionCivilEditado]="dataReparacionCivilEditado"
+                     (enviarDatosEditarReparacionCivil)="enviarDatosAcuerdoCuotasySujetos($event)"
+                     />
+                </div>
+            </div>
+        </div>
+        <div class="col-12 md:col-7">
+            <app-tabs-view [desactivarTabs]="desactivarTabs"
+                            class="font-bold"
+                            [tabs]="tabs"
+                            [indexSeleccionado]="indexActivo"
+                            (onChangeIndex)="cambiarTab($event)"/>
+            <p-tabView class="cfe-tabs-view" [(activeIndex)]="indexActivo">
+                <p-tabPanel>
+                    <app-registrar-editar-acuerdos-cuotas
+                        [data]="data"
+                        [enviarDatosAcuerdoActa]="datosEditarReparacionCivilSubject"
+                        [modoLectura]="modoLectura"
+                        (enviarEstadoBoton)="recibirEnviarEstadoBotonCuotas($event)"
+                        />
+                </p-tabPanel>
+                <p-tabPanel>
+                    <app-registrar-editar-sujetos
+                        [data]="data"
+                        [salidaAlterna]="salidaAlterna"
+                        [tipoSentencia]="tipoSentencia"
+                        [tipoAcuerdoActa]="tipoAcuerdoActa"
+                        [delitosTramiteSujeto]="delitosTramiteSujeto"
+                        [modoLectura]="modoLectura"
+                        [editar]="true"
+                        [datosEditarReparacionCivilSubject]="datosEditarReparacionCivilSubject"
+                        (enviarEstadoBoton)="recibirEnviarEstadoBotonSujeto($event)"
+                  />
+                </p-tabPanel>
+                @if(datosEditarReparacionCivil && !modoLectura){
+                    <div class="flex justify-content-end align-items-center gap-3 mt-4">
+                        <button (click)="guardarCuotasySujetos()" 
+                                [disabled]="(indexActivo == 0 && desactivarBotonCuotas) || (indexActivo == 1 && desactivarBotonSujetos)" 
+                                type="button" 
+                                class="cfe-boton-primary cfe-boton-lg ml-2 boton-w">
+                                Guardar</button>
+                    </div>
+                }
+            </p-tabView>
+        </div>
+    </div>
+</div>

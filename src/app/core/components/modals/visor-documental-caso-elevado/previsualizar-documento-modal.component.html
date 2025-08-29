@@ -1,0 +1,188 @@
+<div class="previsualizar-container p-5">
+  <div class="modal__header px-4">
+    <div class="modal_header__content">
+      <img src="assets/icons/searchedDoc.svg" alt="Icono de busqueda"/>
+      <div class="cfe-titulo-1">
+        ATENDER CASO - {{ (informacion.tipoCaso ? informacion.tipoCaso : 'Caso') |  nombrePropio }}: <span
+        [innerHTML]="obtenerNumeroCaso()"></span>
+      </div>
+      <app-etiqueta-caso
+        [etiqueta]="getEtiquetaConfig(casoSeleccionado)"
+      ></app-etiqueta-caso>
+    </div>
+
+    <div class="flex align-items-center justify-content-center">
+      <p-button
+        (click)="close()"
+        icon="pi pi-times"
+        styleClass="p-button-rounded text-color p-button-text"
+      ></p-button>
+    </div>
+  </div>
+
+
+  <div class="col-12">
+    <div class="grid">
+      <div class="col-5 tarjeta p-0 my-2 border-round-sm content-info">
+        <div class="p-3 font-bold pt-1">
+          <div>
+            <span class="etiqueta-azul">INFORMACIÓN DEL CASO:</span>
+          </div>
+          <div class="px-3 mt-3">
+            <div>
+              <span class="etiqueta">TIPO DE ELEVACIÓN:</span>
+              <span class="contenido">{{ informacion.tipoElevacion }}</span>
+            </div>
+            <div>
+              <span class="etiqueta">TIPO DE CASO:</span>
+              <span class="contenido">{{ informacion.tipoCaso }}</span>
+            </div>
+            <div>
+              <span class="etiqueta">FISCAL:</span>
+              <span class="contenido">{{ informacion.fiscal || "-" }} </span>
+            </div>
+            <div>
+              <span class="etiqueta">DESPACHO:</span>
+              <span class="contenido">{{ informacion.despacho || "-" }} </span>
+            </div>
+            <div>
+              <span class="etiqueta">ETAPA:</span>
+              <span class="contenido">{{ informacion.etapa }} </span>
+            </div>
+            <div>
+              <span class="etiqueta">ACTO PROCESAL:</span>
+              <span class="contenido">{{ informacion.actoProcesal }} </span>
+            </div>
+            <div>
+              <span class="etiqueta">TRÁMITE:</span>
+              <span class="contenido">{{ informacion.tramite }} </span>
+            </div>
+            <div>
+              <span class="etiqueta">FECHA DE ELEVACIÓN:</span>
+              <span class="contenido">{{ informacion.fechaElevacion }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tarjeta font-bold pt-1">
+          <div class="mb-3">
+            <span class="etiqueta-azul px-3"
+            >DOCUMENTOS ADJUNTOS({{ listaDocumentos.length }})</span
+            >
+          </div>
+          <div
+            *ngFor="let item of listaDocumentos; index as i"
+            class="px-0 document mt-0"
+          >
+            <div
+              class="flex flex-no-wrap mt-0"
+              [ngClass]="{ 'document-active': indexSelected == i }"
+            >
+              <div
+                class="col-auto mx-3 flex align-items-center justify-content-center"
+              >
+                <img
+                  src="assets/icons/pdf-red.svg"
+                  class="cfe-icon"
+                  alt="pdf-icon"
+                />
+              </div>
+              <div class="col-6 mt-0">
+                <div class="row">
+                  <label class="flex document-name">{{ item.nombre }}</label>
+                </div>
+                <div class="row">
+                  <label class="fecha" for=""
+                  >Fecha de registro: {{ item.fecha }}</label
+                  >
+                </div>
+              </div>
+              <div
+                class="col-auto mt-0 flex flex-column justify-content-center"
+              >
+                <button
+                  class="cfe-boton-primary cfe-boton-m cfe-boton-dowload"
+                  (click)="obtenerDocumentoVisor(item.idDocumento)"
+                >
+                  pdf
+                </button>
+                <label class="etiqueta-sm flex justify-content-center"
+                >{{ getSizeInMb(item.tamanio) }}mb</label
+                >
+              </div>
+              <div class="col-auto ml-2 mt-0 flex align-items-center">
+                <a
+                  (click)="descargarDocumentoPdf(item)"
+                  style="width: 100%"
+                  class="flex w-100 justify-content-center"
+                >
+                  <img
+                    width="20"
+                    src="assets/icons/download-cloud.svg"
+                    alt="pdf-icon"
+                  />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="tipoVisor == TipoVisorEnum.VerObservacion" class="p-3 tarjeta font-bold pt-1">
+          <div>
+            <span class="etiqueta-azul">OBSERVACIÓN DEL DESPACHO SUPERIOR:</span>
+          </div>
+          <div class="px-3 mt-3">
+            <div>
+              <span class="etiqueta">FISCAL SUPERIOR:</span>
+              <span class="contenido">{{ datosObservacion.fiscalQueObserva }}</span>
+            </div>
+            <div>
+              <span class="etiqueta">FECHA DE OBSERVACIÓN:</span>
+              <span class="contenido">
+                {{ datosObservacion.fecha | dateformat }}
+                {{ datosObservacion.hora | dateformat : "hour" }}
+              </span>
+            </div>
+            <div>
+              <span class="etiqueta">DETALLE DE LA OBSERVACIÓN:</span>
+              <span class="contenido">{{ datosObservacion.descripcion || "-" }} </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-7 pdf-view">
+        <div class="px-2 border-round-sm font-bold">
+          <div class="">
+            <app-tabs-view
+              [tabs]="tabs"
+              (onChangeIndex)="cambioTab($event)"
+            ></app-tabs-view>
+
+            <p-tabView class="cfe-tabs-view" [(activeIndex)]="indexActivo">
+              <p-tabPanel>
+                @if (pdfUrl !== '' && pdfUrl !== undefined) {
+                  <iframe
+                    [src]="pdfUrl | safeUrl"
+                    style="width: 100%; height: 78vh !important"
+                    title="Pdf reader"
+                  ></iframe>
+                }
+              </p-tabPanel>
+              <p-tabPanel>
+                <app-atender-documento
+                  (atenderCasoRespuesta)="eventoAtenderCaso($event)"
+                  [documento]="informacion"
+                  [caso]="casoSeleccionado"
+                  [tipoVisor]="tipoVisor"
+                  [datosObservacion]="datosObservacion"
+                >
+                </app-atender-documento>
+              </p-tabPanel>
+            </p-tabView>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

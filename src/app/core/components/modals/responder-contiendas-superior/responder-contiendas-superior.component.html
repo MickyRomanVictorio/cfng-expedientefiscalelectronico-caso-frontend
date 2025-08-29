@@ -1,0 +1,39 @@
+<div class="p-5 relative modal-width">
+  <div class="flex align-items-end justify-content-end">
+    <fn-icon
+      class="cfe-encabezado-cerrar"
+      [ico]="obtenerIcono('iClose')"
+      height="2rem"
+      (click)="close()"
+    ></fn-icon>
+  </div>
+
+  <div class="alert-icon flex align-items-center justify-content-center">
+    <img alt="alerta" [src]="alertIcon">
+  </div>
+
+  <div class="grid">
+    <div class="col">
+      <h3 class="flex  align-items-center justify-content-center alert-title-caso mt-5">{{titulo}}</h3>
+    </div>
+    <div class="col-12 p-3 text-center">
+      <p>
+        Esta acción realiza la respuesta del caso a la {{registroElevacion.entidad}} - {{registroElevacion.despacho}}, después no
+        podrá revertir el cambio
+        <span class="font-bold"> ¿Está seguro de realizar este trámite?</span>
+      </p>
+    </div>
+
+    <div class="col-12 flex align-items-center justify-content-center mt-2 mb-2">
+      <button class="cfe-boton-opcion cfe-boton-secondary cfe-boton-lg font-semibold with-button"
+              (click)="modalObservarElevacion()">
+        Observar
+      </button>
+      <button class="ml-3 cfe-boton-primary cfe-boton-lg font-semibold with-button"
+              (click)="aceptarElevacion()">
+        Aceptar
+      </button>
+    </div>
+
+  </div>
+</div>

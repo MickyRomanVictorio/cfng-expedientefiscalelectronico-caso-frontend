@@ -1,0 +1,51 @@
+<div class="cfe-container max-w-3xl mx-auto px-4 md:px-6">
+  <div class="grid text-center">
+    <div class="col-4" style="padding: 0 !important;">
+      <h3 class="cfe-titulo-1">Módulo de ayuda al usuario</h3>
+      <h6 class="m-0">EFE: Expediente fiscal electrónico</h6>
+    </div>
+    <div class="col-8">
+      <div class="field mb-0 w-full">
+        <app-ayuda-autocompletar></app-ayuda-autocompletar>
+      </div>
+    </div>
+  </div>
+  <div class="flex justify-content-center w-full">
+    <div class="fixed-width">
+      <div class="grid mt-3 mb-3">
+        <div class="col-12">
+          <app-ayuda-breadcrumb [data]="breadCumList"></app-ayuda-breadcrumb>
+        </div>
+      </div>
+      <div class="grid mt-3 mb-3">
+        <div class="col-12 w-full">
+          <h3 class="cfe-titulo-3">{{ totalResultados }} Resultados de: {{ busqueda }}</h3>
+        </div>
+      </div>
+      <div *ngFor="let item of listaArticulos">
+        <div class="grid">
+          <div class="col-12 flex flex-column">
+            <span class="mb-2 font-semibold" (click)="navigateToDetail(item, 'categoria')" [innerHTML]="highlightMatch(item.noCategoriaPadre, busqueda)"></span>
+            <small><span class="mb-1" (click)="navigateToDetail(item, 'detalle')" [innerHTML]="highlightMatch(item.noCategoria, busqueda)"></span></small>
+            <span [innerHTML]="highlightMatch(item.resumen, busqueda)"></span>
+          </div>
+          <div class="col-12 flex flex-row gap-2">
+            <button *ngFor="let tag of item.tags"
+                    class="cfe-boton-secondary cfe-boton-sm"
+                    (click)="navigateToDetail(tag, 'tag')">
+              {{ tag.noTag }}
+            </button>
+          </div>
+          <hr class="w-full h-1 mt-2 bg-gray-300">
+        </div>
+      </div>
+      <div class="grid mt-3">
+        <div class="col-12 flex" style="justify-content: center;">
+          <button *ngIf="totalResultados > 20" class="cfe-boton-secondary cfe-boton-m" (click)="verMas()">
+            Ver más
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,129 @@
+@if (
+  !verificarTramiteArchivo() && !verificarTramitePredifinido() &&
+  (
+(!esTramitePredefinido && gestionCasoService.casoActual.flgConcluido == '1') ||
+(this.casoFiscal.flgLecturaSuperior == 1 && usuarioAuth.codJerarquia === '02') 
+|| (this.casoFiscal.flgLectura == 1 && usuarioAuth.codJerarquia === '01')
+  )
+) {
+<div class="acto_procesal__container">
+    <div class="text-xl font-semibold text-primary mb-1 family-poppin-bold text-center">
+        <br />
+        <br />
+
+          @if ( gestionCasoService.casoActual.idClasificadorExpediente === 2  && gestionCasoService.casoActual.flgConcluido == '1' ) {
+            El cuaderno incidental está concluido. Usted podrá  navegar en modo vista por: Elementos de convicción, Sujetos procesales  y  Resumen. Adicionalmente, en Sujetos Procesales podrá exportarlos en formato Pdf o Excel.
+          } @else {
+            Este caso está en modo VISTA, por lo que no puede realizar ninguna acción sobre el mismos.
+          }
+        <br />
+        <br />
+    </div>
+</div>
+
+} @else {
+
+    @if (esModoLecturaMonitoreado() && !tramiteEnModoVisor) {
+      <div class="acto_procesal__container">
+        <div class="text-xl font-semibold text-primary mb-1 family-poppin-bold text-center">
+          <br />
+          <br />
+          Este caso está en modo VISTA, por lo que no puede realizar ninguna acción sobre el mismos.
+          <br />
+          <br />
+        </div>
+      </div>
+    } @else {
+
+      @if (!esTramitePredefinido) {
+
+        <div class="acto_procesal__container">
+
+          <div class="acto_procesal__tamanio">
+
+            <div class="acto_procesal__header" >
+                <div class="text-xl font-semibold text-primary mb-1 family-poppin-bold">
+                    Seleccione el acto procesal y trámite a realizar:
+                </div>
+            </div>
+            <app-seleccionar-tramite
+              [actosProcesales]="actosProcesales"
+              [idActoProcesalSeleccionado]="idActoProcesalSeleccionado"
+              [tramites]="tramites"
+              [idTramiteSeleccionado]="idTramiteSeleccionado"
+              [lectura]="tramiteEnModoEdicion || validarEstadoTramiteCasoUltimo"
+              (alCambiarActoProcesal)="eventoCambiarActoProcesal($event)"
+              (alCambiarTramite)="eventoSeleccionarTramite($event)"
+            />
+
+            @if (mostrarEnlace) {
+              <div class="col-11 field">
+                  <label for=""
+                      class="cfe-enlace-general"
+                      styleClass="etiqueta"
+                      tooltipEvent="hover">
+                      Consultar al SICOPRIN
+                  </label>
+              </div>
+            }
+
+          </div>
+        </div>
+      }
+    }
+}
+
+@if ( gestionCasoService.casoActual.flgConcluido !== '1' ) {
+  @if (estaSeleccionadoUnTramite && !ocultarTitulo) {
+    <div class="text-xl font-semibold text-primary mb-1 mt-4 family-poppin-bold">
+        {{ obtenerTitulo(tituloTramite) }}
+    </div>
+  }
+}
+
+@if (validacionTramite.verFormulario && mostrarTextoTramiteIniciado && !estadoFirmado) {
+  <div class="flex justify-content-start pt-2">
+    <img [src]="infoIcon" class="h-2rem" alt="info">
+    <span class="ml-3 align-content-center cfe-texto-general font-semibold">Trámite iniciado</span>
+  </div>
+}
+
+<p-messages></p-messages>
+
+<!--@if ( gestionCasoService.casoActual.flgConcluido !== '1' ) {
+  <div #componenteACargar class="mt-2"></div>
+}-->
+
+<div #componenteACargar class="mt-2"></div>
+
+@if (validacionTramite.verIniciarTramite) {
+  <div class="flex justify-content-center p-4">
+    <button
+        type="button"
+        class="cfe-boton-primary cfe-boton-lg cfe-boton-icono-izquierda"
+        [disabled]="validacionTramite.bloquearIniciarTramite && !habilitarInicio"
+        (click)="confirmarCreacionTramite()">
+        <fn-icon
+            class="ml-1"
+            [ico]="iconUtil.obtenerIcono('iFileRegister')"
+            height="1.6rem"
+        ></fn-icon>
+        <span class="ml-3 family-poppin-bold">Iniciar trámite</span>
+    </button>
+</div>
+}
+
+@if (validacionTramite.verDocumentos) {
+  <app-tab-documentos [idDocumentos]="idDocumentos" [tipoOrigen] = "validacionTramite.tipoOrigenTramiteSeleccionado"></app-tab-documentos>
+}
+
+@if (validacionTramite.verEditor && tramiteSeleccionado) {
+  <app-tramite-editor
+    [tramiteSeleccionado]="tramiteSeleccionado!"
+    [tramiteResponse]="creacionTramiteRespuesta"
+    [codigoDespacho]="casoFiscal.dependenciaFiscal"
+    [esFirmado]="esFirmado"
+  ></app-tramite-editor>
+}
+
+

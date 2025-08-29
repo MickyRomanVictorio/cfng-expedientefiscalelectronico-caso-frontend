@@ -1,0 +1,246 @@
+<div class="cfe-container">
+  <!-- Filters Section -->
+
+  <div class="card background-white p-4">
+    <form [formGroup]="filterForm" class="grid">
+      <!-- Período -->
+      <div class="col-12 md:col-3">
+        <div class="field">
+          <label class="font-bold block mb-2">Período</label>
+          <p-dropdown
+            formControlName="periodo"
+            [options]="rangeOptions"
+            optionLabel="label"
+            [style]="{ width: '100%' }"
+            placeholder="Seleccione período"
+            (onChange)="onPeriodoChange($event)"
+          ></p-dropdown>
+        </div>
+      </div>
+
+      @if (periodoValue === 'A' || periodoValue === 'M') {
+
+      <div class="col-12 md:col-3">
+        <div class="field">
+          <label class="font-bold block mb-2">Año</label>
+          <p-dropdown
+            formControlName="anio"
+            [options]="yearOptions"
+            optionLabel="label"
+            [style]="{ width: '100%' }"
+            placeholder="Seleccione el año"
+          ></p-dropdown>
+        </div>
+      </div>
+
+      @if (periodoValue === 'M') {
+
+      <div class="col-12 md:col-3">
+        <div class="field">
+          <label class="font-bold block mb-2">Mes</label>
+          <p-dropdown
+            formControlName="mes"
+            [options]="mesOptions"
+            optionLabel="label"
+            [style]="{ width: '100%' }"
+            placeholder="Seleccione el año"
+          ></p-dropdown>
+        </div>
+      </div>
+
+      } } @else {
+
+      <!-- Fecha inicio -->
+      <div class="col-12 md:col-3">
+        <div class="field">
+          <label class="font-bold block mb-2">Fecha inicio</label>
+          <p-calendar
+            formControlName="fechaInicio"
+            [showIcon]="true"
+            dateFormat="dd/mm/yy"
+            [style]="{ width: '100%' }"
+            placeholder="Seleccione fecha"
+          ></p-calendar>
+        </div>
+      </div>
+
+      <!-- Fecha fin -->
+      <div class="col-12 md:col-3">
+        <div class="field">
+          <label class="font-bold block mb-2">Fecha fin</label>
+          <p-calendar
+            formControlName="fechaFin"
+            [showIcon]="true"
+            dateFormat="dd/mm/yy"
+            [style]="{ width: '100%' }"
+            placeholder="Seleccione fecha"
+          ></p-calendar>
+        </div>
+      </div>
+
+      }
+
+      <!-- Fiscales-->
+      <div class="col-12 md:col-3">
+        <div class="field">
+          <label class="font-bold block mb-2">Fiscales</label>
+          <p-multiSelect
+            id="delitos"
+            [options]="resultsFiscales"
+            [(ngModel)]="fiscalesSeleccionados"
+            optionLabel="nombreFiscal"
+            optionValue="fiscal"
+            formControlName="fiscales"
+            [ngClass]="{ 'sin-seleccion': sinSeleccionFiscales }"
+            styleClass="w-full lista-ancho-maximo"
+            (onChange)="onChangeFiscalesSeleccionados($event)"
+            emptyMessage="Resultados no encontrados"
+            class="lista-ancho-maximo"
+            [panelStyle]="{ 'max-width': '750px' }"
+          ></p-multiSelect>
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="col-12 flex justify-content-end gap-2">
+        <p-button
+          label="Buscar"
+          styleClass="cfe-boton-primary cfe-boton-m mr-2 boton-w"
+          (onClick)="search()"
+        ></p-button>
+        <p-button
+          label="Limpiar filtros"
+          styleClass="cfe-boton-secondary cfe-boton-m mr-3 boton-w"
+          (onClick)="clearFilters()"
+        ></p-button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Indicadores Section -->
+  <div class="card background-white p-4">
+    <!-- Título -->
+    <div class="card-header flex align-items-center justify-content-between">
+      <p>Monitoreo de Carga Laboral del {{ fechaInicio }} al {{ fechaFin }}</p>
+      <i
+        class="pi pi-fw pi-chevron-down"
+        (click)="eventoMostrarOcultarMonitoreo()"
+      ></i>
+    </div>
+
+    @if(!mostrarMonitoreo){
+    <!-- Línea divisoria -->
+    <hr class="border-t border-gray-200 mb-6" />
+
+    <div class="grid">
+      <div class="col-5">
+        <app-indicadores
+          [pendientes]="totalesPorEtapa.pendientes"
+          [totales]="totalesPorEtapa.total"
+          [resueltos]="totalesPorEtapa.resueltos"
+          [tramites]="totalesPorEtapa.tramites"
+          (cardSelected)="manejarSeleccion($event)"
+        ></app-indicadores>
+      </div>
+
+      <div class="col-3">
+        <app-grafica [datos]="datosGrafico"></app-grafica>
+      </div>
+
+      <div class="col-4">
+        <app-estado-caso
+          [estadosEnTramite]="estadosEnTramite"
+          [estadosResueltos]="estadosResueltos"
+        >
+        </app-estado-caso>
+      </div>
+    </div>
+    }
+  </div>
+
+  <!-- Table Section -->
+  <div class="card background-white p-4">
+    <div class="flex justify-content-end mb-3">
+      <button
+        class="cfe-boton-secondary cfe-boton-m w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start"
+        (click)="exportarPdfExcel('PDF')"
+      >
+        <fn-icon
+          class="ml-1"
+          [ico]="icono('iFileDownload')"
+          height="1.6rem"
+        ></fn-icon>
+        <span class="family-poppin-bold">Exportar PDF</span>
+      </button>
+
+      <button
+        class="cfe-boton-secondary cfe-boton-m w-full sm:w-auto justify-content-start"
+        (click)="exportarPdfExcel('Excel')"
+      >
+        <fn-icon class="ml-1" [ico]="icono('iTable')" height="1.6rem"></fn-icon>
+        <span class="family-poppin-bold">Exportar Excel</span>
+      </button>
+    </div>
+
+    <p-table
+      [value]="results"
+      [paginator]="true"
+      [rows]="10"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      styleClass="p-datatable-striped"
+    >
+      <ng-template pTemplate="caption">
+        <div class="text-center font-bold mb-3">
+          <div>MONITOREO DE CARGA LABORAL</div>
+          <div>DEL {{ fechaInicio }} AL {{ fechaFin }}</div>
+        </div>
+        <div class="mb-2">
+          <div>DISTRITO FISCAL: {{ distritoFiscal }}</div>
+          <div>DEPENDENCIA FISCAL: {{ dependenciaFiscal }}</div>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Nº</th>
+          <th>Fiscal</th>
+          <th>Resueltos</th>
+          <th>% Resueltos</th>
+          <th>En trámite</th>
+          <th>% En trámite</th>
+          <th>Total</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-record let-i="rowIndex">
+        <tr>
+          <td>{{ i + 1 }}</td>
+          <td>{{ record.fiscal }}</td>
+          <td>{{ record.resueltos }}</td>
+          <td>{{ record.porcentajeResuelto }}</td>
+          <td>{{ record.tramites }}</td>
+          <td>{{ record.porcentajeTramite }}</td>
+          <td>{{ record.total }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="footer">
+        <tr>
+          <td colspan="2" class="text-right font-bold">TOTALES:</td>
+          <td class="font-bold">{{ getTotalResueltos() }}</td>
+          <td class="font-bold">{{ getPorcentajeResueltosFormateado() }}</td>
+          <td class="font-bold">{{ getTotalEnTramite() }}</td>
+          <td class="font-bold">{{ getPorcentajeEnTramiteFormateado() }}</td>
+          <td class="font-bold">{{ getGrandTotal() }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td class="no-before text-center" colspan="9">
+            No se encontraron registros con los criterios de búsqueda ingresados
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

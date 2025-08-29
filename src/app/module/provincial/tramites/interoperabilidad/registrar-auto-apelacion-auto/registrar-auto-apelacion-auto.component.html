@@ -1,0 +1,180 @@
+@if(!mostrarFormulario){
+  <mensaje-interoperabilidad-pj/>
+}
+<br/>
+@if (mostrarFormulario) {
+  @if (esTramiteCorrecto && !estadoRecibido && !soloLectura) {
+    <mensaje-completar-informacion
+      titulo="{{tramiteSeleccionado?.nombreTramite}}"
+    />
+  }
+  <div>
+    <form [formGroup]="formGroup">
+      <div class="grid mt-3">
+        <div class="col-12 sm:col-12 md:col-6 lg:col-2">
+          <label class="font-bold adjust-origin-label text-left">Fecha de notificación</label>
+          <p-calendar id="fechaNotificacion"
+                      dateMask
+                      dateFormat="dd/mm/yy"
+                      class="cfe-calendar calendar-height"
+                      [showIcon]="true"
+                      icon="cfe-calendar-icon"
+                      placeholder="dd/mm/aaaa"
+                      formControlName="fechaNotificacion">
+          </p-calendar>
+        </div>
+        <div class="field col-12 lg:col-7">
+          <div class="formgrid grid">
+            <div class="field col-11 tour-f-2">
+              <label class="font-bold adjust-origin-label text-left">Seleccionar resultado</label>
+              <div class="formgrid grid">
+                @if(!esTerminacionAnticipada && !esApelacionProceso){
+                  <div class="field col-11">
+                    <button class="cfe-boton-primary cfe-boton-lg w-full" (click)="openModalSujetos(1)">
+                      Resultado
+                    </button>
+                  </div>
+                  @if (this.selectedSujetos && selectedSujetos.length > 0) {
+                    <div class="field col-1">
+                      <label>&nbsp;</label>
+                      <div class="mt-1">
+                        <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+                      </div>
+                    </div>
+                  }
+                }
+                @if(esTerminacionAnticipada){
+                  <div class="field col-4">
+                    <button class="cfe-boton-primary cfe-boton-lg w-full" (click)="openModalSujetos(2)">
+                      Penas
+                    </button>
+                  </div>
+                  @if (this.selectedSujetosPena && selectedSujetosPena.length > 0) {
+                    <div class="field col-1">
+                      <div class="mt-1">
+                        <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+                      </div>
+                    </div>
+                  }
+                  <div class="field col-4">
+                    <button class="cfe-boton-primary cfe-boton-lg w-full" (click)="openModalSujetos(3)">
+                      Rep. Civil
+                    </button>
+                  </div>
+                  @if (this.selectedSujetosSalidaExterna && selectedSujetosSalidaExterna.length > 0) {
+                    <div class="field col-1">
+                      <div class="mt-1">
+                        <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+                      </div>
+                    </div>
+                  }
+                }
+                @if(esApelacionProceso){
+                  <div class="field col-11">
+                    <button class="cfe-boton-primary cfe-boton-lg w-full" (click)="openModalSujetos(4)">
+                      Proceso
+                    </button>
+                  </div>
+                  @if (this.selectedSujetosProceso && selectedSujetosProceso.length > 0) {
+                    <div class="field col-1">
+                      <div class="mt-1">
+                        <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+                      </div>
+                    </div>
+                  }
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="col">
+          <label for="txtObservacion" class="font-semibold">Observaciones (opcional)</label>
+          <textarea
+            id="txtObservacion"
+            maxlength="200"
+            rows="5"
+            (input)="actualizarContadorInputTextArea($event)"
+            formControlName="txtObservacion"
+            class="p-inputtext p-2 w-full"
+            [ngClass]="{ 'ng-invalid ng-dirty': errorMsg('txtObservacion') }"
+          ></textarea>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="col-12 text-right">
+          <p>Quedan {{ caracteresRestantes }} caracteres</p>
+        </div>
+      </div>
+    </form>
+    <div class="flex justify-content-between">
+      <span><a *ngIf="!soloLectura && !estadoRecibido" class="btn-link" (click)="openModalSelectTramite()">¿Este documento no pertenece a este trámite?</a></span>
+      <p-button
+        styleClass="cfe-boton-lg cfe-boton-primary"
+        [hidden]="!validarForm"
+        label="Guardar"
+        (onClick)="guardarFormulario()"
+        [disabled]="!validarForm">
+      </p-button>
+    </div>
+    <div class="flex justify-content-between">
+      <span><a *ngIf="!soloLectura && !estadoRecibido" class="btn-link" ></a></span>
+
+       <p-button
+        styleClass="cfe-boton-lg cfe-boton-danger"
+        label="Devolver al Fiscal Provincial"
+        (onClick)="devolverAlFiscalProvincial()"
+        [hidden]="!mostrarDevolverAlFiscalProvincial">
+      </p-button>
+    </div>
+  </div>
+
+
+  <!--@if(idJerarquia == 1 && pdfUrlTramite!==null) {-->
+  @if(codJerarquia === '01'){
+    <!--<iframe
+      title="Documento Trámite"
+      [src]="pdfUrlTramite"
+      width="100%"
+      style="height: 500px"
+    ></iframe>-->
+    @if(codJerarquia === '01' && !ocultarBotones){
+      <div class="text-right pt-3">
+        <button
+          type="button"
+          class="cfe-boton-secondary cfe-boton-m inline"
+          (click)="eventoObservarTramite()"
+        >
+          Observar Trámite
+        </button>
+        <button
+          type="button"
+          class="cfe-boton-primary cfe-boton-m inline ml-2"
+          (click)="eventoRecibirTramite()"
+        >
+          Recibir Trámite
+        </button>
+      </div>
+    }
+
+    @if(verFormularioObservar()===true){
+      <hr>
+      <app-observar
+        [esModal]="false"
+        [datosPronunciamiento]="datosPronunciamiento"
+        [esSoloLectura]="false"
+        (cerrar)="eventoObservarCancelar()"
+        (observar)="eventoObservarEnviar($event)"
+      ></app-observar>
+    }
+
+  }
+
+  @if(codJerarquia === '02' && observacionProvincial && observacionProvincial.length > 0){
+    <button type="button" class="cfe-boton-secondary cfe-boton-m inline" (click)="eventoObservarTramite(true)">
+      Ver Observación Provincial
+    </button>
+  }
+
+}

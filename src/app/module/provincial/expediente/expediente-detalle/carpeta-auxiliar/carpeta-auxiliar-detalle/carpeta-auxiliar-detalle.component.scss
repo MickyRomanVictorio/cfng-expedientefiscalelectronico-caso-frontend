@@ -1,0 +1,88 @@
+.close {
+  cursor: pointer;
+  position: absolute;
+  right: 30px;
+  top: 20px;
+}
+
+.seleccion-left {
+  min-width: 300px;
+  max-width: 480px;
+  font-weight: 700;
+  font-size: 0.85em;
+  color: #1B1C1E;
+  border-right: 1px solid #E0E0E0;
+}
+
+.accordion-item {
+  border: 1px solid #ccc;
+  width: 100%;
+}
+
+.accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  background-color: #0E2E4A;
+  color: #FFFFFF
+}
+
+.sub-accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  background-color: #E7EAED;
+  color: #333333
+}
+
+.accordion-title {
+  flex-grow: 1;
+}
+
+.accordion-content {
+  td{
+    span{
+      font-size: 12px;
+    }
+  }
+  padding: 10px;
+}
+
+.hidden {
+  display: none;
+}
+//FIN: Acordion
+:host::ng-deep .cfe-selectbutton{
+  .p-selectbutton{
+    .p-button{
+      border-radius: 20px !important;
+      margin-right: 10px;
+      color: #333333;
+      background-color: #FFFFFF;
+      border: 1px solid #E0E0E0;
+      transition: background-color .3s ease !important;
+      .p-button-label{
+        font-size: 14px;
+      }
+      &:hover{
+        background-color: #5a6268;
+        border-color: #5a6268;
+        color: #FFFFFF;
+      }
+      &.p-highlight{
+        color: #3F9FD6;
+        background-color: #DDEEF8;
+        border: 1px solid #3F9FD6;
+        &:hover{
+          background-color: #2B8DE3;
+          color: #ffffff;
+          border-color: #2B8DE3;
+        }
+      }
+    }
+  }
+}

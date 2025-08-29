@@ -1,0 +1,11 @@
+@for (plazo of plazos; track $index) {
+  
+  <div   class="pt-4 pb-2 progressBarCaso">
+    <div class="flex justify-content-between flex-wrap pb-1">
+        <div class="flex align-items-center">{{ plazo.descripcionPlazo }}</div>
+        <div class="flex align-items-center">{{ plazo.diasTrasncurridos }}/{{ plazo.diasPlazo }} días</div>
+    </div>
+    <p-progressBar [styleClass]="getColor($index) + ' border-none'" [value]="calculatePercentage(plazo.diasTrasncurridos, plazo.diasPlazo)"></p-progressBar>
+  </div>
+}
+

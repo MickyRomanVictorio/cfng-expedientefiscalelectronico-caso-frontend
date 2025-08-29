@@ -1,0 +1,50 @@
+<div>
+  <div class="flex justify-content-between mb-3">
+    <h3 class="cfe-subtitulo-4">IMPUTADOS PARA EL REQUERIMIENTO DE ACUSACIÓN</h3>
+    <div class="">
+      <p-button (click)="close()" icon="pi pi-times" styleClass="p-button-rounded text-color p-button-text" tabindex="-1"></p-button>
+    </div>
+  </div>
+  <p-table
+    [value]="listaImputados"
+    [rowHover]="true"
+    [rows]="10"
+    [scrollable]="true"
+    scrollHeight="20rem"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [breakpoint]="'992px'"
+    responsiveLayout="stack"
+    class="cfe-table-green"
+  >
+    <ng-template pTemplate="header">
+      <tr class="without-border">
+        <th class="left-none" id="numero">N°</th>
+        <th id="nombre">Nombres y apellidos/ Razón social</th>
+        <th class="right-none" id="delito">Delitos</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-data let-i="rowIndex">
+      <tr class="p-selectable-row without-border">
+        <td class="left-none align-content-center">{{ i + 1 }}</td>
+        <td class="align-content-center">{{ data.nombre }}</td>
+        <td [ngClass]="{'right-none flex flex-column gap-1': data.delitos.length > 0}">
+          @for(delito of data.delitos; let i=$index; track i)
+          {
+            <span class="">●	{{ delito }}</span>
+          }
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td class="no-before" colspan="8">
+          <div class="flex justify-content-center flex-wrap">
+            <div class="flex align-items-center justify-content-center">
+              No hay imputados
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

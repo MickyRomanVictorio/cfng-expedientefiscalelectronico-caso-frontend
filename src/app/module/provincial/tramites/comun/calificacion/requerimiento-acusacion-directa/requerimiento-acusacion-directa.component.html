@@ -1,0 +1,11 @@
+<app-alertas-tramite
+  [alertas]="alertas"
+  [idCaso]="idCaso"
+></app-alertas-tramite>
+
+<app-asociar-sujetos-delitos
+  [idActoTramiteCaso]="idActoTramiteCaso"
+  [etapa]="etapa"
+  (seHanRegistradoAsociaciones)="establecerSiSeHanRegistradoAsociaciones($event)"
+  [modoLectura]="tramiteEstadoFirmado"
+/>

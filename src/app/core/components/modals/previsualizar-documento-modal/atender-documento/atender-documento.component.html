@@ -1,0 +1,177 @@
+<form [formGroup]="formulario" class="pr-2 pl-2">
+  <p class="cfe-subtitulo-2 pt-1 pb-1">
+    @if (formulario.get('accion')!.value === 'R') { 1. Acciones a realizar
+    }@else if(formulario.get('accion')!.value === 'O' ||
+    formulario.get('accion')!.value === 'N'){ 1. Acciones realizadas }
+  </p>
+  <div class="grid">
+    @if(documento.estadoDocuIngresado === NUEVOS){
+    <div class="col-6 col-sm-6">
+      <p-radioButton
+        value="R"
+        inputId="opcion1"
+        formControlName="accion"
+        class="custom-radio-button"
+        (click)="reiniciarFormulario()"
+      ></p-radioButton>
+      <label class="ml-2">Recibir documento</label>
+    </div>
+    }
+    @if(documento.estadoDocumento === null || (documento.estadoDocumento !==
+    null && documento.estadoDocumento !== 'Subsanado')) {
+    <div class="col-6 col-sm-6">
+      <p-radioButton
+        value="O"
+        inputId="opcion2"
+        formControlName="accion"
+        class="custom-radio-button"
+        (click)="reiniciarFormulario()"
+      ></p-radioButton>
+      <label class="ml-2">Observar documento</label>
+    </div>
+    } @if (documento.estadoDocumento !== null && documento.estadoDocumento ===
+    'Subsanado') {
+    <div class="col-6 col-sm-6">
+      <p-radioButton
+        value="N"
+        inputId="opcion2"
+        formControlName="accion"
+        class="custom-radio-button"
+        (click)="reiniciarFormulario()"
+      ></p-radioButton>
+      <label class="ml-2">No presentado</label>
+    </div>
+    }
+  </div>
+
+  @if (formulario.get('accion')!.value === 'R') {
+    <p class="cfe-subtitulo-2 pt-1 pb-1">2. Asociar trámite</p>
+    <div class="grid">
+      <div class="col-10 col-sm-10">
+        <input
+          pInputText
+          class="p-inputtext-md cfe-input-md w-full"
+          type="text"
+          formControlName="tramite"
+          [disabled]="true"
+        />
+      </div>
+      <div class="col-2 col-sm-2 pl-0">
+        <button
+          class="cfe-boton-primary cfe-boton-m w-full"
+          (click)="seleccionarTramite()"
+        >
+          <fn-icon
+            [ico]="iconUtil.obtenerIcono('iSearch')"
+            height="1.3rem"
+          ></fn-icon>
+          Buscar
+        </button>
+      </div>
+    </div>
+    <p class="cfe-subtitulo-2 pt-1 pb-1">Acto procesal</p>
+    <div class="grid">
+      <div class="col-12">
+        <input
+          pInputText
+          class="p-inputtext-md cfe-input-md w-full"
+          type="text"
+          formControlName="acto"
+          [disabled]="true"
+        />
+      </div>
+    </div>
+    @if (cuadernoAsociado !== null) {
+    <div class="grid">
+      <div class="col-12">
+        <a href="#" class="text-button" (click)="abrirModalAsociarCuaderno(cuadernoAsociado.tipo, 'E')">
+          {{
+            (
+              cuadernoAsociado.tipo === 1 ?
+              'Asociado al cuaderno incidental: ':
+              'Asociado a la pestaña de apelación ' + cuadernoAsociado.numeroApelacion +' del cuaderno incidental: '
+            )
+            + cuadernoAsociado.numeroCaso
+          }}
+        </a>
+      </div>
+    </div>
+    }
+    <div class="grid">
+      <div class="col-12">
+        <p-checkbox
+          [binary]="true"
+          inputId="binary"
+          formControlName="respuesta"
+          label="Es respuesta de una solicitud"
+        ></p-checkbox>
+      </div>
+    </div>
+    @if (formulario.get('respuesta')!.value) {
+    <p class="cfe-subtitulo-2 pt-1 pb-1">Seleccione la solicitud a asociar</p>
+    <div class="grid">
+      <div class="col-12">
+        <p-dropdown
+          [options]="solicitudes"
+          formControlName="solicitud"
+          placeholder="Seleccione una solicitud"
+          emptyMessage="No se encotraron resultados"
+        ></p-dropdown>
+      </div>
+    </div>
+    }
+  }
+
+  @if (formulario.get('accion')!.value === 'O' ||  formulario.get('accion')!.value === 'N') {
+  <p class="cfe-subtitulo-2 pt-1 pb-1">2. Correo del remitente</p>
+  <div class="grid">
+    <div class="col-12">
+      <label>Correo:</label>
+      <input
+        pInputText
+        class="p-inputtext-md cfe-input-md w-full"
+        type="text"
+        formControlName="correo"
+      />
+    </div>
+  </div>
+  }
+
+  <p class="cfe-subtitulo-2 pt-1 pb-1">
+    @if (formulario.get('accion')!.value === 'R'){
+      3. Descripción de la acción a realizar
+    } @else if (formulario.get('accion')!.value === 'O') {
+      3. Detalle de las observaciones
+    } @else if(formulario.get('accion')!.value === 'N'){
+      3. Detalle de la acción realizada
+    }
+  </p>
+  <div class="grid">
+    <div class="col-12">
+      <textarea
+        class="w-full"
+        rows="3"
+        [maxlength]="1000"
+        pInputTextarea
+        formControlName="descripcion"
+        (input)="onInputDescripcionChange()"
+      ></textarea>
+    </div>
+  </div>
+  @if(documento.estadoDocuIngresado === NUEVOS){
+    <p style="text-align: end;">Quedan {{ remainingChars }} carácteres</p>
+  }
+
+  @if (esRegistro) {
+  <div class="grid mt-5" style="display: flex">
+    <button
+      pButton
+      class="cfe-boton-primary cfe-boton-lg"
+      style="margin-left: auto"
+      [disabled]="!habilitarGuardar"
+      [label]="formulario.get('accion')!.value === 'O' || formulario.get('accion')!.value === 'N' ? 'ENVIAR CORREO': 'GUARDAR'"
+      (click)="onSubmit()"
+    ></button>
+  </div>
+  }
+</form>

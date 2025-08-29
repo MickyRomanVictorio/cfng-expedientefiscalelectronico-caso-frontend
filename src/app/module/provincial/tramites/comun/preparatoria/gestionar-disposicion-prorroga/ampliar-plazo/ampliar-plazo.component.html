@@ -1,0 +1,100 @@
+<div class="casos-ampliacion-container">
+  <p-toast [baseZIndex]="5000"></p-toast>
+  <p-progressBar *ngIf="verBarraProgreso" mode="indeterminate" [style]="{ height: '6px' }"></p-progressBar>
+  <div class="encabezado-modal">
+    <h3
+      class="encabezado-titulo cfe-subtitulo-3 cfe-semi-bold"
+      [innerHTML]="tituloModal"
+    ></h3>
+
+    <fn-icon
+      class="encabezado-cerrar"
+      [ico]="obtenerIcono('iClose')"
+      height="2rem"
+      (click)="cerrarModal()"
+    ></fn-icon>
+  </div>
+  <h5>Plazos actuales</h5>
+  <div class="formgrid grid" [formGroup]="f!">
+
+    <div class="field col-12 lg:col-6">
+      <label for="feciniinvpre" class="font-semibold">Fecha de inicio investigación preliminar</label>
+      <input pInputText id="feciniinvpre" type="text" [formControlName]="fd.fechafin" readonly class="p-inputtext  py-3 w-full">
+    </div>
+    <div class="field col-12 lg:col-6">
+      <label for="fecfininvpre" class="font-semibold">Fecha de fin investigación preliminar</label>
+      <input pInputText id="fecfininvpre" type="text"  [formControlName]="fd.fechafin" readonly class="p-inputtext  py-3 w-full">
+    </div>
+
+    <div class="col-12">
+      <h5>Asignar nuevo Plazo</h5>
+    </div>
+
+    <div class="field col-12 lg:col-2" >
+      <label for="plazo" class="font-semibold">Plazo nuevo</label>
+      <input pInputText id="plazo" maxlength="4" digitOnly formControlName="plazo" type="text" class="p-inputtext py-3 w-full" required>
+      <small class="error-message" *ngIf="aps.fieldPlazo!.touched && (aps.fieldPlazo!.hasError('required') || aps.fieldPlazo!.hasError('minlength'))">
+        Ingrese un número de documento válido (4 caracteres)
+      </small>
+      <small class="error-message" *ngIf="aps.fieldPlazo!.touched && f!.hasError('unidadMedidaCheck')">
+        Seleccione unidad de medida
+      </small>
+    </div>
+    <div class="field col-12 lg:col-4">
+      <label for="unidadMedida" class="font-semibold">Unidad de medida</label>
+      <p-dropdown id="unidadMedida" [formControlName]="fd.unidadMedida"
+                  placeholder="Seleccione unidad de medida"
+                  styleClass="py-1 p-inputtext-lg" [options]="unidadesMedidas"
+                  optionLabel="label" optionValue="value">
+      </p-dropdown>
+      <small class="error-message" *ngIf="aps.fieldUnidadMedida!.touched && aps.fieldUnidadMedida!.hasError('required')">
+        Seleccione Unidad de Medida
+      </small>
+    </div>
+    <div class="field col-12 lg:col-6">
+      <label for="fechaFinCalculada"  class="font-semibold">Nueva fecha fin calculada</label>
+      <input pInputText id="fechaFinCalculada"
+             [formControlName]="fd.fechaFinCalculada"
+             placeholder="Se calcula al firmar la disposisión"
+             type="text" class="p-inputtext py-3 w-full">
+    </div>
+    <div class="col-12">
+        <div class="mensaje-plazo" *ngIf="f!.hasError('plazoMaximo')">
+            <span><i class="pi pi-info-circle" style="font-size: 1.5rem"></i></span>
+            <p [innerHtml]="aps.mensajePlazos" ></p>
+        </div>
+    </div>
+    <div class="field col-12 mb-3">
+      <label for="sede"  class="font-semibold">Sede de investigación</label>
+      <p-dropdown id="sede" [formControlName]="fd.sede"
+                  styleClass="py-1 p-inputtext-lg" [options]="sedes"
+                  placeholder="Seleccione sede de investigación"
+                  optionLabel="label" optionValue="value">
+      </p-dropdown>
+      <small class="error-message" *ngIf="aps.fieldSede!.touched && aps.fieldSede!.hasError('required')">
+        Seleccione Sede
+      </small>
+    </div>
+
+    <div class="field col-12">
+      <label for="descripcion" class="font-semibold">Descripción ({{descripcion?.value?.length ?? 0}}/200)</label>
+      <textarea rows="5" cols="30"
+                pInputTextarea id="descripcion"
+                [formControlName]="fd.descripcion" #descripcion
+                class="p-inputtext-lg py-3 text-lg w-full"
+                placeholder="Ingrese descripción" maxlength="200">
+            </textarea>
+      <small class="error-message" *ngIf="aps.fieldDescripcion!.touched && aps.fieldDescripcion!.hasError('required')">
+        Ingrese Descripción
+      </small>
+    </div>
+  </div>
+
+  <div class=" flex justify-content-end  option-container">
+    <p-button
+      styleClass="cfe-boton-primary text-white font-semibold px-4 py-1.2"
+      label="Ampliar"
+      (onClick)="ampliar()"
+    ></p-button>
+  </div>
+</div>

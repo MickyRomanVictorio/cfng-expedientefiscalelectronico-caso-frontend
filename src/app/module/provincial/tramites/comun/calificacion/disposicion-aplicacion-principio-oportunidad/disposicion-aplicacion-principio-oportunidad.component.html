@@ -1,0 +1,29 @@
+<app-alertas-tramite
+  [alertas]="alertas"
+  [idCaso]="idCaso"
+  [idEtapa]="idEtapa"
+></app-alertas-tramite>
+<br />
+<div class="col">
+  <label for="button" class="font-semibold">&nbsp;</label>
+  <p-button
+    styleClass="p-button-lg cfe-boton-primary w-70"
+    label="Ver documentos ingresados"
+    (click)="mostrarModal()"
+  ></p-button>
+</div>
+<br />
+
+<div class="col">
+  <div class="field mb-0">
+    <div class="col" style="margin-left: 2px">
+      <p-checkbox
+        [(ngModel)]="esCasoReservado"
+        [binary]="true"
+        inputId="binary"
+        label="Cargar solicitud de principio de oportunidad"
+        (onChange)="alSeleccionar()"
+      ></p-checkbox>
+    </div>
+  </div>
+</div>

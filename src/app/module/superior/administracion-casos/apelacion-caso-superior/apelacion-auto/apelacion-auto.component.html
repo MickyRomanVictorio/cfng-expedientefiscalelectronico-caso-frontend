@@ -1,0 +1,147 @@
+<div class="cfe-container">
+
+    <div class="elevacion_actuados__header">
+        <div class="casos_por_asignar_header__content">
+            <fn-icon [ico]="icono('iFolderSearch')" height="1.6rem"></fn-icon>
+            <h3 class="cfe-titulo-1">Bandeja de apelaciones de auto</h3>
+            <fn-icon [ico]="icono('iTooltip')" height="1.6rem"></fn-icon>
+        </div>
+        <div class="casos_por_asignar_header__navigate">
+            <button class="cfe-boton-secondary cfe-boton-sm" (click)="verCasoResuelto()" >
+                Ver casos resueltos
+                <fn-icon [ico]="icono('iChevronRight')" height="1.5rem"></fn-icon>
+            </button>
+        </div>
+    </div>
+  <!--Ini - Componente Filtro -->
+  <app-filtrar-consulta-caso
+  [tipoVista]="tipoVista"
+  [datosRutaCondicion]="datosRutaCondicion"
+  (buscar)="eventoBuscar($event)"
+  (buscarPorTexto)="eventoBuscarPorTexto($event)"
+   ></app-filtrar-consulta-caso>
+<!--Fin - Componente Filtro -->
+
+  <!--  Ini - Opciones Tipo Vista, Opciones para Exportar -->
+  <div class="mt-5" [ngClass]="{'container-view-list px-2': tipoVista === TipoVistaEnum.Tabla}">
+
+    <div class="grid py-3">
+      <div class="col-12 md:col-6">
+        <div class="flex align-items-center">
+          <img [src]="iconAsset.obtenerRutaIcono('exclamationFolder')" alt="Folder Icon" style="width: 22px"/>
+          <h4 class="casos_listados_count mt-2 mb-0">
+            {{ paginacionConfiguracion.data.total }} casos de contienda de competencia pendientes de pronunciamiento
+          </h4>
+        </div>
+      </div>
+      <div class="col-12 md:col-6">
+        <div class="flex flex-column sm:flex-row justify-content-end">
+            @if (tipoVista === TipoVistaEnum.Tabla)
+            {
+              <div class="flex flex-column sm:flex-row justify-content-end mr-0 sm:mr-3">
+                <div class="flex align-items-center gap-1 md:gap-2 flex-column sm:flex-row">
+                  <button class="cfe-boton-secondary cfe-boton-m w-full sm:w-auto mr-0 mb-2 sm:mb-0 justify-content-start" (click)="eventoExportar(TipoExportarEnum.Pdf)">
+                    <img [src]="iconAsset.obtenerRutaIcono('pdf')" alt="PDF Icon" class="mr-1"/>
+                    Exportar PDF
+                  </button>
+                  <button class="cfe-boton-secondary cfe-boton-m w-full sm:w-auto mb-2 sm:mb-0 justify-content-start" (click)="eventoExportar(TipoExportarEnum.Excel)">
+                    <img [src]="iconAsset.obtenerRutaIcono('excel')" alt="Excel Icon" class="mr-1"/>
+                    Exportar Excel
+                  </button>
+                </div>
+              </div>
+            }
+
+          <div class="flex gap-3 align-items-center mt-3 sm:mt-0">
+            <button aria-label="Vista tipo tarjetas" class="list-type border-none bg-transparent cursor-pointer" [ngClass]="{ active: tipoVista === TipoVistaEnum.Tarjeta }"
+              (click)="eventoTipoVista($event, TipoVistaEnum.Tarjeta)"
+            >
+              <i class="pi pi-table mt-1"></i>
+            </button>
+            <button aria-label="Vista tipo tabla" class="list-type border-none bg-transparent cursor-pointer" [ngClass]="{ active: tipoVista === TipoVistaEnum.Tabla }"
+              (click)="eventoTipoVista($event, TipoVistaEnum.Tabla)"
+            >
+              <i class="pi pi-bars mt-1"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    @if (tipoVista === TipoVistaEnum.Tabla) {
+      <!-- Ini - Leyenda  Plazos -->
+
+        <div class="flex flex-wrap pb-2 ">
+          @for (ly of leyendaPlazos(); track $index) {
+            <div
+                class="flex align-items-center surface-200 px-3 py-2 w-full sm:w-auto"
+                [ngClass]="{'leyenda-plazo-inicio': $index===0, 'leyenda-plazo-fin': $index===leyendaPlazos().length-1 }"
+              >
+              <span class="plazo-item {{ ly.clasesCss }}"></span> {{ ly.nombre }}
+              <div class="quantity">({{ ly.cantidad }})</div>
+            </div>
+          }
+        </div>
+      <!-- Fin - Leyenda  Plazos -->
+
+        <app-tabla-casos
+          [listaCasos]="listaCasos"
+          [paginacionCondicion]="paginacionCondicion"
+          [paginacionConfiguracion]="paginacionConfiguracion"
+          [paginacionReiniciar]="paginacionReiniciar"
+          (cambiarPagina)="eventoCambiarPagina($event)"
+          (casoSeleccionado)="eventoCasoSeleccionado($event)"
+          [procesadoCriterioBusqueda]="procesadoCriterioBusqueda"
+        ></app-tabla-casos>
+    }
+
+  </div>
+<!--  Fin - Opciones Tipo Vista, Opciones para Exportar -->
+
+@if (tipoVista === TipoVistaEnum.Tarjeta) {
+  <div>
+    <!-- Ini - Leyenda  Plazos -->
+      <div class="flex flex-wrap py-2 mb-1 ">
+        @for (ly of leyendaPlazos(); track $index) {
+          <div
+              class="flex align-items-center surface-200 px-3 py-2 w-full sm:w-auto"
+              [ngClass]="{'leyenda-plazo-inicio': $index===0, 'leyenda-plazo-fin': $index===leyendaPlazos().length-1 }"
+            >
+            <span class="plazo-item {{ ly.clasesCss }}"></span> {{ ly.nombre }}
+            <div class="quantity">({{ ly.cantidad }})</div>
+          </div>
+        }
+      </div>
+    <!-- Fin - Leyenda  Plazos -->
+
+    <!-- Ini - Tarjeta Casos -->
+    <app-tarjeta-casos
+    [listaCasos]="listaCasos"
+    [paginacionCondicion]="paginacionCondicion"
+    [paginacionConfiguracion]="paginacionConfiguracion"
+    [paginacionReiniciar]="paginacionReiniciar"
+    (cambiarPagina)="eventoCambiarPagina($event)"
+    (casoSeleccionado)="eventoCasoSeleccionado($event)"
+    >
+    </app-tarjeta-casos>
+    <!-- Fin - Tarjeta Casos -->
+
+    @if (listaCasos.length === 0) {
+      <div class="mt-4 py-5 text-center bg-white px-2 text-600 border-300 border-1 border-round font-semibold">
+        @if (procesadoCriterioBusqueda===false) {
+          En estos momentos no hay casos fiscales
+        }@else {
+          No se encontraron registros con los criterios de búsqueda ingresados
+        }
+      </div>
+    }
+
+  </div>
+
+}
+
+
+
+</div>
+
+<p-toast></p-toast>

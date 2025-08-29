@@ -1,0 +1,23 @@
+.bg-filtro{
+  background-color: #efefef;
+ }
+
+.opciones-busqueda {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+
+.cfe-boton-f {
+  position: relative;
+  top: -25px;
+}
+
+.input-invalid {
+  border-color: #dc3545 !important;
+}
+
+.text-error {
+  color: #dc3545 !important;
+}

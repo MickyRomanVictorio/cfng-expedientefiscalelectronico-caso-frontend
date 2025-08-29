@@ -1,0 +1,134 @@
+<div class="tarjeta-carpeta">
+  <div class="tarjeta-cabecera-contenedor" (click)="eventoVerDetalleCaso(casofiscal())">
+    <div class="tarjeta-cabecera" [ngClass]="getTarjetaTituloEstilo()">
+      <div class="tarjeta-titulo">
+        @if (casofiscal().numeroCaso) {
+        <span [innerHTML]="obtenerCasoHtml(casofiscal().numeroCaso!)"></span>
+        }
+        @if (casofiscal().flgLecturaSuperior === '1') {
+        <img src="assets/icons/eyesIcon.svg" alt="Solo lectura" class="ml-2 mt-1"
+          style="filter: brightness(0) invert(1)" />
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body-z" (click)="eventoVerDetalleCaso(casofiscal())"
+    [ngClass]="{'leido': casofiscal().flgCasoLeido === '1'}">
+
+    <!-- Contenido del cuerpo de la tarjeta -->
+    <div class="flex justify-content-between flex-wrap">
+      <div class="flex align-items-center justify-content-center">
+        <span>Etapa: <strong class="capitalize">{{casofiscal().etapa!.toLowerCase()}}</strong></span>
+      </div>
+      <div>
+        <div
+          class="hidden flex align-items-center justify-content-end px-2 cursor-pointer text-500 transition-all transition-duration-200 hover:text-color"
+         >
+          <i class="pi pi-ellipsis-v font-bold text-lg"></i>
+        </div>
+      </div>
+    </div>
+
+    @if (casofiscal().fiscalOrigen) {
+    <div class="pt-3">
+      <div>
+        Fiscal:
+        <div>
+          <strong class="capitalize">{{casofiscal().fiscalOrigen?.toLowerCase()}}</strong>
+        </div>
+      </div>
+    </div>
+    }
+
+    @if (casofiscal().fiscaliaOrigen) {
+    <div class="pt-3">
+      <div>
+        Fiscalía Provincial:
+        <div>
+          <strong class="capitalize">{{casofiscal().fiscaliaOrigen!.toLowerCase()+' - ' +
+            casofiscal().despachoOrigen!}}</strong>
+        </div>
+      </div>
+    </div>
+    }
+
+    @if (casofiscal().fiscalSuperiorAsignado) {
+    <div class="pt-3">
+      <div>
+        Fiscal superior asignado:
+        <div>
+          <strong class="capitalize">{{casofiscal().fiscalSuperiorAsignado!.toLowerCase()}}</strong>
+        </div>
+      </div>
+    </div>
+    }
+
+    <div class="pt-3">
+      Último trámite:
+      <div>
+        <strong class="capitalize">{{casofiscal().ultimoTramite?.toLowerCase() || "-"}}</strong>
+      </div>
+    </div>
+
+    <div class="pt-3">
+      Delitos:
+      <div class="flex gap-2">
+        @if (casofiscal().delitos) {
+        <b>{{ verDelitoInicio(casofiscal().delitos!) }}</b>
+        <span (click)="eventoVerDelitos($event)" class="cursor-pointer link">Ver más</span>
+        }
+      </div>
+    </div>
+
+    <div class="pt-3">
+      <div class="flex justify-content-between flex-wrap">
+        <div class="align-items-center">
+          Fecha de elevación
+          <div><b>{{ casofiscal().fechaCreacion ||'' | dateformat }}</b></div>
+        </div>
+        <div class="align-items-center">
+          F. de último trámite
+          <div><b>{{ casofiscal().fechaUltimoTramite ||'' | dateformat }}</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pt-3">
+      <app-etiqueta-acciones-caso [casoFiscal]="casofiscal()"
+        [perfilJerarquia]="PerfilJerarquia.Superior"></app-etiqueta-acciones-caso>
+    </div>
+
+    <div class="my-3">
+      <div class="mb-4" (click)="toggleResumen($event)">
+        <div class="flex align-items-center">
+          <p-badge severity="warning" styleClass="bg-orange-400" [value]="contadorPestanias"></p-badge>
+          <span class="pl-2">Resumen de las pestañas de apelación:</span>
+        </div>
+        <div class="pt-2">
+          <a href="javascript:void(0);" id="flecha"
+            class="text-xl flex align-items-center justify-content-center openToggle">
+            <i [ngClass]="{'pi-angle-down': !mostrarResumen, 'pi-angle-up': mostrarResumen}"
+              class="pi pi-angle-down font-bold" style="font-size: 1.6rem;"></i>
+          </a>
+        </div>
+      </div>
+
+      @if (mostrarResumen) {
+      <div *ngFor="let pestania of casofiscal().pestaniasApelacion"
+        class="inline-flex gap-2 justify-content-start flex-wrap mb-5">
+        <div *ngIf="pestania.cantidad>0" class="align-items-center justify-content-center mr-2">
+          <app-file-info-caso [value]="pestania.cantidad"></app-file-info-caso>
+          <div class="text-xs text-blue-900 text-wrap"> {{ pestania.nombre }}</div>
+        </div>
+      </div>
+      }
+    </div>
+
+    @if (casofiscal().notas) {
+    <div class="pt-2">
+      <app-nota-adhesiva [caso]="casofiscal()" [esSoloLectura]="true"></app-nota-adhesiva>
+    </div>
+    }
+  </div>
+</div>

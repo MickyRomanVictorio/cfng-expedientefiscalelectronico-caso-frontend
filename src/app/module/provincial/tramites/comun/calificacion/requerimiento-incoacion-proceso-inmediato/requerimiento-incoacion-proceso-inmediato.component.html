@@ -1,0 +1,67 @@
+
+<div class="mt-5">
+  <div class="grid">
+    <div class="col-fixed w-70">
+      <button
+        class="cfe-boton-primary cfe-boton-lg w-full"
+        pButton
+        (click)="abrirModalMedidasCoercion()"
+      >
+        Medidas de Coerción
+      </button>
+    </div>
+    <div class="col flex align-content-center flex-wrap">
+      <div class="flex align-items-center justify-content-center">
+        @if (esMedidaCoercionCorrecta) {
+        <img alt="exito" [src]="icono('check-circle')" class="h-2rem" />
+        }
+      </div>
+    </div>
+  </div>
+
+  <p class="font-semibold mb-2 mt-2">Supuestos de aplicación</p>
+  <div class="grid">
+    <div class="col-fixed w-70">
+      <p-multiSelect
+        [disabled]="tramiteEnModoVisor"
+        [options]="listaSupuestos"
+        [(ngModel)]="supuestoSeleccionados"
+        (onChange)="verificarSupuestos()"
+        optionLabel="noDescripcion"
+        placeholder="Seleccione uno o más supuestos"
+        styleClass="py-1 p-inputtext-lg w-full"
+        emptyFilterMessage="No se encontraron supuestos de aplicación"
+        emptyMessage="No hay supuestos de aplicación disponibles"
+        filterPlaceHolder="Buscar"
+      >
+        <ng-template let-value pTemplate="selectedItems">
+          <div
+            class="selected-item-chip"
+            *ngFor="let supuesto of supuestoSeleccionados"
+          >
+            <span class="chip-content">{{ supuesto.noDescripcion }}</span>
+          </div>
+          <div
+            *ngIf="!supuestoSeleccionados || supuestoSeleccionados.length === 0"
+            class="placeholder"
+          >
+            Seleccione uno o más supuestos
+          </div>
+        </ng-template>
+
+        <ng-template let-supuesto pTemplate="item">
+          <div class="item">
+            {{ supuesto.noDescripcion }}
+          </div>
+        </ng-template>
+      </p-multiSelect>
+    </div>
+    <div class="col flex align-content-center flex-wrap">
+      <div class="flex align-items-center justify-content-center">
+        @if ( supuestoSeleccionados.length > 0 ) {
+        <img alt="exito" [src]="icono('check-circle')" class="h-2rem"/>
+        }
+      </div>
+    </div>
+  </div>
+</div>

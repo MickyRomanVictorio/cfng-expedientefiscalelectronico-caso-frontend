@@ -1,0 +1,825 @@
+/* You can add global styles to this file, and also import other style files */
+@import url("http://172.16.111.112:8085/assets/css/styles.min.css");
+// @import "assets/styles/scss/styles.scss";
+
+// /* PrimeNG */
+@import "../node_modules/primeng/resources/primeng.min.css";
+// @import "../node_modules/primeflex/primeflex.scss";
+// @import "../node_modules/primeicons/primeicons.css";
+
+// /* Font Poppins */
+// @import "../node_modules/@fontsource/poppins/latin.css";
+
+// /* Font Inter */
+// @import "../node_modules/@fontsource/inter/latin.css";
+
+// .custom-mpfe-p-select-button-item {
+//   .p-disabled{
+//     border: 0px !important;
+//     background-color: rgba(255, 255, 255, 0) !important;
+//     &.p-highlight{
+//       background-color: #419FD5 !important;
+//     }
+//   }
+
+//   .p-ripple{
+//     //border: red solid 5px !important;
+//     border-radius: 0px !important;
+//     height: 100% !important;
+//     &:last-child {
+//       border-top-right-radius: var(--border-radius) !important;
+//       border-bottom-right-radius: var(--border-radius) !important;
+//     }
+//   }
+// }
+.menu-options .p-menu.p-menu-overlay {
+  left: 0 !important;
+}
+
+.p-datatable .p-datatable-tbody>tr>td {
+  border-width: 1px 0 0 0 !important;
+}
+
+// /* Tamaño Extra Small (xs) - similar a .form-control-sm */
+// .form-ctr-xs {
+//   font-size: 0.75rem;  /* 12px */
+//   padding: 0.25rem 0.5rem;
+//   height: calc(1.5em + 0.5rem + 2px);
+// }
+
+// /* Tamaño Small (sm) - similar a .form-control-sm */
+// .form-ctr-sm {
+//   font-size: 0.875rem; /* 14px */
+//   padding: 0.375rem 0.75rem;
+//   height: calc(1.5em + 0.75rem + 2px);
+// }
+
+// /* Tamaño Medium (md) - por defecto en Bootstrap */
+// .form-ctr-md {
+//   font-size: 1rem; /* 16px */
+//   padding: 0.375rem 0.75rem;  /* Padding igual que el sm en Bootstrap */
+//   height: calc(1.5em + 0.75rem + 2px);
+// }
+
+// /* Tamaño Large (lg) - similar a .form-control-lg */
+// .form-ctr-lg {
+//   font-size: 1.1rem; /* 20px */
+//   padding: 0.5rem 1rem;
+//   height: calc(1.5em + 1rem + 2px);
+// }
+// .form-ctr-lg .p-dropdown-label {
+//   font-size: 1.1rem !important;
+//   padding: 0.1rem 0 !important;
+// }
+
+// /* Tamaño Extra Large (xl) */
+// .form-ctr-xl {
+//   font-size: 1.5rem; /* 24px */
+//   padding: 0.625rem 1.25rem;
+//   height: calc(1.5em + 1.25rem + 2px);
+// }
+
+// /* Tamaño Extra Extra Large (xxl) */
+// .form-ctr-xxl {
+//   font-size: 1.75rem; /* 28px */
+//   padding: 0.75rem 1.5rem;
+//   height: calc(1.5em + 1.5rem + 2px);
+// }
+
+.tooltip,
+.tooltipNew {
+  font-family: var(--font-family) !important;
+}
+
+/***********************************************/
+
+/*  Archivo de clases personalizadas para CFE  */
+
+/***********************************************/
+
+// Layout
+.cfe-container {
+  width: 100%;
+  padding: 15px 10px;
+
+  .cfe_bandeja__header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px 0 25px 0;
+
+    .cfe_bandeja_header__content {
+      display: flex;
+      align-items: center;
+
+      .cfe-titulo-1 {
+        padding: 0 12.5px;
+      }
+
+      img {
+        width: 25px;
+
+        &:nth-child(3) {
+          width: 23px;
+        }
+      }
+    }
+
+    .cfe_bandeja_header__navigate {
+      display: flex;
+
+      .cfe-boton-secondary {
+        padding-left: 26px !important;
+        padding-right: 12px !important;
+      }
+    }
+  }
+
+  .cfe_bandeja__filters {
+    width: 100%;
+  }
+
+  .cfe_bandeja__table {
+    width: 100%;
+    background: var(--mpfn-white);
+    border-radius: 6px;
+    border: 1.5px solid var(--mpfn-gray2);
+    margin-top: 10px;
+
+    .cfe_bandeja_table__title {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px 25px 0 25px;
+      margin-bottom: 20px;
+      margin-top: 20px;
+
+      .cfe_por_reasignar_table_title__content {
+        display: flex;
+        align-items: center;
+
+        img {
+          width: 22px;
+          position: relative;
+          top: -2px;
+        }
+
+        .cfe-subtitulo-1 {
+          margin-left: 10px;
+        }
+      }
+
+      .num_casos_por_asignar_table_title__content {
+        display: flex;
+        align-items: center;
+
+        img {
+          width: 22px;
+          position: relative;
+          top: -2px;
+        }
+
+        .cfe-subtitulo-1 {
+          margin-left: 10px;
+        }
+      }
+
+      .casos_por_reasignar_table_title__options {
+        display: flex;
+      }
+    }
+
+    .cfe_bandeja__legend {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      padding: 10px 20px 25px 20px;
+
+      .term-item {
+        font-size: 1em;
+        display: flex;
+        padding: 0.25rem;
+        font-family: var(--mpfn-font-regular);
+        align-items: center;
+        margin-right: 12px;
+
+        span {
+          display: inline-block;
+          width: 13px;
+          height: 13px;
+          border-radius: 50%;
+          background: var(--mpfn-gray2);
+          margin-right: 5px;
+        }
+
+        .quantity {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.9em;
+          margin-left: 4px;
+        }
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+
+    .cfe_bandeja_table__content {
+      width: 100%;
+    }
+  }
+}
+
+.cfe-margin-top {
+  margin-top: 20px;
+}
+
+.cfe-container-background-blanco {
+  background: var(--mpfn-white);
+}
+
+.cfe-container-background-crema {
+  background: var(--mpfn-background);
+}
+
+.p-selectbutton .p-button {
+  background: var(--mpfn-lightblue-background);
+  border: 1px solid var(--mpfn-lightblue-background);
+  color: var(--mpfn-black);
+  transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.p-selectbutton .p-button:not(.p-disabled):not(.p-highlight):hover {
+  background: var(--mpfn-lightblue-background);
+  border-color: var(--mpfn-lightblue-background);
+  color: #ffffff;
+}
+
+.p-selectbutton .p-button.p-highlight {
+  background: var(--mpfn-lightblue);
+  border-color: var(--mpfn-lightblue);
+  color: #ffffff;
+}
+
+.p-selectbutton .p-button.p-highlight:hover {
+  background: var(--mpfn-lightblue);
+  border-color: var(--mpfn-lightblue);
+  color: #ffffff;
+}
+
+// Titulos
+.cfe-titulo-1 {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 32px;
+  font-family: var(--mpfn-font-bold);
+  color: var(--mpfn-primary);
+  margin: 0;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.cfe-subtitulo-estado {
+  font-size: 14px;
+  font-family: var(--mpfn-font-bold);
+  color: var(--mpfn-red-wine);
+}
+
+.modal-container {
+  background-color: var(--mpfn-background);
+  min-width: 80%;
+}
+
+.cfe-titulo-2 {
+  @extend .cfe-titulo-1;
+  font-size: 22px;
+}
+
+.cfe-titulo-3 {
+  @extend .cfe-titulo-1;
+  font-size: 20px;
+}
+
+.cfe-titulo-4 {
+  @extend .cfe-titulo-1;
+  font-size: 18px;
+}
+
+// Subtitulos
+.cfe-subtitulo-1 {
+  font-size: 18px;
+  font-family: var(--mpfn-font-bold);
+  color: var(--mpfn-primary);
+  margin: 0;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.cfe-subtitulo-2 {
+  @extend .cfe-titulo-1;
+  font-size: 16px;
+}
+
+.cfe-subtitulo-3 {
+  @extend .cfe-titulo-1;
+  font-size: 1.5rem !important;
+}
+
+.cfe-subtitulo-4 {
+  @extend .cfe-titulo-1;
+  font-size: 1.1rem !important;
+}
+
+.cfe-subtitulo-2-jade {
+  @extend .cfe-subtitulo-2;
+  color: var(--mpfn-jade);
+}
+
+// Parrafos
+.cfe-parrafo-1 {
+  font-size: 0.9rem !important;
+}
+
+.cfe-caso>p>span.color-caso {
+  color: var(--mpfn-black-2) !important;
+}
+
+// Ancho de la fuente
+.cfe-semi-bold {
+  font-weight: 600 !important;
+  font-family: var(--mpfn-semi-bold);
+}
+
+.cfe-bold {
+  font-weight: 700 !important;
+  font-family: var(--mpfn-bold);
+}
+
+// Botones
+.cfe-boton {
+  outline: none;
+  font-family: var(--mpfn-font-semi-bold);
+  transition: 300ms background-color, border, color ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: var(--mpfn-gray3) !important;
+    border: 1px solid var(--mpfn-gray3) !important;
+    color: var(--mpfn-gray15) !important;
+
+    &:hover {
+      background-color: var(--mpfn-gray3) !important;
+      border: 1px solid var(--mpfn-gray3) !important;
+      color: var(--mpfn-gray15) !important;
+    }
+  }
+}
+
+.cfe-boton-primary {
+  @extend .cfe-boton;
+  color: var(--mpfn-white);
+  background-color: var(--mpfn-secondary);
+  border: 1px solid var(--mpfn-secondary);
+
+  &:hover {
+    background-color: var(--mpfn-yellow-hover) !important;
+    border: 1px solid var(--mpfn-yellow-hover) !important;
+  }
+}
+
+.cfe-input-lg {
+  padding: 0.735rem 0.9375rem !important;
+}
+
+.cfe-boton-secondary {
+  font-weight: 600;
+  @extend .cfe-boton;
+  color: var(--mpfn-primary);
+  background-color: var(--mpfn-gray7);
+  border: 1px solid var(--mpfn-gray6);
+
+  &:hover {
+    background: var(--mpfn-gray-hover) !important;
+    color: var(--mpfn-primary) !important;
+    border-color: var(--mpfn-gray2) !important;
+  }
+}
+
+.cfe-boton-secondary.active {
+  background: var(--mpfn-gray-active) !important;
+  color: var(--mpfn-primary) !important;
+  border-color: var(--mpfn-gray2) !important;
+}
+
+.cfe-boton-tertiary {
+  @extend .cfe-boton;
+  color: var(--mpfn-white);
+  background-color: var(--mpfn-green-dark);
+  border: 1px solid var(--mpfn-green-dark);
+
+  &:hover {
+    background-color: var(--mpfn-green-hover) !important;
+    border: 1px solid var(--mpfn-green-hover) !important;
+  }
+}
+
+.cfe-boton-bluedark {
+  @extend .cfe-boton;
+  color: var(--mpfn-white);
+  background-color: var(--mpfn-primary);
+  border: 1px solid var(--mpfn-primary);
+}
+
+.cfe-boton-danger {
+  @extend .cfe-boton;
+  color: var(--mpfn-white);
+  background-color: var(--mpfn-red);
+  border: 1px solid var(--mpfn-red);
+}
+
+.cfe-boton-outline {
+  @extend .cfe-boton;
+  color: var(--mpfn-black);
+  background-color: var(--mpfn-white);
+  border: 1px solid var(--mpfn-gray2);
+
+  &:hover {
+    background: var(--mpfn-gray3);
+    border-color: var(--mpfn-gray2);
+  }
+}
+
+.cfe-table-primary {
+  .p-datatable-thead {
+    background: var(--mpfn-jade-background) !important;
+    font-weight: bold;
+  }
+
+  .p-datatable-tbody {
+    tr {
+      background-color: var(--mpfn-white) !important;
+      margin-bottom: 20px !important;
+    }
+  }
+}
+
+.p-label-bottom {
+  display: inline-block !important;
+  margin-bottom: 0.5rem !important;
+}
+
+// .cfe-boton-lg {
+//   padding: 0.5rem 1rem !important;
+//   font-size: 1.25rem;
+// }
+
+// .cfe-boton-m {
+//   padding: 0.375rem 0.75rem !important;
+//   font-size: 1rem;
+// }
+
+// .cfe-boton-sm {
+//   padding: 0.25rem 0.5rem !important;
+//   font-size: 0.875rem;
+// }
+
+// // Variables de tamaño para el dropdown
+// $dropdown-font-size-sm: 0.825rem;
+// $dropdown-font-size-lg: 1.15rem;
+
+// $dropdown-padding-sm: 0.25rem;
+// $dropdown-padding-lg: 0.5rem;
+
+// $dropdown-trigger-height-sm: calc(1.5em + 0.5rem + 2px);
+// $dropdown-trigger-height-lg: calc(1.5em + 1rem + 2px);
+
+// /* Tamaños personalizados para el dropdown de PrimeNG */
+// .p-dropdown.p-dropdown-sm {
+//   font-size: $dropdown-font-size-sm;
+// }
+
+// .p-dropdown.p-dropdown-lg {
+//   font-size: $dropdown-font-size-lg;
+// }
+
+// /* Estilos internos para los elementos del dropdown */
+// .p-dropdown.p-dropdown-sm .p-dropdown-panel {
+//   font-size: $dropdown-font-size-sm;
+//   padding: $dropdown-padding-sm;
+// }
+
+// .p-dropdown.p-dropdown-lg .p-dropdown-panel {
+//   font-size: $dropdown-font-size-lg;
+//   padding: $dropdown-padding-lg;
+// }
+
+// /* Ajustes adicionales para el botón de dropdown */
+// .p-dropdown.p-dropdown-sm .p-dropdown-trigger {
+//   height: $dropdown-trigger-height-sm;
+// }
+
+// .p-dropdown.p-dropdown-lg .p-dropdown-trigger {
+//   height: $dropdown-trigger-height-lg;
+// }
+
+// /* Estilo para el span que muestra el texto seleccionado */
+// .p-dropdown.p-dropdown-sm .p-dropdown-label {
+//   font-size: $dropdown-font-size-sm;
+// }
+
+// .p-dropdown.p-dropdown-lg .p-dropdown-label {
+//   font-size: $dropdown-font-size-lg;
+// }
+
+// /* Estilos para el ícono del dropdown */
+// .p-dropdown.p-dropdown-sm .p-dropdown-trigger .p-dropdown-trigger-icon {
+//   font-size: $dropdown-font-size-sm;
+// }
+
+// .p-dropdown.p-dropdown-lg .p-dropdown-trigger .p-dropdown-trigger-icon {
+//   font-size: $dropdown-font-size-lg;
+// }
+
+// /* Estilo para el panel de opciones */
+// .p-dropdown.p-dropdown-sm .p-dropdown-item {
+//   font-size: $dropdown-font-size-sm;
+// }
+
+// .p-dropdown.p-dropdown-lg .p-dropdown-item {
+//   font-size: $dropdown-font-size-lg;
+// }
+
+// // ********************
+
+// // Variables de tamaño para el multiselect
+// $multiselect-font-size-sm: 0.825rem;
+// $multiselect-font-size-lg: 1.15rem;
+
+// $multiselect-padding-sm: 0.25rem;
+// $multiselect-padding-lg: 0.5rem;
+
+// $multiselect-trigger-height-sm: calc(1.5em + 0.5rem + 2px);
+// $multiselect-trigger-height-lg: calc(1.5em + 1rem + 2px);
+
+// /* Tamaños personalizados para el multiselect de PrimeNG */
+// .p-multiselect.p-multiselect-sm {
+//   font-size: $multiselect-font-size-sm;
+// }
+
+// .p-multiselect.p-multiselect-lg {
+//   font-size: $multiselect-font-size-lg;
+// }
+
+// /* Estilos internos para los elementos del multiselect */
+// .p-multiselect.p-multiselect-sm .p-multiselect-panel {
+//   font-size: $multiselect-font-size-sm;
+//   padding: $multiselect-padding-sm;
+// }
+
+// .p-multiselect.p-multiselect-lg .p-multiselect-panel {
+//   font-size: $multiselect-font-size-lg;
+//   padding: $multiselect-padding-lg;
+// }
+
+// /* Ajustes adicionales para el botón de multiselect */
+// .p-multiselect.p-multiselect-sm .p-multiselect-trigger {
+//   height: $multiselect-trigger-height-sm;
+// }
+
+// .p-multiselect.p-multiselect-lg .p-multiselect-trigger {
+//   height: $multiselect-trigger-height-lg;
+// }
+
+// /* Estilo para el span que muestra los elementos seleccionados */
+// .p-multiselect.p-multiselect-sm .p-multiselect-label-container .p-multiselect-label {
+//   font-size: $multiselect-font-size-sm;
+// }
+
+// .p-multiselect.p-multiselect-lg .p-multiselect-label-container .p-multiselect-label {
+//   font-size: $multiselect-font-size-lg;
+// }
+
+// /* Estilos para el ícono de apertura del multiselect */
+// .p-multiselect.p-multiselect-sm .p-multiselect-trigger .p-multiselect-trigger-icon {
+//   font-size: $multiselect-font-size-sm;
+// }
+
+// .p-multiselect.p-multiselect-lg .p-multiselect-trigger .p-multiselect-trigger-icon {
+//   font-size: $multiselect-font-size-lg;
+// }
+
+// /* Estilo para cada opción en el panel de selección */
+// .p-multiselect.p-multiselect-sm .p-multiselect-item {
+//   font-size: $multiselect-font-size-sm;
+// }
+
+// .p-multiselect.p-multiselect-lg .p-multiselect-item {
+//   font-size: $multiselect-font-size-lg;
+// }
+
+// // ****************************+
+
+// // Variables de tamaño para el calendar
+// $calendar-font-size-sm: 0.825rem;
+// $calendar-font-size-lg: 1.15rem;
+
+// $calendar-padding-sm: 0.25rem;
+// $calendar-padding-lg: 0.5rem;
+
+// $calendar-trigger-height-sm: calc(1.5em + 0.5rem + 2px);
+// $calendar-trigger-height-lg: calc(1.5em + 1rem + 2px);
+
+// /* Tamaños personalizados para el calendar de PrimeNG */
+// .p-calendar.p-calendar-sm {
+//   font-size: $calendar-font-size-sm;
+// }
+
+// .p-calendar.p-calendar-lg {
+//   font-size: $calendar-font-size-lg;
+// }
+
+// /* Estilos internos para los elementos del calendario */
+// .p-calendar.p-calendar-sm .p-inputtext {
+//   font-size: $calendar-font-size-sm;
+//   padding: $calendar-padding-sm;
+// }
+
+// .p-calendar.p-calendar-lg .p-inputtext {
+//   font-size: $calendar-font-size-lg;
+//   padding: $calendar-padding-lg;
+// }
+
+// /* Ajustes para el botón de selector de fecha */
+// .p-calendar.p-calendar-sm .p-datepicker-trigger {
+//   height: $calendar-trigger-height-sm;
+// }
+
+// .p-calendar.p-calendar-lg .p-datepicker-trigger {
+//   height: $calendar-trigger-height-lg;
+// }
+
+// /* Estilo para el ícono del calendario */
+// .p-calendar.p-calendar-sm .p-datepicker-trigger .p-datepicker-trigger-icon {
+//   font-size: $calendar-font-size-sm;
+// }
+
+// .p-calendar.p-calendar-lg .p-datepicker-trigger .p-datepicker-trigger-icon {
+//   font-size: $calendar-font-size-lg;
+// }
+
+// /* Estilo para el panel de calendario */
+// .p-calendar.p-calendar-sm .p-datepicker-calendar {
+//   font-size: $calendar-font-size-sm;
+// }
+
+// .p-calendar.p-calendar-lg .p-datepicker-calendar {
+//   font-size: $calendar-font-size-lg;
+// }
+
+// /* Estilo para los días en el calendario */
+// .p-calendar.p-calendar-sm .p-datepicker-calendar td {
+//   font-size: $calendar-font-size-sm;
+// }
+
+// .p-calendar.p-calendar-lg .p-datepicker-calendar td {
+//   font-size: $calendar-font-size-lg;
+// }
+
+.cfe-container .cfe_bandeja__table.transparent {
+  background-color: transparent;
+  border: none;
+}
+
+//
+
+/* Tamaño Extra Extra Grande (XXL) */
+.cfe-modal-xxl {
+  width: 90vw;
+  max-width: 1200px;
+  min-width: 80vw;
+}
+
+/* Tamaño Extra Grande (XL) */
+.cfe-modal-xl {
+  width: 80vw;
+  max-width: 1000px;
+  min-width: 70vw;
+}
+
+/* Tamaño Grande (LG) */
+.cfe-modal-lg {
+  width: 70vw;
+  max-width: 800px;
+  min-width: 60vw;
+}
+
+/* Tamaño Mediano (MD) */
+.cfe-modal-md {
+  width: 60vw;
+  max-width: 700px;
+  min-width: 50vw;
+}
+
+/* Tamaño Pequeño (SM) */
+.cfe-modal-sm {
+  width: 50vw;
+  max-width: 500px;
+  min-width: 40vw;
+}
+
+/* Estilos responsivos para dispositivos pequeños */
+@media screen and (max-width: 768px) {
+
+  .cfe-modal-xxl,
+  .cfe-modal-xl,
+  .cfe-modal-lg,
+  .cfe-modal-md,
+  .cfe-modal-sm {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+  }
+}
+
+
+
+/** shepherd **/
+.shepherd-element {
+  background-color: var(--mpfn-primary) !important;
+  border-radius: 8px !important;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+.shepherd-title {
+  font-weight: bold !important;
+  color: var(--mpfn-white) !important;
+}
+
+.shepherd-header {
+  background-color: var(--mpfn-primary) !important;
+  padding: 0 0 0 0.75em !important;
+}
+
+.shepherd-arrow:before {
+  background-color: var(--mpfn-primary) !important;
+}
+
+.shepherd-text {
+  font-size: 14px !important;
+  color: var(--mpfn-white) !important;
+}
+
+.shepherd-button-back {
+  color: var(--mpfn-primary) !important;
+  background-color: var(--mpfn-gray7) !important;
+  border: 1px solid var(--mpfn-gray6) !important;
+}
+
+.shepherd-button-next {
+  color: var(--mpfn-white) !important;
+  background-color: var(--mpfn-secondary) !important;
+  border: 1px solid var(--mpfn-secondary) !important;
+}
+
+.shepherd-button-none {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.shepherd-footer {
+  justify-content: space-between !important;
+  margin: 0.75rem 0 0 0 !important;
+}
+
+.shepherd-element {
+  margin: 1.2rem 0 !important;
+}
+
+.shepherd-has-title .shepherd-content .shepherd-cancel-icon {
+  color: var(--mpfn-white) !important;
+  margin: 0.25rem 0.75rem 0 0 !important;
+}
+
+
+label.ng-dirty.ng-invalid,
+p-radiobutton.ng-dirty.ng-invalid {
+  color: #dc3545;
+}
+
+.mpfn-link{
+  color: var(--mpfn-secondary);
+  cursor: pointer;
+  font-weight: 600;
+}

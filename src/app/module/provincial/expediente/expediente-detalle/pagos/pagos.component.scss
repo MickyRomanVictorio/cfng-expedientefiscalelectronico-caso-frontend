@@ -1,0 +1,94 @@
+:host ::ng-deep .p-tabview-panels {
+  padding: 0;
+  border-radius: 0;
+  border: 1px solid #afafaf;
+  z-index: 1;
+}
+.barra-superior{
+  width: 100%;
+  height: 18px;
+  background-color:white;
+  &.atrasado{
+    background-color: #F3D7D7;
+  }
+}
+.reparacion-civil {
+  padding: 0.5rem 1rem 1rem 1rem;
+  border-radius: 8px;
+  width: 100%;
+  .contenido {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    .columna {
+      flex: 2;
+      min-width: 150px;
+      margin: 0 10px;
+
+      &.primero{
+        flex: 1;
+      }
+      strong {
+        display: block;
+        color: var(--mpfn-gray1);
+      }
+
+      p {
+        margin: 2px 0;
+      }
+
+      .todos {
+        color: #3F9FD6;
+        text-decoration: underline;
+        font-size: 1em;
+        cursor: pointer;
+      }
+
+      &.montos {
+        div {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 4px;
+
+          strong {
+            color: var(--mpfn-gray1);
+          }
+
+          .total {
+            font-weight: bold;
+            color: #000;
+          }
+        }
+      }
+    }
+  }
+}
+.leyenda-pago {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    .legend-circle {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+
+      &.pendiente {
+        background-color:#666666;
+      }
+
+      &.atrasado{
+        background-color: #C1292E;
+      }
+
+      &.pagado {
+        background-color:#06A77D;
+      }
+    }
+  }
+}

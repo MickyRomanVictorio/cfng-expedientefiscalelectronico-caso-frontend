@@ -1,0 +1,97 @@
+<div class="bandeja_tramites__table">
+  <div class="bandeja_tramites_table__title grid">
+    <div
+      class="bandeja_tramites_table_title__content col-12 md:col-6 flex-wrap"
+    >
+      <fn-icon
+        [ico]="icono('iFolderExclamation')"
+        height="1.8rem"
+        [style]="{ 'margin-left': '-12px' }"
+      ></fn-icon>
+      <h4 class="cfe-subtitulo-1">{{ titleDocumento }}</h4>
+      <!-- @if(esTabRecibido){
+      <div class="flex border-1 border-500 border-round-3xl px-3 py-1 ml-3">
+        <span class="circulo circulo--rojo mr-2 mt-1"></span>
+        <span>Pendiente de completar información</span>
+      </div>
+      } -->
+    </div>
+    <div
+      class="col-12 md:col-6 flex flex-column sm:flex-row justify-content-end align-items-center pr-0"
+    >
+      <button
+        class="cfe-boton-secondary cfe-boton-m w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start"
+        (click)="exportarPdfExcel('PDF')"
+      >
+        <fn-icon
+          class="ml-1"
+          [ico]="icono('iFileDownload')"
+          height="1.6rem"
+        ></fn-icon>
+        Exportar PDF
+      </button>
+      <button
+        class="cfe-boton-secondary cfe-boton-m w-full sm:w-auto justify-content-start"
+        (click)="exportarPdfExcel('Excel')"
+      >
+        <fn-icon class="ml-1" [ico]="icono('iTable')" height="1.6rem"></fn-icon>
+        Exportar Excel
+      </button>
+    </div>
+  </div>
+
+  <div class="bandeja_tramites_table__content">
+    <p-table
+      [value]="documentosBandeja"
+      [paginator]="true"
+      [rowHover]="true"
+      [rows]="10"
+      [showCurrentPageReport]="true"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      currentPageReportTemplate="{first} de {last} registros"
+      [breakpoint]="'992px'"
+      responsiveLayout="stack"
+      class="table_td_content_responsive"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>N°</th>
+          <th>Fiscal</th>
+          <th>Caso</th>
+          <th>Complejidad</th>
+          <th>Etapa</th>
+          <th>F.Ini. Etapa</th>
+          <th style="width: 175px">Plazos días</th>
+          <th style="width: 175px">Días Trans.</th>
+          <th style="width: 175px">Días Total</th>
+          <th style="width: 175px">Indicador</th>
+          <th style="width: 125px">
+            <!-- -->
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-docbandeja>
+        <tr class="p-selectable-row">
+          <td data-column-name="Númeracion"></td>
+          <td data-column-name="Fiscal"></td>
+          <td data-column-name="Caso"></td>
+          <td data-column-name="Complejidad"></td>
+          <td data-column-name="Etapa"></td>
+          <td data-column-name="F.Ini. Etap"></td>
+          <td data-column-name="Plazos días"></td>
+          <td data-column-name="Días Trans."></td>
+          <td data-column-name="Días Total"></td>
+          <td data-column-name="Indicador"></td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td class="no-before" colspan="8" style="text-align: center">
+            No se encontraron registros con los criterios de búsqueda ingresados
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+<p-toast></p-toast>

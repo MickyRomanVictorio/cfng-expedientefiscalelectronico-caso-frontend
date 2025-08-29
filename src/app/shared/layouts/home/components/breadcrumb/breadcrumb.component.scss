@@ -1,0 +1,20 @@
+@use '../../../../../../assets/styles/scss/abstracts/fonts' as *;
+
+.breadcrumb__container{
+    font-family: var(--font-family);
+    display: flex;
+    //margin-top: 25px;
+    .breadcrumb__item{
+        text-decoration: underline;
+        font-family: $font-regular;
+        &:last-child{
+            text-decoration: none;
+            cursor: default;
+        }
+    }
+}
+
+.separator{
+    display: inline-block;
+    margin: 0 4px;
+}

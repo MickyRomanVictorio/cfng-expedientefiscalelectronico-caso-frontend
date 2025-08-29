@@ -1,0 +1,173 @@
+<div class="alertas__header">
+  <div class="alertas_header__content">
+    <img style="width: 35px;" src="../../../../../../../assets/icons/alert.svg" alt="Icono de advertencia"/>
+    <h3 class="cfe-titulo-1">Alertas</h3>
+  </div>
+</div>
+<app-tabs-view [tabs]="tabs" [indexSeleccionado]="indexActivo" (onChangeIndex)="handleChangeBandeja(indexActivo = $event)"></app-tabs-view>
+<p-tabView class="cfe-tabs-view" [(activeIndex)]="indexActivo">
+  <p-tabPanel>
+    <p-tabView class="cfe-tabs-view-anidado" [(activeIndex)]="activeIndexEstado" (onChange)="handleChangeEstado($event)">
+      <p-tabPanel header="Pendientes" class="p-col-2 ">
+        <div class="cfe-tabpabel__container cfe-tabpabel__container--lg">
+          <div class="grid mt-1 mb-4 ">
+            <div class="col">
+              <div class="field mb-0">
+                <label for="buscar" class="font-semibold">Buscar</label>
+                <input (input)="onInput($event,1)" #input1 pInputText type="text" inputmode="numeric"
+                       class="p-inputtext py-3 text-lg w-full"
+                       placeholder="Buscar por número de caso"/>
+              </div>
+            </div>
+          </div>
+          <div *ngFor="let item of listaFiltradaAlertasPlazoPendientes2" class="fondoMensajePlazos">
+            <div class="grid">
+              <div class="col-10 md:col-11">
+                <span class="tituloAlerta">
+                    {{ item.titulo }}
+                </span>
+              </div>
+              <div class="col-2 md:col-1 flex align-items-center justify-content-end">
+                <div class="btn-more-options" (click)="menu.toggle($event)">
+                  <div class="btn-more-options-content">
+                    <span></span><span></span><span></span>
+                  </div>
+                </div>
+                <p-menu #menu class="menu-options" [model]="items(item)" [popup]="true"></p-menu>
+              </div>
+            </div>
+            <div (click)="irAlerta(item)">
+              <div class="mt-1">
+                <label class="" for="">
+                  <p [innerHTML]="item.texto | textoTiempoSegundos:item.fechaCreacion"></p>
+                </label>
+              </div>
+              <div class="mt-2">
+                <label for="" class="tiempo"> {{ item.fechaCreacion | tiempoSegundos }} </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="cfe-paginator" [hidden]="query.limit > listaFiltradaAlertasPlazoPendientes.length">
+          <app-paginator [query]="query" [items]="itemPaginado" [rowsPerPageOptions]="[]"
+                         (paginate)="onPaginate($event)"></app-paginator>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="Solucionadas">
+        <div class="cfe-tabpabel__container cfe-tabpabel__container--lg">
+          <div class="grid mt-1 mb-4 ">
+            <div class="col">
+              <div class="field mb-0">
+                <label for="buscar" class="font-semibold">Buscar</label>
+                <input (input)="onInput($event,2)" #input2 pInputText type="text" inputmode="numeric"
+                       class="p-inputtext py-3 text-lg w-full"
+                       placeholder="Buscar por número de caso"/>
+              </div>
+            </div>
+          </div>
+          <div *ngFor="let item of listaFiltradaAlertasPlazoAtendidos2" class="fondoAlertasSolucionadas">
+            <div class="grid">
+              <div class="col">
+                                <span class="tituloAlertaSolucionadas">
+                                    {{ item.titulo }}
+                                </span>
+              </div>
+            </div>
+            <div class="mt-1">
+              <label class="" for="">
+                <p [innerHTML]="item.texto | textoTiempoSegundos:item.fechaCreacion"></p>
+              </label>
+            </div>
+            <div class="mt-2">
+              <label for="" class="tiempo"> {{ item.fechaCreacion | tiempoSegundos }} </label>
+            </div>
+            <hr>
+          </div>
+        </div>
+        <div class="cfe-paginator" [hidden]="query.limit > listaFiltradaAlertasPlazoAtendidos.length">
+          <app-paginator [query]="query" [items]="itemPaginado" [rowsPerPageOptions]="[]"
+                         (paginate)="onPaginate($event)"></app-paginator>
+        </div>
+      </p-tabPanel>
+    </p-tabView>
+  </p-tabPanel>
+  <p-tabPanel>
+    <p-tabView class="cfe-tabs-view-anidado" [(activeIndex)]="activeIndexEstado" (onChange)="handleChangeEstado($event)">
+      <p-tabPanel header="Pendientes" class="p-col-2 ">
+        <div class="cfe-tabpabel__container cfe-tabpabel__container--lg">
+          <div class="grid mt-1 mb-4">
+            <div class="col">
+              <div class="field mb-0">
+                <label for="buscar" class="font-semibold">Buscar</label>
+                <input (input)="onInput($event,3)" #input3 pInputText type="text" inputmode="numeric"
+                       class="p-inputtext py-3 text-lg w-full"
+                       placeholder="Buscar por número de caso"/>
+              </div>
+            </div>
+          </div>
+          <div *ngFor="let item of listaFiltradaAlertasGenericaPendientes2" class="fondoMensajeGenericas">
+            <div (click)="irAlerta(item)">
+              <div>
+                <div class="grid">
+                  <div class="col-10 md:col-11">
+                    <span class="tituloGenericas">
+                        {{ item.titulo }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-1">
+                <label class="" for="">
+                  <p [innerHTML]="item.texto | textoTiempoSegundos:item.fechaCreacion"></p>
+                </label>
+              </div>
+              <div class="mt-2">
+                <label for="" class="tiempo"> {{ item.fechaCreacion | tiempoSegundos }} </label>
+              </div>
+              </div>
+          </div>
+        </div>
+        <div class="cfe-paginator" [hidden]="query.limit > listaFiltradaAlertasGenericaPendientes.length">
+          <app-paginator [query]="query" [items]="itemPaginado" [rowsPerPageOptions]="[]"
+                         (paginate)="onPaginate($event)"></app-paginator>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="Solucionadas">
+        <div class="cfe-tabpabel__container cfe-tabpabel__container--lg">
+          <div class="grid mt-1 mb-4">
+            <div class="col">
+              <div class="field mb-0">
+                <label for="buscar" class="font-semibold">Buscar</label>
+                <input (input)="onInput($event,4)" #input4 pInputText type="text" inputmode="numeric"
+                       class="p-inputtext py-3 text-lg w-full"
+                       placeholder="Buscar por número de caso"/>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div *ngFor="let item of listaFiltradaAlertasGenericaAtendidos2" class="fondoAlertasSolucionadas">
+              <div>
+                <label class="tituloAlertaSolucionadas" for="">
+                  {{ item.titulo }}
+                </label>
+              </div>
+              <div class="mt-1">
+                <label class="" for="">
+                  <p [innerHTML]="item.texto | textoTiempoSegundos:item.fechaCreacion"></p>
+                </label>
+              </div>
+              <div class="mt-2">
+                <label for="" class="tiempo"> {{ item.fechaCreacion | tiempoSegundos }} </label>
+              </div>
+              <hr>
+            </div>
+          </div>
+        </div>
+        <div class="cfe-paginator" [hidden]="query.limit > listaFiltradaAlertasGenericaAtendidos.length">
+          <app-paginator [query]="query" [items]="itemPaginado" [rowsPerPageOptions]="[]" [resetPage]="shouldResetPage"
+                         (paginate)="onPaginate($event)"></app-paginator>
+        </div>
+      </p-tabPanel>
+    </p-tabView>
+  </p-tabPanel>
+</p-tabView>

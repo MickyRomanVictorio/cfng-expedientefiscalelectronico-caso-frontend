@@ -1,0 +1,56 @@
+<app-alertas-tramite
+  [alertas]="alertas"
+  [idCaso]="idCaso"
+  [idEtapa]="idEtapa"
+></app-alertas-tramite>
+
+<div class="w-full">
+  <app-asociar-sujetos-delitos
+    [idActoTramiteCaso]="idActoTramiteCaso"
+    [etapa]="etapa"
+    (seHanRegistradoAsociaciones)="
+      establecerSiSeHanRegistradoAsociaciones($event)
+    "
+    [modoLectura]="tramiteEstadoFirmado"
+  />
+</div>
+
+<div class="w-full">
+  <form [formGroup]="formRegistro">
+    <div class="col-12 md:col-4 relative">
+      <button
+        type="button"
+        class="cfe-boton-primary cfe-boton-lg w-full"
+        (click)="mostrarModal()"
+      >
+        <span class="family-poppin-bold">Asignación de plazo </span>
+      </button>
+
+      @if ( plazoRequest ) {
+      <div class="icono-guardado">
+        <img
+          [src]="iconAsset.obtenerRutaIcono('check-circle')"
+          alt="guardado"
+          class="pr-2 h-2rem"
+        />
+      </div>
+      }
+    </div>
+
+    @if (esFiscaliaLavadoActivos) {
+    <div class="field flex sm:flex-row align-items-center">
+      <img [src]="icono('security')" alt="reservado" class="pr-2 h-4rem" />
+      <div class="col" style="margin-left: 2px">
+        <p-checkbox
+          formControlName="esCasoReservado"
+          [disabled]="tramiteEstadoFirmado"
+          [binary]="true"
+          inputId="binary"
+          label="Caso reservado"
+          (onChange)="alSeleccionar()"
+        ></p-checkbox>
+      </div>
+    </div>
+    }
+  </form>
+</div>

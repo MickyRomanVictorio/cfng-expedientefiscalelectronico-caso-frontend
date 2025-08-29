@@ -1,0 +1,64 @@
+
+<div [formGroup]="form" class="grid grid-nogutter p-4">
+    <div class="col-12">
+        <div class="flex justify-content-between flex-wrap">
+            <span class="flex align-items-center justify-content-center font-semibold  cfe-titulo-2" >
+                Agregar posit
+            </span>
+            <div class="flex align-items-center justify-content-center">
+                <p-button (click)="close()" icon="pi pi-times" tabindex="-1" styleClass="p-button-rounded text-color p-button-text"></p-button>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="field">
+            <div><strong>Selecciona el color del posit:</strong></div>
+            <div class="color-options flex gap-1" style="padding-top: 1rem;">
+                <a (click)="activeColor($event, coloresPostIt.GREEN)"
+                    [ngStyle]="{'background-color': coloresPostIt.GREEN }"
+                    [ngClass]="{'active': coloresPostIt.GREEN == notaCaso.colorNota}"
+                    class="popst-it-green flex align-items-center justify-content-center w-2rem h-2rem border-round-lg cursor-pointer">
+                    @if (coloresPostIt.GREEN == f.colorNota) {
+                      <i class="pi pi-check" style="font-size: 1.2rem; font-weight: bold; color: black;"></i>
+                    }
+                </a>
+
+                <a (click)="activeColor($event, coloresPostIt.ORANGE)"
+                    [ngStyle]="{'background-color': coloresPostIt.ORANGE}"
+                    [ngClass]="{'active': coloresPostIt.ORANGE == notaCaso.colorNota}"
+                    class="popst-it-orange flex align-items-center justify-content-center w-2rem h-2rem border-round-lg cursor-pointer">
+                    @if (coloresPostIt.ORANGE == f.colorNota) {
+                      <i class="pi pi-check" style="font-size: 1.2rem; font-weight: bold; color: black;" ></i>
+                    }
+                </a>
+                <a (click)="activeColor($event, coloresPostIt.YELLOW)"
+                    [ngStyle]="{'background-color': coloresPostIt.YELLOW}"
+                    [ngClass]="{'active': coloresPostIt.YELLOW == notaCaso.colorNota}"
+                    class="popst-it-yellow flex align-items-center justify-content-center w-2rem h-2rem border-round-lg cursor-pointer">
+                    @if (coloresPostIt.YELLOW == f.colorNota) {
+                      <i class="pi pi-check" style="font-size: 1.2rem; font-weight: bold; color: black;"></i>
+                    }
+                </a>
+            </div>
+        </div>
+        <div class="field">
+            <div class="py-2"><strong>Contenido del posit</strong></div>
+            <textarea required="required" (input)="countWords()" rows="5" cols="30" pInputTextarea class="p-inputtext p-inputtextarea p-component w-full"
+                [maxlength]="maxLength" formControlName="textoNota"></textarea>
+
+            <div class="py-2 text-right text-600	">Quedan {{ maxLength- wordCount }} caracteres</div>
+        </div>
+        <div class="field">
+            <div class="flex justify-content-end flex-wrap gap-3">
+              <button class="cfe-boton-secondary cfe-boton-m mr-3 boton-w" (click)="close()" >
+                Cancelar
+              </button>
+              <button class="cfe-boton-primary cfe-boton-m mr-2 boton-w" [disabled]="!this.form.valid" (click)="save()">
+                Guardar
+              </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

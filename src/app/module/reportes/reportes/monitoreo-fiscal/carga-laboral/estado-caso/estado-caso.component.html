@@ -1,0 +1,27 @@
+<div class="grid">
+  <div class="col-6">
+    <p-card>
+      <div class="mb-4 font-semibold text-base">En trámite</div>
+      <div class="flex flex-column gap-3">
+        <div *ngFor="let estado of estadosEnTramite"
+             class="flex justify-content-between align-items-center py-2 border-bottom-1 border-gray-200">
+          <span class="text-gray-600 text-sm mr-2">{{estado.etapa}}</span>
+          <span class="font-medium text-base">{{estado.cantidad}}</span>
+        </div>
+      </div>
+    </p-card>
+  </div>
+
+  <div class="col-6">
+    <p-card>
+      <div class="mb-4 font-semibold text-base">Resuelto</div>
+      <div class="flex flex-column gap-3">
+        <div *ngFor="let estado of estadosResueltos"
+             class="flex justify-content-between align-items-center py-2 border-bottom-1 border-gray-200">
+          <span class="text-gray-600 text-sm mr-2">{{estado.etapa}}</span>
+          <span class="font-medium text-base">{{estado.cantidad}}</span>
+        </div>
+      </div>
+    </p-card>
+  </div>
+</div>

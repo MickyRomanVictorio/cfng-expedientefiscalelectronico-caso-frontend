@@ -1,0 +1,18 @@
+export interface DerivacionInformacion {
+    etapa?: string,
+    idActoTramiteCaso?: string,
+    idTipoDerivacion?: number,
+    idTipoEspecialidad: number,
+    idEspecialidad: string,
+    esDerivacionDespachoEspecifico: string,
+    idUbigeo?: number,
+    idDistritoFiscalOrigen?: number,
+    idDistritoFiscalDestino?: number,
+    codigoFiscaliaOrigen?: string,
+    codigoFiscaliaDestino: string | null,
+    codigoDespachoOrigen?: string,
+    codigoDespachoDestino: string,
+    esDerivacionParaAcumulacion: string,
+    numeroCasoAlQueSeVaAcumular: string | null,
+    formularioIncompleto: string,
+}

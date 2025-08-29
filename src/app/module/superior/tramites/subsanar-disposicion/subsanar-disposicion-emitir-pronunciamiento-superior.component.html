@@ -1,0 +1,88 @@
+<div class="py-2">
+
+  <app-alertas-tramite [alertas]="alertas" [idCaso]="idCaso" urlClass="cfe-url cfe-url-black"></app-alertas-tramite>
+
+  @if (alertas.length === 0) {
+    <form [formGroup]="formularioPronunciamiento">
+    <div class="grid">
+
+      <div class="col-12 md:col-6">
+          <label for="tipoResultado" class="font-semibold">Resultado</label>
+          <p-dropdown
+              id="tipoResultado"
+              styleClass="py-1 p-inputtext-lg"
+              [options]="tipoResultado"
+              optionValue="id"
+              optionLabel="noDescripcion"
+              emptyMessage="Sin resultados"
+              placeholder="Seleccione un tipo de resultado"
+              formControlName="tipoResultado"
+              (onChange)="eventoSeleccionarResultado($event)"
+              >
+          </p-dropdown>
+      </div>
+
+      <div class="col-12 md:col-6">
+        <label for="descripcion" class="font-semibold mb-2">¿Se excluye al fiscal?</label>
+        <div class="field-checkbox mt-3">
+            <p-checkbox
+              id="descripcion"
+              formControlName="excluirFiscal"
+              [binary]="true"
+              inputId="binary"
+              label="Excluir fiscal"
+            ></p-checkbox>
+        </div>
+      </div>
+    </div>
+  </form>
+  }
+</div>
+
+
+@if(idJerarquia == 1 && pdfUrlTramite!==null) {
+  <iframe
+    title="Documento Trámite"
+    [src]="pdfUrlTramite"
+    width="100%"
+    style="height: 500px"
+  ></iframe>
+
+  @if(idJerarquia === 1 && !ocultarBotones){
+    <div class="text-right pt-3">
+      <button
+        type="button"
+        class="cfe-boton-secondary cfe-boton-m inline"
+        (click)="eventoObservarTramite()"
+      >
+        Observar Trámite
+      </button>
+      <button
+        type="button"
+        class="cfe-boton-primary cfe-boton-m inline ml-2"
+        (click)="eventoRecibirTramite()"
+      >
+        Recibir Trámite
+      </button>
+    </div>
+  }
+
+  @if(verFormularioObservar()===true){
+    <hr>
+    <app-observar
+      [esModal]="false"
+      [datosPronunciamiento]="datosPronunciamiento"
+      [esSoloLectura]="false"
+      (cerrar)="eventoObservarCancelar()"
+      (observar)="eventoObservarEnviar($event)"
+    ></app-observar>
+  }
+
+}
+@if(idJerarquia === 2 && observacionProvincial && observacionProvincial.length > 0){
+  <button type="button" class="cfe-boton-secondary cfe-boton-m inline" (click)="eventoObservarTramite(true)">
+    Ver Observación Provincial
+  </button>
+}
+
+<div #scrollInferior></div>

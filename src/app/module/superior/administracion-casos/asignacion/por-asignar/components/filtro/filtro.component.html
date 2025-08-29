@@ -1,0 +1,136 @@
+<form [formGroup]="fmrBuscar">
+  <!--Ini - texto del buscador -->
+  <div class="grid mt-1">
+    <div class="col">
+      <div class="field mb-0">
+        <label for="buscar" class="font-semibold">Buscar</label>
+        <input pInputText type="text" class="p-inputtext-lg py-3 text-lg w-full"
+          placeholder="Ingrese algún texto para buscar, por ejemplo el número de caso, nombre de las partes, etc"
+          formControlName="buscar" id="buscar" name="buscar" (keyup)="eventoBuscarSegunTexto()" autocomplete="off" />
+      </div>
+    </div>
+    <div class="col-fixed" style="width: 70px;" [ngClass]="{'cfe-filtro-boton-fondo': esVisibleFiltros}">
+      <div class="field mb-0 mt-5">
+        <button type="button" class="cfe-filtro-boton" (click)="eventoMostrarOcultarFiltros()">
+          <fn-icon [ico]="iconUtil.obtenerIcono('iFilterShow')" height="2.1rem"></fn-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <!--Fin - texto del buscador -->
+
+  <!--Ini - filtro de tiempo -->
+  @if (!esVisibleFiltros) {
+  <div class="mt-3 mb-4">
+
+    <div class="flex flex-wrap gap-3">
+
+      <div class="flex align-items-center">
+        <p-radioButton value="1" formControlName="periodoFecha" (onClick)="eventoCambiarFiltroTiempo($event.value)"
+          inputId="ultimoSeisMeses"></p-radioButton>
+        <label for="ultimoSeisMeses" class="ml-2">Últimos 6 meses</label>
+      </div>
+
+      <div class="flex align-items-center">
+        <p-radioButton value="2" formControlName="periodoFecha" (onClick)="eventoCambiarFiltroTiempo($event.value)"
+          inputId="todosLosMeses"></p-radioButton>
+        <label for="todosLosMeses" class="ml-2">Todos los meses</label>
+      </div>
+
+    </div>
+
+  </div>
+  }
+  <!--Fin - filtro de tiempo -->
+
+
+  <!--Ini - Formulario de Filtros Avanzados -->
+  @if (esVisibleFiltros) {
+
+  <div class="cfe-filtros p-0">
+    <div class="cfe-filtros-fondo block pb-2 px-3 pt-4">
+
+      <!-- Ini - filtros -->
+      <div class="grid">
+        <div class="field col-12">
+
+          <div class="flex align-items-center flex-wrap gap-3">
+
+            <div class="flex align-items-center">
+              <p-radioButton value="1" formControlName="tipoFecha" name="tipoFecha" inputId="tipoFechaElevacion"></p-radioButton>
+              <label for="tipoFechaElevacion" class="ml-2 font-semibold">Fecha de elevación</label>
+            </div>
+
+            <div class="flex align-items-center">
+              <p-radioButton value="2" formControlName="tipoFecha" name="tipoFecha" inputId="tipoFechaAceptada"></p-radioButton>
+              <label for="tipoFechaAceptada" class="ml-2 font-semibold">Fecha aceptada</label>
+            </div>
+
+            <div class="flex align-items-center">
+              <p-radioButton value="3" formControlName="tipoFecha" name="tipoFecha" inputId="tipoFechaUltAudiencia"></p-radioButton>
+              <label for="tipoFechaUltAudiencia" class="ml-2 font-semibold">Fecha última audiencia</label>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="col-12 lg:col-3">
+          <label class="font-semibold mb-0 " for="fechaDesde">Fecha</label>
+          <p-calendar dateMask class="p-inputtext-lg cfe-calendar h-56" [showIcon]="true" icon="cfe-calendar-icon"
+            placeholder="dd/mm/aaaa" dateFormat="dd/mm/yy" formControlName="fechaDesde"
+            inputId="fechaDesde"></p-calendar>
+        </div>
+        <div class="col-12 lg:col-3">
+          <label class="font-semibold mb-0 pr-1" for="fechaHasta"></label>
+          <p-calendar dateMask class="p-inputtext-lg cfe-calendar h-56" [showIcon]="true" icon="cfe-calendar-icon"
+            placeholder="dd/mm/aaaa" dateFormat="dd/mm/yy" formControlName="fechaHasta" inputId="fechaHasta"></p-calendar>
+        </div>
+        <div class="col-12 lg:col-3">
+          <label class="mb-0 font-semibold" for="tipoElevacion">Tipo de Elevación</label>
+          <p-dropdown formControlName="tipoElevacion" styleClass="py-1 p-inputtext-lg" placeholder="Seleccione"
+                      [options]="tipoElevacion" optionLabel="label" optionValue="value"></p-dropdown>
+        </div>
+      </div>
+
+      <div class="field grid">
+        <div class="col-12 lg:col-6">
+          <label class="font-semibold mb-0" for="idEntidad">Fiscalía</label>
+          <p-dropdown formControlName="idEntidad" styleClass="py-1 p-inputtext-lg" [options]="fiscaliasPronvinciales"
+            optionLabel="label" optionValue="value" emptyMessage="Sin resultados" placeholder="Todos"
+            (onChange)="eventoCambiarFiscaliaProvincial($event)"
+            [showClear]="true"></p-dropdown>
+        </div>
+        <div class="col-12 lg:col-4">
+          <label class="font-semibold mb-0" for="idDespacho">Despacho</label>
+          <p-dropdown formControlName="idDespacho" styleClass="py-1 p-inputtext-lg" [options]="despachos" optionLabel="label"
+            optionValue="value" emptyMessage="Sin resultados" placeholder="Todos" [showClear]="true"></p-dropdown>
+        </div>
+        <div class="col-12 lg:col-2">
+          <label class="font-semibold mb-0" for="idPlazo">Plazos</label>
+          <p-dropdown formControlName="idPlazo" styleClass="py-1 p-inputtext-lg"
+            [options]="plazos" optionLabel="label"
+            optionValue="value" emptyMessage="Sin resultados" placeholder="Todos" [showClear]="true"></p-dropdown>
+        </div>
+      </div>
+      <!-- Fin - filtros -->
+
+
+      <!-- Ini - Botones de Acciones -->
+      <div class="flex align-items-center justify-content-end pb-2 pt-2">
+        <button type="button" class="cfe-boton-secondary cfe-boton-m mr-3 boton-w" (click)="eventoLimpiar()">
+          Limpiar filtros
+        </button>
+        <button type="button" class="cfe-boton-primary cfe-boton-m mr-2 boton-w" (click)="eventoBuscar()">
+          Buscar
+        </button>
+      </div>
+      <!-- Fin - Botones de Acciones -->
+
+    </div>
+  </div>
+  }
+  <!--Fin - Formulario de Filtros Avanzados -->
+</form>

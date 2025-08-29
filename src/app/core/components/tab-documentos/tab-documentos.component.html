@@ -1,0 +1,58 @@
+<p-tabView (onChange)="cambiarTab($event)" class="cfe-tabs-view-anidado">
+  @if(tipoOrigen !== 5){
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <span>Cargo</span>
+      </ng-template>
+    </p-tabPanel>
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <span>Documento</span>
+      </ng-template>
+    </p-tabPanel>
+  }@else{
+    @if (idDocumentos.length === 1) {
+      <p-tabPanel>
+        <ng-template pTemplate="header">
+          <span>Acta de Audiencia</span>
+        </ng-template>
+      </p-tabPanel>
+    }@else {
+      <p-tabPanel>
+        <ng-template pTemplate="header">
+          <span>Cargo</span>
+        </ng-template>
+      </p-tabPanel>
+      <p-tabPanel>
+        <ng-template pTemplate="header">
+          <span>Documento</span>
+        </ng-template>
+      </p-tabPanel>
+      <p-tabPanel>
+        <ng-template pTemplate="header">
+          <span>Acta de Audiencia</span>
+        </ng-template>
+      </p-tabPanel>
+    }
+  }
+ 
+</p-tabView>
+<div *ngIf="base64PdfFile" class="col-12">
+  <ngx-extended-pdf-viewer
+    class="pdf-viewer11"
+    [base64Src]="base64PdfFile"
+    [showToolbar]="true"
+    [showPresentationModeButton]="false"
+    [showDownloadButton]="false"
+    [showSecondaryToolbarButton]="false"
+    [showTextEditor]="false"
+    [showDrawEditor]="false"
+    [showOpenFileButton]="false"
+    [showStampEditor]="false"
+    [showUnverifiedSignatures]="true"
+    (pageRendered)="onPageRendered()"
+    [height]="'100vh'"
+    [id]="'pdf-viewer-2'"
+  >
+  </ngx-extended-pdf-viewer>
+</div>

@@ -1,0 +1,5 @@
+export enum ID_N_RSP_APELACION {
+    CONSENTIDO = 1061,
+    CONCEDE = 1062,
+    DENIEGA = 1024,
+  }

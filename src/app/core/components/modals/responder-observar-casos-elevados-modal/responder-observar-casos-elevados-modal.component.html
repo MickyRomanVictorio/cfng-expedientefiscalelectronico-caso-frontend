@@ -1,0 +1,43 @@
+<div class="p-5 relative modal-width">
+    <div class="flex align-items-end justify-content-end">
+        <p-button (click)="close()" icon="pi pi-times"
+            styleClass="p-button-rounded text-color p-button-text"></p-button>
+    </div>
+    <div class="grid">
+        <div class="col-12 text-2xl font-semibold text-primary">
+            OBSERVAR CASO
+        </div>
+        <div class="col-12 text-xl mb-2">
+            <span [innerHTML]="codigoCaso(registroElevacion.codCaso)"></span>
+        </div>
+        <hr class="col-12 p-0">
+        <h3 class="col-12 p-0 font-bold">INFORMACIÓN DEL CASO</h3>
+
+        <p class="col-12 p-0 " for="">Fiscal a cargo</p>
+        <p class="col-12 p-0 font-bold" for="">{{registroElevacion.fiscalAsignado}}</p>
+
+        <p class="col-12 p-0 " for="">Delitos</p>
+        <p class="col-12 p-0 font-bold" for="">{{registroElevacion.delitos}}</p>
+
+        <hr class="col-12 p-0">
+
+        <h3 class="col-12 p-0 font-bold">DETALLES DE LA OBSERVACION</h3>
+        <p class="col-12 p-0 font-bold">Ingrese los detalles de la observación para realizar la devolución del
+            caso</p>
+
+        <textarea required="required" class="col-12 p-0" rows="5" pInputTextarea class="w-full"
+            [(ngModel)]="observacion"></textarea>
+      <div class="col-12 flex align-items-center justify-content-center mt-2 mb-2">
+        <button class="cfe-boton-opcion cfe-boton-secondary cfe-boton-lg font-semibold with-button"
+                (click)="close()">
+          Cancelar
+        </button>
+        <button class="ml-3 cfe-boton-primary cfe-boton-lg font-semibold with-button"
+                label="Observar" [disabled]="!isFormValid"
+                (click)="confirm()">
+          Observar
+        </button>
+      </div>
+
+    </div>
+</div>

@@ -1,0 +1,38 @@
+.ui-fileupload-droppable {
+  border: 2px dashed #cccccc;
+  border-radius: 4px;
+  padding: 1.5rem;
+  text-align: center;
+  color: #3f9fd6;
+  background-color: #f4f4f4;
+  cursor: pointer;
+}
+
+link {
+  color: var(--mpfn-lightblue);
+}
+
+.custom-file-upload-container{
+  padding-top: 10px;
+}
+
+.border-dark {
+  color: #b9b9b9;
+}
+
+.cfe-contenedor-recurso {
+  width: 80px;
+  max-height: 95px;
+  min-height: 95px;
+  object-fit: cover;
+}
+
+.cfe-boton-descargar-recurso {
+  top: 0px !important;
+  right: 34px;
+  position: absolute !important;
+  cursor: pointer;
+  display: inline-flex;
+  min-width: auto !important;
+  transform: scale(0.75);
+}

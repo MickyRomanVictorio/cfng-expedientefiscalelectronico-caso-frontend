@@ -1,0 +1,19 @@
+<div class="acuerdo-reparatorio">
+  <div class="modal__header">
+    <div class="modal_header__content">
+      <div [innerHTML]="titulo" class="cfe-titulo-1"></div>
+    </div>
+    <div class="flex align-items-center justify-content-center mr-3">
+      <p-button onKeyPress (click)="dialogRef.close()" icon="pi pi-times"
+        styleClass="p-button-rounded text-color p-button-text"></p-button>
+    </div>
+  </div>
+
+  <div class="p-grid">
+    <app-registrar-reparacion-civil [data]="data" 
+      [salidaAlterna]="true"
+      [modoLectura]="modoLectura"
+      [tipoAcuerdoActa]="tipo"
+      />
+  </div>
+</div>

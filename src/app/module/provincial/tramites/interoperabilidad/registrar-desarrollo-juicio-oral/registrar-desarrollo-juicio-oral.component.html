@@ -1,0 +1,307 @@
+@if(tramiteNoDespachadoMesa){
+<mensaje-interoperabilidad-pj />
+} @else{ @if(!this.tramiteEstadoRecibido){ @if ((formRegistro.invalid)) {
+<mensaje-completar-informacion [titulo]="nombreTramite()" />
+}}
+<div class="registrar_desarrollo_juicio_oral__container mt-3">
+  <form [formGroup]="formRegistro">
+    <div class="col-12">
+      <div class="grid">
+        <div class="col-12 md:col-5">
+          <div class="field mb-0">
+            <label for="fechaInicio" class="p-label-bottom font-semibold"
+              >Fecha inicio</label
+            >
+            <p-calendar
+              formControlName="fechaInicio"
+              dateMask
+              [withDateTime]="true"
+              dateFormat="dd/mm/yy"
+              hourFormat="24"
+              class="p-inputtext-lg cfe-calendar h-42"
+              [showIcon]="true"
+              icon="cfe-calendar-icon"
+              placeholder="DD/MM/AAAA HH:MM"
+              [showTime]="true"
+              [minDate]="fechaActual"
+              (onInput)="cambiarFechaInicio()"
+              (onSelect)="cambiarFechaInicio()"
+            >
+            </p-calendar>
+          </div>
+        </div>
+        <div class="col-12 md:col-5">
+          <div class="field mb-0">
+            <label for="fechaFin" class="p-label-bottom font-semibold"
+              >Fecha fin</label
+            >
+            <p-calendar
+              formControlName="fechaFin"
+              dateMask
+              [withDateTime]="true"
+              dateFormat="dd/mm/yy"
+              hourFormat="24"
+              class="p-inputtext-lg cfe-calendar h-42"
+              [showIcon]="true"
+              icon="cfe-calendar-icon"
+              placeholder="DD/MM/AAAA HH:MM"
+              [showTime]="true"
+              [minDate]="fechaMinfinSesion"
+            >
+            </p-calendar>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 md:col-6 flex justify-content-start align-items-center">
+      <div class="flex gap-3">
+        <div class="flex align-items-center">
+          <p-radioButton
+            formControlName="tipoCitacion"
+            [value]="DESARROLLO_JUICIO_ORAL.CITACION_VIRTUAL"
+            (onClick)="cambiarTipoCitacion($event)"
+            id="virtual"
+          ></p-radioButton>
+          <label for="virtual" class="ml-2">Reunión Virtual</label>
+        </div>
+        <div class="flex align-items-center">
+          <p-radioButton
+            formControlName="tipoCitacion"
+            [value]="DESARROLLO_JUICIO_ORAL.CITACION_PRESENCIAL"
+            (onClick)="cambiarTipoCitacion($event)"
+            id="presencial"
+          ></p-radioButton>
+          <label for="presencial" class="ml-2">Reunión Presencial</label>
+        </div>
+      </div>
+    </div>
+    @if(formRegistro.get('tipoCitacion')?.value ===
+    DESARROLLO_JUICIO_ORAL.CITACION_VIRTUAL){
+    <div class="col-12">
+      <div class="grid">
+        <div class="col-12 md:col-12">
+          <label for="fechaNotificacion" class="p-label-bottom font-semibold"
+            >URL Reunión</label
+          >
+          <input
+            pInputText
+            type="text"
+            class="p-inputtext-m py-3 text-lg w-full"
+            placeholder="Ingrese URL de reunión"
+            formControlName="urlReunion"
+            [maxlength]="100"
+          />
+        </div>
+      </div>
+    </div>
+    }
+    <div class="col-12 mt-1">
+      <div class="grid">
+        <div class="col-12 md:col-6">
+          <div class="field mb-0">
+            <label for="distritoJudicial" class="p-label-bottom font-semibold"
+              >Distrito Judicial</label
+            >
+            <p-dropdown
+              id="distritoJudicial"
+              formControlName="distritoJudicial"
+              styleClass="p-inputtext-lg"
+              [options]="listaDistritoJudicial"
+              placeholder="Seleccione el distrito judicial"
+              optionLabel="nombre"
+              optionValue="id"
+              emptyMessage="No se encontraron resultados"
+              (onChange)="listarJuzgados($event.value)"
+            >
+            </p-dropdown>
+          </div>
+        </div>
+        <div class="col-12 md:col-6">
+          <div class="field mb-0">
+            <label for="juzgado" class="p-label-bottom font-semibold"
+              >Juzgado</label
+            >
+            <p-dropdown
+              id="juzgado"
+              formControlName="juzgado"
+              styleClass="p-inputtext-lg"
+              [options]="listaJuzgado"
+              placeholder="Seleccione el juzgado"
+              optionLabel="descEntidad"
+              optionValue="codEntidad"
+              emptyMessage="No se encontraron resultados"
+            >
+            </p-dropdown>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 md:col-12">
+      <div class="field mb-0">
+        <label for="actuaciones" class="p-label-bottom font-semibold"
+          >Actuaciones</label
+        >
+        <p-multiSelect
+          id="actuaciones"
+          formControlName="actuaciones"
+          styleClass="p-inputtext-lg w-full py-1"
+          [options]="listaActuaciones"
+          placeholder="Seleccione la actuación"
+          optionLabel="nombre"
+          optionValue="id"
+          [maxSelectedLabels]="7"
+          selectedItemsLabel="{0} actuaciones seleccionadas"
+          emptyMessage="No se encontraron resultados"
+          [filter]="true"
+          emptyFilterMessage="No se encontraron resultados"
+          [showToggleAll]="false"
+        >
+        </p-multiSelect>
+      </div>
+    </div>
+
+    @if(mostrarBotonesDelitosHechos()){
+    <div class="botones-grid">
+      <div class="label">
+        @if(esActuacion(DESARROLLO_JUICIO_ORAL.ACUSACION_COMPLEMENTARIA)){
+        -Acusación complementaria<br />
+        } @if(esActuacion(DESARROLLO_JUICIO_ORAL.DESVINCULACION_JURIDICA)){
+        -Desvinculación jurídica }
+      </div>
+      <div class="acciones">
+        <div class="accion">
+          <p-button
+            onKeyPress
+            styleClass="p-button-lg cfe-boton-primary"
+            (click)="abrirModalDelitosyPartes()"
+          >
+            <span class="ml-5 mr-5">Ver delitos y partes</span>
+          </p-button>
+        </div>
+        @if(esActuacion(DESARROLLO_JUICIO_ORAL.ACUSACION_COMPLEMENTARIA)){
+        <div class="accion">
+          <p-button
+            onKeyPress
+            (click)="abrirModalHechosCaso()"
+            styleClass="p-button-lg cfe-boton-primary"
+          >
+            <span class="ml-5 mr-5">Ver hechos</span>
+          </p-button>
+        </div>
+        }
+      </div>
+    </div>
+    }
+    <div class="grid mt-3">
+      <div class="col-5">
+        <button
+          type="button"
+          (click)="abrirModalVideosAudiencia()"
+          class="cfe-boton-secondary cfe-boton-lg w-full"
+          icon="pi pi-upload"
+        >
+          <span class="ml-1">Audios de audiencia</span>
+        </button>
+      </div>
+      <div class="col-1 flex align-content-center flex-wrap">
+        @if(audiosAudienciaCorrectos){
+        <div class="flex align-items-center justify-content-center">
+          <img
+            [src]="icono('check-circle')"
+            alt="validado"
+            class="icono-validacion"
+          />
+        </div>
+        }
+      </div>
+      <div class="col-5">
+        <button
+          [disabled]="ocultarBotonGestionVideos"
+          type="button"
+          class="cfe-boton-secondary cfe-boton-lg w-full"
+          icon="pi pi-upload"
+        >
+          <span class="ml-1">Videos de audiencia</span>
+        </button>
+      </div>
+      @if(!ocultarBotonGestionVideos){
+      <div class="col-1 flex align-content-center flex-wrap">
+        <div class="flex align-items-center justify-content-center">
+          <img
+            [src]="icono('check-circle')"
+            alt="validado"
+            class="icono-validacion"
+          />
+        </div>
+      </div>
+      }
+    </div>
+    <div class="grid mt-1">
+      <div class="col-12 md:col-12">
+        <div class="w-full pb-1">
+          <label for="observaciones" class="p-label-bottom font-semibold"
+            >Observaciones (opcional)</label
+          >
+        </div>
+        <div class="w-full">
+          <textarea
+            formControlName="observaciones"
+            pInputTextarea
+            id="observaciones"
+            class="w-full p-inputtextarea p-inputtext p-component p-element"
+            rows="6"
+            [maxlength]="longitudMaximaObservaciones"
+          ></textarea>
+          <contador-footer-textarea
+            [textarea]="formRegistro.get('observaciones')"
+            [size]="longitudMaximaObservaciones"
+          ></contador-footer-textarea>
+        </div>
+      </div>
+    </div>
+    @if ( !tramiteEstadoRecibido ) {
+    <div class="flex flex-column sm:flex-row justify-content-between mt-4">
+      <a class="cfe-enlace" (click)="otroTramite()">
+        ¿Este documento no pertenece a este trámite?</a
+      >
+      <p-button
+        onKeyPress
+        [disabled]="formRegistro.invalid"
+        type="submit"
+        (click)="guardarTramite()"
+        styleClass="p-button-lg cfe-boton-primary text-white family-poppin-bold btn-adjust-filter w-column-full"
+      >
+        <span class="ml-4 mr-4">Guardar</span>
+      </p-button>
+    </div>
+    }
+  </form>
+</div>
+<p-dialog
+  [(visible)]="mostrarModalHechosCasos"
+  [modal]="true"
+  [showHeader]="false"
+  [closable]="false"
+  [dismissableMask]="true"
+  styleClass="reparacion-civil-dialog"
+>
+  <app-encabezado-modal
+    titulo="Hecho del caso"
+    [numeroCaso]="numeroCaso"
+    [tituloSinEtiquetaCaso]="true"
+    [sinReferencia]="true"
+    [alCerrarModal]="cerrarModalHechosCaso"
+    tituloSize="1.3rem"
+  />
+  <ng-template pTemplate="content">
+    @if ( mostrarModalHechosCasos ) {
+    <ng-container>
+      <div class="dialog-content">
+        <app-hechos-caso [tipo]="'V'" [idCaso]="idCaso" />
+      </div>
+    </ng-container>
+    }
+  </ng-template>
+</p-dialog>
+
+}

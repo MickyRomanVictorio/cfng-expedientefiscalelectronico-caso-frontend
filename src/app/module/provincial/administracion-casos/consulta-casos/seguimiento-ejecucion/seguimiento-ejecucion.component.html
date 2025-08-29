@@ -1,0 +1,40 @@
+<div class="cfe-container">
+  <div class="cfe_bandeja__header">
+    <div class="cfe_bandeja_header__content">
+      <fn-icon
+        [ico]="iconUtil.obtenerIcono('iFolderSearch')"
+        height="1.6rem"
+      ></fn-icon>
+      <h3 class="cfe-titulo-1">Seguimiento de ejecución</h3>
+      <fn-icon
+        class="cursor-pointer"
+        onKeyPress
+        [ico]="iconUtil.obtenerIcono('iTooltip')"
+        height="1.6rem"
+        (click)="overlay.toggle($event)"
+      ></fn-icon>
+      <p-overlayPanel #overlay>
+        <div class="overlay-content">
+          <div class="overlay-close-button">
+            <fn-icon
+              onKeyPress
+              [ico]="iconUtil.obtenerIcono('iClose')"
+              height="1.6rem"
+              (click)="overlay.hide()"
+            ></fn-icon>
+          </div>
+
+          <p class="overlay-title"><strong>Lista los cuadernos de ejecución creados de los siguientes tipos</strong></p>
+          <ul class="overlay-list">
+            <li><strong>AUTO:</strong> las medidas de coerción personal</li>
+            <li>
+              <strong>SENTENCIA:</strong> Condenatoria, absolutoria con
+              reparación civil y reparación civil exclusiva
+            </li>
+          </ul>
+        </div>
+      </p-overlayPanel>
+    </div>
+  </div>
+  <lista-cuaderno-ejecucion></lista-cuaderno-ejecucion>
+</div>

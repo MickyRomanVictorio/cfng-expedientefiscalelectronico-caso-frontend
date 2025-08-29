@@ -1,0 +1,35 @@
+
+$boton-cerrar-width: 50px;
+
+.casos-ampliacion-container {
+    background: $white;
+    border-radius: 4px;
+    padding: 16px;
+    width: 98%;
+}
+.encabezado-modal{
+    width: 100%;
+    position: relative;
+    margin-bottom: 10px;
+    .encabezado-titulo{
+        width: calc(100% - $boton-cerrar-width);
+        display: inline-block;
+        margin: 0;
+    }
+    .encabezado-cerrar{
+        position: absolute;
+        right: -8px;
+        top: 0;
+        cursor: pointer;
+    }
+}
+
+:host ::ng-deep .p-message.p-message-warn .p-message-icon {
+    color: $secondary;
+}
+:host ::ng-deep  .p-message .p-message-wrapper {
+    span > span {
+        color: $secondary;
+        font-weight: bold;
+    }
+}

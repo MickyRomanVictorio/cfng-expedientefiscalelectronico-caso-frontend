@@ -1,0 +1,17 @@
+<div class="field col-12 lg:col-6">
+  <div class="formgrid grid">
+    <div class="field col-11">
+      <button class="cfe-boton-primary cfe-boton-lg w-full" (click)="abrirModalPlazos()"
+        [disabled]="bloquearFormulario">
+        <span class="family-poppin-bold">Declarar complejo</span>
+      </button>
+    </div>
+    @if ( seRegistraronPlazos ) {
+    <div class="field col-1">
+      <div class="mt-1">
+        <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+      </div>
+    </div>
+    }
+  </div>
+</div>

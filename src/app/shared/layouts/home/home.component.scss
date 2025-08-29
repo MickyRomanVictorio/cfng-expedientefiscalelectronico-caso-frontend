@@ -1,0 +1,15 @@
+.espacio-sidebar{
+  transition: 300ms all ease;
+  max-width: 0;
+}
+.espacio-sideba--ancho{
+  max-width:  var(--sidebar-width);
+}
+.contenido{
+  /*width: 100%;
+  max-width: calc(100% - var(--sidebar-width));
+  margin-left: auto;*/
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}

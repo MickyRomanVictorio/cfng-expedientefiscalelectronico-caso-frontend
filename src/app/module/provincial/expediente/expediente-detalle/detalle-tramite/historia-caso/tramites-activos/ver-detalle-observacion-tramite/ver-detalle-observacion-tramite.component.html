@@ -1,0 +1,25 @@
+<div class="p-5 modal-observacion">
+
+    <app-encabezado-modal
+        [titulo]="titulo"
+        [referenciaModal]="referenciaModal"
+        [numeroCaso]="numeroCaso"
+        tituloSize="1.2em"
+    />
+
+    <div class="col-12">
+        <label class="cfe-bold">{{ etiquetaDetalle }}:</label>
+        <p>{{ detalle }}</p>
+    </div>
+
+    <div class="col-12">
+        <label class="cfe-bold">{{ etiquetaFecha }}:</label>
+        <p>{{ dateUtil.formatearFechaHoraAbreviada(fecha) }}</p>
+    </div>
+
+    <div class="col-12">
+        <label class="cfe-bold">Usuario:</label>
+        <p>{{ usuario }}</p>
+    </div>
+
+</div>

@@ -1,0 +1,50 @@
+<div class="detalle-firma-container">
+  <div class="encabezado-modal flex justify-content-between">
+    <h3
+      class="encabezado-titulo cfe-subtitulo-3 cfe-semi-bold"
+      [innerHTML]="tituloModal"
+    ></h3>
+
+    <fn-icon
+      class="encabezado-cerrar"
+      [ico]="obtenerIcono('iClose')"
+      height="2rem"
+      (click)="cerrarModal()"
+    ></fn-icon>
+  </div>
+
+  <p-table
+    [value]="detalles"
+    dataKey="orden"
+    [tableStyle]="{ 'min-width': '60rem' }"
+  >
+    <ng-template pTemplate="body" let-detalle let-expanded="expanded">
+      <tr>
+        <td style="width: 2em">
+          <a href="#" [pRowToggler]="detalle">
+            <i
+              [ngClass]="
+                expanded
+                  ? 'pi pi-fw pi-chevron-down'
+                  : 'pi pi-fw pi-chevron-right'
+              "
+            >
+            </i>
+          </a>
+        </td>
+        <td>
+          <img [src]="iconSvg('detalle_firma')" alt="" />
+          Rev.{{ detalle.orden }}: Firmado por
+          {{ detalle.nombreCompletoFirmante }} <{{ detalle.correoFirmante }}> -
+          {{ detalle.tipoAccionFirma }}
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="rowexpansion" let-detalle>
+      <tr>
+        <td></td>
+        <td [innerHTML]="obtenerDetalleHtml(detalle)"></td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

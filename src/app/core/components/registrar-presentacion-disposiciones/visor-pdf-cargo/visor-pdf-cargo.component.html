@@ -1,0 +1,38 @@
+<div class="col-12 pd-10"></div>
+<div class="pdf-container-frame">
+  <div class="visor-background-cargo">
+    <iframe *ngIf="documentoAdjunto.urlPdf" [src]="documentoAdjunto.urlPdf" class="frame" type='application/pdf'
+            title="Pdf reader"></iframe>
+  </div>
+  <div class="overlay-div-frame flex justify-content-center align-items-center">
+    <div *ngIf="documentoAdjunto.urlPdf" class="flex align-items-center typ-5">
+      @if( !soloVistaPrevia ) {
+        <div class="elemento elemento1">
+          <img [src]="pdfIcon" height="30px" alt="pdf icono" >
+        </div>
+      }
+      <div class="elemento">
+        {{ documentoAdjunto.preNamePdf }} {{ !soloVistaPrevia ? documentoAdjunto.namePdf : ''}}
+      </div>
+      <div *ngIf="documentoAdjunto.fromServer" class="elemento elemento3 flex cursor-pointer" (click)="descargarArchivo()" onKeyPress="">
+        <fn-icon class="cursor-pointer" [ico]="obtenerIcono('iDownload')" height="1.8rem"/>
+        <span class="ml-1">Descargar</span>
+      </div>
+    </div>
+
+    <div *ngIf="!documentoAdjunto.urlPdf">
+      {{ documentoAdjunto.preNamePdf }}
+    </div>
+
+    <div *ngIf="documentoAdjunto.isSign" class="typ-5 text-center" [ngClass]="{'d-none': closable}">
+      <div class="flex justify-content-center ">
+        <div class="flex badge-firma badge-firma-ok align-items-center ">
+          <fn-icon class="badge-firma-ok mr-1" [ico]="obtenerIcono('iCheckCircle')"  />
+          <span class="text-black-alpha-70"> Se realizó la firma digital y se guardó exitosamente </span>
+          <fn-icon class="cursor-pointer ml-2 text-black-alpha-70" [ico]="obtenerIcono('iClose')" (click)="closable = true" onKeyPress=""/>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

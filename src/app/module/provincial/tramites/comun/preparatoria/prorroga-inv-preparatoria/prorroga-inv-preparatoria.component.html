@@ -1,0 +1,29 @@
+<div class="grid mt-1">
+  <div class="w-full">
+    <app-asociar-sujetos-delitos 
+      [idActoTramiteCaso]="idActoTramiteCaso"
+      [etapa]="etapa"
+      (seHanRegistradoAsociaciones)="establecerSiSeHanRegistradoAsociaciones($event)"
+      [modoLectura]="bloquearFormulario"
+    />
+  </div>
+  <div class="w-full">
+    <div class="col-12 md:col-4 relative">
+      <button
+        class="cfe-boton-primary cfe-boton-lg w-full"
+        (click)="abrirModalProrrogaInvPreparatoria()"
+      >
+        <span class="family-poppin-bold">Ampliar Plazo</span>
+      </button>
+      @if ( seRegistraronPlazos ) {
+        <div class="icono-guardado">
+            <img
+                [src]="iconAsset.obtenerRutaIcono('check-circle')"
+                alt="guardado"
+                class="pr-2 h-2rem"
+            >
+        </div>
+      }
+  </div>
+
+</div>

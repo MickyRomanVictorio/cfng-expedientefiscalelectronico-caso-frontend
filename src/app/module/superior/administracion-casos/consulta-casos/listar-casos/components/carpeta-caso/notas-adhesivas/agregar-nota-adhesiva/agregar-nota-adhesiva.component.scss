@@ -1,0 +1,60 @@
+
+$background-colors: 06A77D, F19700;
+
+.color-options {
+
+    
+    
+    a {
+        padding: 0.5rem;
+        width: 25px;
+        height: 25px;
+        cursor: pointer;
+        font-weight: bold;
+        display: block;
+        border-radius: 5px;
+        &:hover {
+            opacity: .8;
+        }
+    }
+    i {
+        display: none;
+    }
+
+    .active, .active-default {
+        
+        i {
+            display: block;
+            color: white;
+        }
+    }
+
+
+
+    
+
+    .popst-it-green {
+        background-color: #9BDCCB !important;
+        color: white;
+        font-weight: bold !important;
+
+    }
+    .popst-it-orange {
+        background-color: #FFBCB2 !important;
+        font-weight: bold !important; 
+    }
+    .popst-it-yellow {
+        background-color: #FAEFA2 !important;
+    }
+    .popst-it-red {
+        background-color: #FFE5E2 !important;
+        font-weight: bold !important;
+    }
+    .popst-it-text {
+        background-color: #5F6062 !important;
+        font-weight: bold !important;
+    }
+
+   
+}
+

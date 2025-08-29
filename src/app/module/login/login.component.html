@@ -1,0 +1,52 @@
+<p-toast></p-toast>
+<div class="text-center">
+  <div class="flex justify-content-center p-4">
+    <img
+      alt="logo"
+      src="./assets/images/logo_institucional_blanco.svg"
+      width="300rem"
+    />
+  </div>
+</div>
+<form
+  [formGroup]="myForm"
+  (ngSubmit)="submit()"
+  class="bg-white shadow-3 p-5 sm:p-6 md:p-8 border-round-xl"
+>
+  <p class="text-5xl font-bold">Expediente<br />Fiscal Electrónico</p>
+  <p class="mb-5">Ingrese sus datos</p>
+
+  <fn-input
+    label="Usuario"
+    [ico]="iUser"
+    placeholder="Ingrese usuario"
+    formControlName="username"
+  ></fn-input>
+
+  <fn-input
+    label="Contraseña"
+    [ico]="iLock"
+    placeholder="Ingrese contraseña"
+    formControlName="password"
+    type="password"
+  ></fn-input>
+
+  <fn-input
+    label="Token"
+    [ico]="iKey"
+    placeholder="Ingrese clave token"
+    formControlName="token"
+  ></fn-input>
+
+  <div>
+    <button
+      pButton
+      pRipple
+      type="submit"
+      label="Iniciar sesión"
+      class="w-full"
+      [loading]="isLoading"
+      [disabled]="isLoading || myForm.invalid"
+    ></button>
+  </div>
+</form>

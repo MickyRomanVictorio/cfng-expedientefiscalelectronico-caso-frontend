@@ -1,0 +1,105 @@
+<div class="">
+
+  <div class="cfe-encabezado-modal mb-2">
+    <span class="cfe-subtitulo-3 family-poppin-bold">
+      Seleccionar consentimiento de la resolución
+    </span>
+    <fn-icon
+      onkeypress=""
+      class="cfe-encabezado-cerrar"
+      [ico]="iconUtil.obtenerIcono('iClose')"
+      height="2rem"
+      (click)="cerrarModal()"
+    ></fn-icon>
+  </div>
+
+  <div class="cfe-subtitulo-3 family-poppin-bold mt-4">
+    {{subTitulo}}<span [innerHTML]="stringUtil.obtenerNumeroCaso(numeroCaso)"></span>
+  </div>
+
+  <div class="mt-4">
+    <span><strong>Seleccione los sujetos procesales a los cuales se realizará el consentimiento.</strong></span>
+  </div>
+
+  <div class="cfe-tabla-white mt-2">
+    <p-table
+      class="table-apelaciones"
+      [value]="sujetosProcesalesFiltrados"
+      responsiveLayout="stack">
+      <ng-template let-columns pTemplate="header">
+        <tr>
+          <th scope="col" class="columna-nro" >N°</th>
+          <th scope="col" class="columna-nombre" >Nombres y apellidos / Razón social</th>
+          <th scope="col" class="columna-tipo" >Tipo de sujeto procesal</th>
+          <th scope="col" class="columna-resultado-primera-instancia">Resultado (1era
+            instancia)
+          </th>
+          <th scope="col" class="columna-consentimiento">
+            <input
+              class="cursor-pointer"
+              (change)="seleccionarTodos($event)"
+              [(ngModel)]="selectAllCheck"
+              [disabled]="soloLectura"
+              type="checkbox"/>
+                Consentimiento
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template let-rowIndex="rowIndex" let-item pTemplate="body">
+        <tr class="p-selectable-row">
+          <td>
+            <span class="p-column-title font-semibold">N°</span>
+            {{ (( query.page -1 ) * query.limit) + (rowIndex + 1) }}
+          </td>
+          <td>
+            <div>{{ item.nombreCompleto | nombrePropio }}</div>
+          </td>
+          <td style="text-align: center; vertical-align: middle;">
+            {{ item.noTipoParteSujeto }}
+          </td>
+          <td style="text-align: center; vertical-align: middle;">
+            {{ item.noTipoRespuestaInstancia1 | capitalizar }}
+          </td>
+          <td style="text-align: center; vertical-align: middle;">
+            <input
+              class="cursor-pointer"
+              [checked]="verificaSeleccionado(item)"
+              [disabled]="soloLectura || (item.idActoTramiteCasoGuardado !== null && idActoTramiteCaso !== item.idActoTramiteCasoGuardado)"
+              (change)="onSelectionChange(item, $event)"
+              type="checkbox"/>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8">No se encontró información de sujetos procesales.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <app-paginator
+      [query]="query"
+      [items]="itemPaginado"
+      [rowsPerPageOptions]="[]"
+      (paginate)="onPaginate($event)"
+    ></app-paginator>
+
+  </div>
+  <div class="flex-center border-round-lg p-3 gap-2" style="background-color: #F8EED3;">
+    <i class="pi pi-exclamation-circle" style="color: #F19700; font-size: 25px;"></i>
+    <span class="text-md">Tener en cuenta que para todos los sujetos procesales se registrará el "consentimiento"; por lo tanto, el cuaderno incidental concluirá.</span>
+  </div>
+</div>
+<div class="col-12 flex align-items-center justify-content-center mt-2 mb-2">
+  <button class="cfe-boton-opcion cfe-boton-secondary cfe-boton-lg  family-poppin-bold"
+          (click)="cerrarModal()">
+    Cancelar
+  </button>
+  @if (!soloLectura) {
+    <button class="ml-3 cfe-boton-primary cfe-boton-lg  family-poppin-bold"
+          [disabled]="!habilitarBotonAceptar"
+          (click)="aceptar()">
+      Aceptar
+    </button>
+  }
+
+</div>

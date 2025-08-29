@@ -1,0 +1,126 @@
+.previsualizar-container {
+  background: #F5F2E0;
+  border-radius: 4px;
+  padding: 5px 10px;
+  max-width: 1800px;
+  min-width: 100%;
+  h3 {
+    // color: $primary;
+    font-family: val(--font-semi-bold);
+    font-size: 1.2em;
+    margin-bottom: 12px;
+    margin-top: 0;
+    display: flex;
+  }
+  p {
+    color: var(--gray1);
+    font-family: var(--font-regular);
+    font-size: 1em;
+    margin-bottom: 14px;
+  }
+  textarea {
+    width: 100%;
+    &:focus {
+      box-shadow: none;
+    }
+  }
+}
+
+:host::ng-deep .modal__header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .modal_header__content {
+    display: flex;
+    align-items: center;
+    .cfe-titulo-1 {
+      padding-left: 5px;
+      margin-top: -5px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    img {
+      width: 25px;
+      &:nth-child(3) {
+        width: 23px;
+      }
+    }
+  }
+}
+
+:host ::ng-deep .colorAmbarCaso {
+  color: var(--mpfn-secondary);
+}
+
+:host ::ng-deep .cfe-boton-m {
+  padding: 8.5px 4.5px !important;
+  min-width: 81px;
+  font-size: 1rem;
+}
+
+:host::ng-deep .tarjeta {
+  background-color: var(--mpfn-white) !important;
+}
+
+:host::ng-deep .tarjeta div {
+  margin-top: 0.3rem;
+}
+.etiqueta {
+  font-size: 15px;
+}
+.etiqueta-azul{
+  font-size: 16px;
+  color:#0e2e4a;
+}
+:host::ng-deep .etiqueta {
+  font-weight: bold;
+}
+
+:host::ng-deep .contenido {
+  font-weight: normal !important;
+  margin-left: 12px !important;
+}
+
+:host::ng-deep .fecha {
+  font-weight: normal !important;
+  font-size: 0.8rem;
+}
+
+.cfe-icon{
+  width: 35px !important;
+}
+
+.cfe-boton-dowload{
+  cursor: pointer;
+  background-color: #EA4C3A;
+}
+
+.document{
+  border: 0.5px solid #cccccc;
+}
+.etiqueta-sm{
+  font-size: 0.8rem;
+}
+.document-active{
+  background-color: #fff0e0;
+}
+.content-info{
+  max-width: 30%;
+  height: 87vh;
+  overflow-y: auto;
+}
+.pdf-view{
+  width: 70%;
+}
+.document-name{
+  word-break: break-all;
+  width: 100%;
+}
+.etiquetas-superior{
+  margin-left: 3.5rem !important;
+}
+
+.cfe-titulo-1 {
+  margin: 0 0.5rem !important;
+}

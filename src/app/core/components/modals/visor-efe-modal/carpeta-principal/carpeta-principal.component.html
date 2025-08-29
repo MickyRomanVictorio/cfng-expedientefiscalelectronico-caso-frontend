@@ -1,0 +1,421 @@
+<div class="grid" tabindex="-1">
+
+  <!-- #region - Lista de Etapas -->
+  <div class="col-12 md:col-4">
+
+    <!-- #region - Buscador -->
+    <div class="field">
+      <label for="buscar" class="font-semibold">Buscar:</label>
+      <div class="p-field p-fluid">
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input id="buscar" type="text" #inputBuscarRef autocomplete="off" (input)="eventoBuscar($event)" placeholder="Buscar documento" class="p-inputtext p-component p-element">
+        </span>
+      </div>
+    </div>
+    <!-- #endregion - Buscador -->
+
+    <!-- #region - Filtros -->
+    <div class="cfe-selectbutton cfe-selectbutton-md">
+      <p-selectButton
+        [options]="tipoDocumentoFiltro"
+        [(ngModel)]="tipoDocumentoFiltroSeleccionado"
+        optionLabel="name"
+        optionValue="value"
+        (onChange)="eventoBuscarTipoDocumento($event)">
+      </p-selectButton>
+    </div>
+    <!-- #endregion - Filtros -->
+
+    <!-- #region - Resumen -->
+    <div class="py-1 mb-2">
+      <span class="font-semibold">{{cantidadResultados.encontrados}}</span> encontrados -
+       <span class="font-semibold">{{cantidadResultados.cuadernosIncidentales}}</span> Cuadernos incidentales -
+       <span class="font-semibold">{{cantidadResultados.cuadernosEjecucion}}</span> cuadernos de ejecución
+    </div>
+    <!-- #endregion - Resumen -->
+
+    <!-- #region Etapas -->
+    <div [style]="{ width: '100%', height: '500px' }" class="scrollbar">
+      @for (etapa of datoEtapaFiltro; let indice = $index; track $index) {
+
+        <div class="accordion-item">
+          <!-- #region - Título -->
+          <div class="accordion-header py-3 flex align-items-center justify-content-between p-2 cursor-pointer text-white" (click)="etapa.mostrarContenido=!etapa.mostrarContenido">
+              <span>{{etapa.nombre}}</span>
+              <i class="pi pi-chevron-{{etapa.mostrarContenido===true?'up':'down'}} mr-2"></i>
+          </div>
+          <!-- #endregion - Título -->
+
+          <!--#region - Cuerpo -->
+          <div [ngClass]="{ 'hidden': !etapa.mostrarContenido }">
+              @if (
+                etapa.id === EtapasArchivoEnum.Registro ||
+                etapa.id === EtapasArchivoEnum.Calificacion ||
+                etapa.id === EtapasArchivoEnum.Preliminar ||
+                etapa.id === EtapasArchivoEnum.Preparatoria ||
+                etapa.id === EtapasArchivoEnum.Intermedia
+              ) {
+                <ng-container *ngTemplateOutlet="etapaCalifPrelPrepInteRef; context: {etapa: etapa }"></ng-container>
+
+              } @else if (etapa.id === EtapasArchivoEnum.Juzgamiento) {
+                <app-item-archivo [etapa]="etapa"></app-item-archivo>
+              }@else {
+                <div class="text-center py-4 px-2">No se encontraron registros.</div>
+              }
+          </div>
+          <!-- #endregion - Cuerpo -->
+
+        </div>
+      }
+    </div>
+    <!-- #endregion Etapas -->
+
+  </div>
+  <!-- #endregion - Lista de Etapas -->
+
+  <!-- #region - Visor -->
+  <div class="col-12 md:col-8">
+    <div class="py-2 pl-4 pr-5">
+      <div class="flex justify-content-between flex-column lg:flex-row">
+        <div class="flex align-items-center mt-2 lg:mt-0 text-center">
+          <fn-icon [ico]="obtenerIcono('iClose')" height="2rem" class="cursor-pointer" (click)="eventoDeseleccionarTodo()"></fn-icon>
+          <div class="hover:text-red-600 hover:underline cursor-pointer" (click)="eventoDeseleccionarTodo()">
+            <span class="font-bold">{{datoArchivoSeleccionados.length}}</span> Seleccionado
+          </div>
+        </div>
+
+        <div class="flex align-items-center mt-2 lg:mt-0">
+          <fn-icon [ico]="obtenerIcono('iDownload')" height="2rem" class="cursor-pointer" (click)="descargarArchivosSeleccionados()"></fn-icon>
+          <div class="hover:text-red-600 hover:underline cursor-pointer" (click)="descargarArchivosSeleccionados()">
+            Descargar <span class="font-bold">{{datoArchivoSeleccionados.length}}</span> documento{{datoArchivoSeleccionados.length>1?'s':''}}
+          </div>
+        </div>
+        <div class="flex align-items-center mt-2 lg:mt-0">
+
+          @if (soloPdfSeleccionados(); as soloPdf) {
+            <!-- Icono Activo -->
+            <fn-icon
+              [ico]="obtenerIcono('iDownload')"
+              height="2rem"
+              class="cursor-pointer"
+              (click)="eventoDescargarTodo()">
+            </fn-icon>
+
+            <!-- Texto Activo -->
+            <div
+              class="hover:text-red-600 hover:underline cursor-pointer"
+              (click)="eventoDescargarTodo()">
+              Descargar <span class="font-bold">{{datoArchivoSeleccionados.length}}</span> en un solo documento
+            </div>
+
+          } @else {
+            <!-- Icono Deshabilitado -->
+            <fn-icon
+              [ico]="obtenerIcono('iDownload')"
+              height="2rem"
+              class="text-gray-400">
+            </fn-icon>
+
+            <!-- Texto Deshabilitado -->
+            <div class="text-gray-400">
+              Descargar <span class="font-bold">0</span> en un solo documento
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="flex align-items-center">
+      @if (datoArchivo.length>0) {
+        <div class="pr-1">
+          <button type="button" class="cfe-boton-secondary p-2" (click)="eventoSeleccionarArchivoAnterior()">
+            <i class="pi pi-chevron-left"></i>
+          </button>
+        </div>
+      }
+
+      <div class="w-full h-full" [ngStyle]="{'padding':visorTipoArchivo === TipoArchivo.Audio ? '6rem 5rem' : null}">
+        <ng-template #visorArchivoContainer></ng-template>
+        @if (datoArchivo.length===0) {
+          <div class="text-center py-8 px-2 font-bold">No se encontraron registros.</div>
+        }
+      </div>
+      @if (datoArchivo.length>0) {
+      <div class="pl-1">
+        <button type="button" class="cfe-boton-secondary p-2" (click)="eventoSeleccionarArchivoSiguiente()">
+          <i class="pi pi-chevron-right font-bold"></i>
+        </button>
+      </div>
+    }
+    </div>
+  </div>
+  <!-- #endregion - Visor -->
+</div>
+
+
+<!-- #region - Template Etapa Calificación, Preliminar, Preparatoria, Intermedia -->
+ <ng-template #etapaCalifPrelPrepInteRef let-etapa="etapa">
+  <!-- datos principales -->
+  <p-table
+      [value]="etapa.datosArchivo"
+      [rowHover]="true"
+      responsiveLayout="stack"
+  >
+    <ng-template pTemplate="body" let-rowIndex="rowIndex" let-califPrelPrepInte>
+      <tr #filaArchivoRef [id]="'fila-'+califPrelPrepInte.correlativo" [style.backgroundColor]="colorFondoFilaArchivo(califPrelPrepInte)">
+        <td style="vertical-align: top;" class="pl-2 pr-0">
+          <div class="flex">
+            <p-checkbox [(ngModel)]="califPrelPrepInte.seleccionado" binary="true" (onChange)="eventoSeleccionarFila(califPrelPrepInte, $event)"></p-checkbox>
+            <span class="pl-1">{{ califPrelPrepInte.correlativo }}.</span>
+          </div>
+        </td>
+        <td style="vertical-align: top;" class="pl-0 cursor-pointer" (click)="eventoSeleccionarArchivo(califPrelPrepInte)">
+          <div>
+              @if (etapa.id === EtapasArchivoEnum.Registro ) {
+                <div class="text-md font-semibold">{{califPrelPrepInte.nombreTipoDocumento}}</div>
+              }@else {
+                <div class="text-md">
+                  <span class="font-semibold">Acto:</span> {{califPrelPrepInte.nombreActoProcesal}}
+                </div>
+                <div class="text-md">
+                  <span class="font-semibold">Trámite:</span> {{califPrelPrepInte.nombreTramite}}
+                </div>
+                <div class="text-xs text-600">Fecha de emisión: {{califPrelPrepInte.fechaEmision}}</div>
+              }
+
+              <div class="text-xs text-600">Fecha de registro: {{califPrelPrepInte.fechaCreacion}}</div>
+          </div>
+        </td>
+        <td style="vertical-align: top;" class="relative">
+          <div style="min-width: 150px;">
+            <div class="flex align-content-center">
+              <div class="w-full">
+                <div (click)="eventoSeleccionarArchivo(califPrelPrepInte)" class="bg-red-500 text-white px-2 py-2 text-center border-round cursor-pointer transition-all transition-duration-200 hover:bg-red-700">pdf</div>
+                <div class="text-xs flex  justify-content-between">
+                  <div>{{califPrelPrepInte.pesoFormateado}}</div>
+                  <div>{{califPrelPrepInte.folioTotal}} Folio{{califPrelPrepInte.folioTotal===1?'':'s'}}</div>
+                </div>
+              </div>
+              <div style="width: 50px;" class="text-right pl-3">
+                <fn-icon class="cursor-pointer" (click)="eventoDescargarArchivo(califPrelPrepInte)" [ico]="obtenerIcono('iDownload')" height="2.1rem"></fn-icon>
+              </div>
+            </div>
+            <div class="text-sm pt-1 text-600">
+              Folio inicial:{{califPrelPrepInte.folioInicio-1}} - Folio final: {{califPrelPrepInte.folioFin-1}}
+            </div>
+            @if (califPrelPrepInte.fuenteInvestigacion && califPrelPrepInte.fuenteInvestigacion.length > 0) {
+              <div class="flex align-items-center justify-content-end pt-2">
+                <div>
+                  <img src="{{ iconAsset.obtenerRutaIcono('documento') }}" style="width: 1.2rem;" alt="Icono"/>
+                  <img src="{{ iconAsset.obtenerRutaIcono('video') }}" style="width: 1.2rem;" alt="Icono" class="mx-1"/>
+                  <img src="{{ iconAsset.obtenerRutaIcono('audio') }}" style="width: 1.2rem;" alt="Icono"/>
+                </div>
+                <div class="pl-4 pr-1 cursor-pointer" (click)="califPrelPrepInte.mostrarContenido = !califPrelPrepInte.mostrarContenido">
+                  <i class="text-xl pi pi-chevron-{{califPrelPrepInte.mostrarContenido===true?'up':'down'}}"></i>
+                </div>
+              </div>
+            }
+          </div>
+        </td>
+      </tr>
+
+      <ng-container *ngTemplateOutlet="datoArhivoFuenteInvestigacionRef; context: {datosArchivo: califPrelPrepInte}"></ng-container>
+
+      @if (rowIndex == etapa.datosArchivo.length -1 ) {
+        <!-- Espacio -->
+        <tr>
+          <td colspan="3" class="p-0" style="border: none; height: 0.5rem; background-color: #fff;">
+          </td>
+        </tr>
+      }
+
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="3"  class="text-center">
+          No se encontraron registros.
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+
+  <!-- datos cuaderno incidental-->
+  @for (ciPre of etapa.cuadernoIncidental;let indice = $index; track $index) {
+    <div class="sub-accordion-container">
+
+      <div class="flex align-items-center justify-content-between cursor-pointer" (click)="ciPre.mostrarContenido=!ciPre.mostrarContenido">
+        <div>
+          <div class="flex px-2 py-3">
+            <div class="pr-1">
+              <p-checkbox [binary]="true" [(ngModel)]="ciPre.seleccionado"  inputId="binary" (onChange)="eventoSeleccionarGrupo(ciPre, $event)" />
+            </div>
+            <div>
+              {{ciPre.correlativo}}.
+            </div>
+            <div class="px-1">
+              <img [src]="iconAsset.obtenerRutaIcono('folder')" alt="Icono folder"/>
+            </div>
+            <div>
+              <div>
+                <span class="font-semibold">Cuaderno incidental:</span> {{ciPre.codigo}}
+              </div>
+              <div>
+                <span class="font-semibold">Asunto:</span> {{ciPre.asunto}}
+              </div>
+              <div>
+                <span class="font-semibold">Fecha de registro:</span> {{ciPre.fechaRegistro}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="pr-3">
+          <i class="pi pi-chevron-{{ciPre.mostrarContenido===true?'up':'down'}} text-xl"></i>
+        </div>
+      </div>
+
+      <!-- Item de Cuadernos Incidentales - Archivos -->
+      <div class="ml-4 bg-white" [ngClass]="{ 'hidden': !ciPre.mostrarContenido }">
+        <p-table
+        [value]="ciPre.datosArchivo"
+        [rowHover]="true"
+      >
+        <ng-template pTemplate="body" let-rowIndex="rowIndex" let-detalleCuadernoIncidental>
+          <tr #filaArchivoRef [id]="'fila-'+detalleCuadernoIncidental.correlativo" [style.backgroundColor]="colorFondoFilaArchivo(detalleCuadernoIncidental)">
+            <td style="vertical-align: top;" class="pl-2 pr-0">
+              <div class="flex">
+                <p-checkbox [(ngModel)]="detalleCuadernoIncidental.seleccionado" binary="true" (onChange)="eventoSeleccionarFila(detalleCuadernoIncidental, $event)"></p-checkbox>
+                <span class="pl-1">{{ciPre.correlativo}}.{{ rowIndex + 1 }}.</span>
+              </div>
+            </td>
+            <td style="vertical-align: top;" class="pl-2 cursor-pointer" (click)="eventoSeleccionarArchivo(detalleCuadernoIncidental)">
+              <div>
+                  <div class="text-md">
+                    <span class="font-semibold">Acto:</span> {{detalleCuadernoIncidental.nombreActoProcesal}}
+                  </div>
+                  <div class="text-md">
+                    <span class="font-semibold">Trámite:</span> {{detalleCuadernoIncidental.nombreTramite}}
+                  </div>
+                  <div class="text-xs text-600">Fecha de emisión: {{detalleCuadernoIncidental.fechaEmision}}</div>
+                  <div class="text-xs text-600">Fecha de registro: {{detalleCuadernoIncidental.fechaCreacion}}</div>
+              </div>
+            </td>
+
+            <td style="vertical-align: top;">
+              <div>
+                <div class="flex align-content-center">
+                  <div class="w-full">
+                    <div (click)="eventoSeleccionarArchivo(detalleCuadernoIncidental)" class="bg-red-500 text-white px-2 py-2 text-center border-round cursor-pointer transition-all transition-duration-200 hover:bg-red-700">pdf</div>
+                    <div class="text-xs flex  justify-content-between">
+                      <div class="text-700 font-semibold">{{ detalleCuadernoIncidental.pesoFormateado }}</div>
+                      <div>{{detalleCuadernoIncidental.folioTotal}} Folio{{detalleCuadernoIncidental.folioTotal===1?'':'s'}}</div>
+                    </div>
+                  </div>
+                  <div style="width: 50px;" class="text-right pl-3">
+                    <fn-icon class="cursor-pointer" (click)="eventoDescargarArchivo(detalleCuadernoIncidental)" [ico]="obtenerIcono('iDownload')" height="2.1rem"></fn-icon>
+                  </div>
+                </div>
+                <div class="text-xs pt-1 text-600">
+                  Folio inicial:{{detalleCuadernoIncidental.folioInicio}} - Folio final: {{detalleCuadernoIncidental.folioFin}}
+                </div>
+
+                @if (detalleCuadernoIncidental.fuenteInvestigacion && detalleCuadernoIncidental.fuenteInvestigacion.length > 0) {
+                  <div class="flex align-items-center justify-content-end pt-2">
+                    <div>
+                      <img src="{{ iconAsset.obtenerRutaIcono('documento') }}" style="width: 1.2rem;" alt="Icono"/>
+                      <img src="{{ iconAsset.obtenerRutaIcono('video') }}" style="width: 1.2rem;" alt="Icono" class="mx-1"/>
+                      <img src="{{ iconAsset.obtenerRutaIcono('audio') }}" style="width: 1.2rem;" alt="Icono"/>
+                    </div>
+                    <div class="pl-4 pr-1 cursor-pointer" (click)="detalleCuadernoIncidental.mostrarContenido = !detalleCuadernoIncidental.mostrarContenido">
+                      <i class="text-xl pi pi-chevron-{{detalleCuadernoIncidental.mostrarContenido===true?'up':'down'}}"></i>
+                    </div>
+                  </div>
+                }
+
+              </div>
+            </td>
+          </tr>
+
+          <ng-container *ngTemplateOutlet="datoArhivoFuenteInvestigacionRef; context: {datosArchivo: detalleCuadernoIncidental}"></ng-container>
+          <!-- Ini - Espacio vacío, solo para la última fila y si existe fuente de investigación -->
+          @if (ciPre.mostrarContenido && rowIndex === ciPre.datosArchivo.length -1 && detalleCuadernoIncidental.fuenteInvestigacion.length>0 ) {
+            <tr>
+              <td colspan="3" class="p-0 py-2" style="border: none !important;"></td>
+            </tr>
+          }
+          <!-- Fin - Espacio vacío, solo para la última fila y si existe fuente de investigación -->
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="3" style="text-align: center;">No se encontraron registros con los criterios de búsqueda ingresados.
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      </div>
+    </div>
+  }
+
+ </ng-template>
+ <!-- #endregion - Template Etapa Calificación, Preliminar, Preparatoria, Intermedia -->
+
+
+ <!-- #region - Template Fuente de Investigación -->
+ <ng-template #datoArhivoFuenteInvestigacionRef let-datosArchivo="datosArchivo">
+  @if (datosArchivo.fuenteInvestigacion && datosArchivo.fuenteInvestigacion.length > 0) {
+    <tr>
+      <td colspan="3" class="relative p-0 text-right pr-2" style="border: none !important">
+        <div class="bg-white absolute px-3 font-semibold left-0" style="top: -0.9rem; display: inline-block; white-space: nowrap;">Fuente de Investigación</div>
+      </td>
+    </tr>
+    @for (fuenteInvestigacion of datosArchivo.fuenteInvestigacion; track $index) {
+      <tr [ngClass]="{ 'hidden': !datosArchivo.mostrarContenido }" #filaArchivoRef [id]="'fila-'+fuenteInvestigacion.correlativo" [style.backgroundColor]="colorFondoFilaArchivo(fuenteInvestigacion)">
+        <td class="p-0 text-right" style="border: none !important; border-bottom: #ccc solid 1px !important;">
+          <p-checkbox [(ngModel)]="fuenteInvestigacion.seleccionado" binary="true" (onChange)="eventoSeleccionarFila(fuenteInvestigacion, $event)"></p-checkbox>
+        </td>
+        <td class="p-0" style="border: none !important; border-bottom: #ccc solid 1px !important;">
+          <div class="py-3 cursor-pointer" (click)="eventoSeleccionarArchivo(fuenteInvestigacion)">
+            <div class="flex align-items-center">
+              <div class="px-1">
+                <img src="{{ iconAsset.obtenerRutaIcono( fuenteInvestigacion.nombreTipoArchivo.toLowerCase() ) }}" style="width: 1.2rem;" alt="Icono"/>
+              </div>
+              <div class="pl-1">
+                  <div class="text-md">{{fuenteInvestigacion.nombre}}</div>
+                  <div class="text-sm text-600">{{fuenteInvestigacion.pesoFormateado}}</div>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td style="vertical-align: top;" style="border: none !important; border-bottom: #ccc solid 1px !important;">
+          <div>
+            <div class="flex align-content-center">
+              <div class="w-full">
+                <div (click)="eventoSeleccionarArchivo(fuenteInvestigacion)" class="text-white text-xs px-2 py-1 text-center border-round cursor-pointer formato-{{fuenteInvestigacion.nombreTipoArchivo.toLowerCase()}}">{{fuenteInvestigacion.nombreExtension}}</div>
+              </div>
+              <div style="width: 50px;" class="text-right pl-3">
+                <fn-icon class="cursor-pointer" (click)="eventoDescargarArchivo(fuenteInvestigacion)" [ico]="obtenerIcono('iDownload')" height="2.1rem"></fn-icon>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    }
+    @if (datosArchivo.mostrarContenido) {
+      <tr>
+        <td colspan="3" class="py-2" style="border: none !important; background-color: #e4e4e4 !important;">
+        </td>
+      </tr>
+    }@else {
+      <tr>
+        <td colspan="3" class="py-3" style="border: none !important; background-color: #fff !important;">
+        </td>
+      </tr>
+    }
+  }
+ </ng-template>
+ <!-- #endregion - Template Fuente de Investigación  -->
+
+
+ <!-- Region - Footer -->

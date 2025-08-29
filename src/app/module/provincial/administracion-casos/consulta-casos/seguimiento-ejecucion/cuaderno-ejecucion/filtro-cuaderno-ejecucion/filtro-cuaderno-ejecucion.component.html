@@ -1,0 +1,146 @@
+<form [formGroup]="form">
+  <div class="grid">
+    <div class="col flex flex-wrap align-items-end">
+      <div
+        class="field mb-0 w-full"
+      >
+        <label for="buscar" class="font-semibold">Buscar</label>
+        <input
+          formControlName="busquedaTexto"
+          id="buscar"
+          pInputText
+          type="text"
+          class="py-3 px-3 text-lg w-full border-1 border-solid border-round-sm font-normal focus:border-primary outline-none"
+          placeholder="Buscar en la lista. Puede incluir datos del sujeto procesal y/o delitos"
+          [style.height]="'49px !important'"
+          [class.input-invalid]="!noExcedioLongitudTextoBuscar"
+          autocomplete="off"
+          (keydown.enter)="buscarCuadernosEjecucion()"
+          [maxLength]="100"
+        />
+        @if (!noExcedioLongitudTextoBuscar) {
+        <small class="text-error"
+          >Has superado el límite de 100 caracteres. Por favor, refina su
+          búsqueda para obtener mejores resultados.</small
+        >
+        }
+      </div>
+    </div>
+    <div class="col-fixed align-content-end p-0" style="width: 70px">
+      <div class="px-2 pb-2 pt-3" [ngClass]="{ 'bg-filtro': mostrarFiltro }">
+        <button
+          type="button"
+          class="cfe-filtro-boton h-auto py-1"
+          (click)="cambiarTipoFiltro()"
+          [style.height]="'49px !important'"
+        >
+          <fn-icon
+            [ico]="iconUtil.obtenerIcono('iFilterShow')"
+            [ngStyle]="{ transform: mostrarFiltro ? 'rotate(180deg)' : 'none' }"
+            height="2rem"
+          ></fn-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  @if (mostrarFiltro === true) {
+  <div class="grid mt-0 mb-3">
+    <div class="col-12 pr-0 pt-0">
+      <div class="bg-filtro p-2 md:p-4">
+        <div class="grid">
+          <div class="col-12 md:col-6">
+            <label for="fechaInicio" class="font-bold block pb-2"
+              >Fecha de notificación:</label
+            >
+            <div class="flex flex-column md:flex-row">
+              <p-calendar
+                dateMask
+                class="cfe-calendar"
+                [showIcon]="true"
+                icon="cfe-calendar-icon"
+                placeholder="dd/mm/aaaa"
+                dateFormat="dd/mm/yy"
+                dataType="string"
+                formControlName="fechaInicio"
+                [maxDate]="hoy"
+              >
+              </p-calendar>
+              <p-calendar
+                dateMask
+                class="cfe-calendar pl-0 md:pl-2"
+                [showIcon]="true"
+                icon="cfe-calendar-icon"
+                placeholder="dd/mm/aaaa"
+                dateFormat="dd/mm/yy"
+                dataType="string"
+                formControlName="fechaFin"
+                [maxDate]="hoy"
+              >
+              </p-calendar>
+            </div>
+          </div>
+          <div class="col-12 md:col-3">
+            <label for="tipoResolucion" class="font-bold block pb-2"
+              >Tipo de resolución</label
+            >
+            <div>
+              <p-dropdown
+                formControlName="tipoResolucion"
+                placeholder="Todos"
+                styleClass="p-inputtext-lg"
+                emptyMessage="Resultados no encontrados"
+                emptyFilterMessage="Resultados no encontrados"
+                appendTo="body"
+                [options]="listaTipoResolucion"
+                optionLabel="nombre"
+                optionValue="codigo"
+              >
+              </p-dropdown>
+            </div>
+          </div>
+          <div class="col-12 flex justify-content-end">
+            <button
+              type="button"
+              class="cfe-boton-secondary cfe-boton-lg inline w-full md:w-auto family-poppin-bold"
+              (click)="limpiarFiltros()"
+            >
+              Limpiar filtros
+            </button>
+            <button
+              type="button"
+              class="cfe-boton-primary cfe-boton-lg inline ml-0 md:ml-2 mt-1 md:mt-0 w-full md:w-auto family-poppin-bold"
+              (click)="buscarCuadernosEjecucion()"
+            >
+              Buscar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  } @if (!mostrarFiltro) {
+  <div class="grid">
+    <div class="col-12 pt-3">
+      <div class="flex flex-wrap gap-3">
+        <div class="flex align-items-center">
+          <p-radioButton
+            value="0"
+            inputId="ultimoSeisMeses"
+            id="ultimoSeisMeses"
+            formControlName="filtroTiempo"
+          >
+          </p-radioButton>
+          <label for="ultimoSeisMeses" class="ml-2 font-semibold"
+            >Últimos 6 meses</label
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+
+  <hr />
+</form>
+
+<p-toast></p-toast>

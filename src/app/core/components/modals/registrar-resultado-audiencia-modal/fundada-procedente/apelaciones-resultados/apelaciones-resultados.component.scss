@@ -1,0 +1,58 @@
+.apelaciones-resultados{
+    .card {
+        background-color: var(--mpfn-white) !important;
+
+        .sujetos-container {
+            border-radius: 5px;
+            width: fit-content;
+            p {
+              margin: 0;
+              font-weight: bold;
+              font-size: 16px;
+              margin-bottom: 0.5em;
+            }
+
+            ul {
+              list-style-type: disc;
+              margin-left: 30px;
+              padding: 0;
+              li {
+                font-size: 14px;
+                margin-bottom: 1em;
+              }
+            }
+          }
+
+    }
+    .msg-guardado{
+        color: var(--mpfn-green-dark) !important;
+    }
+}
+
+$badge-colors: (
+    solidaria: var(--mpfn-lightblue),
+    mancomunada:var(--mpfn-red),
+);
+
+.badge-estados {
+    color: white;
+    padding: 4px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-block;
+    text-align: center;
+    line-height: 1.5;
+
+    @each $color-name, $color-value in $badge-colors {
+        &-#{$color-name} {
+            background-color: $color-value;
+        }
+    }
+}
+
+.no-guiones {
+    list-style-type: none !important;
+    padding-left: 0 !important;
+    margin-left:-30px !important;
+}

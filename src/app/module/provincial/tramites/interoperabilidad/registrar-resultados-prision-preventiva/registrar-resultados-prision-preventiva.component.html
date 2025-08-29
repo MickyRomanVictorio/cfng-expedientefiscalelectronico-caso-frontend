@@ -1,0 +1,474 @@
+<div class="cfe-encabezado-modal mb-2">
+  @if (actualizar) {
+    <span class="cfe-subtitulo-3 family-poppin-bold">
+      Actualizar resultado
+    </span>
+  } @else {
+    <span class="cfe-subtitulo-3 family-poppin-bold">
+      Seleccionar resultado
+    </span>
+  }
+  <fn-icon
+    onkeypress=""
+    class="cfe-encabezado-cerrar"
+    [ico]="iconUtil.obtenerIcono('iClose')"
+    height="2rem"
+    (click)="cerrarModal()"
+  ></fn-icon>
+</div>
+
+<div class="cfe-subtitulo-3 family-poppin-bold mt-2">
+  Incidente: <span [innerHTML]="stringUtil.obtenerNumeroCaso(numeroCaso)"></span>
+</div>
+
+@if(tramiteEnModoEdicion) {
+  <div class="mt-4">
+    @if (actualizar) {
+      <strong>Seleccione y actualice la información del resultado para el(los) sujeto(s) procesal(es)</strong>
+    } @else {
+      <strong>Seleccione y registre el resultado para el(los) sujeto(s) procesal(es):</strong>
+    }
+  </div>
+  <input class="hidden">
+  @if ((actualizar && this.formularioRespuestaPrision.get('idActoTramiteResultadoSujeto')?.value) || !actualizar) {
+    <form [formGroup]="formularioRespuestaPrision">
+      @if (!actualizar) {
+        <div class="grid mt-2">
+          <div class="col-12 lg:col-2">
+            <strong>{{nombreResultado}}</strong>
+          </div>
+          <div class="col-12 lg:col-9">
+            <div class="flex justify-content-center">
+              @for (resultado of tipoResultados; track $index) {
+                <p-radioButton name="idTipoResultado"
+                               [ngClass]="{'ng-invalid ng-dirty': formularioRespuestaPrision.get('idTipoResultado')?.invalid && formularioRespuestaPrision.get('idTipoResultado')?.touched}"
+                               [value]="resultado.id" formControlName="idTipoResultado"
+                               (ngModelChange)="alcambiarTipoResultado()"
+                               inputId="res{{resultado.id}}"/>
+                <label for="res{{resultado.id}}" class="ml-2 mr-4 text-md cursor-pointer">
+                  {{ resultado.noDescripcion }}
+                </label>
+              }
+            </div>
+          </div>
+        </div>
+      }
+      @if ( formularioRespuestaPrision.get('idTipoResultado')?.getRawValue() ) {
+        <div class="grid mt-2">
+          <div class="col-12 lg:col-6">
+            <label for="sujetoProcesal" class="font-bold text-sm">Sujeto procesal</label>
+            <p-dropdown
+              optionValue="idConcatenado"
+              optionLabel="nombreSujetoProcesalConcatenado"
+              (onChange)="alCambiarSujetoProcesal($event)"
+              styleClass="p-inputtext-lg mb-2"
+              placeholder="Seleccione"
+              formControlName="idSujetoCaso"
+              [filter]="true"
+              [emptyFilterMessage]="mensajeNoResultados"
+              [options]="sujetosProcesales"
+              appendTo="body"
+              [emptyMessage]="mensajeNoResultados"
+              [ngClass]="{'ng-invalid ng-dirty': formularioRespuestaPrision.get('idSujetoCaso')?.invalid && formularioRespuestaPrision.get('idSujetoCaso')?.touched}"/>
+            @if (mensajeResultadoUnico !== '') {
+              <div class="col-12">
+                <mensaje-generico [titulo]="mensajeResultadoUnico" [tipoAlerta]="'error'" [closable]="true"  (cerrado)="mensajeResultadoUnico = ''"/>
+              </div>
+            }
+          </div>
+          <div class="col-12 lg:col-6">
+            <label for="idDelitoSujeto" class="font-bold text-sm">Delito(s)</label>
+            <p-multiSelect
+              #multiSelect
+              appendTo="body"
+              styleClass="py-1 p-inputtext-lg w-full"
+              [options]="delitosSujetoProcesal"
+              placeholder="Seleccione Delito"
+              filterPlaceholder="Seleccione el(los) delito(s)"
+              optionValue="idDelitoSujeto"
+              optionLabel="nombreDelito"
+              formControlName="idDelitoSujeto"
+              display="chip"
+              [emptyFilterMessage]="mensajeNoResultados"
+              [emptyMessage]="mensajeNoResultados"
+              [panelStyle]="{ 'max-width': '50em' }"
+              [showToggleAll]="false"
+              [maxSelectedLabels]="delitosSujetoProcesal.length"
+              [ngClass]="{'ng-invalid ng-dirty': formularioRespuestaPrision.get('idDelitoSujeto')?.invalid && formularioRespuestaPrision.get('idDelitoSujeto')?.touched}"
+            >
+              <ng-template pTemplate="selectedItems" let-items>
+                <div class="custom-delitos-items" [class.scroll-delitos]="items?.length > 3">
+                  @if (items?.length) {
+                    @for (item of items; track $index) {
+                      <span class="delito-item" [class.existe-extremo]="item.existeExtremo">
+                        {{ item.nombreDelito }}
+                        @if (delitosHabilitados) {
+                          <i onKeyPress class="pi pi-times" (click)="quitarDelito(item, $event, multiSelect)"></i>
+                        }
+                      </span>
+                    }
+                  } @else {
+                    <span class="no-seleccionado">Seleccione delitos</span>
+                  }
+                </div>
+              </ng-template>
+            </p-multiSelect>
+          </div>
+        </div>
+
+        @if ( tipoResultadoInfundado || prolongacion || cesacion || adecuacion || actualizar) {
+          <div class="grid">
+            <div class="col-12 lg:col-6">
+              <label for="idTipoMedidaCoercion" class="font-bold text-sm">Tipo de medida de coerción</label>
+              <p-dropdown
+                optionValue="id"
+                optionLabel="noDescripcion"
+                (onChange)="alCambiarTipoMedidaCoercion($event)"
+                styleClass="p-inputtext-lg mb-2"
+                placeholder="Seleccione"
+                formControlName="idTipoMedidaCoercion"
+                [emptyFilterMessage]="mensajeNoResultados"
+                [options]="tipoMedidasCoercion"
+                appendTo="body"
+                [emptyMessage]="mensajeNoResultados"
+                [ngClass]="{'ng-invalid ng-dirty': formularioRespuestaPrision.get('idTipoMedidaCoercion')?.invalid && formularioRespuestaPrision.get('idTipoMedidaCoercion')?.touched}"/>
+            </div>
+            <div class="col-12 lg:col-6">
+              <label for="idMedidaCoercion" class="font-bold text-sm">Medida de coerción</label>
+              <p-dropdown
+                optionValue="id"
+                optionLabel="nombre"
+                styleClass="p-inputtext-lg mb-2"
+                placeholder="Seleccione"
+                formControlName="idMedidaCoercion"
+                (onChange)="alCambiarMedidaCoercion()"
+                [emptyFilterMessage]="mensajeNoResultados"
+                [options]="medidasCoercion"
+                appendTo="body"
+                [emptyMessage]="mensajeNoResultados"
+                [ngClass]="{'ng-invalid ng-dirty': formularioRespuestaPrision.get('idMedidaCoercion')?.invalid && formularioRespuestaPrision.get('idMedidaCoercion')?.touched}"/>
+            </div>
+          </div>
+        }
+
+        @if ( esMedidaCoercionComparecenciaRestringida ) {
+          <strong>Reglas de conducta</strong>
+          @for (regla of reglasConducta; track $index) {
+            <div class="col-12">
+              <p-checkbox
+                class="mb-2"
+                formControlName="idReglaConducta"
+                [value]="regla.id"
+                [label]="regla.nombre"/>
+            </div>
+          }
+
+        }
+        <div class="grid mt-2 mb-2">
+          <div class="col-12"
+               [ngClass]="{'bg-mode-edicion': regitroEnModoEdicion}">
+            <div [ngClass]="regitroEnModoEdicion && !adecuacion ? 'bg-mode-edicion' : !esReoAusenteContumaz ? 'bg-mpfn-gray8' : ''">
+              <div class="col-12">
+                @if (!reo && !prolongacion && !cesacion && !adecuacion) {
+                  <p-checkbox
+                    class="mb-3"
+                    [binary]="true"
+                    formControlName="reoAusenteContumaz"
+                    (ngModelChange)="alCambiarReoAusente()"
+                    label="Reo ausente/contumaz (opcional)"/>
+                }
+                <br>
+                <strong>Datos de la medida de coerción: {{ nombreMedidaCoercion | capitalizar }}</strong>
+              </div>
+              @if ( !esReoAusenteContumaz || reo) {
+                <div class="col-12">
+                  <div class="grid">
+                    <div class="col-12 lg:col-4">
+                      <label for="fechaInicio" class="font-bold text-sm">Fecha de inicio</label>
+                      <p-calendar
+                        [dateFormat]="'dd/mm/yy'"
+                        class="p-inputtext-sm cfe-calendar"
+                        [showIcon]="true"
+                        dateMask
+                        formControlName="fechaInicio"
+                        icon="cfe-calendar-icon"
+                        placeholder="dd/mm/aaaa"
+                        appendTo="body"
+                        dataType="string"
+                        [minDate]="fechaHecho"
+                        [maxDate]="fechaActual"
+                        [ngClass]="{'ng-invalid ng-dirty': formularioRespuestaPrision.get('fechaInicio')?.invalid && formularioRespuestaPrision.get('fechaInicio')?.touched}"/>
+                    </div>
+                    <div class="col-12 lg:col-2">
+                      <label for="plazoOtorgado" class="font-bold text-sm">Plazo otorgado</label>
+                      <input class="p-inputtext-lg w-full" digitOnly pInputText formControlName="plazoOtorgado"
+                             placeholder="Digite el plazo" (input)="eliminarCerosIniciales($event, 'plazoOtorgado')"
+                             [ngClass]="{'ng-invalid ng-dirty': formularioRespuestaPrision.get('plazoOtorgado')?.invalid && formularioRespuestaPrision.get('plazoOtorgado')?.touched}"
+                      />
+                    </div>
+                    <div class="col-12 lg:col-2">
+                      <label for="idUnidadMedida" class="font-bold text-sm">Unidad de medida</label>
+                      <p-dropdown
+                        optionValue="id"
+                        optionLabel="nombre"
+                        styleClass="p-inputtext-lg mb-2"
+                        placeholder="Seleccione"
+                        formControlName="idUnidadMedida"
+                        [emptyFilterMessage]="mensajeNoResultados"
+                        [options]="unidadesMedida"
+                        appendTo="body"
+                        [emptyMessage]="mensajeNoResultados"
+                        [ngClass]="{'ng-invalid ng-dirty': formularioRespuestaPrision.get('idUnidadMedida')?.invalid && formularioRespuestaPrision.get('idUnidadMedida')?.touched}"/>
+                    </div>
+                    <div class="col-12 lg:col-4">
+                      <label for="fechaCalculada" class="font-bold text-sm">Fecha fin calculada</label>
+                      <p-calendar
+                        [dateFormat]="'dd/mm/yy'"
+                        class="p-inputtext-sm cfe-calendar"
+                        [showIcon]="true"
+                        dateMask
+                        formControlName="fechaCalculada"
+                        icon="cfe-calendar-icon"
+                        placeholder="Se mostrará al guardar"
+                        appendTo="body"
+                        dataType="string"/>
+
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+
+            @if ((prolongacion && !tipoResultadoInfundado) || adecuacion || cesacion) {
+              <div class="mt-3" [ngClass]="regitroEnModoEdicion && !adecuacion ? 'bg-mode-edicion' : 'bg-mpfn-gray8'">
+                <div class="col-12">
+                  <strong>Datos de la prolongación de la prisión preventiva</strong>
+                </div>
+
+                <div class="col-12">
+                  <div class="grid">
+                    <div class="col-12 lg:col-4">
+                      <label for="plazoProlongado" class="font-bold text-sm">Plazo prolongado</label>
+                        <input class="p-inputtext-lg w-full" digitOnly pInputText formControlName="plazoProlongado"
+                             placeholder="Digite el plazo" (input)="eliminarCerosIniciales($event, 'plazoProlongado')"
+                             [ngClass]="{'ng-invalid ng-dirty': formularioRespuestaPrision.get('plazoProlongado')?.invalid && formularioRespuestaPrision.get('plazoProlongado')?.touched}"
+                      />
+                    </div>
+                    <div class="col-12 lg:col-4">
+                      <label for="idUnidadMedidaProlongado" class="font-bold text-sm">Unidad de medida</label>
+                      <p-dropdown
+                        optionValue="id"
+                        optionLabel="nombre"
+                        styleClass="p-inputtext-lg mb-2"
+                        placeholder="Seleccione"
+                        formControlName="idUnidadMedidaProlongado"
+                        [emptyFilterMessage]="mensajeNoResultadosProlongado"
+                        [options]="unidadesMedida"
+                        appendTo="body"
+                        [emptyMessage]="mensajeNoResultadosProlongado"
+                        [ngClass]="{'ng-invalid ng-dirty': formularioRespuestaPrision.get('idUnidadMedidaProlongado')?.invalid && formularioRespuestaPrision.get('idUnidadMedidaProlongado')?.touched}"/>
+                    </div>
+                    <div class="col-12 lg:col-4">
+                      <label for="fechaCalculadaProlongado" class="font-bold text-sm">Nueva fecha fin calculada</label>
+                      <p-calendar
+                        [dateFormat]="'dd/mm/yy'"
+                        class="p-inputtext-sm cfe-calendar"
+                        [showIcon]="true"
+                        dateMask
+                        formControlName="fechaCalculadaProlongado"
+                        icon="cfe-calendar-icon"
+                        placeholder="Se mostrará al guardar"
+                        appendTo="body"
+                        dataType="string"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+            @if (cesacion && !tipoResultadoInfundado) {
+              <div class="mt-3" [ngClass]="regitroEnModoEdicion ? 'bg-mode-edicion' : 'bg-mpfn-gray8'">
+                <div class="col-12">
+                  <strong>Datos de la cesación de la prisión preventiva</strong>
+                </div>
+
+                <div class="col-12">
+                  <div class="grid">
+                    <div class="col-12 lg:col-3">
+                      <label for="fechaCese" class="font-bold text-sm">Fecha de cese</label>
+                      <p-calendar
+                        [dateFormat]="'dd/mm/yy'"
+                        class="p-inputtext-sm cfe-calendar"
+                        [showIcon]="true"
+                        dateMask
+                        formControlName="fechaCese"
+                        icon="cfe-calendar-icon"
+                        placeholder="dd/mm/aaaa"
+                        appendTo="body"
+                        dataType="string"
+                        [minDate]="fechaHecho"
+                        [maxDate]="fechaActual"
+                        [ngClass]="{'ng-invalid ng-dirty': formularioRespuestaPrision.get('fechaCese')?.invalid && formularioRespuestaPrision.get('fechaCese')?.touched}"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-3" [ngClass]="regitroEnModoEdicion ? 'bg-mode-edicion' : 'bg-mpfn-gray8'">
+                <div class="col-12">
+                  <strong>Datos de la medida de coerción: {{ nombreMedidaCoercion | capitalizar }}</strong>
+                </div>
+
+                <div class="col-12">
+                  <div class="grid">
+                    <div class="col-12 lg:col-4">
+                      <label for="fechaInicioCesacion" class="font-bold text-sm">Fecha de inicio</label>
+                      <p-calendar
+                        [dateFormat]="'dd/mm/yy'"
+                        class="p-inputtext-sm cfe-calendar"
+                        [showIcon]="true"
+                        dateMask
+                        formControlName="fechaInicioCesacion"
+                        icon="cfe-calendar-icon"
+                        placeholder="dd/mm/aaaa"
+                        appendTo="body"
+                        dataType="string"
+                        [minDate]="fechaHecho"
+                        [maxDate]="fechaActual"
+                        [ngClass]="{'ng-invalid ng-dirty': formularioRespuestaPrision.get('fechaInicioCesacion')?.invalid && formularioRespuestaPrision.get('fechaInicioCesacion')?.touched}"/>
+                    </div>
+                    <div class="col-12 lg:col-2">
+                      <label for="plazoCesacion" class="font-bold text-sm">Plazo otorgado</label>
+                      <input class="p-inputtext-lg w-full" digitOnly pInputText formControlName="plazoCesacion"
+                             placeholder="Digite el plazo" (input)="eliminarCerosIniciales($event, 'plazoCesacion')"
+                             [ngClass]="{'ng-invalid ng-dirty': formularioRespuestaPrision.get('plazoCesacion')?.invalid && formularioRespuestaPrision.get('plazoCesacion')?.touched}"
+                      />
+                    </div>
+                    <div class="col-12 lg:col-2">
+                      <label for="idUnidadMedidaCesacion" class="font-bold text-sm">Unidad de medida</label>
+                      <p-dropdown
+                        optionValue="id"
+                        optionLabel="nombre"
+                        styleClass="p-inputtext-lg mb-2"
+                        placeholder="Seleccione"
+                        formControlName="idUnidadMedidaCesacion"
+                        [emptyFilterMessage]="mensajeNoResultados"
+                        [options]="unidadesMedida"
+                        appendTo="body"
+                        [emptyMessage]="mensajeNoResultados"
+                        [ngClass]="{'ng-invalid ng-dirty': formularioRespuestaPrision.get('idUnidadMedidaCesacion')?.invalid && formularioRespuestaPrision.get('idUnidadMedidaCesacion')?.touched}"/>
+                    </div>
+                    <div class="col-12 lg:col-4">
+                      <label for="fechaCalculadaCesacion" class="font-bold text-sm">Fecha fin calculada</label>
+                      <p-calendar
+                        [dateFormat]="'dd/mm/yy'"
+                        class="p-inputtext-sm cfe-calendar"
+                        [showIcon]="true"
+                        dateMask
+                        formControlName="fechaCalculadaCesacion"
+                        icon="cfe-calendar-icon"
+                        placeholder="Se mostrará al guardar"
+                        appendTo="body"
+                        dataType="string"/>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+             @if (adecuacion && !tipoResultadoInfundado) {
+              <div class="mt-3" [ngClass]="{ 'bg-mode-edicion': regitroEnModoEdicion }">
+                <div class="col-12">
+                  <strong>Datos de la adecuación de la prisión preventiva</strong>
+                </div>
+
+                <div class="col-12">
+                  <div class="grid">
+                    <div class="col-12 lg:col-4">
+                      <label for="plazoAdecuacion" class="font-bold text-sm">Plazo adecuación</label>
+                        <input class="p-inputtext-lg w-full" digitOnly pInputText formControlName="plazoAdecuacion"
+                             placeholder="Digite el plazo" (input)="eliminarCerosIniciales($event, 'plazoAdecuacion')"
+                             [ngClass]="{'ng-invalid ng-dirty': formularioRespuestaPrision.get('plazoAdecuacion')?.invalid && formularioRespuestaPrision.get('plazoAdecuacion')?.touched}"
+                      />
+                    </div>
+                    <div class="col-12 lg:col-4">
+                      <label for="idUnidadMedidaAdecuacion" class="font-bold text-sm">Unidad de medida</label>
+                      <p-dropdown
+                        optionValue="id"
+                        optionLabel="nombre"
+                        styleClass="p-inputtext-lg mb-2"
+                        placeholder="Seleccione"
+                        formControlName="idUnidadMedidaAdecuacion"
+                        (onChange)="alCambiarUnidadAdecuacion($event.value)"
+                        [emptyFilterMessage]="mensajeNoResultadosAdecuacion"
+                        [options]="unidadesMedida"
+                        appendTo="body"
+                        [emptyMessage]="mensajeNoResultadosAdecuacion"
+                        [ngClass]="{'ng-invalid ng-dirty': formularioRespuestaPrision.get('idUnidadMedidaAdecuacion')?.invalid && formularioRespuestaPrision.get('idUnidadMedidaAdecuacion')?.touched}"/>
+                    </div>
+                    <div class="col-12 lg:col-4">
+                      <label for="fechaCalculadaAdecuacion" class="font-bold text-sm">Nueva fecha fin adecuación</label>
+                      <p-calendar
+                        [dateFormat]="'dd/mm/yy'"
+                        class="p-inputtext-sm cfe-calendar"
+                        [showIcon]="true"
+                        dateMask
+                        formControlName="fechaCalculadaAdecuacion"
+                        icon="cfe-calendar-icon"
+                        placeholder="Se mostrará al guardar"
+                        appendTo="body"
+                        dataType="string"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+            @if ( mensajeExcedePlazoOtorgado ) {
+              <div class="col-12">
+                <mensaje-generico [titulo]="mensajeExcedePlazoOtorgado" [tipoAlerta]="'error'" [closable]="true" (cerrado)="mensajeExcedePlazoOtorgado = null"/>
+              </div>
+            }
+            <div class="col-12">
+              <label for="descripcion" class="font-bold text-sm">Descripción (opcional)</label>
+              <textarea pInputTextarea class="w-full text-md" rows="4" formControlName="descripcion" placeholder="Ingrese la descripción"
+                        [maxLength]="longitudMaximaObservaciones"></textarea>
+              <small class="block text-right mt-1"
+                     [ngClass]="{'p-error': cantidadCaracteresObservacion > longitudMaximaObservaciones }">
+                {{cantidadCaracteresObservacion}}/{{longitudMaximaObservaciones}} máximo de caracteres
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <div class="field col-12 flex flex-column sm:flex-row justify-content-center mt-3">
+          <p-button
+            [disabled]="!formularioValido || mensajeExcedePlazoOtorgado"
+            (onClick)="agregarGuardarResultado()"
+            styleClass="p-button-lg cfe-boton-primary text-white family-poppin-bold btn-adjust-filter w-column-full">
+            <span class="ml-4 mr-4">{{ regitroEnModoEdicion ? 'Modificar' : 'Agregar' }} y guardar</span>
+          </p-button>
+        </div>
+      }
+
+    </form>
+  }
+}
+<div class="border-line"></div>
+
+<div class="mt-3">
+  <app-listar-resultados-prision-preventiva
+    [idActoTramiteCaso]="idActoTramiteCaso"
+    [eventoActualizarTablaResultados]="eventoActualizarTablaResultados"
+    [tramiteEnModoEdicion]="tramiteEnModoEdicion"
+    [actualizar]="actualizar"
+    [reo]="reo"
+    [prolongacion]="prolongacion"
+    [cesacion]="cesacion"
+    [adecuacion]="adecuacion"
+    (alSeleccionarResultado)="alSeleccionarResultado($event)"
+    (listaResultados)="listaResultados($event)"
+    (listaResultadosTodos)="listaResultadosTodos($event)"
+    (limpiarControles)="limpiarControles()"
+    (existeResultadosRegistrados)="existeResultadosRegistrados = $event"/>
+</div>
+
+

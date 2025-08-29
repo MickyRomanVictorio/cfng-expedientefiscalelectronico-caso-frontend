@@ -1,0 +1,23 @@
+
+.solicitar_terminacion_anticipada__container {
+    .cfe-opciones-botones {
+        display: flex;
+        margin-top: 1em;
+        justify-content: space-between;
+        align-items: center;
+
+        p {
+            font-size: 18px;
+            font-weight: normal;
+            color: black;
+            margin: 0;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+    }
+
+}
+:host ::ng-deep .p-inputtextarea {
+  resize: none;
+}

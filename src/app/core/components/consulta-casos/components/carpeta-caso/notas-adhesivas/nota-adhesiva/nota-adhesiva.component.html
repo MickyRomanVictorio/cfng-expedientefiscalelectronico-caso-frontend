@@ -1,0 +1,25 @@
+<div class="bar-footer-section flex align-items-center justify-content-center gap-2">
+    @for (note of caso.notas!.slice(0, 3); track $index) {
+      <div [ngStyle]="{'background-color': note.colorNota, 'height':'90px'}" class="sticky-note cursor-pointer" (click)="eventoVerDetalleNota($event, note)">
+        <div class="extracto-nota p-2 block text-xs">
+            {{ note.textoNota | slice:0:15 }}
+        </div>
+        @if (esSoloLectura()===false) {
+          <a class="block delete-note" href="javascript:void(0);" (click)="eventoBorrar($event, note)">
+            <img [src]="iconAsset.obtenerRutaIcono('uil_trash')" alt="Icono eliminar" />
+          </a>
+        }
+        <div class="folded-corner">
+        </div>
+    </div>
+    }
+
+  @if (esSoloLectura()===false) {
+    @if (caso.notas!.length <=2) {
+      <a (click)="eventoNuevo($event)" href="javascript:void(0);"
+        class="add-icon flex align-items-center justify-content-center">
+        <img [src]="iconAsset.obtenerRutaIcono('plus-square')" alt="Icono de advertencia" />
+      </a>
+    }
+  }
+</div>

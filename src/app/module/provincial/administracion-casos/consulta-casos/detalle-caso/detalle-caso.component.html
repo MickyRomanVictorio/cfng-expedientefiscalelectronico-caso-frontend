@@ -1,0 +1,7 @@
+@if(gestionCasoService.dataObtenida) {
+  <app-informacion-caso></app-informacion-caso>
+  <app-expediente-detalle-tramite
+    [idCaso]="idCaso"
+    [calificarCaso]="calificarCaso"
+  ></app-expediente-detalle-tramite>
+}

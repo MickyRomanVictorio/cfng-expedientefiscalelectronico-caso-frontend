@@ -1,0 +1,197 @@
+<div class="">
+  <div class="cfe-encabezado-modal">
+    <h3
+      [innerHTML]="tituloModal"
+      class="cfe-encabezado-titulo cfe-subtitulo-3 cfe-semi-bold"
+    ></h3>
+
+    <fn-icon
+      (click)="cancelar()"
+      [ico]="obtenerIcono('iClose')"
+      class="cfe-encabezado-cerrar"
+      height="2rem"
+    >
+    </fn-icon>
+  </div>
+  <br />
+  <h6
+    class="cfe-encabezado-titulo cfe-subtitulo-3 cfe-semi-bold"
+    [innerHTML]="tituloCaso"
+  ></h6>
+  <h6>
+    {{ soloLectura ? "Visualizar" : "Seleccionar" }} los sujetos procesales a
+    los cuales se apelará el resultado de la resolución.
+  </h6>
+
+  <div class="cfe-tabla-white">
+    <p-table
+      [sortField]="'nombre'"
+      [sortOrder]="1"
+      [styleClass]="'p-datatable-sm'"
+      [value]="sujetosProcesalesFiltrados"
+      responsiveLayout="stack"
+    >
+      <ng-template let-columns pTemplate="header">
+        <tr>
+          <th class="columna-nro" pSortableColumn="nro">N°</th>
+          <th class="columna-nombre" pSortableColumn="nombre">
+            Nombres y apellidos / Razón social
+          </th>
+          <th class="columna-delito" pSortableColumn="delito">Delito</th>
+          <th
+            class="columna-resultado-primera-instancia"
+            pSortableColumn="resultado-primera-instancia"
+          >
+            Tipo de Sentencia
+          </th>
+          <th class="columna-apelar" pSortableColumn="apelar">
+            <input
+              (change)="seleccionarTodos($event)"
+              [(ngModel)]="selectAllCheck"
+              [disabled]="soloLectura"
+              type="checkbox"
+            />
+            Apelar sentencia
+          </th>
+          <th class="columna-petitorio" pSortableColumn="petitorio">
+            Tipo de petitorio
+          </th>
+          <th class="columna-apelar" pSortableColumn="apelar">Clase de Pena</th>
+
+          <th class="columna-apelar" pSortableColumn="apelar">
+            Reparación civil
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template let-i="rowIndex" let-item pTemplate="body">
+        <tr class="p-selectable-row">
+          <td style="text-align: center; vertical-align: middle">
+            <span class="p-column-title font-semibold">N°</span>
+            {{ i + 1 }}
+          </td>
+          <td>
+            <span class="p-column-title font-semibold"
+              >Nombres y apellidos /<br />Razón social</span
+            >
+            <div>{{ item.sujeto | nombrePropio }}</div>
+          </td>
+          <td style="text-align: left; vertical-align: middle">
+            <span class="p-column-title font-semibold">Delito</span>
+            {{ item.delito | capitalizar }}
+          </td>
+          <td style="text-align: center; vertical-align: middle">
+            <span class="p-column-title font-semibold"
+              >Tipo de Sentencia(PPC)</span
+            >
+            {{ item.tipoSentencia | capitalizar }}
+          </td>
+          <td style="text-align: center; vertical-align: middle">
+            <span class="p-column-title font-semibold">Apelar sentencia</span>
+            <label>
+              <input
+                (change)="onSelectionChange(item, $event)"
+                [ngModel]="item.flApelacion === '1'"
+                [disabled]="soloLectura"
+                type="checkbox"
+              />
+            </label>
+          </td>
+          <td style="text-align: center; vertical-align: middle">
+            <span class="p-column-title font-semibold">Tipo de petitorio</span>
+            <p-dropdown
+              styleClass="p-inputtext-md"
+              placeholder="Pendiente petitorio"
+              [options]="listaRespuesta"
+              optionLabel="nombre"
+              optionValue="id"
+              appendTo="body"
+              (onChange)="onSelectionPetitorio(item, $event)"
+              [(ngModel)]="item.idPetitorio"
+              [showClear]="true"
+              autoDisplayFirst="false"
+              [disabled]="item.flApelacion !== '1' || soloLectura"
+            >
+              <ng-template let-respuesta pTemplate="item">
+                <div>{{ respuesta.nombre }}</div>
+              </ng-template>
+            </p-dropdown>
+          </td>
+          <td style="text-align: center; vertical-align: middle">
+            <span class="p-column-title font-semibold">Apelar Pena</span>
+            @if(item.pena !== null && item.pena !== '') {
+            <label title="{{ item.tipoPena }}">
+              <input
+                *ngIf="item.pena !== ''"
+                (change)="onSelectionChangePena(item, $event)"
+                [ngModel]="item.flApelacionPena === '1'"
+                [disabled]="item.desactivoPenaReparacionCivil || soloLectura "
+                type="checkbox"
+              />
+              {{ item.pena }}
+            </label>
+            }@else {
+            <span >-</span>
+            }
+          </td>
+          @if(item.mostrarCheckRepCivil === '1') {
+          <td style="text-align: center; vertical-align: middle">
+            <span class="p-column-title font-semibold">Apelar Reparacion</span>
+            <label>
+              <input
+                (change)="onSelectionChangeRCivil(item, $event)"
+                [ngModel]="item.flApelacionReparacionCivil === '1'"
+                [disabled]="item.desactivoPenaReparacionCivil || soloLectura"
+                type="checkbox"
+              />
+            </label>
+          </td>}
+          @else { 
+          <td style="text-align: center; vertical-align: middle">
+            <label >{{"-"}}</label>
+          </td>
+          }
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8">No se encontró información de sujetos procesales.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <app-paginator
+      (paginate)="onPaginate($event)"
+      [items]="itemPaginado"
+      [query]="query"
+      [rowsPerPageOptions]="[]"
+    >
+    </app-paginator>
+  </div>
+  <div
+    *ngIf="activaPetitorio"
+    class="flex-center border-round-lg p-3 gap-2"
+    style="background-color: #f8eed3"
+  >
+    <i
+      class="pi pi-exclamation-circle"
+      style="color: #f19700; font-size: 25px"
+    ></i>
+    <span class="text-md"
+      >El escrito de recurso de apelacion será registrado por el fiscal.</span
+    >
+  </div>
+</div>
+<div class="col-12 flex align-items-center justify-content-center mt-2 mb-2">
+  <button
+    class="cfe-boton-opcion cfe-boton-secondary cfe-boton-lg font-semibold with-button"
+    (click)="cancelar()"
+  >
+    Cancelar
+  </button>
+  <button
+    class="ml-3 cfe-boton-primary cfe-boton-lg font-semibold with-button"
+    [disabled]="!mostrarBtnAceptar"
+    (click)="aceptar()"
+  >
+    Aceptar
+  </button>
+</div>

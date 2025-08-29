@@ -1,0 +1,93 @@
+<div class="grid h-full w-full m-0 border-round-sm mt-17">
+  <div class="col-12 px-6 py-4">
+
+    <div class="m-4" style="height: 14rem;">
+      <app-adjuntar-archivo-manual
+        (onRemove)="removeFileAttach()"
+        (onSelect)="onSelect($event)">
+      </app-adjuntar-archivo-manual>
+    </div>
+    <div class="flex justify-content-center text-center">
+      <p-button (onClick)="eventoAgregar()" [disabled]="activarBtnAgregar()"
+                [styleClass]="'p-button-lg cfe-boton-primary  cfe-boton-lg'"
+                label="Agregar"></p-button>
+    </div>
+    <p *ngIf="mostrarTamanoError" class="text-red-500">{{ mensajeErrorTamano }}</p>
+    <br>
+    <div class="w-full" style="height: 24rem;">
+      <p-table
+        [rowHover]="true"
+        [rows]="5"
+        [value]="archivosAdjuntos"
+        responsiveLayout="stack">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 20px">
+            </th>
+            <th>
+              Archivo
+            </th>
+            <th>
+              Duración/T
+            </th>
+            <th>
+              Peso
+            </th>
+            <th style="width: 125px">
+              Acciones
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template let-archivo pTemplate="body">
+          <tr class="p-selectable-row">
+            <td>
+              <span class="p-column-title"></span>
+              <div>
+                <p-checkbox (onChange)="eventoSeleccionarParaGuardar()" [(ngModel)]="archivo.isSelect" [binary]="true"
+                            inputId="binary"/>
+              </div>
+            </td>
+            <td>
+              <span class="p-column-title">Archivo</span>
+              <div>
+                <img [ngSrc]="this.iconAsset.obtenerRutaIcono(archivo.imgDoc)"
+                     alt="{{archivo.file.name}}" fill
+                     style="width: 15px; height: auto; position: relative;">
+                {{ archivo.file.name }}
+              </div>
+            </td>
+            <td>
+              <span class="p-column-title">Duración/T</span>
+              <div>
+                <span>
+                  {{ archivo.duration }}
+                </span>
+              </div>
+            </td>
+            <td>
+              <span class="p-column-title">Peso</span>
+              <div>
+                {{ archivo.size }}
+              </div>
+            </td>
+            <td class="align-items-center">
+              <img
+                (click)="eliminarArchivoModal(archivo)"
+                [ngSrc]="this.iconAsset.obtenerRutaIcono('trash')" alt="Eliminar"
+                fill style="width: 15px; height: auto; position: relative;">
+            </td>
+          </tr>
+        </ng-template>
+
+      </p-table>
+    </div>
+
+    <div class="flex justify-content-around mt-7 mb-4 text-center">
+      <p-button (onClick)="dialogRef.close()" [styleClass]="'p-button-lg cfe-boton-secondary text-primary font-bold'"
+                label="Cancelar"></p-button>
+      <p-button (onClick)="eventoGuardar()" [disabled]="activarBtnGuardar()"
+                [styleClass]="'p-button-lg cfe-boton-primary  cfe-boton-lg'"
+                label="Guardar"></p-button>
+    </div>
+  </div>
+</div>

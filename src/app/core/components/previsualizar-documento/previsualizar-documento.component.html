@@ -1,0 +1,28 @@
+<div class="previsualizar-documento-contenedor">
+    <div class="cabecera-archivo-subido">
+        <img 
+            [src]="pdfIcon"
+            alt="Pdf Ícono"
+        >
+        <h4>Vista previa del documento: {{ nombreArchivo }}</h4>
+        <fn-icon
+            class="cerrar-previsualizacion"
+            [ico]="obtenerIcono('iClose')"
+            height='2em'
+            (click)="cerrarPrevisualizacion()"
+        >
+        </fn-icon>
+    </div>
+    <ngx-extended-pdf-viewer
+        [src]="pdfUrl"
+        [showPresentationModeButton]="false"
+        [showDownloadButton]="false"
+        [showUnverifiedSignatures]="true"
+        [showSecondaryToolbarButton]="false"
+        [showTextEditor]="false"
+        [showDrawEditor]="false"
+        [showOpenFileButton]="false"
+        [showStampEditor]="false"
+    >
+    </ngx-extended-pdf-viewer> 
+</div>

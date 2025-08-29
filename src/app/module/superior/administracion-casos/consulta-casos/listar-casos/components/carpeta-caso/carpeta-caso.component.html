@@ -1,0 +1,119 @@
+<div class="card-header-container">
+    <div *ngIf="casofiscal.flgLectura === '1'; else templateLectura"
+        [ngStyle]="{'border-bottom': 'solid 52px ' + '#1B1C1E', 'color': '#fff'}">
+        <div class="numero-caso" [innerHTML]="colorizeCode(casofiscal.numeroCaso)">
+
+        </div>
+    </div>
+    <ng-template #templateLectura>
+            <div *ngIf="estadoCaso; else templateVacio" [ngStyle]="{'border-bottom': 'solid 52px ' + '#F4D8D8', 'color': '#000'}">
+                <div class="numero-caso" [innerHTML]="colorizeCode(casofiscal.numeroCaso)">
+
+                </div>
+            </div>
+        <ng-template #templateVacio>
+            <div [ngStyle]="{'border-bottom': 'solid 52px ' + '#E7EAED', 'color': '#000'}">
+                <div class="numero-caso" [innerHTML]="colorizeCode(casofiscal.numeroCaso)">
+
+                </div>
+            </div>
+        </ng-template>
+    </ng-template>
+</div>
+<div class="card-body-z" [ngStyle]="{'background-color': (casofiscal.flgCasoLeido ==='1'? '#E7EAED': '#white')}">
+    <div class="flex justify-content-between flex-wrap">
+        <div class="flex align-items-center justify-content-center">
+            <span>Etapa: <strong class="capitalize">{{ casofiscal.etapa?.toLowerCase() }}</strong></span>
+        </div>
+        <div class="flex align-items-center justify-content-center"><i class="pi pi-ellipsis-v"></i></div>
+        <img *ngIf="casofiscal.flgLectura === '1'" src="../../../../../../../../assets/icons/eyesIcon.svg" alt="Icono de ver" />
+
+    </div>
+    <div class="pt-3">
+        <div>
+            Fiscal:
+            <div>
+                <strong class="capitalize">{{ casofiscal.fiscal?.toLowerCase() }}</strong>
+            </div>
+        </div>
+    </div>
+    <div class="pt-3">
+        Último acceso procesal:
+        <div>
+            <strong class="capitalize">{{ casofiscal.ultimoTramite?.toLowerCase() || "-" }}</strong>
+        </div>
+    </div>
+    <div class="pt-3">
+        Delitos:
+        <div class="flex gap-2">
+            <strong >{{ flatDelitos(casofiscal.delitos) }}</strong>
+            <span *ngIf="casofiscal.delitos!.length > 0" (click)="showCasos()"
+                class="cursor-pointer link">Ver más</span>
+        </div>
+    </div>
+    <div class="pt-3">
+        <div class="flex justify-content-between flex-wrap">
+            <div class="align-items-center">
+                <strong>
+                    F. Registro
+                </strong>
+                <div>{{ casofiscal.fechaIngreso }}</div>
+            </div>
+            <div class="align-items-center">
+                <strong>F. último trámite</strong>
+                <div>
+                    {{casofiscal.fechaUltimoTramite }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <p-dialog [showHeader]="false" [(visible)]="visible" [modal]="true" [style]="{ 'min-width': '30vw', 'max-width': '1200px' }"
+     [draggable]="true"
+        [resizable]="false">
+        <div class="m-0 p-3">
+
+            <div class="flex w-full justify-content-between">
+                <h3 class="cfe-subtitulo-3">Delitos</h3>
+                <p-button type="button" icon="pi pi-times" (click)="visible = false" label="Cerrar" class="p-button-secondary"></p-button>
+            </div>
+
+
+            <span>
+                <strong class="cfe-semi-bold">Caso: </strong>
+                <strong [innerHTML]="colorizeCode(casofiscal.numeroCaso)"></strong>
+            </span>
+            <div>
+                <p-table class="cfe-bold" [value]="casofiscal.delitos!">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>N°</th>
+                            <th>Delito</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-delitos let-i="rowIndex">
+                        <tr class="cfe-semi-bold">
+                            <td style="padding-right: 5px; width: 30px;">{{ i + 1 }} </td>
+                            <td>{{ delitos.nombre }}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </p-dialog>
+
+    <div *ngFor="let plazo of casofiscal.plazos">
+        <app-barra-progreso-caso [titulo]="plazo.nombreActoProcesal!" [inicio]="plazo.diasTrasncurridos!"
+            [diasPlazo]="plazo.diasPlazo!" [indicadorPlazo]="plazo.indSemaforo!" >
+        </app-barra-progreso-caso>
+
+    </div>
+
+    <div class="pt-0 flex justify-content-end container-view-details">
+        <p-button icon="pi pi-angle-right" (click)="abrirDetalleCaso(casofiscal)"></p-button>
+    </div>
+    <br>
+
+    <app-etiqueta-acciones-caso [casoFiscal]="casofiscal"></app-etiqueta-acciones-caso>
+    <app-pendientes-caso [metaInfo]="casofiscal.pendientes!" [updateEstadoCaso]="actualizarEstadoLeido.bind(this)"></app-pendientes-caso>
+    <app-nota-adhesiva [caso]="casofiscal"></app-nota-adhesiva>
+</div>

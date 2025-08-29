@@ -1,0 +1,532 @@
+<div class="cfe-container">
+  <div class="cfe_bandeja__header">
+    <div class="cfe_bandeja_header__content">
+      <fn-icon [ico]="iconUtil.obtenerIcono('iFolderSearch')" height="1.6rem"></fn-icon>
+      <h3 class="cfe-titulo-1">Reasignar casos</h3>
+      <fn-icon [ico]="iconUtil.obtenerIcono('iTooltip')" height="1.6rem"></fn-icon>
+    </div>
+  </div>
+
+  <form class="cfe_bandeja__filters" [formGroup]="formularioReasignacion">
+    <div class="grid row-magin-top">
+      <div class="col">
+        <div class="field mb-0">
+          <label class="font-semibold">Fiscal asignado:</label>
+          <p-dropdown
+            (ngModelChange)="eventoCambiarFiscalAsignado($event)"
+            [options]="listaFiscalesAsignacion"
+            optionLabel="nombreCompleto"
+            optionValue="idFiscal"
+            [showClear]="true"
+            placeholder="Seleccione un fiscal"
+            styleClass="py-1 p-inputtext-lg"
+            [formControl]="fiscalAsignado"
+            emptyMessage="No se encontraron resultados"
+          >
+            <ng-template let-fiscalAsignado pTemplate="item">
+              <div class="grid">
+                <div class="col text-base">
+                  {{ fiscalAsignado.nombreCompleto }}
+                </div>
+                <div class="col font-semibold text-right text-base">
+                  {{ fiscalAsignado.casosAsignados }} casos asignados
+                </div>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
+      </div>
+    </div>
+    <div class="grid mt-1">
+      <div class="col">
+        <div class="field mb-0">
+          <label for="buscar" class="font-semibold">Buscar</label>
+          <input
+            pInputText
+            type="text"
+            class="p-inputtext-lg py-3 text-lg w-full"
+            (keyup)="filtrarCasos()"
+            placeholder="Ingrese algún texto para buscar cualquier información que se muestre en la lista"
+            formControlName="buscar"
+          />
+        </div>
+      </div>
+      <div
+        class="col-fixed"
+        [ngClass]="{ 'cfe-filtro-boton-fondo': mostrarFiltros }"
+      >
+        <div class="field mb-0">
+          <label for="button" class="font-semibold">&nbsp;</label>
+          <button
+            class="cfe-filtro-boton"
+            (click)="eventoMostrarOcultarFiltros()"
+          >
+            <fn-icon
+              [ico]="iconUtil.obtenerIcono('iFilterShow')"
+              height="2.1rem"
+            ></fn-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+    @if (!mostrarFiltros) {
+    <div class="grid mt-3 mb-4">
+      <div class="col">
+        <div class="flex flex-wrap gap-3">
+          <div class="flex align-items-center">
+            <p-radioButton
+              value="ultimosMeses"
+              formControlName="tiempoAFiltrar"
+              inputId="ultimoSeisMeses"
+              (ngModelChange)="!mostrarFiltros && listarCasosAsignados()"
+            ></p-radioButton>
+            <label for="para filtrar los últimos 6 meses" class="ml-2"
+              >Últimos 6 meses</label
+            >
+          </div>
+          <div class="flex align-items-center">
+            <p-radioButton
+              value="todos"
+              formControlName="tiempoAFiltrar"
+              inputId="todosLosMeses"
+              (ngModelChange)="!mostrarFiltros && listarCasosAsignados()"
+            ></p-radioButton>
+            <label for="para filtrar todos los meses" class="ml-2"
+              >Todos los meses</label
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    } @if (mostrarFiltros) {
+    <div class="grid nested-grid mt-1 cfe-filtros">
+      <div class="col-12 cfe-filtros-fondo">
+        <div class="grid">
+          <div class="col-12 md:col-6">
+            <div class="field mb-0">
+              <label for="Fecha de asignacion" class="font-semibold"
+                >Fecha de asignación:</label
+              >
+              <div class="grid">
+                <div class="col">
+                  <p-calendar
+                    dateMask
+                    dateFormat="dd/mm/yy"
+                    class="p-inputtext-lg cfe-calendar h-56 mt-1"
+                    [showIcon]="true"
+                    icon="cfe-calendar-icon"
+                    placeholder="dd/mm/aaaa"
+                    formControlName="fechaAsignacionInicio"
+                  ></p-calendar>
+                </div>
+                <div class="col">
+                  <p-calendar
+                    dateMask
+                    dateFormat="dd/mm/yy"
+                    class="p-inputtext-lg cfe-calendar h-56 mt-1"
+                    [showIcon]="true"
+                    icon="cfe-calendar-icon"
+                    placeholder="dd/mm/aaaa"
+                    formControlName="fechaAsignacionFin"
+                  ></p-calendar>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col col-12 md:col-6">
+            <div class="field mb-0">
+              <label class="font-semibold">Tipo de asignación:</label>
+              <p-dropdown
+                styleClass="p-inputtext-lg py-1"
+                [options]="tiposAsignacion"
+                optionValue="id"
+                optionLabel="nombre"
+                emptyMessage="Sin resultados"
+                placeholder="Seleccione un tipo de asignación"
+                [showClear]="true"
+                formControlName="tipoAsignacion"
+                emptyMessage="No se encontraron resultados"
+              ></p-dropdown>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cfe-filtros-fondo cfe-filtros-opciones">
+        <button
+          class="cfe-boton-secondary cfe-boton-m mr-3 boton-w"
+          (click)="limpiarFiltros()"
+        >
+          Limpiar filtros
+        </button>
+        <button
+          class="cfe-boton-primary cfe-boton-m mr-2 boton-w"
+          (click)="listarCasosAsignados()"
+        >
+          Buscar
+        </button>
+      </div>
+    </div>
+    }
+  </form>
+
+  @if (mostrarOpcionesReasignacion) {
+  <ng-container>
+    <div class="cfe_bandeja__header">
+      <div class="cfe_bandeja_header__content">
+        <h6 class="cfe-subtitulo-1 font-semibold">Opciones de reasignación</h6>
+        <fn-icon [ico]="iconUtil.obtenerIcono('iTooltip')" height="1.6rem"></fn-icon>
+      </div>
+    </div>
+
+    <form [formGroup]="formularioOpcionesReasignacion">
+      <div class="grid row-magin-top">
+        <div class="col-12 md:col-4">
+          <label class="font-semibold">Tipo de reasignación:</label>
+          <p-dropdown
+            styleClass="p-inputtext-lg py-1"
+            [options]="tiposReasignacion"
+            optionValue="id"
+            optionLabel="nombre"
+            emptyMessage="Sin resultados"
+            placeholder="Seleccione un tipo de reasignación"
+            [showClear]="true"
+            formControlName="tipoReasignacion"
+            emptyMessage="No se encontraron resultados"
+            (ngModelChange)="eventoCambiarTipoReasignacion($event)"
+          ></p-dropdown>
+        </div>
+        <div class="col-12 md:col-4">
+          <label class="font-semibold">Fiscal a reasignar:</label>
+          <p-dropdown
+            [options]="listaFiscalesReasignacion"
+            optionLabel="nombreCompleto"
+            optionValue="idFiscal"
+            [showClear]="true"
+            placeholder="Seleccione un fiscal a reasignar"
+            styleClass="py-1 p-inputtext-lg"
+            [formControl]="fiscalAReasignar"
+            emptyMessage="No se encontraron resultados"
+          >
+            <ng-template let-fiscalReasignado pTemplate="item">
+              <div class="grid">
+                <div class="col text-base">
+                  {{ fiscalReasignado.nombreCompleto }}
+                </div>
+                <div class="col font-semibold text-right text-base">
+                  {{ fiscalReasignado.casosAsignados }} casos asignados
+                </div>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
+        <div class="col-12 md:col-4">
+          <label class="font-semibold">Motivo:</label>
+          <input
+            pInputText
+            type="text"
+            class="p-inputtext-lg py-3 text-lg w-full"
+            placeholder="Ingrese el motivo de la reasignación"
+            formControlName="motivo"
+            style="height: 55px"
+            [maxlength]="300"
+          />
+        </div>
+      </div>
+
+      <div class="grid row-magin-top">
+        @if (mostrarFechaReasignacionTemporal) {
+        <div class="col-12 md:col-6">
+          <div class="field mb-0">
+            <label for="Fechas de reasignación temporal" class="font-semibold">
+              Fechas de reasignación temporal
+            </label>
+            <div
+              class="grid"
+              [ngClass]="{ 'reasignacion-disabled': !esTipoAsignacionTemporal }"
+            >
+              <div class="col">
+                <p-calendar
+                  dateMask
+                  dateFormat="dd/mm/yy"
+                  class="p-inputtext-lg cfe-calendar h-56"
+                  [showIcon]="true"
+                  icon="cfe-calendar-icon"
+                  placeholder="DD/MM/AAAA"
+                  formControlName="fechaReasignacionInicio"
+                  [disabled]='true'
+                  (onSelect)="validarFechas(formularioOpcionesReasignacion, true)"
+                ></p-calendar>
+              </div>
+              <div class="col">
+                <p-calendar
+                  dateMask
+                  dateFormat="dd/mm/yy"
+                  class="p-inputtext-lg cfe-calendar h-56"
+                  [showIcon]="true"
+                  icon="cfe-calendar-icon"
+                  placeholder="DD/MM/AAAA"
+                  formControlName="fechaReasignacionFin"
+                  [disabled]="true"
+                  (onSelect)="validarFechas(formularioOpcionesReasignacion,false)"
+                ></p-calendar>
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+
+        <div class="col-12 md:col-3">
+          <label for="button" class="font-semibold">Opcional</label>
+          <button
+            class="cfe-boton-secondary cfe-boton-m mr-3 cfe-boton-icono-izquierda"
+            style="margin-top: 10px"
+            (click)="abrirArchivoParaSubirlo($event)"
+          >
+            <fn-icon
+              class="ml-1"
+              [ico]="iconUtil.obtenerIcono('iAttach')"
+              height="1.6rem"
+            ></fn-icon>
+            Subir Documento
+          </button>
+          <input
+            #archivoEntrada
+            class="hidden"
+            type="file"
+            accept="application/pdf"
+            (change)="alSeleccionarArchivo($event)"
+          />
+          @if (archivoSeleccionado) {
+          <div class="archivo-subido">
+            <span class="nombre-archivo" (click)="verArchivoSubido()">{{
+              archivoSeleccionado.name
+            }}</span>
+            <span class="peso-archivo"
+              >({{ obtenerPesoFormateado(archivoSeleccionado!.size) }})</span
+            >
+            <fn-icon
+              [ico]="iconUtil.obtenerIcono('iClose')"
+              height="1.4em"
+              (click)="borrarArchivoSubido()"
+            >
+            </fn-icon>
+          </div>
+          }
+        </div>
+
+        <div class="col-12 md:col-3">
+          <div class="field mb-0">
+            <label for="button" class="font-semibold">&nbsp;</label>
+            <button
+              class="cfe-boton-primary cfe-boton-lg w-full"
+              (click)="reasignarCaso()"
+            >
+              <fn-icon
+                class="ml-1"
+                [ico]="iconUtil.obtenerIcono('iReAsign')"
+                height="1.6rem"
+              ></fn-icon>
+              Reasignar
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ng-container>
+  }
+
+  <div class="cfe_bandeja__table">
+    <div class="cfe_bandeja_table__title grid">
+      <div class="col-12 md:col-6">
+        <!-- -->
+      </div>
+      <div
+        class="col-12 md:col-6 flex flex-column sm:flex-row justify-content-end align-items-center pr-0"
+      >
+        <button
+          class="cfe-boton-secondary cfe-boton-m cfe-boton-m cfe-boton-m w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start"
+          (click)="exportarPdfExcel('PDF')"
+        >
+          <fn-icon
+            class="ml-1"
+            [ico]="iconUtil.obtenerIcono('iFileDownload')"
+            height="1.6rem"
+          ></fn-icon>
+          Exportar PDF
+        </button>
+        <button
+          class="cfe-boton-secondary cfe-boton-m cfe-boton-m w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start"
+          (click)="exportarPdfExcel('Excel')"
+        >
+          <fn-icon
+            class="ml-1"
+            [ico]="iconUtil.obtenerIcono('iTable')"
+            height="1.6rem"
+          ></fn-icon>
+          Exportar Excel
+        </button>
+      </div>
+    </div>
+    <div class="cfe_bandeja_table__content">
+      <p-table
+        [value]="casosPorAsignarFiltrados"
+        [rowHover]="true"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [styleClass]="'p-datatable-sm'"
+        responsiveLayout="stack"
+        [(selection)]="casosSeleccionados"
+        (onHeaderCheckboxToggle)="onHeaderCheckboxToggle($event)"
+        (onRowSelect)="onRowSelect($event)"
+        (onRowUnselect)="onRowUnselect($event)"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="w-col-20">
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th pSortableColumn="numeroCaso">
+              Número de caso<p-sortIcon field="numeroCaso"></p-sortIcon>
+            </th>
+            <th pSortableColumn="etapa">
+              Etapa<p-sortIcon field="etapa"></p-sortIcon>
+            </th>
+            <th pSortableColumn="actoProcesal">
+              Acto procesal<p-sortIcon field="actoProcesal"></p-sortIcon>
+            </th>
+            <th pSortableColumn="tramite">
+              Trámite<p-sortIcon field="tramite"></p-sortIcon>
+            </th>
+            <th pSortableColumn="fiscalAsignado">
+              Fiscal asignado<p-sortIcon field="fiscalAsignado"></p-sortIcon>
+            </th>
+            <th class="col-width-172" pSortableColumn="feIngreso">
+              Fecha de registro de denuncia<p-sortIcon field="feDenuncia"></p-sortIcon>
+            </th>
+            <th class="col-width-172" pSortableColumn="feIngreso">
+              Fecha de ingreso al despacho<p-sortIcon field="feIngreso"></p-sortIcon>
+            </th>
+            <th class="col-width-172" pSortableColumn="feAsignacion">
+              Fecha de asignación<p-sortIcon field="feAsignacion"></p-sortIcon>
+            </th>
+            <th class="w-col-10"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-caso>
+          <tr class="p-selectable-row">
+            <td class="table_td_content_start">
+              <div class="col-offset-3">
+                <p-tableCheckbox [value]="caso"></p-tableCheckbox>
+              </div>
+            </td>
+            <td class="table_td_content_start caso-container">
+              <span class="p-column-title">Número de caso</span>
+              <div class="plazo-item-row">
+                <div>
+                  <span  (copy)="copiarAlPortapapeles(caso.numeroCaso)"
+                    [innerHTML]="stringUtil.obtenerNumeroCaso(caso.numeroCaso)"
+                  ></span>
+                </div>
+              </div>
+
+              <div class="mb-1 mt-2">
+                <span
+                  class="badge badge-{{
+                    obtenerClaseDeTipoAsignacion(caso.tipoAsignacion)
+                  }}"
+                  >Asignación {{ caso.tipoAsignacion.toLowerCase() }}</span
+                >
+              </div>
+            </td>
+            <td data-column-name="Etapa">
+              <span class="p-column-title">Etapa</span>
+              <div>
+                <div class="">{{ caso.etapa }}</div>
+              </div>
+            </td>
+            <td data-column-name="Acto Procesal">
+              <span class="p-column-title">Acto Procesal</span>
+              <div>
+                <div class="">{{ caso.actoProcesal }}</div>
+              </div>
+            </td>
+            <td data-column-name="Trámite">
+              <span class="p-column-title">Trámite</span>
+              <div>
+                <div class="">{{ caso.tramite }}</div>
+              </div>
+            </td>
+            <td data-column-name="Fiscal Asignado">
+              <span class="p-column-title">Fiscal Asignado</span>
+              {{ caso.fiscalAsignado }}
+            </td>
+            <td class="table_td_content_start fecha-container">
+              <span class="p-column-title">Fecha Denuncia</span>
+              <div>
+                <div>{{ caso.fechaDenuncia| dateformat }}</div>
+                <div class="cfe-row-top">
+                  {{ caso.horaDenuncia | dateformat : "hour24" }}
+                </div>
+              </div>
+            </td>
+            <td class="table_td_content_start fecha-container">
+              <span class="p-column-title">Fecha Ingreso</span>
+              <div>
+                <div>{{ caso.fechaIngreso| dateformat }}</div>
+                <div class="cfe-row-top">
+                  {{ caso.horaIngreso | dateformat : "hour24" }}
+                </div>
+              </div>
+            </td>
+            <td class="table_td_content_start fecha-container">
+              <span class="p-column-title">Fecha Asignación</span>
+              <div>
+                <div>{{ caso.fechaAsignacion| dateformat }}</div>
+                <div class="cfe-row-top">
+                  {{ caso.horaAsignacion | dateformat : "hour24" }}
+                </div>
+              </div>
+            </td>
+          
+            <td class="table_td_content_start no-before">
+              <div class="block lg:hidden col-offset-6"></div>
+              <div>
+                <div
+                  class="cfe-btn-more-options"
+                  (click)="menu2.toggle($event)"
+                >
+                  <div class="cfe-btn-more-options-content">
+                    <span></span><span></span><span></span>
+                  </div>
+                </div>
+                <p-menu
+                  #menu2
+                  (onShow)="obtenerOpcionesMenu(caso)"
+                  [model]="opcionesMenu"
+                  [popup]="true"
+                  class="cfe-menu-options"
+                ></p-menu>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="9" style="text-align: center">
+              No se encontraron registros con los criterios de búsqueda
+              ingresados
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <app-paginator
+        [query]="query"
+        [items]="itemPaginado"
+        [rowsPerPageOptions]="[]"
+        [resetPage]="resetPage"
+        (paginate)="onPaginate($event)"
+      ></app-paginator>
+    </div>
+  </div>
+</div>
+
+<p-toast></p-toast>

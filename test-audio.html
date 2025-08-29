@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+.custom-audio-player {
+    width: 100%;
+    max-width: 600px;
+    background-color: #333;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.audio-controls {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+
+.audio-controls button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: white;
+}
+
+.icon {
+    height: 20px;
+    width: 20px;
+}
+
+.seek-bar {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.seek-bar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: white;
+    cursor: pointer;
+    margin-top: -4px; /* Ajusta esto para centrar el thumb en la pista */
+}
+
+.seek-bar::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: white;
+    cursor: pointer;
+}
+
+.seek-bar::-ms-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: white;
+    cursor: pointer;
+}
+
+.seek-bar::-webkit-slider-runnable-track {
+    height: 4px;
+    background: linear-gradient(to right, #6a5acd, #00bfff, #8a2be2); /* Degradado morado y azul */
+    border-radius: 2px;
+}
+
+.seek-bar::-moz-range-track {
+    height: 4px;
+    background: linear-gradient(to right, #6a5acd, #00bfff, #8a2be2);
+    border-radius: 2px;
+}
+
+.seek-bar::-ms-track {
+    height: 4px;
+    background: linear-gradient(to right, #6a5acd, #00bfff, #8a2be2);
+    border-radius: 2px;
+    border-color: transparent;
+    color: transparent;
+}
+
+.time {
+    min-width: 50px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.volume-slider {
+    position: absolute;
+    right: 20px;
+    top: -120px;
+    display: none;
+    background-color: #444;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.volume-slider input[type="range"] {
+    -webkit-appearance: slider-vertical;
+    appearance: slider-vertical;
+    width: 8px;
+    height: 100px;
+    margin: 10px 0;
+}
+
+
+  </style>
+
+
+</head>
+<body>
+  <div class="custom-audio-player">
+    <audio id="audio">
+        <source src="http://172.16.111.112:8085/assets/temporal/audio.mpeg" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
+    <div class="audio-controls">
+        <button id="playPause">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-play">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-pause" style="display: none;">
+                <rect x="6" y="4" width="4" height="16"></rect>
+                <rect x="14" y="4" width="4" height="16"></rect>
+            </svg>
+        </button>
+        <span id="currentTime" class="time">0:00</span>
+        <input type="range" id="seekBar" value="0" step="1" class="seek-bar">
+        <span id="duration" class="time">0:00</span>
+        <button id="muteToggle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-volume">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M19.07 4.93a10 10 0 010 14.14"></path>
+            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-mute" style="display: none;">
+                <line x1="1" y1="1" x2="23" y2="23"></line>
+            </svg>
+        </button>
+    </div>
+</div>
+
+
+
+
+  <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const audio = document.getElementById('audio');
+    const seekBar = document.getElementById('seekBar');
+    const currentTimeDisplay = document.getElementById('currentTime');
+
+    // Actualizar el tiempo de reproducción actual del audio
+    audio.addEventListener('timeupdate', function() {
+        const value = (this.currentTime / this.duration) * 100;
+        seekBar.value = value;
+        currentTimeDisplay.textContent = formatTime(this.currentTime);
+    });
+
+    // Permite cambiar la posición de reproducción del audio al interactuar con la barra
+    seekBar.addEventListener('input', function() {
+        const time = audio.duration * (this.value / 100);
+        audio.currentTime = time;
+    });
+
+    // Formatear el tiempo en minutos y segundos
+    function formatTime(time) {
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60);
+        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    }
+
+    // Añadir funcionalidad de play/pause
+    document.getElementById('playPause').addEventListener('click', function() {
+        if (audio.paused) {
+            audio.play();
+            this.querySelector('.icon-play').style.display = 'none';
+            this.querySelector('.icon-pause').style.display = 'block';
+        } else {
+            audio.pause();
+            this.querySelector('.icon-play').style.display = 'block';
+            this.querySelector('.icon-pause').style.display = 'none';
+        }
+    });
+
+    // Añadir funcionalidad de mute/unmute
+    document.getElementById('muteToggle').addEventListener('click', function() {
+        audio.muted = !audio.muted;
+        this.querySelector('.icon-volume').style.display = audio.muted ? 'none' : 'block';
+        this.querySelector('.icon-mute').style.display = audio.muted ? 'block' : 'none';
+    });
+});
+
+  </script>
+</body>
+</html>

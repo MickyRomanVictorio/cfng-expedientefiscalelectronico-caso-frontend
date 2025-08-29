@@ -1,0 +1,346 @@
+<form [formGroup]="formAcuerdoActa" class="datos-reparacion">
+    @if(visibleMensajeError){
+    <div class="w-full mb-3">
+        <mensaje-completar-campos (cerrado)="visibleMensajeError = false" [titulo]="txtMensajeError"
+            [closable]="true" />
+    </div>
+    }
+    <div class="formgrid grid">
+        <div class="col-12 field">
+            <div class="field mb-0">
+                <label for="tipoPagoTotal" class="p-label-bottom font-bold text-sm">{{datosAcuerdoActa?.reparacionCivil!=null? 'Datos de la reparación civil':'Datos del Pago'}}</label>
+                <div class="text-left pt-1 pb-1">
+                    <p-radioButton (onClick)="cambiarTipoReparacion($event.value)" [value]="ACUERDO_ACTA.PAGO_TOTAL"
+                        formControlName="tipoPagoTotal" inputId="pagoTotal"
+                        name="tipoPagoTotal"></p-radioButton>
+                    <label for="pagoTotal" class="ml-2 text-sm">Pago Total</label>
+                    <p-radioButton (onClick)="cambiarTipoReparacion($event.value)"
+                        [value]="ACUERDO_ACTA.PAGO_PARCIAL" formControlName="tipoPagoTotal"
+                        inputId="pagoParcial" name="tipoPagoTotal" class="ml-3"></p-radioButton>
+                    <label for="pagoParcial" class="ml-2 text-sm">Pago Parcial</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 field">
+            <label for="tipoPago" class="p-label-bottom font-bold text-sm">Tipo de pago</label>
+            <p-dropdown (onChange)="cambiarTipoPago($event.value)" [options]="listaTipoPago" formControlName="tipoPago"
+                optionValue="id" optionLabel="nombre" placeholder="Seleccione" styleClass="p-inputtext-md"
+                emptyMessage="Resultados no encontrados">
+            </p-dropdown>
+        </div>
+        @if(formAcuerdoActa.value.tipoPago==ACUERDO_ACTA.DEPOSITO_JUDICIAL){
+        <div class="col-12 field">
+            <label for="codigoDepositoJudicial" class="p-label-bottom font-bold text-sm">Código de depósito judicial</label>
+            <input digitOnly maxlength="20" formControlName="codigoDepositoJudicial" pInputText type="text"
+             class="p-inputtext-md w-full" placeholder="Ingrese el código de depósito judicial" />
+        </div>
+        }
+        @if(formAcuerdoActa.value.tipoPago==ACUERDO_ACTA.DEPOSITO_CUENTA_AGRAVIADO){
+        <div class="col-12 mt-2 mb-3">
+            <div class="grid">
+                <div class="col-12 md:col-6">
+                    <label for="banco" class="p-label-bottom font-bold text-sm">Banco</label>
+                    <p-dropdown [options]="listaBanco" formControlName="banco" optionValue="id" optionLabel="nombre"
+                        placeholder="Seleccione" styleClass="p-inputtext-md"
+                        emptyMessage="Resultados no encontrados">
+                    </p-dropdown>
+                </div>
+                <div class="col-12 md:col-6">
+                    <label for="banco" class="p-label-bottom font-bold text-sm">Número de cuenta </label>
+                    <input digitOnly maxlength="20" formControlName="nroCuenta" pInputText type="text"
+                       class="p-inputtext-md w-full" placeholder="Ingrese el número de cuenta" />
+                </div>
+            </div>
+        </div>
+        }
+        <div class="col-12 mt-2">
+            <div class="grid">
+                <div class="col-12 md:col-6 flex">
+                    <div>
+                        <label for="montoTotalPago" class="p-label-bottom font-bold text-sm">{{datosAcuerdoActa?.reparacionCivil? 'Monto de reparación civil':'Total a depositar'}}</label>
+                        <input (input)="validarReseteoCuotasPorInputs()"
+                               digitOnly
+                               (blur)="formatearMonto('montoTotalPago');calcularMontoMinisterio()"
+                               [decimal]="true" 
+                               [formatThousands]="true"
+                               [decimalSeparator]="'.'"
+                               formControlName="montoTotalPago" 
+                               pInputText type="text"
+                               class="p-inputtext-md w-full" 
+                               placeholder="Ingrese el monto" />
+                    </div>
+                    @if(!formAcuerdoActa.get('montoTotalPago')?.errors && !modoLectura){
+                        <div class="mt-5 ml-2">
+                            <img [src]="icono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+                        </div>
+                    }
+                </div>
+                @if(porcentajeMinisterio>0){
+                  <div class="col-12 md:col-6">
+                    <label class="p-label-bottom font-bold text-sm">
+                        <p-checkbox (onChange)="calcularMontoMinisterio()" formControlName="checkMontoMinisterio"
+                            [binary]="true" id="montoMinisterio"></p-checkbox>
+                        <label class="ml-2" for="montoMinisterio">Monto para el Ministerio Público ({{porcentajeMinisterio*100+"%"}})</label>
+                    </label>
+                    <input formControlName="montoMinisterio" pInputText type="text"class="p-inputtext-md w-full"
+                        placeholder="Ingrese el monto" />
+                </div>
+                }
+            </div>
+        </div>
+        @if(formAcuerdoActa.value.tipoPagoTotal==ACUERDO_ACTA.PAGO_PARCIAL){
+          <div class="col-12 mt-4">
+            <div class="grid">
+                <div class="col-12 md:col-6 flex">
+                    <div>
+                        <label for="nroCuotas" class="p-label-bottom font-bold text-sm">Número de cuotas</label>
+                        <input (input)="validarReseteoCuotasPorInputs()" 
+                                digitOnly
+                                formControlName="nroCuotas"
+                                pInputText 
+                                type="text"
+                                class="p-inputtext-md w-full"
+                                placeholder="Ingrese el número de cuotas" 
+                                maxlength="1"
+                                />
+                    </div>
+                    @if(!formAcuerdoActa.get('nroCuotas')?.errors && !modoLectura){
+                        <div class="mt-5 ml-2">
+                            <img [src]="icono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+                        </div>                       
+                    }
+                </div>
+                <div class="col-12 md:col-6 flex">
+                    <div>
+                        <label for="periodicidad" class="p-label-bottom font-bold text-sm">Periodicidad</label>
+                        <p-dropdown (onChange)="cambiarPeriodicidad($event.value);validarReseteoCuotasPorInputs();"
+                            [options]="listaPeriodicidad" formControlName="periodicidad" optionValue="id" optionLabel="noDescripcion"
+                             placeholder="Seleccione la periodicidad"
+                            styleClass="p-inputtext-md w-full" emptyMessage="Resultados no encontrados">
+                        </p-dropdown>
+                    </div>
+                    @if(!formAcuerdoActa.get('periodicidad')?.errors && !modoLectura){
+                        <div class="mt-5 ml-2">
+                            <img [src]="icono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        }
+        @if(formAcuerdoActa.value.periodicidad==ACUERDO_ACTA.PERIODICIDAD_PERSONALIZADO){
+          <div class="col-12 mt-4">
+            <div class="grid">
+                <div class="col-12 md:col-6 flex">
+                    <div>
+                        <label for="rangoDiasPeriodicidad" 
+                               class="p-label-bottom font-bold text-sm">Rango de días</label>
+                        <input (input)="validarReseteoCuotasPorInputs()"
+                               digitOnly
+                               formControlName="rangoDiasPeriodicidad"
+                               pInputText type="text"
+                               class="p-inputtext-md w-full"
+                               maxlength="3"
+                               placeholder="Ingrese el rango de días" />
+                    </div>
+                    @if(!formAcuerdoActa.get('rangoDiasPeriodicidad')?.errors && !modoLectura){
+                        <div class="mt-5 ml-2">
+                            <img [src]="icono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        }
+        <div class="col-12 mt-4">
+            <div class="grid">
+                <div class="col-12 md:col-6 flex">
+                    <div>
+                        <label for="fechaInicioPago" class="p-label-bottom font-bold text-sm">Fecha de inicio de pago</label>
+                        <p-calendar (onSelect)="validarReseteoCuotasPorInputs()"
+                                    (input)="validarReseteoCuotasPorInputs()"
+                                    formControlName="fechaInicioPago"
+                                    dateMask
+                                    dateFormat="dd/mm/yy"
+                                    class="p-inputtext-md cfe-calendar h-40" 
+                                    [showIcon]="true"
+                                    icon="cfe-calendar-icon"
+                                    [minDate]="fechaMinimaPago"
+                                    [maxDate]="fechaMaximoPago"
+                                    placeholder="dd/mm/aaaa"></p-calendar>
+                    </div>
+                    @if(!formAcuerdoActa.get('fechaInicioPago')?.errors && !modoLectura){
+                        <div class="mt-5 ml-2">
+                            <img [src]="icono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @if(formAcuerdoActa.value.tipoPagoTotal==ACUERDO_ACTA.PAGO_PARCIAL){
+            @if(!modoLectura){
+                <div class="col-12 mt-4">
+                    <button [disabled]="!validarGeneracionCuotas()" (click)="generarCuotas()" type="button"
+                        class="cfe-boton-primary cfe-boton-lg w-full">
+                        <span class="ml-1">Generar cuotas</span>
+                    </button>
+                </div>
+            }
+        <div class="col-12 mt-3">
+            <div class="w-full">
+                <h6 class="cfe-semi-bold">Cuotas de Pago</h6>
+            </div>
+            @if(cuotas.controls.length==0){
+                <div class="w-100 text-center mt-2">
+                    <p>Aún no se tiene la información de las cuotas correspondiente</p>
+                </div>
+            }
+            @if(cuotas.controls.length>0){
+            <div class="col-12 mt-2">
+                <div class="cuotas-container">
+                    <p-table [value]="cuotas.controls" class="w-full cuotas-tabla" scrollable="true"
+                        scrollHeight="400px">
+                        <ng-template pTemplate="body" let-cuenta let-i="rowIndex">
+                            <tr class="cuota-row" [formGroup]="cuenta">
+                                <td>
+                                    <h6>{{ i + 1 }}.</h6>
+                                </td>
+                                <td>
+                                    <label for="monto" class="p-label-bottom font-bold text-sm">Monto a depositar por cuota</label>
+                                    <input [ngClass]="{'border-red': campoInvalidoCuotas(i, 'monto')}"
+                                           (input)="actualizarMontoTotal()"
+                                           pInputText (blur)="formatearMontoCuotas(i)"
+                                           digitOnly
+                                           [formatThousands]="true"
+                                           [decimal]="true"
+                                           [decimalSeparator]="'.'"
+                                           formControlName="monto" type="text"
+                                           class="p-inputtext py-2 w-full" />
+                                </td>
+                                <td>
+                                    <label for="fecha" class="p-label-bottom font-bold text-sm">Fecha de vencimiento</label>
+                                    <p-calendar [minDate]="fechaMinimaPago"
+                                                [maxDate]="fechaMaximoPenal"
+                                                [ngClass]="{'border-red': campoInvalidoCuotas(i, 'fecha')}"
+                                                formControlName="fecha"
+                                                dateMask
+                                                appendTo="body"
+                                                dateFormat="dd/mm/yy"
+                                                class="p-inputtext-md cfe-calendar h-40"
+                                                [showIcon]="true"
+                                                icon="cfe-calendar-icon"
+                                                placeholder="dd/mm/aaaa"></p-calendar>
+                                </td>
+                                <td>
+                                    @if(!modoLectura){
+                                        <fn-icon
+                                        (click)="eliminarCuota(i)"
+                                        (keydown.enter)="eliminarCuota(i)"
+                                        tabindex="0"
+                                        aria-label="Eliminar cuota"
+                                        [ico]="iconUtil.obtenerIcono('iTrash')"
+                                        height="2.5rem"
+                                        style="cursor: pointer; color: #c83c3c; margin-top: 1.5em;">
+                                      </fn-icon>
+                                    }
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    @if(!modoLectura){
+                        <div class="cuotas-footer">
+                            <strong class="mr-2">Total:</strong>{{formAcuerdoActa.value.montoTotalPago}} de
+                            {{formAcuerdoActa.value.montoTotalPago}} -<strong class="mr-2 ml-2">Restan:</strong> 0
+                        </div>
+                    }
+                </div>
+            </div>
+                @if(!modoLectura && cuotas.controls.length<REPARACION_CIVIL.CANTIDAD_CUOTAS_MAXIMA){
+                    <div class="col-12 mt-3">
+                        <button (click)="agregarCuotasVacias()" type="button" class="cfe-boton-secondary cfe-boton-lg w-full">
+                            <span class="ml-1">Agregar Cuotas +</span>
+                        </button>
+                    </div>
+                }
+            }
+        </div>
+        }
+        <div class="col-12 mt-3">
+            <label for="descripcion" class="p-label-bottom font-bold text-sm">Observaciones</label>
+            <textarea formControlName="observaciones" placeholder="Ingrese la observación" pInputTextarea
+                (input)="caracteresRestantesObservacion = eventoContadorInputTextArea($event)" maxlength="1000"
+                id="descripcion" class="w-full p-inputtextarea p-inputtext p-component p-element" rows="6"></textarea>
+            <div class="w-full text-gray-600 text-right">
+                Quedan <b>{{caracteresRestantesObservacion}}</b> caracteres
+            </div>
+        </div>
+        <hr />
+        <div class="col-12 field">
+            <div class="field-checkbox">
+                <p-checkbox (onChange)="cambiarOtrosAcuerdos($event.checked)" [binary]="true"
+                    formControlName="otrosAcuerdos" name="otrosAcuerdos" value="1" id="otrosAcuerdos"></p-checkbox>
+                <label for="otrosAcuerdos" class="text-sm">Otros Acuerdos</label>
+            </div>
+        </div>
+        @if(formAcuerdoActa.value.otrosAcuerdos){
+          <div class="col-12">
+              <div class="grid">
+                  <div class="col-12 md:col-6">
+                      <label for="fechaOtrosAcuerdo" 
+                             class="p-label-bottom font-bold text-sm">Fecha de acuerdo</label>
+                      <p-calendar formControlName="fechaOtrosAcuerdo" 
+                                  dateMask dateFormat="dd/mm/yy"
+                                  class="p-inputtext-md cfe-calendar h-40" 
+                                  [showIcon]="true" icon="cfe-calendar-icon"
+                                  [minDate]="fechaMinimaPago"
+                                  [maxDate]="fechaActual"
+                                  placeholder="dd/mm/aaaa"></p-calendar>
+                  </div>
+              </div>
+          </div>
+          <div class="col-12 mt-3">
+              <label for="detalleOtrosAcuerdo" class="p-label-bottom font-bold text-sm">Detalle</label>
+              <textarea formControlName="detalleOtrosAcuerdo" placeholder="Ingrese el detalle" pInputTextarea
+                  class="w-full p-inputtextarea p-inputtext p-component p-element" rows="6"
+                  (input)="caracteresRestantesAcuerdo = eventoContadorInputTextArea($event)" maxlength="1000"></textarea>
+              <div class="w-full text-gray-600 text-right">
+                  Quedan <b>{{caracteresRestantesAcuerdo}}</b> caracteres
+              </div>
+          </div>
+          <div class="col-12 mt-2">
+              <div class="field-checkbox">
+                  <p-checkbox [binary]="true" (onChange)="cambiarFechaLimiteAcuerdo($event.checked)"
+                      formControlName="checkFechaLimiteAcuerdo" name="checkFechaLimiteAcuerdo"
+                      id="checkFechaLimiteAcuerdo"></p-checkbox>
+                  <label for="checkFechaLimiteAcuerdo" class="text-sm">Estos otros acuerdos incluyen fecha límite o de vencimiento</label>
+              </div>
+          </div>
+          @if(formAcuerdoActa.value.checkFechaLimiteAcuerdo){
+            <div class="col-12 mt-2">
+                <div class="grid">
+                    <div class="col-12 md:col-6">
+                        <label for="fechaLimiteAcuerdo" 
+                               class="p-label-bottom font-bold text-sm">Fecha límite o de vencimiento</label>
+                        <p-calendar formControlName="fechaLimiteAcuerdo"
+                                    dateMask dateFormat="dd/mm/yy"
+                                    class="p-inputtext-md cfe-calendar h-40"
+                                    [showIcon]="true" 
+                                    icon="cfe-calendar-icon"
+                                    placeholder="dd/mm/aaaa"
+                                    [minDate]="fechaMinimaPago"
+                                    [maxDate]="fechaMaximoPenal"
+                                    ></p-calendar>
+                    </div>
+                </div>
+            </div>
+          }
+        }
+    </div>
+    <div class="flex justify-content-end align-items-center gap-3 mt-4">
+        @if(datosAcuerdoActa?.idSujetoCaso != null && !modoLectura){
+            <button [disabled]="formAcuerdoActa.invalid" (click)="guardar()" type="button" class="cfe-boton-primary cfe-boton-lg ml-2 boton-w">Guardar</button>
+        }
+    </div>
+</form>

@@ -1,0 +1,541 @@
+<h3 *ngIf="accion == 1 || accion == 2" class="cfe-titulo-1 ml-2 mb-3 mt-3">
+  {{ accion == 1 ? "Visualizar" : "Editar" }} pena
+</h3>
+@if ( validarMensajesErrorEspeciales()) {
+<div class="mt-2 mb-3">
+  <mensaje-completar-campos [titulo]="txtMensajeError" [closable]="true" />
+</div>
+}
+
+<form [formGroup]="formPenas" (ngSubmit)="guardar()">
+  <div class="grid flex">
+    <div class="col-12 md:col-6">
+      <label for="sujeto" class="p-label-bottom font-bold text-sm"
+        >Sujeto procesal</label
+      >
+      <p-dropdown
+        formControlName="sujeto"
+        (onChange)="listarDelitos($event.value)"
+        [options]="listaSujetoProcesal"
+        styleClass="p-inputtext-md"
+        optionValue="id"
+        optionLabel="nombre"
+        appendTo="body"
+        emptyMessage="Sin resultados"
+        placeholder="Seleccione el sujeto procesal"
+        emptyFilterMessage="No se encontraron resultados"
+      ></p-dropdown>
+    </div>
+    <div class="col-12 md:col-6">
+      <label for="delito" class="p-label-bottom font-bold text-sm"
+        >Delito</label
+      >
+      <p-dropdown
+        formControlName="delito"
+        [options]="listaDelitos"
+        styleClass="p-inputtext-md"
+        optionValue="id"
+        optionLabel="nombre"
+        placeholder="Seleccione el delito"
+        emptyMessage="Sin resultados"
+        emptyFilterMessage="No se encontraron resultados"
+      ></p-dropdown>
+    </div>
+  </div>
+  @if(conformadaPretension && formPenas.value.sujeto){
+  <div class="w-full mt-2">
+    <div class="text-left">
+      <p-radioButton
+        class="mr-2"
+        formControlName="tipoPretension"
+        [value]="TOTAL_POR_PRETENSION"
+        inputId="conformadaTotal"
+        name="tipoPretension"
+      ></p-radioButton>
+      <label class="mr-4" for="conformadaTotal"
+        >Conformada total por pretensión</label
+      >
+      <p-radioButton
+        class="mr-2"
+        formControlName="tipoPretension"
+        value="2"
+        inputId="conformadaParcial"
+        name="tipoPretension"
+      ></p-radioButton>
+      <label for="conformadaParcial">Conformada parcial por pretensión</label>
+    </div>
+  </div>
+
+  }
+
+  <div class="grid mt-1">
+    <div class="col-12 md:col-6">
+      <label for="clasePena" class="p-label-bottom font-bold text-sm"
+        >Clases de pena</label
+      >
+      <p-dropdown
+        formControlName="clasePena"
+        [options]="listaClasePenas"
+        styleClass="p-inputtext-md"
+        optionValue="id"
+        optionLabel="noDescripcion"
+        (onChange)="cambioClasesPenas($event.value)"
+        emptyMessage="Sin resultados"
+        placeholder="Seleccione la pena"
+      ></p-dropdown>
+    </div>
+    <div
+      *ngIf="formPenas.value.clasePena != RESTRICTIVA_LIBERTAD_CLASE_PENA"
+      class="col-12 md:col-6"
+    >
+      <label for="tipoPena" class="p-label-bottom font-bold text-sm"
+        >Tipo de pena</label
+      >
+      <p-dropdown
+        (onChange)="cambiarTipoPena($event.value)"
+        formControlName="tipoPena"
+        [options]="listaTipoPenas"
+        styleClass="p-inputtext-md"
+        optionValue="idTipoPena"
+        optionLabel="nombreTipoPena"
+        placeholder="Seleccione el tipo de pena"
+        emptyMessage="Sin resultados"
+      ></p-dropdown>
+    </div>
+    <div
+      *ngIf="formPenas.value.clasePena == RESTRICTIVA_LIBERTAD_CLASE_PENA"
+      class="col-12 md:col-6"
+    >
+      <label for="fechaExpulsionPais" class="p-label-bottom font-bold text-sm"
+        >Fecha de expulsión del país</label
+      >
+      <p-calendar
+        dateMask
+        dateFormat="dd/mm/yy"
+        class="p-inputtext-md cfe-calendar h-40"
+        [showIcon]="true"
+        icon="cfe-calendar-icon"
+        placeholder="dd/mm/aaaa"
+        formControlName="fechaExpulsionPais"
+      ></p-calendar>
+    </div>
+  </div>
+
+  <div
+    *ngIf="
+      formPenas.value.clasePena == PRIVATIVA_LIBERTAD_CLASE_PENA &&
+      formPenas.value.tipoPena == EFECTIVA_TIPO_PENA
+    "
+    class="w-full mt-1"
+  >
+    <div class="field-checkbox">
+      <p-checkbox
+        (onChange)="cambiarCadenaPerpetua($event)"
+        formControlName="cadenaPerpetua"
+        [binary]="true"
+        id="cadenaPerpetua"
+      ></p-checkbox>
+      <label for="cadenaPerpetua">Cadena perpetua</label>
+    </div>
+  </div>
+  <div *ngIf="this.formPenas.value.cadenaPerpetua == true" class="grid mt-1">
+    <div class="col-12 md:col-6">
+      <label
+        for="fechaInicioRevisionCadenaPerpetua"
+        class="p-label-bottom font-bold text-sm"
+        >Fecha de inicio de la cadena perpetua</label
+      >
+      <p-calendar
+        (onSelect)="calcularCadenaPerpetua()"
+        (input)="calcularCadenaPerpetua()"
+        dateMask
+        dateFormat="dd/mm/yy"
+        class="p-inputtext-md cfe-calendar h-40"
+        [showIcon]="true"
+        icon="cfe-calendar-icon"
+        placeholder="dd/mm/aaaa"
+        formControlName="fechaInicioRevisionCadenaPerpetua"
+      ></p-calendar>
+    </div>
+    <div class="col-12 md:col-6">
+      <label
+        for="fechaRevisionCadenaPerpetua"
+        class="p-label-bottom font-bold text-sm"
+        >Fecha de revisión de la cadena perpetua</label
+      >
+      <p-calendar
+        dateMask
+        dateFormat="dd/mm/yy"
+        class="p-inputtext-md cfe-calendar h-40"
+        [showIcon]="true"
+        icon="cfe-calendar-icon"
+        placeholder="dd/mm/aaaa"
+        formControlName="fechaRevisionCadenaPerpetua"
+      ></p-calendar>
+    </div>
+  </div>
+  <div *ngIf="validarPeriodoPena()" class="grid mt-1">
+    <div class="col-12 md:col-6">
+      <label for="periodoPenaAnhos" class="p-label-bottom font-bold text-sm"
+        >Periodo de pena</label
+      >
+      <div class="grid">
+        <div class="col">
+          <input
+            pInputText
+            type="text"
+            (input)="
+              calcularFechaPena(false);
+              convertirInputNumero($event, 'periodoPenaAnhos')
+            "
+            digitOnly
+            (keypress)="validarRango($event, 0, 99)"
+            class="p-inputtext-md w-full"
+            placeholder="Año"
+            formControlName="periodoPenaAnhos"
+            [maxLength]="2"
+          />
+        </div>
+        <div class="col">
+          <input
+            pInputText
+            type="text"
+            (input)="
+              calcularFechaPena(false);
+              convertirInputNumero($event, 'periodoPenaMeses')
+            "
+            digitOnly
+            (keypress)="validarRango($event, 0, 11)"
+            class="p-inputtext-md w-full"
+            placeholder="Meses"
+            formControlName="periodoPenaMeses"
+            [maxLength]="2"
+          />
+        </div>
+        <div class="col">
+          <input
+            pInputText
+            type="text"
+            (input)="
+              calcularFechaPena(false);
+              convertirInputNumero($event, 'periodoPenaDias')
+            "
+            digitOnly
+            (keypress)="validarRango($event, 0, 29)"
+            class="p-inputtext-md w-full"
+            placeholder="Días"
+            formControlName="periodoPenaDias"
+            [maxLength]="2"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="col-12 md:col-6">
+      <label
+        for="periodoPenaFechaInicio"
+        class="p-label-bottom font-bold text-sm"
+        >Fecha para el periodo de pena</label
+      >
+      <div class="grid">
+        <div class="col">
+          <p-calendar
+            (onSelect)="calcularFechaPena(false)"
+            (input)="calcularFechaPena(false)"
+            dateMask
+            dateFormat="dd/mm/yy"
+            class="p-inputtext-md cfe-calendar h-40"
+            [showIcon]="true"
+            icon="cfe-calendar-icon"
+            placeholder="dd/mm/aaaa"
+            formControlName="periodoPenaFechaInicio"
+            [minDate]="fechaHechoCaso"
+            [maxDate]="fechaActual"
+          ></p-calendar>
+        </div>
+        <div class="col">
+          <p-calendar
+            dateMask
+            dateFormat="dd/mm/yy"
+            class="p-inputtext-md cfe-calendar h-40"
+            [showIcon]="true"
+            icon="cfe-calendar-icon"
+            placeholder="dd/mm/aaaa"
+            formControlName="fechaPeriodoPena"
+          ></p-calendar>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="grid"
+    *ngIf="
+      formPenas.value.clasePena == PRIVATIVA_LIBERTAD_CLASE_PENA &&
+      formPenas.value.tipoPena == SUSPENDIDA_TIPO_PENA
+    "
+  >
+    <div class="col-12 md:col-6">
+      <label
+        for="periodoPenaAnhosPrueba"
+        class="p-label-bottom font-bold text-sm"
+        >Periodo de prueba</label
+      >
+      <div class="grid">
+        <div class="col">
+          <input
+            pInputText
+            type="text"
+            (input)="
+              calcularFechaPena(true);
+              convertirInputNumero($event, 'periodoPenaAnhosPrueba')
+            "
+            digitOnly
+            class="p-inputtext-md w-full"
+            placeholder="Año"
+            formControlName="periodoPenaAnhosPrueba"
+            (keypress)="validarRango($event, 0, 99)"
+            [maxLength]="2"
+          />
+        </div>
+        <div class="col">
+          <input
+            pInputText
+            type="text"
+            (input)="
+              calcularFechaPena(true);
+              convertirInputNumero($event, 'periodoPenaMesesPrueba')
+            "
+            digitOnly
+            class="p-inputtext-md w-full"
+            placeholder="Meses"
+            formControlName="periodoPenaMesesPrueba"
+            (keypress)="validarRango($event, 0, 11)"
+            [maxLength]="2"
+          />
+        </div>
+        <div class="col">
+          <input
+            pInputText
+            type="text"
+            (input)="
+              calcularFechaPena(true);
+              convertirInputNumero($event, 'periodoPenaDiasPrueba')
+            "
+            digitOnly
+            class="p-inputtext-md w-full"
+            placeholder="Días"
+            formControlName="periodoPenaDiasPrueba"
+            (keypress)="validarRango($event, 0, 29)"
+            [maxLength]="2"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="col-12 md:col-6">
+      <label
+        for="periodoPenaFechaInicioPrueba"
+        class="p-label-bottom font-bold text-sm"
+        >Fechas para el periodo de prueba</label
+      >
+      <div class="grid">
+        <div class="col">
+          <p-calendar
+            (onSelect)="calcularFechaPena(true)"
+            (onBlur)="calcularFechaPena(true)"
+            dateMask
+            dateFormat="dd/mm/yy"
+            class="p-inputtext-md cfe-calendar h-40"
+            [showIcon]="true"
+            icon="cfe-calendar-icon"
+            placeholder="dd/mm/aaaa"
+            formControlName="periodoPenaFechaInicioPrueba"
+          ></p-calendar>
+        </div>
+        <div class="col">
+          <p-calendar
+            dateMask
+            dateFormat="dd/mm/yy"
+            class="p-inputtext-md cfe-calendar h-40"
+            [showIcon]="true"
+            icon="cfe-calendar-icon"
+            placeholder="dd/mm/aaaa"
+            formControlName="fechaPeriodoPenaPrueba"
+          ></p-calendar>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="!validarFechaPruebaPenal()" class="col-12 md:col-12">
+      <div class="cfe-mensaje-rojo cfe-mensaje-ajuste mb-3">
+        <fn-icon
+          [ico]="iconUtil.obtenerIcono('iAlert')"
+          height="1.4rem"
+        ></fn-icon>
+        <div>
+          El tiempo de periodo de prueba, no debe ser mayor al tiempo de periodo
+          de pena
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="validarPenaConvertidaEjecucion()" class="w-full">
+    <div class="field-checkbox">
+      <p-checkbox
+        formControlName="penaConvertida"
+        [binary]="true"
+        id="penaConvertida"
+      ></p-checkbox>
+      <label for="penaConvertida">¿Pena convertida?</label>
+      <p-checkbox
+        class="ml-3"
+        formControlName="sentenciaEjecProvicional"
+        [binary]="true"
+        id="sentenciaEjecProvicional"
+      ></p-checkbox>
+      <label for="sentenciaEjecProvicional"
+        >Sentencia dispone ejecución provisional</label
+      >
+    </div>
+  </div>
+
+  <div
+    *ngIf="
+      formPenas.value.clasePena == LIMITATIVAS_DERECHO_CLASE_PENA &&
+      (formPenas.value.tipoPena == LIMITACION_DIAS_LIBRES_TIPO_PENA ||
+        formPenas.value.tipoPena == PRESTACION_SERVICIO_COMUNIDAD_TIPO_PENA)
+    "
+    class="grid mt-1"
+  >
+    <div class="col-12 md:col-6">
+      <label for="nroJornadasSemanales" class="p-label-bottom font-bold text-sm"
+        >Periodo de pena (semanas)</label
+      >
+      <input
+        (input)="convertirInputNumero($event, 'nroJornadasSemanales')"
+        digitOnly
+        pInputText
+        type="text"
+        class="p-inputtext-md w-full"
+        placeholder="Número de jornadas semanales"
+        formControlName="nroJornadasSemanales"
+        [maxLength]="3"
+      />
+    </div>
+  </div>
+
+  <div
+    *ngIf="validarReglasConducta()"
+    class="w-full mt-4"
+    formArrayName="reglasConducta"
+  >
+    <label for="" class="font-bold text-sm">Reglas de conducta</label>
+    <div
+      *ngFor="let option of listaReglasConducta; let i = index"
+      class="field-checkbox mt-3"
+    >
+      <p-checkbox [formControlName]="i" [binary]="true"></p-checkbox>
+      <label for="">{{ option.nombre }}</label>
+    </div>
+  </div>
+  <div
+    class="grid mt-1"
+    *ngIf="
+      formPenas.value.clasePena == MULTA_CLASE_PENA &&
+      formPenas.value.tipoPena != null
+    "
+  >
+    <div class="col-12 md:col-6">
+      <label for="montoMultaPena" class="p-label-bottom font-bold text-sm"
+        >Monto de multa pena</label
+      >
+      <input
+        digitOnly
+        [decimal]="true" 
+        (blur)="formatearMonto('montoMultaPena')"
+        [formatThousands]="true"
+        [decimalSeparator]="'.'"
+        pInputText
+        type="text"
+        class="p-inputtext-md w-full"
+        placeholder="S/ Monto de multa pena"
+        formControlName="montoMultaPena"
+      />
+    </div>
+  </div>
+  <div *ngIf="formPenas.value.reparacionCivil" class="col-12 md:col-12 mb-2">
+    <button type="button" class="cfe-boton-primary cfe-boton-lg mr-2 boton-w">
+      Registrar reparación civil
+    </button>
+  </div>
+  <div class="grid mt-1">
+    <div class="col-12 md:col-12">
+      <div class="w-full pb-1">
+        <label for="observaciones" class="font-bold text-sm"
+          >Observaciones (opcional)</label
+        >
+      </div>
+      <div class="w-full">
+        <textarea
+          maxlength="1000"
+          formControlName="observaciones"
+          pInputTextarea
+          id="observaciones"
+          class="w-full p-inputtextarea p-inputtext p-component p-element"
+          rows="6"
+          [maxlength]="200"
+        ></textarea>
+        <small
+          class="block text-right mt-1"
+          [ngClass]="{ 'p-error': counterReportChar() > 200 }"
+        >
+          {{ counterReportChar() }}/200 caracteres
+        </small>
+      </div>
+    </div>
+  </div>
+  @if(ejecucionInmediata){
+  <div class="w-full">
+    <div class="field-checkbox">
+      <p-checkbox
+        formControlName="ejecucionInmediata"
+        inputId="ejecucionInmediata"
+        [binary]="true"
+        id="ejecucionInmediata"
+      ></p-checkbox>
+      <label for="ejecucionInmediata">Ejecución inmediata</label>
+    </div>
+  </div>
+  }
+  <div class="cfe-opciones-botones">
+    <button
+      (click)="salirFormulario()"
+      *ngIf="accion == 1"
+      type="button"
+      class="cfe-boton-primary cfe-boton-m mr-2 boton-w"
+    >
+      Aceptar
+    </button>
+    <button
+      (click)="salirFormulario()"
+      *ngIf="accion == 2"
+      type="button"
+      class="cfe-boton-secondary cfe-boton-m mr-2 boton-w"
+    >
+      Cancelar
+    </button>
+    <!-- {{this.validarInputsPendientes(this.formPenas)}} -->
+    @if (!modoLectura) {
+    <button
+      [disabled]="
+        formPenas.invalid ||
+        !validacionReglasConducta() ||
+        !validarFechaPruebaPenal() ||
+        !validarIngresoDePeriodoPena()
+      "
+      *ngIf="accion == 2 || accion == 0"
+      type="submit"
+      class="cfe-boton-primary cfe-boton-m mr-2 boton-w font-bold"
+    >
+      {{ accion == 0 ? "Agregar" : "Guardar" }}
+    </button>
+    }
+  </div>
+</form>

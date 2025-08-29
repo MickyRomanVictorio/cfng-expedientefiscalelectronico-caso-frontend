@@ -1,0 +1,35 @@
+.botones-grid{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  gap: 1rem;
+  padding: 0.5rem;
+  margin-top: 1em;
+
+  .label {
+    font-weight: 500;
+    margin-right: 2rem;
+    white-space: nowrap;
+  }
+
+  .acciones {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: nowrap;
+
+    .accion {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+    }
+  }
+}
+
+.icono-validacion {
+  height: 2rem;
+}
+:host::ng-deep .reparacion-civil-dialog {
+    width: 1080px;
+}

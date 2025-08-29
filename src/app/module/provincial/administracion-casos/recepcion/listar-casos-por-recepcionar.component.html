@@ -1,0 +1,397 @@
+<div class="cfe-container">
+  <div class="cfe_bandeja__header grid">
+    <div class="col-12 md:col-9 cfe_bandeja_header__content">
+      <fn-icon [ico]="iconUtil.obtenerIcono('iFolderSearch')" height="1.6rem"></fn-icon>
+      <h3 class="cfe-titulo-1 family-poppin-bold">Recepcionar Casos</h3>
+    </div>
+  </div>
+
+  <form class="cfe_bandeja__filters" [formGroup]="formularioFiltrarCasos">
+    <div class="grid mt-1">
+      <div class="col">
+        <div class="field mb-0">
+          <label for="buscar" class="font-semibold">Buscar:</label>
+          <input pInputText (keyup)="filtrarCasos()" type="text" class="p-inputtext-lg py-3 text-lg w-full"
+          placeholder="Ingrese algún texto para buscar cualquier información que se muestre en la lista"
+            formControlName="buscar" />
+        </div>
+      </div>
+      <div class="col-fixed" [ngClass]="{ 'cfe-filtro-boton-fondo': mostrarFiltros }">
+        <div class="field mb-0">
+          <label class="font-semibold">&nbsp;</label>
+          <button id="btnMostrarFiltros" class="cfe-filtro-boton" (click)="eventoMostrarOcultarFiltros()">
+            <fn-icon [ico]="iconUtil.obtenerIcono('iFilterShow')" height="2.1rem"></fn-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    @if (!mostrarFiltros) {
+    <div class="grid mt-3 mb-4">
+      <div class="col">
+        <div class="flex flex-wrap gap-3">
+          <div class="flex align-items-center">
+            <p-radioButton value="1" formControlName="tiempoAFiltrar" inputId="ultimoSeisMeses"
+              (ngModelChange)="getLosUltimosSeisMeses()"></p-radioButton>
+            <label for="ultimoSeisMeses" class="ml-2">Últimos 6 meses</label>
+          </div>
+          <div class="flex align-items-center">
+            <p-radioButton value="0" formControlName="tiempoAFiltrar" inputId="todosLosMeses"
+              (ngModelChange)="getTodosLosMeses()"></p-radioButton>
+            <label for="todosLosMeses" class="ml-2">Todos los meses</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    } @if (mostrarFiltros) {
+    <div class="grid cfe-filtros">
+      <div class="cfe-filtros-fondo px-3">
+        <div class="formgrid grid">
+          <div class="col-12 md:col-6 field">
+            <label for="Fecha de asignacion" class="font-semibold mb-2">Fecha de asignación al fiscal:</label>
+            <div class="grid">
+              <div class="col-12 sm:col-6">
+                <p-calendar
+                  dateMask
+                  id="fechaDesde"
+                  dateFormat="dd/mm/yy"
+                  class="p-inputtext-lg cfe-calendar h-56"
+                  [showIcon]="true"
+                  icon="cfe-calendar-icon"
+                  placeholder="dd/mm/aaaa"
+                  formControlName="fechaDesde"
+                  (onSelect)="validarFechas('fechaDesde')"
+                ></p-calendar>
+              </div>
+              <div class="col-12 sm:col-6 sm:mt-0 mt-1">
+                <p-calendar
+                  dateMask
+                  dateFormat="dd/mm/yy"
+                  class="p-inputtext-lg cfe-calendar h-56"
+                  [showIcon]="true"
+                  icon="cfe-calendar-icon"
+                  placeholder="dd/mm/aaaa"
+                  formControlName="fechaHasta"
+                  (onSelect)="validarFechas('fechaHasta')"
+                ></p-calendar>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 md:col-3 field">
+            <label for="plazos" class="font-semibold mb-0">Plazos</label>
+            <p-dropdown styleClass="p-inputtext-lg py-1" [options]="plazos.data" id="plazos" optionValue="id"
+              optionLabel="nombre" emptyMessage="Sin resultados" placeholder="Todos" [showClear]="true"
+              formControlName="plazo"></p-dropdown>
+          </div>
+          <div class="col-12 md:col-3 field">
+            <label for="extras" class="font-semibold mb-0">Origen</label>
+            <p-dropdown styleClass="p-inputtext-lg py-1" id="origen" [options]="origen.data" optionValue="id"
+              optionLabel="nombre" placeholder="Todos" emptyMessage="Sin resultados" [showClear]="true"
+              formControlName="origen"></p-dropdown>
+          </div>
+        </div>
+      </div>
+      <div class="cfe-filtros-fondo cfe-filtros-opciones">
+        <button class="cfe-boton-secondary cfe-boton-m mr-3 boton-w" (click)="limpiarFiltros()">
+          Limpiar filtros
+        </button>
+        <button class="cfe-boton-primary cfe-boton-m mr-2 boton-w" (click)="obtenerCasosPorAsignar()">
+          Buscar
+        </button>
+      </div>
+    </div>
+    }
+  </form>
+
+  <div class="cfe_bandeja__table">
+    <div class="cfe_bandeja_table__title grid">
+      <div class="num_casos_por_asignar_table_title__content col-12 md:col-6">
+        <div class="flex text-xl font-bold text-primary mb-3">
+          <fn-icon class="mr-2" [ico]="iconUtil.obtenerIcono('iFolderExclamation')" height="1.8rem"
+            [style]="{ 'margin-left': '-12px' }"></fn-icon>
+          {{ totalCasosRecepcionar }} Casos por recepcionar
+        </div>
+      </div>
+      <div class="col-12 md:col-6 flex flex-column sm:flex-row justify-content-end align-items-center pr-0">
+        <button (click)="recibirCasos()"
+          class="cfe-boton-primary cfe-boton-m cfe-boton-m w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-center">
+          Recibir
+        </button>
+        <button
+          class="cfe-boton-secondary cfe-boton-m cfe-boton-m w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start"
+          (click)="exportar('PDF')">
+          <fn-icon class="ml-1" [ico]="iconUtil.obtenerIcono('iFileDownload')" height="1.6rem"></fn-icon>
+          Exportar PDF
+        </button>
+        <button
+          class="cfe-boton-secondary cfe-boton-m cfe-boton-m w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start"
+          (click)="exportar('Excel')">
+          <fn-icon class="ml-1" [ico]="iconUtil.obtenerIcono('iTable')" height="1.6rem"></fn-icon>
+          Exportar Excel
+        </button>
+      </div>
+    </div>
+
+    <div class="cfe_bandeja__legend">
+      <div class="term-item">
+        <span class="dentro-del-plazo"></span>
+        Dentro del Plazo
+        <div class="quantity">({{ totalDentroPlazo }})</div>
+        &nbsp;&nbsp;&nbsp;
+        <span class="plazo-por-vencer"></span>
+        Plazo por Vencer
+        <div class="quantity">({{ totalPorVencer }})</div>
+        &nbsp;&nbsp;&nbsp;
+        <span class="plazo-vencido"></span>
+        Plazo vencido
+        <div class="quantity">({{ totalVencido }})</div>
+      </div>
+      <div class="tooltipNew" [ngClass]="{ visible: tooltipVisible }" >
+        <fn-icon [ico]="iconUtil.obtenerIcono('iInfoCircle')" height="1.6rem" (click)="showTooltip()"></fn-icon>
+        <div class="top">
+          <app-encabezado-tooltip [titulo]="tituloTootip" [alCerrarModal]="toggleTooltip"
+            [referenciaModal]="referenciaModal" />
+          <ul>
+            <li>
+              <b>"Verde":</b> cuando los días transcurridos sean "igual o mayor que 0"
+            </li>
+            <li>
+              <b>"Naranja":</b> cuando los días transcurridos está al "75% (en adelante)" del plazo de 5 días habiles
+              para recibir y calificar.
+            </li>
+            <li>
+              <b>"Rojo":</b> cuando los días transcurridos está "en el día 5 (en adelante)".
+            </li>
+          </ul>
+          <i></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="cfe_bandeja_table__content">
+      <p-table [value]="casosPorRecepcionarFiltrados" [rowHover]="true" [tableStyle]="{ 'min-width': '50rem' }"
+        [styleClass]="'p-datatable-sm'" responsiveLayout="stack" [(selection)]="casosSeleccionados">
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="w-col-20">
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th pSortableColumn="idCaso">
+              Número de caso
+              <p-sortIcon field="idCaso"></p-sortIcon>
+            </th>
+            <th pSortableColumn="detalleTipoOrigen">
+              Origen
+              <p-sortIcon field="detalleTipoOrigen"></p-sortIcon>
+            </th>
+            <th pSortableColumn="remitente">
+              Remitente
+              <p-sortIcon field="remitente"></p-sortIcon>
+            </th>
+            <th pSortableColumn="correo">
+              Contacto de remitente
+              <p-sortIcon field="correo"></p-sortIcon>
+            </th>
+            <th class="col-width-172" pSortableColumn="fechaIngreso">
+              Fecha de ingreso al despacho
+              <p-sortIcon field="fechaIngreso"></p-sortIcon>
+            </th>
+            <th class="col-width-172" pSortableColumn="fechaIngreso">
+              Fecha de registro de denuncia
+              <p-sortIcon field="fechaIngreso"></p-sortIcon>
+            </th>
+            <th class="col-width-172" pSortableColumn="fechaIngreso">
+              Fecha de asignación
+              <p-sortIcon field="fechaIngreso"></p-sortIcon>
+            </th>
+            <th class="col-width-172" pSortableColumn="delitos">
+              Delitos y partes
+              <p-sortIcon field="delitos"></p-sortIcon>
+            </th>
+            <th class="w-col-10">Comentarios</th>
+            <th class="w-col-10"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-casorecepcionado>
+          <tr class="p-selectable-row" [ngClass]="{
+              'cfe-fondo-gris-leido':
+                casorecepcionado.leido == LECTURA_CASO.LEIDO || casoLeidoTemporal
+            }"
+          >
+            <td class="table_td_content_start">
+              <div class="col-offset-3">
+                <p-tableCheckbox [value]="casorecepcionado"></p-tableCheckbox>
+              </div>
+            </td>
+            <td class="table_td_content_start caso-container">
+              <span class="p-column-title">Número de caso</span>
+              <div class="plazo-item-row">
+                <div>
+                  <span (copy)="copiarAlPortapapeles(casorecepcionado.codCaso)"   [innerHTML]="
+                      obtenerNumeroCaso(
+                        casorecepcionado.codCaso,
+                        casorecepcionado.indicadorSemaforo
+                      )
+                    "></span>
+                </div>
+                <div>
+                  <p>
+                    Tiempo que ha transcurrido y que <br />aún no se ha recibido
+                    <br />
+                    <span>
+                      <i class="pi pi-clock mt-17"></i>
+                      {{
+                      dateUtil.obtenerTiempoTranscurrido_DHS(
+                      casorecepcionado.fechaUltimaAsignacion
+                      )
+                      }}
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </td>
+            <td class="table_td_content_start">
+              <span class="p-column-title">Origen</span>
+              <span (click)="
+                  verHistorialDerivaciones(
+                    casorecepcionado.idTipoOrigen,
+                    casorecepcionado.codCaso,
+                    casorecepcionado.idCaso,
+                    casorecepcionado.codCaso
+                  )
+                " class="cursor-pointer badge badge-{{
+                  obtenerClaseTipoOrigen(casorecepcionado.detalleTipoOrigen)
+                }}">
+                <b>{{ casorecepcionado.detalleTipoOrigen }}</b>
+              </span>
+
+              @if (casorecepcionado.flagReasignado == '1') {
+              <div class="badge cfe-badge-reasignado badge-origen cfe-row-top" (click)="
+                  verReasignados(
+                    casorecepcionado.codCaso,
+                    casorecepcionado.idCaso
+                  )
+                ">
+                <b>Reasignado</b>
+              </div>
+              }
+            </td>
+            <td class="table_td_content_start remitente-container">
+              <span class="p-column-title">Remitente</span>
+              <div>
+                <div class="mb-1">
+                  <span class="badge badge-origen">
+                    <strong>{{ casorecepcionado.tipoSujeto }}</strong></span>
+                </div>
+                <div class="cfe-row-top">
+                  {{ casorecepcionado.remitente }}
+                </div>
+              </div>
+            </td>
+            <td class="table_td_content_start">
+              <span class="p-column-title">Contacto de remitente</span>
+              <div>
+                <div class="contact-item">
+                  <span>Teléfono:</span>{{ casorecepcionado.numeroTelefono }}
+                </div>
+                <div class="contact-item mt-17">
+                  <span>Correo:</span>{{ casorecepcionado.correo }}
+                </div>
+              </div>
+            </td>
+            <td class="table_td_content_start fecha-container">
+              <span class="p-column-title">Fecha de ingreso al despacho</span>
+              <div>
+                <div>{{ casorecepcionado.fechaIngreso }}</div>
+                <div class="cfe-row-top">
+                  {{ casorecepcionado.horaIngreso | dateformat : "hour" }}
+                </div>
+              </div>
+            </td>
+            <td class="table_td_content_start fecha-container">
+              <span class="p-column-title">Fecha de registro de denuncia</span>
+              <div>
+                <div>{{ casorecepcionado.fechaDenuncia }}</div>
+                <div class="cfe-row-top">
+                  {{ casorecepcionado.horaDenuncia | dateformat : "hour" }}
+                </div>
+              </div>
+            </td>
+            <td class="table_td_content_start fecha-container">
+              <span class="p-column-title">Fecha de asignación</span>
+              <div>
+                <div>{{ casorecepcionado.fechaAsignacion }}</div>
+                <div class="cfe-row-top">
+                  {{ casorecepcionado.horaAsignacion | dateformat : "hour" }}
+                </div>
+              </div>
+            </td>
+            <td class="table_td_content_start fecha-container">
+              <span class="p-column-title">Delitos y partes</span>
+              <div class="cfe-btn-crimes-parts family-poppin-bold" (click)="
+                  verDelitosPartes(
+                    casorecepcionado.cantidadPartes,
+                    casorecepcionado.codCaso,
+                    casorecepcionado.idCaso,
+                    casorecepcionado.leido
+                  )
+                ">
+                <strong>Ver delitos y partes ({{
+                  casorecepcionado.cantidadPartes
+                  }})</strong>
+              </div>
+            </td>
+
+            <td class="table_td_content_start">
+              <span class="p-column-title">Clasificación</span>
+              <div class="cfe-btn-clasification" (click)="
+                  clasificacionCaso(
+                    casorecepcionado.codCaso,
+                    casorecepcionado.idCaso,
+                    casorecepcionado.leido,
+                    casorecepcionado.clasificacion
+                  )
+                ">
+                <img [src]="iconAsset.obtenerRutaIcono('clasification')" alt="Clasification Icon" />
+              </div>
+            </td>
+            <td class="table_td_content_start no-before">
+              <div class="block lg:hidden col-offset-4"></div>
+              <div>
+                <div class="cfe-btn-more-options" (click)="menu2.toggle($event)">
+                  <div class="cfe-btn-more-options-content">
+                    <span></span><span></span><span></span>
+                  </div>
+                </div>
+                <p-menu #menu2 (onShow)="obtenerOpcionesMenu(casorecepcionado)" [model]="opcionesMenu" [popup]="true"
+                  class="cfe-menu-options"></p-menu>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="8" style="text-align: center">
+              {{ emptyMessage }}
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td class="no-before" colspan="8" style="text-align: center">
+              {{
+              contadorRegistros && contadorRegistros === 0
+              ? "En estos momentos, no hay casos asignados pendientes de recibir"
+              : "No se encontraron registros con los criterios de búsqueda ingresados"
+              }}
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <app-paginator [query]="query" [items]="itemPaginado" [rowsPerPageOptions]="[]" [resetPage]="resetPage"
+        (paginate)="onPaginate($event)"></app-paginator>
+    </div>
+  </div>
+</div>
+
+<p-toast></p-toast>

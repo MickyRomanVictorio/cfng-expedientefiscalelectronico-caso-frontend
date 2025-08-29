@@ -1,0 +1,28 @@
+.crear-editar-abogados {
+    padding: 20px 40px;
+    width: 1267px;
+}
+
+ :host::ng-deep .modal__header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px 0 15px 0;
+    .modal_header__content {
+        display: flex;
+        align-items: center;
+        .cfe-titulo-1 {
+            margin-top: -5px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+    }
+}
+
+input:disabled {
+    background-color: #f0f0f0 !important;
+    pointer-events: none;
+    opacity: 0.6;
+}
+  

@@ -1,0 +1,70 @@
+<div class="py-2">
+  <form [formGroup]="formularioPronunciamiento">
+    <div class="grid">
+        <label class="font-bold adjust-origin-label text-left gap-3 ml-2"
+            >Resultado de la exclusión fiscal:</label
+          >
+      <div class="col-12">
+         
+        <div class="flex flex-row gap-3">
+          
+          <div class="flex align-items-center">
+            <p-radioButton
+              id="fundado"
+              inputId="fundado"
+              formControlName="tipoResultado"
+              [value]="763"
+              (click)="eventoSeleccionarResultado()"
+            ></p-radioButton>
+            <label for="fundado" class="ml-2">Fundado / Procedente</label>
+          </div>
+          <div class="flex align-items-center">
+            <p-radioButton
+              id="infundado"
+              inputId="infundado"
+              formControlName="tipoResultado"
+              [value]="765"
+              (click)="eventoSeleccionarResultado()"
+            ></p-radioButton>
+            <label for="infundado" class="ml-2">Infundado / Improcedente</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+@if (idJerarquia === 1 && !ocultarBotones) {
+  <div class="text-right pt-3">
+    <button
+      type="button"
+      class="cfe-boton-secondary cfe-boton-m inline"
+      (click)="eventoObservarTramite()"
+    >
+      Observar Trámite
+    </button>
+    <button
+      type="button"
+      class="cfe-boton-primary cfe-boton-m inline ml-2"
+      (click)="eventoRecibirTramite()"
+    >
+      Recibir Trámite
+    </button>
+  </div>
+}
+
+@if (idJerarquia === 1 && verFormularioObservar()) {
+  <hr>
+  <app-observar-exclusion-fiscal
+    [esModal]="false"
+    [datosPronunciamiento]="datosPronunciamiento"
+    [esSoloLectura]="false"
+    (cerrar)="eventoObservarCancelar()"
+    (observar)="eventoObservarEnviar($event)"
+  ></app-observar-exclusion-fiscal>
+}
+@if(idJerarquia === 2 && observacionProvincial && observacionProvincial.length > 0){
+  <button type="button" class="cfe-boton-secondary cfe-boton-m inline" (click)="eventoObservarTramite(true)">
+    Ver Observación Provincial
+  </button>
+}

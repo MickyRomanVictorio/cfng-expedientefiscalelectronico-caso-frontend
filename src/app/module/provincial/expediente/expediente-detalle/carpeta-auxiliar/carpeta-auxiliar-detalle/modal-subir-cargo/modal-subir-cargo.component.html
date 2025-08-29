@@ -1,0 +1,210 @@
+<div class="grid h-full w-full m-0 border-round-sm mt-17">
+  <div class="col-12 md:col-5 px-4 scroll-inner"><!-- -->
+      <div class="floatRigth my-1">
+          <i onKeyPress class="pi pi-times size-cursor" (click)="dialogRef.close()"></i>
+      </div>
+      <div class="text-2xl font-semibold text-primary mb-1 family-poppin-bold">
+          SUBIR CARGO
+      </div>
+      <div class="text-2xl mb-2">
+          Caso N°: <span>{{numeroCaso}}</span>
+      </div>
+      <div class="border-line"></div>
+      <div class="text-1-2xl mb-1 mt-1 family-poppin-bold">
+          Asociar Trámite
+      </div>
+      <form [formGroup]="form">
+        <div class="grid">
+          <div class="col-12 sm:col-9">
+            <div class="field mb-0">
+              <label for="tramite" class="font-semibold">Tramite</label>
+              <input #input pInputText type="text" class="p-inputtext p-component p-inputtext-sm w-full" placeholder="Trámite" formControlName="tramite" [disabled]="true" />
+            </div>
+          </div>
+          <div class="col-12 sm:col-3 flex align-items-end">
+            <button pButton pRipple class="cfe-boton-primary cfe-boton w-full" (click)="buscar()" icon="pi pi-search">
+              <span class="ml-1">Buscar</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="col-12">
+            <div class="field mb-0">
+              <label for="tramite" class="font-semibold">Acto Procesal</label>
+              <input pInputText type="text" class="p-inputtext p-component p-inputtext-sm w-full" placeholder="Acto Procesal" formControlName="actoProcesal" [disabled]="true" />
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="field mb-0">
+              <label for="tramite" class="font-semibold">Etapa</label>
+              <input pInputText type="text" class="p-inputtext p-component p-inputtext-sm w-full" placeholder="Etapa" formControlName="etapa" [disabled]="true" />
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="field">
+              <label for="acto" class="cfe-semi-bold">Nombre del documento</label>
+              <p-dropdown
+                class="w-full"
+                [options]="documentos"
+                optionValue="codigo"
+                optionLabel="nombre"
+                emptyMessage="Sin resultados"
+                placeholder="Todos"
+                [showClear]="true"
+                formControlName="idDocumento"
+              ></p-dropdown>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid" *ngIf="archivoSeleccionado===false">
+          <div class="col-12">
+          <label for="" class="font-semibold text-sm">Subir documento</label>
+          <fn-file-upload
+            class="fz-14"
+            [(files)]="archivos"
+            (processSignDocument)="eventoArchivoSeleccionado($event)"
+            [fileLimit]="1"
+            [isInMemory]="true"
+            type="pdf"
+            [isSignDigital]="true"
+            [maxFileSize]="1024 * 1024 * 100"
+            [perFileLabel]="'en TOTAL'"></fn-file-upload>
+          </div>
+        </div>
+      </form>
+        <div class="grid" *ngIf="archivoSeleccionado===true">
+          <div class="col-12 pt-2">
+              <label for="" class="font-semibold text-sm">Cargo</label>
+              <div style="overflow: auto">
+                <table class="w-full text-sm" style="min-width: 900px;  border-collapse: collapse; " aria-describedby="mydesc">
+                  <thead class="bg-cyan-50 border-400 border-1">
+                    <th class="p-2 font-semibold">Cargo</th>
+                    <th class="font-semibold">Tamaño</th>
+                    <th class="font-semibold">Tipo de copia</th>
+                    <th class="font-semibold">Fecha y Hora de Recepción</th>
+                    <th class="font-semibold">Acción</th>
+                  </thead>
+                  <tbody class="border-400 border-1">
+                    <tr>
+                      <td class="p-2">
+                        <div class="flex">
+                          <fn-icon class="cursor-pointer" [ico]="obtenerIcono('iFileFull')" height="1.2rem" />
+                          <span> {{archivos[0].nombreOrigen}} </span>
+                          <span class="green">
+                            <fn-icon class="cursor-pointer" [ico]="obtenerIcono('iCheck')" height="1.4rem" />
+                          </span>
+                        </div>
+                      </td>
+                      <td class="p-2">
+                        {{ formatoPesoArchivo(archivos[0].tamanyo) }}
+                      </td>
+                      <td class="p-2">
+                        <div class="flex">
+                          <input name="tipoCopia" [(ngModel)]="cargoForm.tipoCopia" value=0 type="radio" />
+                          <span class="ml-1">Copia de copia</span>
+                        </div>
+                        <div class="flex">
+                          <input name="tipoCopia" [(ngModel)]="cargoForm.tipoCopia" value=1 type="radio" />
+                          <span class="ml-1">Copia autenticada </span>
+                        </div>
+                      </td>
+                      <td class="p-2">
+                        <div class="flex">
+                          <p-calendar id="fecha" [(ngModel)]="cargoForm.recepcionFecha"  class="cfe-calendar p-inputtext-lg" [showIcon]="true" icon="cfe-calendar-icon"
+                            appendTo="body" placeholder="dd/mm/aaaa" />
+                          <p-calendar [(ngModel)]="cargoForm.recepcionHora" class="p-inputtext-lg cfe-calendar w-8rem" appendTo="body"
+                            [timeOnly]="true" [hourFormat]="'12'" placeholder="00:00" />
+                        </div>
+
+                      </td>
+                      <td class="p-2">
+                        <fn-icon onKeyPress class="cursor-pointer" [ico]="obtenerIcono('iTrashCan')" height="1.3rem" pTooltip="Eliminar documento" tooltipPosition="bottom" (click)="eventoArchivoBorrar()"/>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+          </div>
+        </div>
+
+
+      <div class="flex justify-content-around mt-7 mb-4 text-center">
+          <p-button label="Cancelar" [styleClass]="'p-button-lg cfe-boton-secondary text-primary font-bold'" (onClick)="dialogRef.close()"></p-button>
+          <p-button label="Firmar y Guardar" [styleClass]="'p-button-lg cfe-boton-primary  cfe-boton-lg'" (onClick)="eventoFirmarGuardar()" [disabled]="activarBtnFirmarGuardar()"></p-button>
+      </div>
+  </div>
+
+  <div class="col-12 md:col-7 h-full pr-0 mt-5">
+      <app-visor-pdf-frame [documentoAdjunto]="archivoAdjunto"></app-visor-pdf-frame>
+  </div>
+</div>
+
+<cfe-lib-firma-digital-cliente></cfe-lib-firma-digital-cliente>
+
+
+
+<!--
+<div class="cfe-container">
+    <div class="header">
+        <h2  class="cfe-titulo-2 mb-3">Subir Cargo</h2>
+        <div>
+            <span>Caso N°: {{numeroCaso}}</span>
+        </div>
+        <div class="container-close">
+            <p-button (click)="close()" icon="pi pi-times" styleClass="p-button-rounded text-color p-button-text"></p-button>
+        </div>
+    </div>
+    <div class="body">
+        <form class="subir_cargo" [formGroup]="form">
+            <div class="subir_cargo_header__content">
+                <h3 class="cfe-titulo-1">Asociar Trámite</h3>
+            </div>
+            <div class="grid mt-1 align-items-end">
+                <div class="col-12 sm:col-10">
+                    <div class="field mb-0">
+                        <label for="tramite" class="font-semibold">Tramite:</label>
+                        <input #input pInputText type="text" class="p-inputtext-lg py-3 text-lg w-full" placeholder="tramite" formControlName="tramite" readonly/>
+                    </div>
+                </div>
+                <div class="col-12 sm:col-2">
+                    <button pButton pRipple
+                        class="cfe-boton-primary cfe-boton-lg w-full"
+                        (click)="buscar()" icon="pi pi-search">
+                        <span class="ml-1">Buscar</span>
+                    </button>
+                </div>
+                <div class="field col-3 col-sm-12  w-full">
+                    <label for="acto" class="cfe-semi-bold">Acto Procesal</label>
+                    <p-dropdown class="w-full" [options]="listActos" optionValue="codigo" optionLabel="nombre"
+                        emptyMessage="Sin resultados" placeholder="Todos" [showClear]="true" formControlName="actoProcesal"
+                            ></p-dropdown>
+                </div>
+                <div class="col-12">
+                    <div class="field mb-0">
+                        <label for="Etapa" class="font-semibold">Etapa:</label>
+                        <input #input pInputText type="text" class="p-inputtext-lg py-3 text-lg w-full" placeholder="Etapa" formControlName="etapa" readonly />
+                    </div>
+                </div>
+                <div class="field col-3 col-sm-12 w-full">
+                    <label for="acto" class="cfe-semi-bold">Nombre del documento</label>
+                    <p-dropdown class="w-full" [options]="listDocumentos" optionValue="codigo" optionLabel="nombre"
+                        emptyMessage="Sin resultados" placeholder="Todos" [showClear]="true" formControlName="idDocumento"
+                            ></p-dropdown>
+                </div>
+                <div class="field col-12">
+                    <div class="w-full">
+                        <app-adjuntar-archivo  (onRemove)="removeFile()"
+                            (onUpload)="upload($event)" (onSelect)="onSelect($event)"  (onChangeValuesCargo)="onChangeValuesCargo($event)"></app-adjuntar-archivo>
+                    </div>
+                </div>
+            </div>
+            <div  class="flex flex-wrap gap-3 justify-content-center" >
+                <p-button (click)="close()"  styleClass="p-button-rounded text-color">Cancelar</p-button>
+                <p-button (click)="guardarCargo()"  styleClass="p-button-rounded text-color" [disabled]="!cargo.idTramite">Guardar y firmar</p-button>
+            </div>
+        </form>
+    </div>
+</div>
+-->

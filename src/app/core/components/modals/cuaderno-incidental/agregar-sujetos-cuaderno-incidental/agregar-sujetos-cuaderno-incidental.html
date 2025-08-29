@@ -1,0 +1,149 @@
+<div class="cuadernos-incidentales">
+  <div class="modal__header">
+    <div class="modal_header__content">
+      <div class="cfe-titulo-1">
+        <div class="file-search-icon mt-1 mr-2"></div>
+        AGREGAR SUJETOS PROCESALES
+      </div>
+    </div>
+    <div class="flex align-items-center justify-content-center ml-2">
+      <p-button
+        (onClick)="dialogRef.close()"
+        icon="pi pi-times"
+        styleClass="p-button-rounded text-color p-button-text"
+      ></p-button>
+    </div>
+  </div>
+  <div class="p-grid">
+    <p-table
+      class="table-sujetos"
+      [value]="listaSujetosProcesales"
+      responsiveLayout="stack"
+      [paginator]="false"
+      dataKey="idSujetoCaso"
+      [rows]="10"
+      [showCurrentPageReport]="true"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [(selection)]="sujetosSeleccionados"
+      currentPageReportTemplate="{first} de {last} registros"
+      (onRowUnselect)="quitarSeleccionSujeto($event)"
+      (onHeaderCheckboxToggle)="quitarSeleccionSujetoTabla($event)"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th scope="col" class="w-col-20">
+            <!--<p-tableHeaderCheckbox></p-tableHeaderCheckbox>-->
+          </th>
+          <th scope="col">Nº</th>
+          <th scope="col">Nombres y apellidos/Razón Social</th>
+          <th scope="col">Delitos (opcional)</th>
+          <th scope="col">Mismo tipo de incidente</th>
+          <th scope="col">Agregado</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-sujeto let-rowIndex="rowIndex">
+        <tr>
+          <td>
+            <p-tableCheckbox
+              [ngClass]="{ 'bloqueado': sujeto.idSujetoProcesalCarpeta }"
+              [value]="sujeto"
+            ></p-tableCheckbox>
+          </td>
+          <td>{{ (( query.page -1 ) * query.limit) + (rowIndex + 1) }}</td>
+          <td>
+            <p>{{sujeto.nombreSujetoProcesal}}</p>
+          </td>
+          <td style="width: 500px">
+            <p-multiSelect
+              [disabled]="!sujetoSeleccionado(sujeto.idSujetoCaso)"
+              #multiSelect
+              appendTo="body"
+              styleClass="py-1 p-inputtext-lg w-full"
+              [options]="sujeto.delitos"
+              placeholder="Seleccione Delito"
+              filterPlaceholder="Seleccione el(los) delito(s)"
+              optionLabel="delitoCompleto"
+              display="chip"
+              emptyFilterMessage="No se encontraron resultados"
+              emptyMessage="No se encontraron resultados"
+              [(ngModel)]="sujeto.delitosSeleccionados"
+              [showToggleAll]="false"
+              [maxSelectedLabels]="sujeto.delitos?.length"
+            >
+              <ng-template pTemplate="selectedItems" let-items>
+                <div
+                  class="custom-delitos-items overflow-y-auto"
+                  style="max-height: 400px"
+                >
+                  <ng-container *ngIf="items?.length; else noItems">
+                    <span *ngFor="let item of items" class="delito-item">
+                      {{ item.delitoCompleto }}
+                      <i
+                        class="pi pi-times"
+                        (click)="quitarDelito(sujeto, item, $event, multiSelect)"
+                      ></i>
+                    </span>
+                  </ng-container>
+                  <ng-template #noItems>
+                    <span class="no-seleccionado"
+                      >Seleccione el(los) delito(s)</span
+                    >
+                  </ng-template>
+                </div>
+              </ng-template>
+            </p-multiSelect>
+          </td>
+          <td>
+            <div>
+              @if (sujeto.incidenteCasoComun === null) {
+              <div class="text-red-500 font-bold">Ninguno</div>
+              } @if (sujeto.incidenteCasoComun !== null) {
+              <div
+                [innerHTML]="codigosCuaderno(sujeto.incidenteCasoComun)"
+              ></div>
+              }
+            </div>
+          </td>
+          <td>
+            @if(sujeto.idSujetoProcesalCarpeta){
+            <div class="flex justify-content-start align-items-center">
+              <img
+                [src]="icono('check-circle')"
+                alt="validado"
+                class="h-2rem mr-1"
+              />
+              <span class="text-success">Agregado</span>
+            </div>
+            } @else{
+            <p>-</p>
+            }
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7">
+            <div class="text-center">No se han listando sujetos procesales</div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <app-paginator
+      [query]="query"
+      [items]="itemPaginado"
+      [rowsPerPageOptions]="[]"
+      [resetPage]="resetPage"
+      (paginate)="onPaginate($event)"
+    ></app-paginator>
+  </div>
+  <div class="text-right pt-3">
+    <button
+      type="button"
+      class="cfe-boton-primary cfe-boton-m inline text-sm"
+      (click)="agregarSujetoProcesal()"
+      [disabled]="sujetosSeleccionados.length == 0"
+    >
+      AGREGAR SUJETOS
+    </button>
+  </div>
+</div>

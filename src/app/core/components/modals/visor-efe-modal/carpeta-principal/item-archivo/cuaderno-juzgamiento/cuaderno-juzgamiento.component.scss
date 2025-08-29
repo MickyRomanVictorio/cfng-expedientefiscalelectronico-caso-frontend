@@ -1,0 +1,33 @@
+.formato {
+    color: white;
+    padding: 6px 6px;
+    border-radius: 4px;
+    font-size: 0.7em;
+  }
+  
+  .formato-imagen {
+    background-color: #2196F3; /* Azul */
+  }
+  
+  .formato-audio {
+    background-color: #4CAF50; /* Verde */
+  }
+  
+  .formato-documento {
+    background-color: #F44336; /* Rojo */
+  }
+  
+  .formato-video {
+    background-color: #009688; /* Verde agua */
+  }
+
+  .cuaderno {
+    background-color: #e7eaed;
+
+    .cabecera_cuaderno {
+        text-align: center;
+        font-weight: 600;
+        padding: 10px 0;
+    }
+}
+  

@@ -1,0 +1,161 @@
+@use '../../../../../../../../assets/styles/scss/abstracts/template' as *;
+
+.cfe-container {
+  width: 100%;
+
+  .sujeto_procesal__filters {
+    width: 100%;
+  }
+
+  .sujeto_procesal__table {
+    width: 100%;
+    background: var(--mpfn-white);
+    border-radius: 6px;
+    border: 1.5px solid var(--mpfn-gray2);
+    margin-top: 10px;
+
+    .sujeto_procesal_table__title {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px 25px 0 25px;
+      margin-bottom: 20px;
+      margin-top: 20px;
+
+      .sujeto_procesal_table_title__content {
+        display: flex;
+        align-items: center;
+
+        img {
+          width: 22px;
+          position: relative;
+          top: -2px;
+        }
+
+        .cfe-subtitulo-1 {
+          margin-left: 10px;
+          font-weight: bold;
+        }
+      }
+
+      .sujeto_procesal_table_title__options {
+        display: flex;
+      }
+    }
+
+    .sujeto_procesal__legend {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding: 10px 20px 25px 20px;
+
+      .term-item {
+        font-size: 0.9em;
+        display: flex;
+        font-family: var(--mpfn-font-regular);
+        align-items: center;
+        margin-right: 12px;
+
+        span {
+          display: inline-block;
+          width: 13px;
+          height: 13px;
+          border-radius: 50%;
+          background: var(--mpfn-gray2);
+          margin-right: 5px;
+        }
+
+        .quantity {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.9em;
+          margin-left: 4px;
+        }
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+
+    .sujeto_procesal_table__content {
+      width: 100%;
+    }
+  }
+}
+
+:host ::ng-deep .caso-container {
+
+  align-items: center;
+  position: relative;
+
+  .plazo-item {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+    position: absolute;
+    left: -13px;
+    top: 5px;
+  }
+
+  .cfe-caso {
+    font-family: var(--mpfn-font-regular);
+    white-space: nowrap;
+
+    span {
+      color: var(--mpfn-secondary);
+    }
+  }
+
+  .cfe-validacion-sujeto-valido {
+    font-family: var(--mpfn-font-regular);
+    white-space: nowrap;
+
+    span {
+      color: var(--mpfn-green-dark);
+    }
+  }
+
+  .cfe-validacion-sujeto-no-valido {
+    font-family: var(--mpfn-font-regular);
+    white-space: nowrap;
+
+    span {
+      color: var(--mpfn-yellow-light);
+    }
+  }
+
+}
+.link{
+  color: #2B8DE3;
+  text-decoration: underline;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+}
+
+.badge-carné-temporal-migratorio-ctm {
+  background-color: #664d50;
+  color: #fff;
+}
+
+.circulo {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border-radius: 15px;
+}
+
+.circulo--verde {
+  background-color: #3cc75b;
+}
+
+.badge-menor-edad {
+   color: #FF884D;
+   background-color: #FFE7DB;
+}
+

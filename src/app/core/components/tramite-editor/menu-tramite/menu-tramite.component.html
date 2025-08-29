@@ -1,0 +1,45 @@
+<div class="cfe-container-background-azul-suave mt-3">
+  <div class="grid pt-3">
+    <div class="col-fixed">
+      @if (!editar) {
+        <img src="assets/icons/pdf-file.svg" height="100" class="mr-2" alt="pdf-icon"/>
+      } @else {
+        <img src="assets/icons/word.svg" height="100" class="mr-2" alt="pdf-icon"/>
+      }
+    </div>
+    <div class="col">
+      <div class="grid">
+        <div class="col">
+          <label class="text-3xl font-medium" for="">{{ nombreTramite }}</label>
+        </div>
+        <div class="col-3 pr-3 flex justify-content-end" [ngClass]="{'cfe-invisible': !editar}">
+          <div *ngIf="activarGuardar; else firmarDoc" class="flex justify-content-center">
+            <button type="button" class="cfe-boton-secondary cfe-boton-lg cfe-boton-icono-izquierda"
+                    [disabled]="!habilitarGuardar"
+                    (click)="guardarTramite()">
+              <fn-icon class="ml-1" [ico]="obtenerIcono('iSave')" height="1.6rem"></fn-icon>
+              <span class="ml-3 family-poppin-bold">Guardar trámite</span>
+            </button>
+          </div>
+          <ng-template #firmarDoc>
+            <app-firma-individual
+              [idTramite]="tramiteResponse.idTramite || ''"
+              [idDocumentoVersiones]="tramiteResponse.idDocumentoVersiones || ''"
+            ></app-firma-individual>
+          </ng-template>
+        </div>
+      </div>
+      <div class="col-12">
+        <p-menubar [model]="menuItems" styleClass="p-menubar_tramite p-component_tramite">
+          <ng-template pTemplate="item" let-item let-root="root">
+            <a pRipple class="flex align-items-center p-menuitem-link">
+              <span [class]="item.class">{{ item.label }}</span>
+            </a>
+          </ng-template>
+        </p-menubar>
+      </div>
+    </div>
+  </div>
+</div>
+
+

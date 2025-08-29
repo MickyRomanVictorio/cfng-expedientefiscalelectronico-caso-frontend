@@ -1,0 +1,31 @@
+<app-alertas-tramite
+  [alertas]="alertas"
+  [idCaso]="idCaso"
+  [idEtapa]="idEtapa"
+></app-alertas-tramite>
+
+<app-asociar-sujetos-delitos
+  [idActoTramiteCaso]="idActoTramiteCaso"
+  [etapa]="etapa"
+  (seHanRegistradoAsociaciones)="establecerSiSeHanRegistradoAsociaciones($event)"
+  [modoLectura]="desactivarFormulario"
+/>
+
+@if(causales!.length > 0){
+<h3 class="cfe-subtitulo-4 mb-3 cfe-bold mt-5">
+  {{ causales[0].grupo || "-" }}
+</h3>
+} 
+
+@for(causal of causales; track $index){
+  <div class="field-checkbox">
+    <p-checkbox
+      [label]="causal.etiqueta"
+      name="causal.grupo"
+      [value]="causal"
+      [(ngModel)]="causalesSeleccionadas"
+      (onChange)="eventoSeleccionarCausal($event)"
+      [disabled]="desactivarFormulario"
+    ></p-checkbox>
+  </div>
+}

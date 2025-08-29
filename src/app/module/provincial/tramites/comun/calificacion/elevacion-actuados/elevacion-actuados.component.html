@@ -1,0 +1,22 @@
+@if (esDisposicionElevacion) {
+<div class="col-8 mt-3 mb-4">
+  <label for="Dependencia policial" class="font-semibold mb-2"
+    >Fiscalia Superior a elevar:</label
+  >
+  <p-dropdown
+    styleClass="p-inputtext-m py-1 mt-2"
+    [options]="fiscaliasSuperiores"
+    optionValue="codigoEntidad"
+    optionLabel="nombreEntidad"
+    placeholder="Seleccione"
+    emptyMessage="Sin resultados"
+    [(ngModel)]="fiscaliaSuperiorSeleccionada"
+    (onChange)="eventoSeleccionarFiscaliaSuperior($event)"
+    autoWidth="false"
+    [style]="{ width: '100%' }"
+    dataKey="value"
+    [disabled]="deshabilitado || !this.tramiteEnModoEdicion"
+
+  ></p-dropdown>
+</div>
+}

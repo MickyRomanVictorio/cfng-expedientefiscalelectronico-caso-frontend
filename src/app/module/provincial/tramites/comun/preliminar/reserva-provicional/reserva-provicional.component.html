@@ -1,0 +1,44 @@
+<div class="grid">
+  <div class="col-10 md:col-6">
+    <label for="dias" class="font-semibold"
+      >Tiempo para resolver solicitudes (días)</label
+    >
+    <input
+      pInputText
+      id="dias"
+      (keypress)="validOnlyNumbers($event)"
+      (paste)="preventPaste($event)"
+      maxlength="10"
+      type="text"
+      class="p-inputtext-m py-3 text-base text-color text-m w-full"
+      [(ngModel)]="dias"
+      (ngModelChange)="alSeleccionar()"
+      placeholder="0"
+      [disabled]="deshabilitado || !this.tramiteEnModoEdicion"
+    />
+  </div>
+  <div class="col-10 md:col-6">
+    <label for="fecha" class="font-semibold"
+      >Fecha fin para resolver solicitudes</label
+    >
+    <input
+      pInputText
+      id="fecha"
+      type="text"
+      class="p-inputtext-m py-3 text-base text-color text-m w-full"
+      [value]="
+        casoPlazoNivelT[0]?.fechaFinCalculada
+          ? dateUtil.obtenerFormatoFechaFromDate_DDMMYYYY(
+              casoPlazoNivelT[0]?.fechaFinCalculada
+            )
+          : ''
+      "
+      disabled
+      [attr.placeholder]="
+        !casoPlazoNivelT[0]?.fechaFinCalculada
+          ? 'Se calculará al firmar la disposición'
+          : ''
+      "
+    />
+  </div>
+</div>

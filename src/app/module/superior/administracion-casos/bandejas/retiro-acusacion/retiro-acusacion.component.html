@@ -1,0 +1,504 @@
+<div class="cfe-container">
+  <!-- Ini - Título  -->
+  <div class="cfe_bandeja__header grid">
+    <div class="cfe_bandeja_header__content col-12 md:col-9">
+      <fn-icon
+        [ico]="iconUtil.obtenerIcono('iFolderSearch')"
+        height="1.6rem"
+      ></fn-icon>
+      <h3 class="cfe-titulo-1">Bandeja de casos de retiro de acusación</h3>
+    </div>
+    <div
+      class="col-12 md:col-3 flex flex-column sm:flex-row justify-content-end align-items-center pr-0"
+    ></div>
+  </div>
+  <!-- Fin - Título  -->
+
+  <form [formGroup]="fmrBuscar">
+    <!--Ini - texto del buscador -->
+    <div class="grid">
+      <div class="col">
+        <div class="field mb-0">
+          <label for="buscar" class="font-semibold">Buscar</label>
+          <input
+            pInputText
+            type="text"
+            class="p-inputtext-lg py-3 text-lg w-full"
+            placeholder="Ingrese algún texto para buscar, por ejemplo el número de caso, nombre de las partes, etc"
+            formControlName="buscar"
+            id="buscar"
+            name="buscar"
+            (keyup)="eventoBuscarSegunTexto()"
+            autocomplete="off"
+          />
+        </div>
+      </div>
+      <div
+        class="col-fixed"
+        style="width: 70px"
+        [ngClass]="{ 'cfe-filtro-boton-fondo': esVisibleFiltros }"
+      >
+        <div class="field mb-0 mt-5">
+          <button
+            type="button"
+            class="cfe-filtro-boton"
+            (click)="eventoMostrarOcultarFiltros()"
+          >
+            <fn-icon
+              [ico]="iconUtil.obtenerIcono('iFilterShow')"
+              height="2.1rem"
+            ></fn-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!--Fin - texto del buscador -->
+
+    <!--Ini - filtro de tiempo -->
+    @if (!esVisibleFiltros) {
+    <div class="mt-3 mb-4">
+      <div class="flex flex-wrap gap-3">
+        <div class="flex align-items-center">
+          <p-radioButton
+            value="0"
+            formControlName="filtroTiempo"
+            (onClick)="eventoCambiarFiltroTiempo($event.value)"
+            inputId="ultimoSeisMeses"
+          ></p-radioButton>
+          <label for="ultimoSeisMeses" class="ml-2">Últimos 6 meses</label>
+        </div>
+
+        <div class="flex align-items-center">
+          <p-radioButton
+            value="1"
+            formControlName="filtroTiempo"
+            (onClick)="eventoCambiarFiltroTiempo($event.value)"
+            inputId="todosLosMeses"
+          ></p-radioButton>
+          <label for="todosLosMeses" class="ml-2">Todos los meses</label>
+        </div>
+      </div>
+    </div>
+    }
+    <!--Fin - filtro de tiempo -->
+
+    <!--Ini - Formulario de Filtros Avanzados -->
+    @if (esVisibleFiltros) {
+    <div class="cfe-filtros p-0">
+      <div class="cfe-filtros-fondo block pb-2 px-3 pt-4">
+        <!-- Ini - filtros -->
+        <div class="grid">
+          <div class="field col-12">
+            <div class="flex align-items-center flex-wrap gap-2">
+              <div class="flex align-items-center mr-2">
+                <p-radioButton
+                  value="0"
+                  formControlName="tipoFecha"
+                  name="tipoFecha"
+                  inputId="tipoFechaRegistro"
+                ></p-radioButton>
+                <label for="tipoFechaRegistro" class="ml-2 font-semibold"
+                  >Fecha de elevación</label
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="col-12 lg:col-3">
+            <label class="font-semibold mb-0" for="fechaInicio">Fecha</label>
+            <p-calendar
+              dateMask
+              class="p-inputtext-lg cfe-calendar h-56"
+              [showIcon]="true"
+              icon="cfe-calendar-icon"
+              placeholder="dd/mm/aaaa"
+              dateFormat="dd/mm/yy"
+              formControlName="fechaInicio"
+              inputId="fechaInicio"
+            ></p-calendar>
+          </div>
+          <div class="col-12 lg:col-3">
+            <label class="font-semibold mb-0 pr-1" for="fechaFin"></label>
+            <p-calendar
+              dateMask
+              class="p-inputtext-lg cfe-calendar h-56"
+              [showIcon]="true"
+              icon="cfe-calendar-icon"
+              placeholder="dd/mm/aaaa"
+              dateFormat="dd/mm/yy"
+              formControlName="fechaFin"
+              inputId="fechaFin"
+            ></p-calendar>
+          </div>
+          <div class="col-12 lg:col-3">
+            <label class="mb-0 font-semibold">Ordenar por</label>
+            <p-dropdown
+              formControlName="tipoOrderBy"
+              styleClass="py-1 p-inputtext-lg"
+              placeholder="Seleccione"
+              [options]="ordenarPor"
+              optionLabel="label"
+              optionValue="value"
+            ></p-dropdown>
+          </div>
+        </div>
+
+        <div class="field grid">
+          <div class="col-12 lg:col-6">
+            <label class="font-semibold mb-0">Fiscalía provincial</label>
+            <p-dropdown
+              formControlName="fiscaliaProvincial"
+              styleClass="py-1 p-inputtext-lg"
+              [options]="fiscaliasPronvinciales"
+              optionLabel="label"
+              optionValue="value"
+              emptyMessage="Sin resultados"
+              placeholder="Todos"
+              (onChange)="eventoCambiarFiscaliaProvincial($event)"
+              [showClear]="true"
+            ></p-dropdown>
+          </div>
+          <div class="col-12 lg:col-4">
+            <label class="font-semibold mb-0">Despacho</label>
+            <p-dropdown
+              formControlName="despacho"
+              styleClass="py-1 p-inputtext-lg"
+              [options]="despachos"
+              optionLabel="label"
+              optionValue="value"
+              emptyMessage="Sin resultados"
+              placeholder="Todos"
+              [showClear]="true"
+            ></p-dropdown>
+          </div>
+          <div class="col-12 lg:col-2">
+            <label class="font-semibold mb-0">Plazos</label>
+            <p-dropdown
+              formControlName="plazos"
+              styleClass="py-1 p-inputtext-lg"
+              [options]="plazos"
+              optionLabel="label"
+              optionValue="value"
+              emptyMessage="Sin resultados"
+              placeholder="Todos"
+              [showClear]="true"
+            ></p-dropdown>
+          </div>
+        </div>
+        <!-- Fin - filtros -->
+
+        <!-- Ini - Botones de Acciones -->
+        <div class="flex align-items-center justify-content-end pb-2 pt-2">
+          <button
+            type="button"
+            class="cfe-boton-secondary cfe-boton-m mr-3 boton-w"
+            (click)="eventoLimpiar()"
+          >
+            Limpiar filtros
+          </button>
+          <button
+            type="button"
+            class="cfe-boton-primary cfe-boton-m mr-2 boton-w"
+            (click)="eventoBuscar()"
+          >
+            Buscar
+          </button>
+        </div>
+        <!-- Fin - Botones de Acciones -->
+      </div>
+    </div>
+    }
+    <!--Fin - Formulario de Filtros Avanzados -->
+  </form>
+
+  <div class="mt-5 container-view-list px-3 py-3">
+    <!--Ini - Botones de Exportación -->
+    <div class="grid py-1">
+      <div class="col-12 md:col-6">
+        <div class="flex align-items-center">
+          <img
+            [src]="iconAsset.obtenerRutaIcono('exclamationFolder')"
+            alt="Folder Icon"
+            style="width: 22px"
+          />
+          <h4 class="casos_listados_count mt-2 mb-0 font-bold">
+            {{ paginacionConfiguracion.data.total }} Casos de retiro de
+            acusación por responder
+          </h4>
+        </div>
+      </div>
+      <div class="col-12 md:col-6">
+        <div class="flex flex-column sm:flex-row justify-content-end pr-0">
+          <div
+            class="flex align-items-center gap-1 md:gap-2 flex-column sm:flex-row"
+          >
+            <button
+              [disabled]="listaCasos.length === 0"
+              class="cfe-boton-secondary cfe-boton-m w-full sm:w-auto mr-0 mb-2 sm:mb-0 justify-content-start"
+              (click)="eventoExportar(TipoExportarEnum.Pdf)"
+            >
+              <img
+                [src]="iconAsset.obtenerRutaIcono('pdf')"
+                alt="PDF Icon"
+                class="mr-1"
+              />
+              Exportar PDF
+            </button>
+            <button
+              [disabled]="listaCasos.length === 0"
+              class="cfe-boton-secondary cfe-boton-m w-full sm:w-auto mb-2 sm:mb-0 justify-content-start"
+              (click)="eventoExportar(TipoExportarEnum.Excel)"
+            >
+              <img
+                [src]="iconAsset.obtenerRutaIcono('excel')"
+                alt="Excel Icon"
+                class="mr-1"
+              />
+              Exportar Excel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Fin - Botones de Exportación -->
+
+    <!-- Ini - Leyenda -->
+    <div class="flex flex-wrap gap-2 py-2">
+      <app-leyenda-listas [leyenda]="leyenda"></app-leyenda-listas>
+
+      <div class="term-item">
+        <div class="tooltip">
+          <fn-icon
+            [ico]="iconUtil.obtenerIcono('iInfoCircle')"
+            height="1.3rem"
+          ></fn-icon>
+          <div class="top">
+            <app-encabezado-tooltip
+              [referenciaModal]="referenciaModal"
+              [titulo]="tituloTootip"
+            />
+            <ul>
+              <li>
+                <b>"Verde":</b> cuando los días transcurridos sean "igual o
+                mayor a 0".
+              </li>
+              <li>
+                <b>"Amarillo":</b> cuando los días transcurridos está al "75%
+                (en adelante)" del plazo de 8 días hábiles.
+              </li>
+              <li>
+                <b>"Rojo":</b> cuando los días transcurridos están en "8 días
+                hábiles (en adelante)".
+              </li>
+              <br />
+              <b
+                >Recuerde que debe pronunciarse antes de los 8 días hábiles
+                respecto a la fecha de la última audiencia con el fin de evitar
+                el quiebre de juicio</b
+              >
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Fin - Leyenda -->
+
+    <!-- Ini - Tabla de Casos -->
+    <p-table
+      [value]="listaCasos"
+      [rowHover]="true"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [breakpoint]="'992px'"
+      responsiveLayout="stack"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th scope="col">Nº</th>
+          <th pSortableColumn="codigoCaso" scope="col">
+            Número de caso <p-sortIcon field="codigoCaso"></p-sortIcon>
+          </th>
+          <th pSortableColumn="etapa" scope="col">
+            Etapa <p-sortIcon field="etapa"></p-sortIcon>
+          </th>
+          <th pSortableColumn="nombreCompleto" scope="col">
+            Despacho de procedencia<p-sortIcon
+              field="nombreCompleto"
+            ></p-sortIcon>
+          </th>
+          <th pSortableColumn="fechaIngreso" scope="col">
+            Fecha de elevacíón<p-sortIcon field="fechaIngreso"></p-sortIcon>
+          </th>
+          <th pSortableColumn="semaforoTiempo" scope="col">
+            Plazo para responder
+            <p-sortIcon field="semaforoTiempo"></p-sortIcon>
+          </th>
+          <th pSortableColumn="semaforoNro" scope="col">
+            Plazo de pronunciamiento / Fecha de última audiencia
+            <p-sortIcon field="semaforoNro"></p-sortIcon>
+          </th>
+          <th scope="col">Delitos y partes</th>
+          <th class="w-col-10" scope="col"></th>
+        </tr>
+      </ng-template>
+
+      <ng-template let-caso let-rowIndex="rowIndex" pTemplate="body">
+        <tr class="p-selectable-row text-700">
+          <td>{{ rowIndex + 1 }}</td>
+          <td class="table_td_content_start caso-container">
+            <span class="p-column-title">Número de caso</span>
+            <div class="flex align-items-center mb-3">
+              <span
+                class="plazo-item {{ leyendaClasesCss[caso.semaforoNro] }}"
+              ></span>
+              <div
+                [innerHTML]="obtenerCasoHtml(caso.codigoCaso)"
+                class="font-bold"
+                style="white-space: nowrap"
+              ></div>
+            </div>
+
+            @if (caso.etiquetaColorNro !== null) {
+            <span
+              class="py-1 px-2 ml-4 text-xs bg-blue-400 border-round-md font-semibold {{
+                etiquetaClasesCss[caso.etiquetaColorNro]
+              }}"
+              style="white-space: nowrap"
+            >
+              {{ caso.etiqueta }}
+            </span>
+            } @if (caso.flAcumulado === '1') {
+            <span
+              class="py-1 px-2 ml-4 text-xs border-round-md font-semibold bg-blue-800 text-white"
+              style="white-space: nowrap"
+            >
+              Con acumulación
+            </span>
+            } @if (caso.revertido === '1') {
+            <span
+              class="py-1 px-2 ml-4 text-xs border-round-md font-semibold color-revertido"
+              style="white-space: nowrap"
+            >
+              Revertido
+            </span>
+            }
+          </td>
+
+          <td>
+            <div class="font-semibold text-xs">
+              {{ caso.etapa }}
+            </div>
+          </td>
+
+          <td class="table_td_content_start">
+            <span class="p-column-title">Despacho de procedencia</span>
+
+            <div class="mb-1 text-xs">
+              <div class="font-semibold">{{ caso.nombreCompleto }}</div>
+              <div class="py-1">{{ caso.nombreEntidad }}</div>
+              <div class="font-semibold">{{ caso.nombreDespacho }}</div>
+            </div>
+          </td>
+
+          <td class="fecha-container table_td_content_start">
+            <span class="p-column-title">Fecha elevación</span>
+            <div>
+              <div>{{ caso.fechaIngreso | dateformat }}</div>
+              <div class="mt-1">{{ caso.hora | dateformat : "hour" }}</div>
+            </div>
+          </td>
+
+          <td>
+            <div style="white-space: nowrap">
+              <span
+                ><i class="pi pi-clock mt-17"></i>
+                {{ caso.semaforoTiempo }}</span
+              >
+            </div>
+          </td>
+
+          <td>
+            <div class="text-sm text-600">
+              {{ caso.plazoDiasTranscurridos + "/" + caso.plazoDias }}
+            </div>
+            <div class="progressBarCaso">
+              <p-progressBar
+                [styleClass]="
+                  stringUtil.getColor(+caso.semaforoNro) + ' border-none'
+                "
+                [value]="
+                  mathUtil.calcularPorcentaje(
+                    caso.plazoDiasTranscurridos,
+                    caso.plazoDias
+                  )
+                "
+                [showValue]="false"
+              ></p-progressBar>
+            </div>
+            <div class="pt-2 text-xs font-semibold">
+              <div>15 feb. 2023</div>
+              <div class="pt-1">2:15:pm</div>
+            </div>
+
+            @if (caso.flAcumulado === '1') {
+            <div
+              class="cfe-etiqueta-accion flex align-items-center justify-content-between w-full"
+            >
+              <button type="button" class="cfe-boton-secondary cfe-boton-sm">
+                Ver acumulaciones
+              </button>
+            </div>
+            }
+          </td>
+
+          <td class="table_td_content_start">
+            <span class="p-column-title">Delitos y partes</span>
+            <div
+              class="btn-crimes-parts font-semibold"
+              (click)="eventoVerDelitosPartes($event, caso)"
+            >
+              Ver delitos y partes ({{ caso.cantidadPartes }})
+            </div>
+          </td>
+
+          <td class="table_td_content_start">
+            <i
+              class="pi pi-ellipsis-v font-bold text-xl cursor-pointer text-600 transition-all transition-duration-200 hover:text-color"
+              (click)="eventoOpcionesFila($event, opcionesCasoRef, caso)"
+            ></i>
+          </td>
+        </tr>
+      </ng-template>
+         <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="9" style="text-align: center;">
+            @if (busquedaPorTextoRealizada) {
+               No se encontraron registros con los criterios de búsqueda ingresados.
+            }@else {
+              En estos momentos, no hay casos ingresados al despacho pendientes de atender.
+            }
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    @if(paginacionConfiguracion.data.total > 0) {
+    <app-paginator
+      [query]="paginacionCondicion"
+      [items]="paginacionConfiguracion"
+      [rowsPerPageOptions]="[]"
+      (paginate)="eventoCambiarPagina($event)"
+    ></app-paginator>
+    <!-- Fin - Tabla de Casos -->
+    }
+  </div>
+</div>
+
+<!-- Ini - Opciones del Caso -->
+<p-menu
+  #opcionesCasoRef
+  [model]="opcionesCaso"
+  appendTo="body"
+  [popup]="true"
+></p-menu>
+<!-- Fin - Opciones del Caso -->

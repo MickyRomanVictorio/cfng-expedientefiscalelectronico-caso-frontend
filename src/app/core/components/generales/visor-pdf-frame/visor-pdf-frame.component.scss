@@ -1,0 +1,77 @@
+.pdf-container-frame {
+    position: relative;
+    height: 97vh;
+}
+
+.visor-background-frame {
+    position: absolute;
+    top: -70px;
+    width: 100%;
+    height: 100%;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    background-color: rgba(77, 77, 77, 0.9607843137);
+}
+
+.overlay-div-frame  {
+    position: absolute;
+    top: -78px;
+    left: 0;
+    height: 85px;
+    font-size: 16px;
+    width: 100%;
+    color: white;
+    font-weight: 600;
+    background-color: rgb(48, 48, 48);
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    padding-left: 1.5rem; 
+    padding-top: 1.2rem; /*0.5 cuando es firmado*/
+    z-index: 2;
+    @media (min-width: 2650px){
+            height: 120px;  
+    }
+}
+
+.typ-5 {
+    transform: translateY(5px);
+    -webkit-transform: translateY(5px);
+    -moz-transform: translateY(5px);
+    -ms-transform: translateY(5px);
+    -o-transform: translateY(5px);
+}
+
+.frame {
+    width: 100%;
+    height: 98%;
+}
+
+.elemento {
+    flex: 1;
+    box-sizing: border-box;
+}
+
+.elemento1 {
+    flex: 0 0 auto;
+    width: 38px;
+}
+
+.elemento3 {
+    flex: 0 0 auto;
+    width: 140px;
+}
+
+.d-none {
+    display: none !important;
+}
+
+.badge-firma {
+    padding: 4px 8px;
+    font-family: 'Poppins-Bold', sans-serif; 
+    border-radius: 5px;
+    font-size: 14px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+}

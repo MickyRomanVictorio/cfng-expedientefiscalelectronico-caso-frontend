@@ -1,0 +1,21 @@
+<div [formGroup]="genericoFormulario">
+  <div class="col-4 mt-3" [style]="{ 'margin-bottom': '-8px' }">
+    <label for="fechaCitacion" class="font-semibold mb-3" [style]="{ display: 'inline-block' }">
+      Fecha y hora de citación
+    </label>
+    <div>
+      <p-calendar
+        dateMask
+        dateFormat="dd/mm/yy"
+        [minDate]="fechaMinimaCitacion"
+        hourFormat="24"
+        class="p-inputtext-lg cfe-calendar h-56"
+        [showIcon]="true"
+        icon="cfe-calendar-icon"
+        placeholder="DD/MM/AAAA HH:MM"
+        formControlName="fechaCitacion"
+        [showTime]="true"
+      ></p-calendar>
+    </div>
+  </div>
+</div>

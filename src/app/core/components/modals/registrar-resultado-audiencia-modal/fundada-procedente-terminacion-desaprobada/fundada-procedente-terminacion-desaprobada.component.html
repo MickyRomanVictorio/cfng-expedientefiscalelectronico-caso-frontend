@@ -1,0 +1,257 @@
+<div class="fundada-procedente-desaprobado">
+  <div class="flex mb-4">
+    <fn-icon
+      class="mr-2"
+      [ico]="obtenerIcono('iAlert')"
+      height="1.4rem"
+    ></fn-icon>
+    <div>
+      Para los sujetos que se les ha concedido la apelación, se les creará la
+      <strong>pestaña de apelaciones</strong> (en el cuaderno incidental de
+      terminación anticipada), la cual será elevado al fiscal superior.
+    </div>
+  </div>
+  <form [formGroup]="formApelacionFiscalia">
+    <div class="grid">
+      <div class="col-6">
+        <div class="grid">
+          <div class="col-6 flex align-items-center">
+            <label for="apelacion" class="font-bold"
+              >¿Apelación de la Fiscalía a la terminación anticipada?</label
+            >
+          </div>
+          <div class="col-6">
+            <p-dropdown
+              formControlName="resultadoApelacion"
+              (onChange)="onChangeResultadoApelacionFiscalia()"
+              [options]="listaApelacionFiscalia"
+              styleClass="p-inputtext-lg"
+              placeholder="-"
+              appendTo="body"
+              optionLabel="nombre"
+              optionValue="id"
+            >
+            </p-dropdown>
+          </div>
+        </div>
+      </div>
+      @if (formApelacionFiscalia.get('resultadoApelacion')?.value ===
+      ID_DENIEGA_APELACION) {
+      <div class="col-2">
+        <div class="grid">
+          <div class="col-4 flex align-items-center">
+            <label for="queja" class="font-bold">Queja</label>
+          </div>
+          <div class="col-8">
+            <p-dropdown
+              formControlName="queja"
+              (onChange)="onChangeQuejaApelacionFiscalia()"
+              [options]="listaQueja"
+              styleClass="p-inputtext-lg"
+              placeholder="-"
+              appendTo="body"
+              optionLabel="nombre"
+              optionValue="id"
+            >
+            </p-dropdown>
+          </div>
+        </div>
+      </div>
+      } @if (verMensajeApelacion) {
+      <div class="col-4 flex align-items-center">
+        <span class="msg-guardado">Datos Guardados Correctamente</span>
+      </div>
+      }
+    </div>
+  </form>
+
+  <div class="mt-4">
+    <div class="flex align-items-center">
+      <h6 class="cfe-titulo-1">Apelación a la terminación anticipada</h6>
+    </div>
+    <p-messages [(value)]="messageTA" [enableService]="false" *ngIf="showMessageTA" [closable]="true"></p-messages>
+    <form [formGroup]="formTerminacionAnticipada">
+      <div class="formgrid grid">
+        <div class="field col-4">
+          <label>¿Quién Apeló?</label>
+          <p-dropdown
+            formControlName="sujetoApelo"
+            [options]="listaSujetosApelantes"
+            (onChange)="onChangeApelante()"
+            styleClass="p-inputtext-lg"
+            [filter]="true"
+            appendTo="body"
+            placeholder="Seleccione un sujeto"
+            optionLabel="nombreSujeto"
+            emptyMessage="Sin resultados"
+            emptyFilterMessage="No se encontraron resultados"
+            optionValue="idSujetoCaso"
+          >
+          </p-dropdown>
+        </div>
+        <div class="field col-3">
+          <label>Resultado de la apelación</label>
+          <p-dropdown
+            formControlName="resultadoApelacion"
+            [options]="listaResultadoApelaciones"
+            (onChange)="onChangeQuienApelo()"
+            styleClass="p-inputtext-lg"
+            placeholder="Seleccione una opción"
+            emptyMessage="Sin resultados"
+            appendTo="body"
+            optionLabel="noDescripcion"
+            optionValue="id"
+          >
+          </p-dropdown>
+        </div>
+        @if (formTerminacionAnticipada.get('resultadoApelacion')?.value ===
+        ID_DENIEGA_APELACION) {
+        <div class="field col-2">
+          <label>Queja</label>
+          <p-dropdown
+            formControlName="queja"
+            [options]="listaQueja"
+            styleClass="p-inputtext-lg"
+            placeholder="-"
+            appendTo="body"
+            optionLabel="nombre"
+            optionValue="id"
+          >
+          </p-dropdown>
+        </div>
+        }
+
+        <div class="col-3 flex justify-content-end align-items-center">
+          @if(!modoLectura) {
+            <button
+              (click)="guardarApelacionTerminacionAnticipada()"
+              type="button"
+              class="cfe-boton-primary cfe-boton-m"
+            >
+              Agregar y Guardar
+            </button>
+          }
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="mt-5">
+    <div class="flex align-items-center">
+      <h6 class="cfe-titulo-1">
+        Lista del Apelaciones realizadas a la terminación anticipada
+      </h6>
+    </div>
+    <p-table
+      [value]="listaApelaciones"
+      [rowHover]="true"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [styleClass]="'table-apelaciones'"
+      responsiveLayout="stack"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Nº</th>
+          <th>¿Quién apeló?</th>
+          <th>Tipo de sujeto</th>
+          <th>¿Qué resultado se obtuvo de la apelación?</th>
+          <th>¿Queja?</th>
+          <th>Quitar</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-apelacion let-rowIndex="rowIndex">
+        <tr>
+          <td>{{ rowIndex + 1 }}</td>
+          <td>{{ apelacion.nombreSujeto }}</td>
+          <td>{{ apelacion.nombreTipoParteSujeto }}</td>
+          <td
+            [ngStyle]="{
+              'font-weight':
+                apelacion.idResultadoApelacion === ID_CONCEDE_APELACION
+                  ? 'bold'
+                  : 'normal'
+            }"
+          >
+            {{ apelacion.resultadoApelacion }}
+          </td>
+          <td>{{ apelacion.queja }}</td>
+          <td>
+            <fn-icon
+              onKeyPress
+              (click)="eliminarRegistroApelado(apelacion.idSujetoCasoResultado)"
+              [ico]="obtenerIcono('iTrash')"
+              height="2.4rem"
+              style="cursor: pointer"
+            >
+            </fn-icon>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7">
+            <div class="text-center">
+              Aún no se ha registrado una apelación. Si es que nadie apeló, no
+              necesita registrar nada.
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <app-paginator
+      [query]="query"
+      [items]="itemPaginado"
+      [rowsPerPageOptions]="[]"
+      [resetPage]="resetPage"
+      (paginate)="onPaginate($event)"
+    ></app-paginator>
+  </div>
+
+  <div class="mt-5 mb-5">
+    <div class="grid" *ngIf="fiscaliaApelacionControl.enabled && !fiscaliaApelacionControl.value">
+      <div class="col-4"></div>
+      <div class="col-4">
+        <div
+          class="flex-center border-round-lg p-3 gap-2 label-bg-error"
+          [ngClass]="{ hidden: false }"
+        >
+          <fn-icon
+            class="label-info-secondary"
+            [ico]="obtenerIcono('iInfoCircle')"
+            height="1.5rem"
+          />
+          <span class="text-md">
+            Seleccione una fiscalía superior a elevar
+          </span>
+        </div>
+      </div>
+      <div class="col-4"></div>
+    </div>
+    <div class="grid">
+      <div class="col-4 flex align-items-center justify-content-end">
+        <span class="font-bold"
+          >Fiscalía Superior a donde se eleva la apelación</span
+        >
+      </div>
+      <div class="col-4">
+        <p-dropdown
+          [formControl]="fiscaliaApelacionControl"
+          filterBy="py-1 p-inputtext-lg"
+          [options]="fiscaliasPronvinciales"
+          optionLabel="label"
+          (onChange)="guardarFiscaliaSuperior($event.value)"
+          optionValue="value"
+          appendTo="body"
+          emptyMessage="Sin resultados"
+          placeholder="Seleccione Fiscalia"
+          [filter]="true"
+          [showClear]="true"
+        ></p-dropdown>
+      </div>
+      @if (validGuardarFiscaliaSuperior) {
+      <div class="col-4 flex align-items-center">
+        <span class="msg-guardado ">Datos Guardados Correctamente</span>
+      </div>
+      }
+    </div>
+  </div>
+</div>

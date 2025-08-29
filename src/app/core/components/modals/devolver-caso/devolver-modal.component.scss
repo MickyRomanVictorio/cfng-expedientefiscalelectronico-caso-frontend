@@ -1,0 +1,49 @@
+.casos-devolver-container {
+  background: #fff;
+  border-radius: 4px;
+  padding: 30px 40px;
+  width: 1080px;
+}
+
+textarea {
+  width: 100%;
+
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+.distrito {
+  font-weight: bolder;
+  font-size: 1.2rem !IMPORTANT;
+  margin-top: 15px;
+}
+
+.derivadoA {
+  color: #747474;
+  margin-top: 15px;
+}
+
+.btn-invalid {
+  cursor: not-allowed;
+}
+
+.close {
+  cursor: pointer;
+  position: absolute;
+  right: 30px;
+  top: 20px;
+
+  img {
+    width: 16px;
+  }
+}
+
+.icono-mensaje {
+  cursor: none;
+  margin-right: 5px;
+  filter: hue-rotate(0deg) brightness(900%);
+  -webkit-filter: hue-rotate(0deg) brightness(900%);
+  height: 16px;
+  width: 16px;
+}

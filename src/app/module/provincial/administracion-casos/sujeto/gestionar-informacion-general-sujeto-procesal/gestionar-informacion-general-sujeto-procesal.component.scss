@@ -1,0 +1,33 @@
+.gestionar-informacion-sujeto-procesal-contenedor{
+    .gestionar-informacion-sujeto-procesal-filters{
+        .cfe-titulo-1{
+            font-size: 1.20em;
+            margin-bottom: 0.5em;
+        }
+    }
+}
+
+.input-disabled{
+    background-color: #f0f0f0 !important;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+
+.title-with-icon {
+  display: flex;       /* usamos flexbox */
+  align-items: center; /* centra verticalmente */
+}
+
+.title-with-icon label {
+  margin: 0;                   /* eliminamos márgenes por defecto */
+}
+
+.title-with-icon .btn-icon {
+  margin-left: 8px;            /* 👈 espacio entre texto y botón */
+  background: none;            /* sin fondo */
+  border: none;                /* sin borde */
+  cursor: pointer;             /* cursor de manito */
+  display: flex;               /* centramos el ícono */
+  align-items: center;
+}

@@ -1,0 +1,19 @@
+<div class="w-full" style="width: 1200px !important; height: 500px !important;">
+
+    <div class="cfe-container">
+
+        <div class="header flex justify-content-between flex-wrap ">
+            <span class="flex align-items-center justify-content-center font-semibold">
+                &nbsp;
+            </span>
+            <div class="flex align-items-center justify-content-center">
+                <p-button (click)="close()" icon="pi pi-times" styleClass="p-button-rounded text-color p-button-text"></p-button>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <iframe *ngIf="pdfUrl" [src]="pdfUrl" style='width: 100%;height: 500px !important;' type='application/pdf' title="Pdf reader"></iframe>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,30 @@
+<div class="document-preview">
+    <div [ngClass]="{'open': isOpen}" class="toggle-button" (click)="togglePanel()">
+        <span *ngIf="!isOpen">&#x276E;</span> <!-- Right Arrow -->
+        <span *ngIf="isOpen">&#x276F;</span> <!-- Left Arrow -->
+    </div>
+    <div class="details-panel" [ngClass]="{'open': isOpen}">
+        <div class="">
+            <div class="flex align-items-center flex-wrap mt-3">
+            <div class="mt-1">
+                <div class="mb-2 font-semibold">
+                    Cargo
+                </div>
+                <div class="">
+                    <a (click)="abrirCargo(cargoDocumento!)" class="bg-red-500 text-white px-4 py-1 text-center border-round 
+                    cursor-pointer transition-all 
+                    transition-duration-200 hover:bg-red-700">{{ cargoDocumento?.nombreExtension }}</a>
+                </div>
+                <div class="flex text-xs  text-600 mt-1">
+                    <span class="flex-initial flex align-items-center justify-content-center ">{{ cargoDocumento?.pesoFormateado }}</span>
+                    <span class="flex-initial flex align-items-center justify-content-center ml-2">{{ cargoDocumento?.folioTotal }} folios</span>
+                </div>
+            </div>
+            <div class="pl-4">
+                <a href="#" (click)="descargarCargo($event)"><fn-icon class="cursor-pointer" [ico]="obtenerIcono('iDownload')" height="2.1rem"></fn-icon></a>
+            </div>
+        </div>
+        </div>
+        <div class="text-xs text-600">Folio inicial: {{ cargoDocumento?.folioInicio }} - Folio final: {{ cargoDocumento?.folioFin }}</div>
+    </div>
+</div>

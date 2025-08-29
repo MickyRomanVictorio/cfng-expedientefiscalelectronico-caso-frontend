@@ -1,0 +1,129 @@
+.datos-generales-llamada {
+  width: 100%;
+  max-width: 950px;
+
+  input:disabled {
+    background-color: var(--mpfn-blue-gray);
+  }
+
+  .buscar-dni {
+    button {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+
+    input {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+
+  .hora-input {
+    width: 70px;
+  }
+
+  .p-card .p-card-content {
+    padding-top: 0;
+  }
+
+  .p-selectbutton .p-button {
+    background: var(--mpfn-white);
+    border: 1px solid var(--mpfn-blue-gray);
+    color: var(--mpfn-black);
+    transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .p-selectbutton .p-button:not(.p-disabled):not(.p-highlight):hover {
+    background: var(--mpfn-lightblue-dark);
+    border-color: var(--mpfn-lightblue-dark);
+    color: #ffffff;
+  }
+
+  .p-selectbutton .p-button.p-highlight {
+    background: var(--mpfn-lightblue-dark);
+    border-color: var(--mpfn-lightblue-dark);
+    color: #ffffff;
+  }
+
+  .p-selectbutton .p-button.p-highlight:hover {
+    background: var(--mpfn-lightblue-dark);
+    border-color: var(--mpfn-lightblue-dark);
+    color: #ffffff;
+  }
+
+  h3 {
+    color: var(--mpfn-jade);
+  }
+}
+
+
+.registrar-caso-modal {
+  font-size: .9rem;
+
+  .alert-title {
+    color: var(--mpfn-secondary);
+  }
+
+  .alert-options {
+    display: flex;
+    justify-content: space-between !important;
+  }
+}
+
+.error-message {
+  color: red;
+}
+
+.titulo-denuncia {
+  color: var(--mpfn-jade);
+  font-weight: bold;
+  font-size: 1.8rem;
+}
+
+
+.partes-involucradas {
+  label {
+    cursor: pointer;
+}
+  @extend .datos-generales-llamada;
+
+  .p-dropdown {
+    &.p-disabled {
+      background-color: var(--mpfn-blue-gray);
+    }
+  }
+
+  .cfe-boton-primary {
+    display: inline-flex;
+  }
+
+
+
+  .sin-partes-registrado {
+    color: var(--mpfn-jade);
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: .5rem 0; 
+  }
+
+
+}
+
+.direccion-partes-container {
+
+  .p-dropdown {
+    &.p-disabled {
+      background-color: var(--mpfn-blue-gray);
+    }
+  }
+  input:disabled {
+    background-color: var(--mpfn-blue-gray);
+  }
+
+
+  .p-dialog .p-dialog-content {
+    padding: .8rem 1.8rem;
+  }
+
+
+}

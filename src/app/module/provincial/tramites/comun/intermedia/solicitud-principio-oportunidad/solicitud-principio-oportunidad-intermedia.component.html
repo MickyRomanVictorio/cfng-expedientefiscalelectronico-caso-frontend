@@ -1,0 +1,23 @@
+<div >
+    <div class="col-12 mt-5">
+       
+      <iframe 
+        *ngIf="pdfSolicitudElevacionUrl"
+        [src]="pdfSolicitudElevacionUrl"
+        style='width: 95%; height: 800px !important;'
+        title="Solicitud de Principio de oportunidad"
+      ></iframe>
+    </div>
+    <div  
+      class="col-12 flex justify-content-center ng-star-inserted"
+      *ngIf="!pdfSolicitudElevacionUrl"
+    >
+
+    <div class="col">
+      <label for="button" class="font-semibold">&nbsp;</label>
+      <p-button styleClass="p-button-lg cfe-boton-primary w-70" label="Ver documentos ingresados"
+          (click)="verDocumentosIngresados()"></p-button>
+    </div>
+    </div>
+</div>
+<p-toast></p-toast>

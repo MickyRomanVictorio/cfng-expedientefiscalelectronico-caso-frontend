@@ -1,0 +1,31 @@
+<p-tabMenu [model]="items" [(activeItem)]="activeItem" (activeItemChange)="onTabChange($event)"
+  class="cfe-tabs-view-anidado"></p-tabMenu>
+
+<div class="tab-content">
+  <ng-container *ngIf="activeItem?.label === 'Salidas Alternas'">
+    <div class="p-grid">
+      <div class="flex mb-2 mt-4 p-4">
+        <fn-icon [ico]="obtenerIcono('iAlert')" height="1.4rem"></fn-icon>
+        <div class="ml-2">
+          Para los sujetos que se acogen a una salida alterna, se le creará un <strong>cuaderno de extremos</strong>.
+          Por ejemplo, si “Juan” y “José” se acogen al Principio de oportunidad, y “Luis” se acoge al Acuerdo
+          reparatorio,
+          entonces se crearán dos cuadernos de extremos. Si todos se acogen a una salida alterna, solo se creará un
+          cuaderno de extremos si existen dos salidas externas diferentes, si no todo se manejará en la
+          <strong>carpeta principal</strong>.
+        </div>
+      </div>
+          <app-registrar-reparacion-civil
+          [data]="data"
+          [modoLectura]="tramiteEnModoVisor || tramiteEstadoFirmadoRecibido"
+          [salidaAlterna]="true"
+          />
+    </div>
+  </ng-container>
+  <ng-container *ngIf="activeItem?.label === 'Apelaciones'">
+    <app-apelaciones-resultados [data]="data" [modoLectura]="tramiteEnModoVisor || tramiteEstadoFirmadoRecibido"></app-apelaciones-resultados>
+  </ng-container>
+  <ng-container *ngIf="activeItem?.label === 'Resumen'">
+    <app-resumen-resultado [data]="data"></app-resumen-resultado>
+  </ng-container>
+</div>

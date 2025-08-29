@@ -1,0 +1,47 @@
+.previsualizar-documento-contenedor{
+    width: 850px;
+}
+
+.cabecera-archivo-subido {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    padding: 15px 25px;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    background: var(--mpfn-black);
+    max-height: 62px;
+    z-index: 200;
+    margin-top: -30px;
+    img {
+        width: 24px;
+        height: 23px;
+    }
+    h4 {
+        color: var(--mpfn-white);
+        font-weight: 400;
+        font-size: 15px;
+        padding-left: 12px;
+        margin-top: 17px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+}
+
+ngx-extended-pdf-viewer{
+    margin-top: 30px;
+    position: relative;
+    display: block;
+    height: calc(100% - 15px - 30px);
+    padding-bottom: 15px;
+    background-color: #e8e8eb;
+}
+
+.cerrar-previsualizacion{
+    color: var(--mpfn-white);
+    position: absolute;
+    right: 17px;
+    cursor: pointer;
+}

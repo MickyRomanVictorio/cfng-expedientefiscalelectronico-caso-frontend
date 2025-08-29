@@ -1,0 +1,392 @@
+.cfe-container {
+    width: 100%;
+  
+    .derivado__header {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 10px 0 25px 0;
+    }
+
+    .derivado__table {
+        width: 100%;
+        background: var(--mpfn-white);
+        /*border-radius: 6px;
+        border: 1.5px solid var(--mpfn-gray2);*/
+        margin-top: 10px;
+  
+        .derivado_table__title {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px 25px 0 25px;
+            margin-bottom: 20px;
+            margin-top: 20px;
+  
+            .derivado_table_title__content {
+                display: flex;
+                align-items: center;
+  
+                img {
+                    width: 22px;
+                    position: relative;
+                    top: -2px;
+                }
+  
+                .cfe-subtitulo-1 {
+                    margin-left: 10px;
+                }
+            }
+  
+            .derivado_table_title__options {
+                display: flex;
+            }
+        }
+  
+        
+  
+        .derivado_table__content {
+            width: 100%;
+        }
+    }
+  }
+  
+  :host ::ng-deep .p-dropdown-label {
+    font-size: 1.125rem !important;
+  }
+  
+  :host ::ng-deep .btn-change-view {
+    font-family: var(--mpfn-font-semi-bold);
+    .p-button.p-button-outlined {
+        background-color: transparent;
+        color: var(--mpfn-primary);
+        border: 2px solid;
+        font-size: 17px;
+    }
+  }
+  
+  :host ::ng-deep .caso-container {
+    
+    align-items: center;
+    position: relative;
+  
+    .plazo-item {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 6px;
+        position: absolute;
+        left: -13px;
+        top: 5px;
+    }
+  
+    .cfe-caso {
+        font-family: var(--mpfn-font-regular);
+        white-space: nowrap;
+  
+        span {
+            color: var(--mpfn-secondary);
+        }
+    }
+  }
+  
+  :host ::ng-deep .p-selectable-row {
+    &:hover {
+        cursor: default;
+    }
+  
+    td {
+        vertical-align: top;
+        font-family: var(--mpfn-font-regular);
+    }
+  
+    .remitente-container {
+        font-family: var(--mpfn-font-regular);
+        font-size: 0.95em;
+    }
+  
+    .contact-item {
+        font-family: var(--mpfn-font-regular);
+        font-size: 0.95em;
+  
+        span {
+            display: inline-block;
+            margin-right: 5px;
+            font-family: var(--mpfn-font-semi-bold);
+        }
+    }
+  
+    .fecha-container {
+        font-family: var(--mpfn-font-regular);
+        font-size: 0.95em;
+    }
+  
+    .btn-crimes-parts {
+        cursor: pointer;
+        background: var(--mpfn-white);
+        color: var(--mpfn-black);
+        text-align: center;
+        font-family: var(--mpfn-font-semi-bold);
+        font-size: 0.9em;
+        padding: 6px 5px;
+        border-radius: 5px;
+        transition: 300ms all ease;
+        border: 1.5px solid var(--mpfn-gray2);
+  
+        &:hover {
+            background: var(--mpfn-gray3);
+            border-color: var(--mpfn-gray2);
+        }
+    }
+  
+    .btn-clasification {
+        cursor: pointer;
+        width: 55px;
+        height: 55px;
+        background: var(--mpfn-gray7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 4px;
+        transition: 300ms all ease;
+        border: 1.5px solid var(--mpfn-gray6);
+  
+        &:hover {
+            background: var(--mpfn-gray11);
+        }
+  
+        img {
+            width: 25px;
+        }
+    }
+  
+    .td-justify-center {
+        display: flex;
+        justify-content: center;
+    }
+  }
+  
+  :host ::ng-deep .unread {
+    .caso-container {
+        .cfe-caso {
+            font-family: var(--mpfn-font-bold);
+        }
+    }
+  
+    .remitente-container,
+    .contact-item,
+    .fecha-container {
+        font-family: var(--mpfn-font-bold);
+    }
+  
+    .contact-item {
+        span {
+            font-family: var(--mpfn-font-bold);
+        }
+    }
+  }
+  
+  .btn-more-options {
+    padding: 6px 6px;
+    cursor: pointer;
+    margin-top: 8px;
+  
+    .btn-more-options-content {
+        width: 6px;
+        display: flex;
+        flex-wrap: wrap;
+  
+        span {
+            width: 6px;
+            height: 6px;
+            display: inline-block;
+            background-color: var(--mpfn-gray5);
+            border-radius: 50%;
+            margin-bottom: 4.5px;
+            transition: 300ms background-color ease;
+        }
+    }
+  
+    &:hover {
+        .btn-more-options-content {
+            span {
+                background-color: var(--mpfn-primary);
+            }
+        }
+    }
+  }
+  
+  :host ::ng-deep .menu-options {
+    position: absolute;
+  
+    .p-menu {
+        &.p-menu-overlay {
+            min-width: 265px;
+            top: -30px !important;
+            right: 0 !important;
+            left: auto !important;
+        }
+    }
+  }
+  
+  :host ::ng-deep .origin-container {
+    position: relative;
+  
+    .adjust-origin-label {
+        position: absolute;
+        top: -24px;
+        left: 7px;
+    }
+  }
+
+  :host::ng-deep .p-datatable .p-datatable-thead > tr > th {
+    background: var(--mpfn-white) !important;
+  }
+  
+  .boton-w{
+    min-width: 160px;
+  }
+  
+  .btn-accion {
+    cursor: pointer;
+    width: 55px;
+    height: 55px;
+    background: var(--mpfn-gray7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    transition: 300ms all ease;
+    border: 1.5px solid var(--mpfn-gray6);
+  
+    &:hover {
+      background: var(--mpfn-gray11);
+    }
+  
+    img {
+      width: 25px;
+    }
+  }
+
+  ////por revisar
+  .btn-derivacion {
+    cursor: pointer;
+    padding: 5px 10px;
+    background-color: #E7EBED;
+    border: none;
+    border-radius: 5px;
+    color: #4C6478;
+    font-weight: 600;
+    //margin-inline-start: 1.2rem;
+    &:is(:hover,:active) {
+      background-color: #C4CCD3;
+    }
+  }
+
+  .btn-derivacion-externa {
+    cursor: pointer;
+    padding: 5px 10px;
+    background-color: #970d0d;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    font-weight: 600;
+    //margin-inline-start: 1.2rem;
+    &:is(:hover,:active) {
+      background-color: #C4CCD3;
+    }
+  }
+  
+  .opciones {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap:0.5rem;
+  }
+  
+.btn-devolver ::ng-deep button  {
+    background-color: var(--red-700);
+    color: var(--surface-0);
+    border-color: var(--red-700);
+    &:hover {
+      background-color: var(--red-700);
+      color: var(--surface-0);
+      border-color: var(--red-500);
+    }
+    &:active {
+      background-color: var(--red-700);
+      color: var(--surface-0);
+      border-color: var(--red-500);
+    }
+    &:focus {
+      outline: 0 none;
+      outline-offset: 0;
+      box-shadow: 0 0 0 0.2rem var(--red-100);
+    }
+  }
+  
+  :is(.btn-detalle, .btn-visor) ::ng-deep button {
+    background-color: var(--bluegray-100);
+    color: var(--surface-900);
+    border-color: var(--bluegray-100);
+  
+    &:hover {
+      color: var(--surface-900);
+      background-color: var(--bluegray-100);
+    }
+  
+    &:active {
+      color: var(--surface-900);
+      background-color: var(--bluegray-100);
+    }
+  
+    &:focus {
+      outline: 0 none;
+      outline-offset: 0;
+      box-shadow: 0 0 0 0.2rem var(--bluegray-50);
+    }
+  
+  }
+
+  //derivado aceptado
+  .cfe-boton,
+.cfe-boton-outline,
+.cfe-boton-danger,
+.cfe-boton-bluedark,
+.cfe-boton-tertiary,
+.cfe-filtro-boton,
+.cfe-boton-primary {
+    outline: none;
+    font-family: var(--mpfn-font-semi-bold);
+    transition: 300ms background-color, border, color ease;
+    display: inline;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.aling-derecha {
+    display: contents !important;
+}
+
+.formato-tipo-persona {
+    background-color: #e3e2e2;
+    width: 120px;
+    padding: 9px 9px 9px 13px;
+    font-weight: 700;
+    border-radius: 5px;
+}
+
+.puntero-link {
+    cursor: grab;
+}
+
+.puntero-defecto {
+    cursor: default !important;
+    display:  table-cell !important;
+}
+  

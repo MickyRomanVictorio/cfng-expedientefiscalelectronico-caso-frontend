@@ -1,0 +1,234 @@
+<app-encabezado-modal
+  titulo="INFORMACIÓN ACTUAL DE DELITOS Y PARTES -"
+  [referenciaModal]="referenciaModal"
+  [numeroCaso]="numeroCaso"
+  [tituloSinEtiquetaCaso]="true"
+  [flag]="flag"
+></app-encabezado-modal>
+
+<div class="cfe-tabla-white pt-2">
+  <p-table
+    [loading]="cargandoTabla"
+    [value]="delitosyPartesCopy"
+    [paginator]="true"
+    [rowHover]="true"
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    [tableStyle]="{ 'min-width': '50rem' }"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th scope="col" class="w-1">N°</th>
+        <th scope="col" class="w-1">Tipo documento</th>
+        <th scope="col" class="w-1">N° Documento</th>
+        <th scope="col" class="w-2">Nombres y Apellidos</th>
+        <th scope="col" class="w-1">Tipo de sujeto procesal</th>
+        <th scope="col" class="w-3">Delito(s)</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-partes>
+      <tr
+        class="p-selectable-row"
+        *ngIf="esTipoPermitido(partes.idTipoParteSujeto)"
+      >
+        <td>{{ partes.orden }}</td>
+        <td>{{ partes.tipoDocIdentidad }}</td>
+        <td>{{ partes.numeroDocumento }}</td>
+        <td>{{ partes.nombres }}</td>
+        <td>{{ partes.tipoParteSujeto }}</td>
+        <td>
+          <ng-container>
+            <div
+              class="delito-registrado overflow-y-auto h-6rem"
+              *ngIf="partes.delitos !== null"
+            >
+              <div
+                *ngFor="let delito of partes.delitos"
+                class="border-round-xl m-1 p-2"
+                style="background: rgba(241, 151, 0, 0.2117647059)"
+              >
+                {{ delito.noDelitoGenerico }} /
+                {{ delito.noDelitoSubgenerico }} /
+                {{ delito.noDelitoEspecifico }}
+              </div>
+            </div>
+          </ng-container>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="8">No existe delitos y partes a mostrar.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<h3 class="titulo-desagregar-delitos-partes cfe-subtitulo-3 cfe-semi-bold mt-4">
+  DESAGREGAR PARTES Y/O DELITOS
+</h3>
+<form [formGroup]="formularioDesagregarCaso">
+  <div class="grid mt-2">
+    <div class="field col-12">
+      <span class="font-semibold">1. CREAR GRUPOS:</span>
+    </div>
+  </div>
+  <div class="grid mb-2">
+    <div class="col-12 md:col-5">
+      <label for="partes" class="font-semibold"
+        >Seleccione la(s) parte(s) procesal(es)</label
+      >
+      <p-multiSelect
+        id="partes"
+        [options]="delitosyPartesCopia"
+        [(ngModel)]="partesSeleccionados"
+        optionLabel="nombres"
+        formControlName="partesFormControl"
+        (onChange)="onChangePartesSeleccionadas($event)"
+        placeholder="Seleccione uno o varios sujetos"
+        [emptyFilterMessage]="mensajeListaVacia"
+        [emptyMessage]="mensajeListaVacia"
+        [maxSelectedLabels]="100"
+        appendTo="body"
+        styleClass="p-inputtext-lg w-full chip-scroll-vertical"
+        display="chip"
+      ></p-multiSelect>
+    </div>
+
+    <div class="col-12 md:col-5">
+      <label for="delitos" class="font-semibold"
+        >Seleccione el (los) delito(s) para esta(s) parte(s)</label
+      >
+      <p-multiSelect
+        id="delitos"
+        [options]="delitosFiltrados"
+        [(ngModel)]="delitosSeleccionados"
+        placeholder="Seleccione uno o varios delitos"
+        optionLabel="labelDelito"
+        formControlName="delitosFormControl"
+        (onChange)="onChangeDelitosSeleccionados($event)"
+        [emptyFilterMessage]="mensajeListaVacia"
+        [emptyMessage]="mensajeListaVacia"
+        [maxSelectedLabels]="100"
+        [panelStyle]="{ 'max-width': '60em' }"
+        appendTo="body"
+        styleClass="p-inputtext-lg w-full chip-scroll-vertical"
+        display="chip"
+      ></p-multiSelect>
+    </div>
+
+    <div class="col-12 md:col-2">
+      <label for="delitos" class="font-semibold">&nbsp;</label>
+      <button
+        class="cfe-boton-secondary cfe-boton-lg w-full"
+        (click)="
+          editandoGrupo
+            ? actualizarGrupoPartesyDelitos()
+            : agregarPartesDelitos()
+        "
+        [disabled]="deshabilitarOpciones"
+      >
+        {{ editandoGrupo ? "Actualizar" : "Agregar" }}
+      </button>
+    </div>
+  </div>
+
+  <div class="grid mt-2">
+    <div class="field col-12">
+      <span class="font-semibold">2. VALIDAR GRUPOS:</span>
+    </div>
+  </div>
+  <div class="cfe-tabla-white">
+    <p-table
+      [value]="gruposDesagregados"
+      [scrollable]="true"
+      scrollHeight="flex"
+      [tableStyle]="{ 'min-width': '50rem' }"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th scope="col">Grupo</th>
+          <th scope="col">Partes</th>
+          <th scope="col">Número de caso</th>
+          <th scope="col">Delito(s)</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-grupo let-i="rowIndex">
+        <tr>
+          <td>{{ grupo.nombreGrupo }}</td>
+          <td>
+            <div *ngFor="let sujeto of grupo.sujetos">
+              {{ sujeto.nombres }} ({{ sujeto.numeroDocumento }})
+            </div>
+          </td>
+          <td>
+            <span
+              [innerHTML]="
+                grupo.numeroCaso !== 'Por asignar'
+                  ? stringUtil.formatearCodigoCaso(grupo.numeroCaso)
+                  : grupo.numeroCaso
+              "
+            ></span>
+          </td>
+          <td>
+            <div class="delito-registrado overflow-y-auto h-6rem">
+              <div
+                *ngFor="let delito of grupo.delitos"
+                class="border-round-xl m-1 p-2"
+                style="background: rgba(241, 151, 0, 0.2117647059)"
+              >
+                {{ delito.nombreLabel }}
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="grid" style="align-self: center">
+              <div class="col-3 mt-2">
+                @if(!deshabilitarOpciones){
+                <fn-icon
+                  onkeydown=""
+                  [ico]="icono('iEdit')"
+                  height="1.6rem"
+                  style="cursor: pointer"
+                  (click)="editarGrupo(i)"
+                >
+                </fn-icon>
+                }
+              </div>
+              <div class="col-3">
+                @if(!deshabilitarOpciones){
+                <fn-icon
+                  onkeydown=""
+                  [ico]="icono('iTrash')"
+                  height="2.5rem"
+                  style="cursor: pointer"
+                  (click)="eliminarGrupo(i)"
+                >
+                </fn-icon>
+                }
+              </div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8">No se creó grupos desagregados.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</form>
+
+<div class="flex mt-2 md:justify-content-end">
+  <div class="w-full md:w-auto flex align-items-center">
+    <button
+      class="cfe-boton-primary cfe-boton-lg w-full md:w-auto"
+      (click)="confirmarDesagregarCaso()"
+      [disabled]="esGrupoDesagregado"
+    >
+      Guardar desagregar
+    </button>
+  </div>
+</div>

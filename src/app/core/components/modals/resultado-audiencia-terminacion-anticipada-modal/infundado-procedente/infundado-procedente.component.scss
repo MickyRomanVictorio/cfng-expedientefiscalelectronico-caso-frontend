@@ -1,0 +1,85 @@
+.fundada-procedente-desaprobado {
+    padding: 0px 0px;
+    .cfe-titulo-1 {
+        font-size: 18px !important;
+        margin-bottom: 1em;
+    }
+    .card {
+        background-color: var(--mpfn-white) !important;
+
+        .sujetos-container {
+            border-radius: 5px;
+            width: fit-content;          
+            p {
+              margin: 0;
+              font-weight: bold;
+              font-size: 16px;
+              margin-bottom: 0.5em;
+            }
+          
+            ul {
+              list-style-type: disc;
+              margin-left: 30px;
+              padding: 0;
+              li {
+                font-size: 14px;
+                margin-bottom: 1em;
+              }
+            }
+          }
+          
+    }
+    .msg-guardado{
+        font-weight: bold;
+        color: var(--mpfn-green-dark) !important;
+    }
+}
+
+:host ::ng-deep .table-apelaciones{
+    .p-datatable-thead{
+        background: var(--mpfn-jade-background) !important;
+        font-weight: bold;
+    }
+    .p-datatable-tbody{
+        tr{
+            background-color: var(--mpfn-white) !important;
+            margin-bottom: 20px !important;
+        }
+    }
+}
+
+$badge-colors: (
+    solidaria: var(--mpfn-lightblue),
+    mancomunada:var(--mpfn-red),
+);
+
+.badge-estados {
+    color: white;
+    padding: 4px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-block;
+    text-align: center;
+    line-height: 1.5;
+
+    @each $color-name, $color-value in $badge-colors {
+        &-#{$color-name} {
+            background-color: $color-value;
+        }
+    }
+}
+
+.no-guiones {
+    list-style-type: none !important;
+    padding-left: 0 !important;
+    margin-left:-30px !important;
+}
+
+.label-bg-error {
+    background-color: var(--mpfn-rojo-pastel);
+}
+
+.label-info-secondary {
+    color: var(--mpfn-red);
+}

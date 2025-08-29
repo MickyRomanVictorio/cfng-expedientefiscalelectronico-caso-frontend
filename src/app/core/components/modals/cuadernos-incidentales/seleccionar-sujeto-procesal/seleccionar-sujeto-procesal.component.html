@@ -1,0 +1,109 @@
+<div class="">
+
+  <div class="cfe-encabezado-modal mb-2">
+    <span class="cfe-subtitulo-3 family-poppin-bold">
+      Seleccionar sujetos procesales
+    </span>
+    <fn-icon
+      onkeypress=""
+      class="cfe-encabezado-cerrar"
+      [ico]="iconUtil.obtenerIcono('iClose')"
+      height="2rem"
+      (click)="cerrarModal()"
+    ></fn-icon>
+  </div>
+
+  <div class="cfe-subtitulo-3 family-poppin-bold mt-4">
+    {{subTitulo}}<span [innerHTML]="stringUtil.obtenerNumeroCaso(numeroCaso)"></span>
+  </div>
+
+  <div class="flex flex-column gap-2 mt-4">
+    <span><strong>Seleccione el(los) sujeto(s) procesal(es) para los cuales se solicita la prolongación de prisión preventiva:</strong></span>
+    <div class="flex gap-3">
+      <p-badge [value]="" class="badge-red" />
+      <span>Sujetos procesales cuyo plazo de prisión preventiva ya venció</span>
+    </div>
+  </div>
+
+  <div class="cfe-tabla-white mt-2">
+    <p-table
+      class="table-apelaciones"
+      [value]="resultadosPrisionPreventivaFiltrados"
+      responsiveLayout="stack">
+      <ng-template let-columns pTemplate="header">
+        <tr>
+          <th scope="col" class="columna-consentimiento">
+            <input
+              class="cursor-pointer"
+              (change)="seleccionarTodos($event)"
+              [(ngModel)]="selectAllCheck"
+              [disabled]="!tramiteEnModoEdicion"
+              type="checkbox"/>
+          </th>
+          <th id="Nº">Nº</th>
+          <th id="nombre">Nombres y apellidos</th>
+          <th id="resul">Resultado</th>
+          <th id="medida">Medidad de coerción</th>
+          <th id="fechaini">Fecha de inicio</th>
+          <th id="plazo">Plazo otorgado</th>
+          <th id="fechafin">Fecha fin</th>
+        </tr>
+      </ng-template>
+      <ng-template let-rowIndex="rowIndex" let-item pTemplate="body">
+        <tr class="p-selectable-row">
+          <td style="text-align: center; vertical-align: middle;">
+            @if(!plazoVencido(item.fechaFin) || esFirmado) {
+              <input
+                class="cursor-pointer"
+                (change)="onSelectionChange($event, item)"
+                [checked]="verificaSeleccionado(item)"
+                [disabled]="!tramiteEnModoEdicion"
+                type="checkbox"/>
+            }
+          </td>
+          <td class="align-content-center">
+            <span class="p-column-title font-semibold">N°</span>
+            {{ (( query.page -1 ) * query.limit) + (rowIndex + 1) }}
+          </td>
+          <td class="align-content-center">
+            @if(plazoVencido(item.fechaFin)) {
+              <p-badge [value]="" class="badge-red" />
+            }
+            {{ item.nombreSujetoCaso }}
+          </td>
+          <td class="align-content-center">{{ item.tipoResultado }}</td>
+          <td class="align-content-center">{{ item.medidaCoercion | capitalizar }}<br>({{ item.tipoMedidaCoercion }})</td>
+          <td class="align-content-center">{{ item.reoAusenteContumaz ? '-' : item.fechaInicio }}</td>
+          <td class="align-content-center text-center">{{ item.plazoOtorgado ? textoPlazoOtorgado(item)  : '-' }}</td>
+          <td class="align-content-center">{{ item.reoAusenteContumaz ? '-' : item.fechaFin }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8">No se encontró información de sujetos procesales.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <app-paginator
+      [query]="query"
+      [items]="itemPaginado"
+      [rowsPerPageOptions]="[]"
+      (paginate)="onPaginate($event)"
+    ></app-paginator>
+
+  </div>
+</div>
+<div class="col-12 flex align-items-center justify-content-center mt-2 mb-2">
+  <button class="cfe-boton-opcion cfe-boton-secondary cfe-boton-lg  family-poppin-bold"
+          (click)="cerrarModal()">
+    Cancelar
+  </button>
+  @if (tramiteEnModoEdicion) {
+    <button class="ml-3 cfe-boton-primary cfe-boton-lg  family-poppin-bold"
+            [disabled]="!habilitarBotonAceptar"
+            (click)="aceptar()">
+      Aceptar
+    </button>
+  }
+
+</div>

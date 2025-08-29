@@ -1,0 +1,11 @@
+<div class="flex">
+  @for (ly of leyenda; track $index) {
+  <div class="flex align-items-center surface-200 px-3 py-2 w-full sm:w-auto"
+    [ngClass]="{'leyenda-plazo-inicio': $index===0, 'leyenda-plazo-fin': $index===leyenda.length-1 }">
+    <span class="plazo-item {{ ly.clasesCss }}"></span> {{ ly.nombre }}
+    @if(ly.cantidad>0){
+    <div class="quantity">({{ ly.cantidad }})</div>
+    }
+  </div>
+  }
+</div>

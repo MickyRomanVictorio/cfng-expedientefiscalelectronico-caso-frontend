@@ -1,0 +1,322 @@
+<div class="grid" #focusElement tabindex="-1">
+  <div class="col-12 md:col-4">
+    <div class="pb-2">
+      <button
+        type="button"
+        class="cfe-boton-primary cfe-boton-lg w-full"
+        icon="pi pi-upload"
+        (click)="eventoSubirCargo()"
+      >
+        <span class="ml-1">Subir cargo</span>
+      </button>
+    </div>
+
+    <div class="field">
+      <label for="buscar" class="font-semibold">Buscar:</label>
+      <div class="p-field p-fluid">
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input
+            id="buscar"
+            type="text"
+            autocomplete="off"
+            (input)="eventoBuscar($event)"
+            [(ngModel)]="buscarValor"
+            placeholder="Buscar documento"
+            class="p-inputtext p-component p-element"
+          />
+        </span>
+      </div>
+    </div>
+
+    <div class="cfe-selectbutton cfe-selectbutton-md">
+      <p-selectButton
+        [options]="listatipoDocumentoConsulta"
+        [(ngModel)]="tipoDocumentoConsultaSeleccionado"
+        optionLabel="name"
+        optionValue="value"
+        (onChange)="eventoBuscarTipoDocumento($event)"
+      >
+      </p-selectButton>
+    </div>
+
+    <div class="py-1 mb-2">
+      <span class="font-semibold">{{ totalEncontrado }}</span>
+      {{
+        totalEncontrado > 1 ? "documentos encontrados" : "documento encontrado"
+      }}
+    </div>
+
+    <p-scrollPanel
+      [style]="{ width: '100%', height: '500px' }"
+      styleClass="w-auto"
+    >
+      <div
+        *ngFor="let grupo of gruposDocumentos; let indice = index"
+        class="accordion-item"
+      >
+
+        <div
+          class="accordion-header py-3 flex align-items-center justify-content-between p-2 cursor-pointer text-white"
+          (click)="grupo.mostrarContenido = !grupo.mostrarContenido"
+        >
+          <span>{{ grupo.nombre.toUpperCase() }}</span>
+          <i
+            class="pi pi-chevron-{{
+              grupo.mostrarContenido === true ? 'up' : 'down'
+            }} mr-2"
+          ></i>
+        </div>
+
+         <div [ngClass]="{ hidden: !grupo.mostrarContenido }">
+          <p-table
+            [value]="grupo.documentos"
+            [rowHover]="true"
+            [showCurrentPageReport]="true"
+            responsiveLayout="stack"
+            selectionMode="multiple"
+            [(selection)]="seleccionado"
+          >
+
+            <ng-template pTemplate="body" let-rowIndex="rowIndex" let-documento>
+              <tr
+                #filaDocumentoRef
+                [id]="'fila-' + documento.correlativo"
+                [style.backgroundColor]="
+                  documentoFilaColor(documento.correlativo, grupo.codigo)
+                "
+              >
+                <td style="vertical-align: top" class="pl-2 pr-0">
+                  <div class="flex">
+                    <p-tableCheckbox [value]="documento"></p-tableCheckbox>
+                    <span class="pl-1 font-bold"
+                      >{{ documento.correlativo }}.</span
+                    >
+                  </div>
+                </td>
+                <td
+                  style="vertical-align: top"
+                  class="pl-2 cursor-pointer"
+                  (click)="
+                    eventoSeleccionarArchivo(
+                      grupo.codigo,
+                      documento.correlativo
+                    )
+                  "
+                >
+                  <div>
+                    <div class="text-md font-bold">
+                      {{ documento.tipoDocumento }}
+                    </div>
+                    <div class="text-md font-semibold">
+                      {{ documento.nombreDocumento }}
+                    </div>
+                    <div class="text-xs pt-1">
+                      <div class="font-semibold">Fecha de Recepción:</div>
+                      <div class="text-600">
+                        {{ formatoFecha(documento.fechaRecepcion) }}
+                      </div>
+                    </div>
+                    <div class="text-xs pt-1">
+                      <div class="font-semibold">Fecha de Registro:</div>
+                      <div>{{ formatoFecha(documento.fechaRegistro) }}</div>
+                    </div>
+                    <div class="text-xs pt-1">
+                      <div class="font-semibold">Estado:</div>
+                      <div>{{ documento.estado }}</div>
+                    </div>
+                    <div class="pt-5 text-xs">
+                      <div class="font-bold">Acto Procesal:</div>
+                      <div>{{ documento.actoProcesal }}</div>
+                      <div class="font-bold pt-2">Trámite:</div>
+                      <div>{{ documento.tramite }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td style="vertical-align: top">
+                  <div style="min-width: 150px">
+                    <div class="flex align-content-center">
+                      <div class="w-full">
+                        <div
+                          class="bg-red-500 text-white px-2 py-2 text-center border-round cursor-pointer transition-all transition-duration-200 hover:bg-red-700"
+                          (click)="
+                            eventoSeleccionarArchivo(
+                              grupo.codigo,
+                              documento.correlativo
+                            )
+                          "
+                        >
+                          pdf
+                        </div>
+                        <div class="text-xs flex justify-content-between">
+                          <div>
+                            {{
+                              formatoPesoArchivo(
+                                convertirMBaBytes(documento.pesoArchivo)
+                              )
+                            }}
+                          </div>
+                          <div>
+                            {{ documento.totalFolio }} Folio{{
+                              documento.totalFolio === 1 ? "" : "s"
+                            }}
+                          </div>
+                        </div>
+                      </div>
+                      <div style="width: 50px" class="text-right pl-3">
+                        <fn-icon
+                          class="cursor-pointer"
+                          [ico]="obtenerIcono('iDownload')"
+                          height="2.1rem"
+                          (click)="
+                            descargarArchivo(
+                              documento.idDocumento,
+                              documento.nombreDocumento
+                            )
+                          "
+                        ></fn-icon>
+                      </div>
+                    </div>
+                    <div class="text-xs text-600 pt-1">
+                      Folio inicial:{{ documento.folioInicial }} - Folio final:
+                      {{ documento.folioFinal }}
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="3" class="text-center">
+                  No se encontraron registros
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </p-scrollPanel>
+  </div>
+
+  <div class="col-12 md:col-8">
+    <div class="py-2 pl-4 pr-5">
+      <div class="flex justify-content-between flex-column lg:flex-row">
+        <div class="flex align-items-center mt-2 lg:mt-0 text-center">
+          <fn-icon
+            [ico]="obtenerIcono('iClose')"
+            height="2rem"
+            class="cursor-pointer"
+            (click)="eventoDeseleccionarTodo()"
+          ></fn-icon>
+          <div
+            class="hover:text-red-600 hover:underline cursor-pointer"
+            (click)="eventoDeseleccionarTodo()"
+          >
+            <span class="font-bold">{{ seleccionado.length }}</span>
+            Seleccionado{{ seleccionado.length > 1 ? "s" : "" }}
+          </div>
+        </div>
+
+        <div class="flex align-items-center mt-2 lg:mt-0">
+          <fn-icon
+            [ico]="obtenerIcono('iDownload')"
+            height="2rem"
+            class="cursor-pointer"
+            (click)="descargarArchivosSeleccionados()"
+          ></fn-icon>
+          <div
+            class="hover:text-red-600 hover:underline cursor-pointer"
+            (click)="descargarArchivosSeleccionados()"
+          >
+            Descargar
+            <span class="font-bold">{{ seleccionado.length }}</span> documento{{
+              seleccionado.length > 1 ? "s" : ""
+            }}
+          </div>
+        </div>
+
+        <div class="flex align-items-center mt-2 lg:mt-0">
+          <fn-icon
+            [ico]="obtenerIcono('iDownload')"
+            height="2rem"
+            class="cursor-pointer"
+            (click)="eventoDescargarTodo()"
+          ></fn-icon>
+          <div
+            class="hover:text-red-600 hover:underline cursor-pointer"
+            (click)="eventoDescargarTodo()"
+          >
+            Descargar en un solo documento
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-2 lg:mt-0 pl-3">
+        <ng-container *ngIf="documentoSeleccionado">
+          <div class="flex text-sm">
+            <div class="font-bold">{{ documentoSeleccionado.correlativo }}</div>
+            <div class="font-semibold pl-1">
+              {{ documentoSeleccionado.tipoDocumento }}
+              <span class="text-500 text-xs">{{
+                documentoSeleccionado.nombreDocumento
+              }}</span>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <ng-container *ngIf="pdfBase64 !== ''">
+      <div class="flex align-items-center">
+        <div class="pr-1">
+          <button
+            type="button"
+            class="cfe-boton-secondary p-2"
+            (click)="seleccionarArchivoAnterior()"
+          >
+            <i class="pi pi-chevron-left"></i>
+          </button>
+        </div>
+        <div class="w-full h-full" style="min-height: 30rem">
+          <ng-container *ngIf="pdfBase64 !== null">
+            <ngx-extended-pdf-viewer
+              [src]="pdfBase64"
+              [showPresentationModeButton]="true"
+              [showDownloadButton]="true"
+              [showSecondaryToolbarButton]="false"
+              [showTextEditor]="false"
+              [showDrawEditor]="false"
+              [showOpenFileButton]="false"
+              [showStampEditor]="false"
+              style="display: block; width: 100%; height: 40rem"
+            >
+            </ngx-extended-pdf-viewer>
+          </ng-container>
+
+          <ng-container *ngIf="pdfBase64 === null">
+            <div class="text-center p-7 text-lg font-bold">
+              <div class="py-7 my-5">Documento no disponible</div>
+            </div>
+          </ng-container>
+        </div>
+        <div class="pl-1">
+          <button
+            type="button"
+            class="cfe-boton-secondary p-2"
+            (click)="seleccionarArchivoSiguiente()"
+          >
+            <i class="pi pi-chevron-right font-bold"></i>
+          </button>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="pdfBase64 === ''">
+      <div class="text-center p-7 text-lg font-bold">
+        <div class="py-7">Seleccione el documento que desea visualizar</div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+<p-toast></p-toast>

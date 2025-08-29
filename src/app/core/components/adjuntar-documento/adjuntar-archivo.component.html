@@ -1,0 +1,76 @@
+<div class="formgrid grid">
+    <div *ngIf="!selectedFile" class="field col-12">
+        <label>Subir Cargo</label>
+        <div class="border-dashed border-round border-2 surface-border text-center p-5">
+            <p-messages></p-messages>
+            <div class="text-600 text-2xl">
+                <i class="pi pi-file-pdf text-4xl"></i>
+            </div>
+            <div>
+                Arrastra y suelta los archivos a subir o <a href="#" (click)="openInputFile($event)"
+                    class="text-blue-400 underline cursor-pointer">
+                    haz click aquí </a>
+            </div>
+            <div>Solo se puede subir un archivo en formato PDF</div>
+
+            <input #inputFile class="hidden" type="file" accept="application/pdf" (change)="onSelectFile($event)">
+            <div class="font-semibold text-sm text-700">Máximo tamaño de archivo 10MB</div>
+            <div *ngIf="uploading" class="mt-4">
+                <p-progressBar class="cargo-progressbar" [value]="uploadProgress"></p-progressBar>
+            </div>
+        </div>
+
+    </div>
+
+    <div *ngIf="selectedFile" class="field col-12">
+        <label>Cargo</label>
+        <div class="flex align-items-center justify-content-between selectedFileItem border-round-sm border-1 border-200 px-1 p-3">
+            <div class="flex align-items-center gap-2"><i class="pi pi-file" ></i> <span>{{ selectedFile.name }}</span></div>
+            <div class="flex align-items-center">
+              <span>{{ formatFileSize(selectedFile.size) }}</span>
+            </div>
+            <div >
+                <div>
+                    <input
+                        [(ngModel)]="tipoCopia" name="tipoCopia" value=0
+                        type="radio"
+                        (ngModelChange)="onChangeValues()"
+                     />
+                    <label  class="ml-2">Copia de copia</label>
+                </div>
+
+              <div>
+                    <input [(ngModel)]="tipoCopia" name="tipoCopia"  value=1
+                           type="radio"
+                    (ngModelChange)="onChangeValues()"
+                    />
+                    <label  class="ml-2">Copia de autenticada</label>
+                </div>
+            </div>
+            <div class="flex align-items-center gap-2">
+                <p-calendar [(ngModel)]="fechaRecepcion" id="fecha" class="p-inputtext-lg cfe-calendar  w-14rem " [showIcon]="true" icon="cfe-calendar-icon"
+                            placeholder="dd/mm/aaaa"
+                    (ngModelChange)="onChangeValues()"
+                    >
+                </p-calendar>
+
+                <p-calendar
+                  class="p-inputtext-lg cfe-calendar w-8rem cfe-calendar-md"
+                  [(ngModel)]="horaRecepcion"
+                  [timeOnly]="true"
+                  [hourFormat]="'12'"
+                  placeholder="00:00"
+                  (ngModelChange)="onChangeValues()"
+                />
+
+            </div>
+            <div class="flex align-items-center gap-1">
+                <a  (click)="removeSelectedFile($event)" class="deleteFile" href="#"><i class="pi pi-trash"></i></a>
+                <ng-template #firmadoDiv>
+                    <i class="pi pi-check text-green-500 ml-3"></i>
+                </ng-template>
+            </div>
+
+        </div>
+    </div>
+</div>

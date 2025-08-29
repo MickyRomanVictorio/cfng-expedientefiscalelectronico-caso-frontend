@@ -1,0 +1,206 @@
+<form [formGroup]="formContacto">
+
+    <div class="grid border-bottom-1 border-black-alpha-40">
+        <div class="col-12">
+            <div class="field mt-4">
+                <div class="text-left">
+                    <p-checkbox (onChange)="habilitarDeshabilitar()" formControlName="registrosManuales"
+                        value="registroManual" inputId="registroManual"></p-checkbox>&nbsp;
+                    <label for="registroManual" class="font-semibold pr-4">Registros manuales</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 sm:col-6 md:col-3">
+            <label for="parentesco" class="font-semibold">Parentesco</label>
+
+            <p-dropdown formControlName="parentesco" [options]="listaParentesco" optionLabel="nombre" optionValue="id"
+                emptyMessage="Sin resultados" placeholder="Seleccione" styleClass="p-inputtext-md">
+                <ng-template let-parentesco pTemplate="item">
+                    <div class="grid">
+                        <div class="col text-base">{{ parentesco.nombre }}</div>
+                    </div>
+                </ng-template>
+            </p-dropdown>
+        </div>
+
+        <div class="col-12 sm:col-6 md:col-3">
+            <label for="tipoDocumento" class="font-semibold">Tipo documento</label>
+
+            <p-dropdown (onChange)="eventChangeTipoDocumento()" [options]="listaTiposDocumentosIdentidad"
+                optionLabel="nombre" optionValue="id" emptyMessage="Sin resultados" placeholder="Seleccione"
+                styleClass="p-inputtext-md" formControlName="tipoDocumento">
+                <ng-template let-tipodocumento pTemplate="item">
+                    <div class="grid">
+                        <div class="col text-base">
+                            {{ tipodocumento.nombre }}
+                        </div>
+                    </div>
+                </ng-template>
+            </p-dropdown>
+        </div>
+
+        <div class="col-12 sm:col-6 md:col-3">
+            <label for="numeroDocumento" class="font-semibold">Num. Documento
+            </label>
+
+            <input #numeroDocumentoInput id="idNumeroDocumento" pInputText class="p-inputtext-md w-full"
+                placeholder="Ingrese número de documento" formControlName="numeroDocumento" upperCaseInput
+                [maxLength]="longitudMaximaInput"
+                (keypress)="alfanumericoInput ? validOnlyAlphanumeric($event) : validOnlyNumbers($event)"
+                (paste)="alfanumericoInput ? validOnlyAlphanumericOnPaste($event) : validOnlyNumberOnPaste($event)"
+                (drop)="alfanumericoInput ? validOnlyAlphanumericDrop($event) : validOnlyNumberDrop($event)"
+                (blur)="validarNumeroDocumento($event)" />
+        </div>
+
+        <div class="col-12 sm:col-6 md:col-3">
+            <div class="grid pt-4">
+                <div class="col-9">
+                    <button (click)="consultaServicioReniec()" class="cfe-boton-primary cfe-boton-lg w-full"
+                        [disabled]="formContacto.get('botonBuscarDni')!.disabled">
+                        <fn-icon class="ml-1" [ico]="obtenerIcono('iSearch')" height="1.2rem" />
+                        Buscar
+                    </button>
+                </div>
+                <div class="col-3">
+                    <fn-icon (click)="removerContactoParentesco()" [ico]="obtenerIcono('iTrash')" height="2rem"
+                        onkeypress="" style="cursor: pointer" />
+                </div>
+            </div>
+        </div>
+        <div class="col-12 sm:col-6 md:col-3">
+            <label for="apellidoPaterno" class="font-semibold">Ape. Paterno
+            </label>
+            <input formControlName="apellidoPaterno" id="idApellidoPaterno" pInputText type="text"
+                class="p-inputtext-md w-full" placeholder="Ingrese apellido paterno" [maxlength]="40" 
+                lettersOnly upperCaseInput
+                (blur)="validarNombresParentesco()"/>
+        </div>
+
+        <div class="col-12 sm:col-6 md:col-3">
+            <label for="apellidoMaterno" class="font-semibold">Ape. Materno
+            </label>
+
+            <input formControlName="apellidoMaterno" id="idApellidoMaterno" pInputText type="text"
+                class="p-inputtext-md w-full" placeholder="Ingrese apellido materno" [maxlength]="40"
+                (blur)="validarNombresParentesco()" lettersOnly upperCaseInput />
+        </div>
+
+        <div class="col-12 sm:col-6 md:col-3">
+            <label for="nombresParentesco" class="font-semibold">Nombres
+            </label>
+
+            <input formControlName="nombresParentesco" id="idNombres" pInputText type="text"
+                class="p-inputtext-md w-full" placeholder="Ingrese nombres" [maxlength]="60"
+                (blur)="validarNombresParentesco()" lettersOnly upperCaseInput />
+        </div>
+
+        <div class="col-12 sm:col-6 md:col-3">
+            <div class="field">
+                <label for="sexo" class="font-semibold">Sexo:</label>
+            </div>
+
+            <div class="field">
+                <div class="text-center">
+                    <label>Masculino</label>
+                    <p-radioButton formControlName="rbSexo" value="masculino" class="ml-2"
+                         />
+
+                    <label class="ml-4">Femenino</label>
+                    <p-radioButton formControlName="rbSexo" value="femenino" class="ml-2"
+                       />
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="field">
+                <label class="font-semibold">Tipo de contacto</label>
+            </div>
+
+            <div class="field">
+                <div class="grid">
+                    <div class="field col-3 text-right mt-3 pr-5" style="height: 100%">
+                        <label for="celulares" class="font-semibold">Celulares</label>
+                    </div>
+
+                    <div class="col-3">
+                        <input (input)="validarSoloNumeros($event)" formControlName="celularPrincipalParentesco"
+                            id="idCelularPrincipalParentesco" type="text" class="p-inputtext-md w-full"
+                            placeholder="Ingrese celular 1" [maxlength]="20" pInputText />
+                    </div>
+
+                    <div class="col-3">
+                        <input (input)="validarSoloNumeros($event)" formControlName="celularSecundarioParentesco"
+                            id="idCelularSecundarioParentesco" type="text" class="p-inputtext-md w-full"
+                            placeholder="Ingrese celular 2" [maxlength]="20" pInputText />
+                    </div>
+
+                    <div class="col-3 pr-3">
+                        <input (input)="validarSoloNumeros($event)" formControlName="celularSecundarioOpParentesco"
+                            id="idCelularSecundarioOpParentesco" type="text" class="p-inputtext-md w-full"
+                            placeholder="Ingrese celular 3" [maxlength]="20" pInputText />
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="field col-3 text-right mt-3 pr-5" style="height: 100%">
+                        <label for="correosElectronicos" class="font-semibold">Correos electrónicos</label>
+                    </div>
+
+                    <div class="col-9">
+                        <div class="grid -mb-5">
+                            <div class="field col-6">
+                                <input formControlName="correoPrincipalParentesco" id="idCorreoPrincipalParentesco"
+                                    type="text" class="p-inputtext-md w-full" placeholder="Ingrese correo 1"
+                                    [maxlength]="100" pInputText />
+                            </div>
+
+                            <div class="field col-6 pr-3">
+                                <input formControlName="correoSecundarioParentesco" id="idCorreoSecundarioParentesco"
+                                    type="text" class="p-inputtext-md w-full" placeholder="Ingrese correo 2"
+                                    [maxlength]="100" pInputText />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div class="field col-3 text-right mt-3 pr-5" style="height: 100%">
+                        <label for="telefonos" class="font-semibold">Teléfonos</label>
+                    </div>
+
+                    <div class="col-3">
+                        <input formControlName="telefonoPrincipalParentesco" (input)="validarSoloNumeros($event)"
+                            id="idTelefonoPrincipalParentesco" type="text" class="p-inputtext-md w-full"
+                            placeholder="Ingrese teléfono 1" [maxlength]="20" pInputText />
+                    </div>
+
+                    <div class="col-3">
+                        <input (input)="validarSoloNumeros($event)" formControlName="telefonoSecundarioParentesco"
+                            id="idTelefonoSecundarioParentesco" type="text" class="p-inputtext-md w-full"
+                            placeholder="Ingrese telefono 2" [maxlength]="20" pInputText />
+                    </div>
+
+                    <div class="col-3 pr-3">
+                        <input (input)="validarSoloNumeros($event)" formControlName="telefonoSecundarioOpParentesco"
+                            id="idTelefonoSecundarioOpParentesco" type="text" class="p-inputtext-md w-full"
+                            placeholder="Ingrese telefono 3" [maxlength]="20" pInputText />
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div class="field col-3 text-right mt-3 pr-5" style="height: 100%">
+                        <label for="casillaElectronica" class="font-semibold">Casilla electrónica</label>
+                    </div>
+
+                    <div class="col-9">
+                        <input formControlName="casillaElectronicaPrincipalParentesco"
+                            id="idCasillaElectronicaPrincipalParentesco" type="text"
+                            class="p-inputtext-lg py-3 text-lg w-full"
+                            placeholder="Ingrese el correo de casilla electrónica" [maxlength]="60" pInputText />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,53 @@
+<p-table #table [value]="datos()" dataKey="num">
+  <ng-template pTemplate='header'>
+      <tr>
+          <th scope="col">N°</th>
+          <th scope="col">Acto Procesal</th>
+          <th scope="col">¿Quién apeló?</th>
+          <th scope="col">¿Qué resultado se obtuvo de la apelación?</th>
+          <th scope="col">¿Queja?</th>
+          <th scope="col"></th>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate='body' let-datos let-expanded="expanded">
+      <tr>
+          <td>{{ datos.num }}</td>
+          <td>{{ datos.actoProcesal }}</td>
+          <td>{{ datos.quienApelo }}</td>
+          <td>{{ datos.resultadoApelacion }}</td>
+          <td>{{ datos.queja }}</td>
+          <td>
+            <fn-icon
+              [ico]="iconUtil.obtenerIcono('iChevronRight')"
+              [style.transform]="datos.expandido==='1' ? 'rotate(270deg)' : 'rotate(90deg)'"
+              height="28px" (click)="table.toggleRow(datos); datos.expandido = (datos.expandido==='1'?'0':'1')"
+            />
+          </td>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="rowexpansion" let-datos>
+    <tr>
+      <td colspan="7">
+        <!-- <div class="mb-3">
+          <span class="bg-blue-400 text-white px-2 py-1 border-round-sm text-sm font-semibold">Solidaria</span> RC1-200-2024-1
+        </div> -->
+
+        <div class="grid">
+
+          @for (item of agruparPorParte(datos.sujetos); track $index) {
+            <div class="col-12 md:col-6 lg:col-4">
+              <b>{{item.grupo}}</b>
+              <ul class="pt-1 mt-1">
+                @for (item of datos.sujetos; track $index) {
+                  <li>{{ item.nombres }}</li>
+                }
+              </ul>
+            </div>
+          }
+        </div>
+
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+<hr>

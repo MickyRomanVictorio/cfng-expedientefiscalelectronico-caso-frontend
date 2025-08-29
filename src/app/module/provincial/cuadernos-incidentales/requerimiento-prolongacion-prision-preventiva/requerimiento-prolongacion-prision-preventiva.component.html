@@ -1,0 +1,27 @@
+<div>
+  <form>
+    <div class="grid mt-3">
+
+      <div class="col-12 lg:col-4">
+        <div class="formgrid grid">
+          <div class="field col-10">
+            <label for="" class="font-bold text-sm"></label>
+            <button class="cfe-boton-primary cfe-boton-lg w-full"
+                    (click)="openModalSujetos()"
+            >Seleccionar sujetos procesales
+            </button>
+
+          </div>
+          @if ( cantidadSujetosTramite > 0 ) {
+            <div class="field col-1">
+              <label for="">&nbsp;</label>
+              <div class="mt-1">
+                <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

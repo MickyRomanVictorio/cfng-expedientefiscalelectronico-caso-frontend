@@ -1,0 +1,50 @@
+
+<p class="mt-5 font-bold text-xl text-primary flex align-items-center">
+  <fn-icon (click)="regresarListaSujeto()" class="cursor-pointer"  [ico]="iconUtil.obtenerIcono('iArrowLeft')" height="1.9rem"></fn-icon>
+  <span>{{ nuevoRegistro ? "Nuevo" : "Editar" }} Sujeto Procesal</span>
+</p>
+
+<div class="mt-5">
+  <p-steps
+    class="cfe-steps"
+    [model]="items"
+    [readonly]="isActivoLeer"
+    [activeIndex]="activeIndex"
+    (activeIndexChange)="activeIndexChange($event)"
+    [styleClass]="'p-steps-completed-' + activeIndex"
+  >
+  </p-steps>
+</div>
+
+@if (activeIndex === 0) {
+<app-gestionar-informacion-general-sujeto-procesal
+  [datosEntrada]="{
+    isMemoria: false,
+    isCancelar: true,
+    isMesa: tipoOrigen.EFE
+  }"
+  (onEnviarDatos)="recibirDatos($event)"
+  (onChangeStep)="onChangeStep($event)"
+  [idSujetoCaso]="idSujetoCaso"
+>
+</app-gestionar-informacion-general-sujeto-procesal>
+} @if (activeIndex === 1) {
+<app-gestionar-informacion-detallada-sujeto-procesal
+  [idSujetoCaso]="idSujetoCaso"
+  [nuevoRegistro]="nuevoRegistro"
+  (onChangeStep)="onChangeStep($event)"
+>
+</app-gestionar-informacion-detallada-sujeto-procesal>
+} @if (activeIndex === 2) {
+<app-formacion-profesional-sujeto-procesal
+  [idSujetoCaso]="idSujetoCaso"
+  (onChangeStep)="onChangeStep($event)"
+>
+</app-formacion-profesional-sujeto-procesal>
+} @if (activeIndex === 3) {
+<gestion-abogado
+  (onChangeStep)="onChangeStep($event)"
+  [idSujetoCaso]="idSujetoCaso"
+>
+</gestion-abogado>
+}

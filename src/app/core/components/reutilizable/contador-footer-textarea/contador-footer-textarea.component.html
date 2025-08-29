@@ -1,0 +1,8 @@
+<small
+  class="block text-right mt-1"
+  [ngClass]="{
+    'p-error': counterReportChar() > size()
+  }"
+>
+  {{ counterReportChar() }}/{{size()}} caracteres
+</small>

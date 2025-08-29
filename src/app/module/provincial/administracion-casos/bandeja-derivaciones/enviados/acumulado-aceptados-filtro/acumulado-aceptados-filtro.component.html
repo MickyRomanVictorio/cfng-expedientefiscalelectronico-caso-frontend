@@ -1,0 +1,124 @@
+<div class="bandeja_tramites__header">
+  <div class="bandeja_tramites_header__content">
+    <fn-icon [ico]="icono('iFolderSearch')" height="1.6rem"></fn-icon>
+    <h3 class="cfe-titulo-1">Bandeja de derivaciones - Casos enviados</h3>
+    <fn-icon [ico]="icono('iTooltip')" height="1.6rem"></fn-icon>
+  </div>
+</div>
+
+<form
+  class="bandeja_tramites__filters"
+  [formGroup]="formFiltrarAcumuladosAceptados"
+>
+  <div class="grid mt-1">
+    <div class="col">
+      <div class="field mb-0">
+        <label for="buscar" class="font-semibold">Buscar:</label>
+        <input
+          pInputText
+          id="buscar"
+          type="text"
+          class="p-inputtext-lg py-3 text-lg w-full"
+          placeholder="Ingrese algún texto para buscar, por ejemplo el número de caso, nombre de las partes, etc"
+          formControlName="buscar"
+          (input)="buscarSegunTexto()"
+          #inputBuscar
+        />
+      </div>
+    </div>
+    <div
+      class="col-fixed"
+      style="width: 70px"
+      [ngClass]="{ 'cfe-filtro-boton-fondo': mostrarFiltros }"
+    >
+      <div class="field mb-0">
+        <label class="font-semibold">&nbsp;</label>
+        <button
+          class="cfe-filtro-boton"
+          (click)="eventoMostrarOcultarFiltros()"
+        >
+          <fn-icon [ico]="icono('iFilterShow')" height="2.1rem"></fn-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid mt-3 mb-4" *ngIf="!mostrarFiltros">
+    <div class="col"></div>
+  </div>
+
+  <div class="grid mt-1 cfe-filtros" *ngIf="mostrarFiltros">
+    <div class="cfe-filtros-fondo">
+      <div class="formgrid grid">
+        <div class="col-6 field">
+          <div class="flex align-items-center">
+            <p-radioButton
+              id="fechaAceptacion"
+              value="0"
+              formControlName="tipoFecha"
+              inputId="fechaAceptacion"
+            ></p-radioButton>
+            <label for="fechaAceptacion" class="ml-2"
+              >Fecha de aceptación</label
+            >
+
+            <p-radioButton
+              id="fechaDerivacion"
+              value="1"
+              formControlName="tipoFecha"
+              inputId="fechaEnvio"
+            ></p-radioButton>
+            <label for="fechaDerivacion" class="ml-2"
+              >Fecha de derivación</label
+            >
+          </div>
+        </div>
+        <div class="col-6 field" style="margin-bottom: 20px">
+          <!---->
+        </div>
+        <div class="col-6 field">
+          <label class="font-semibold mb-3"> Fecha: </label>
+          <div class="grid">
+            <div class="col">
+              <p-calendar
+                id="fechaDesde"
+                dateMask
+                dateFormat="dd/mm/yy"
+                class="p-inputtext-lg cfe-calendar h-56"
+                [showIcon]="true"
+                icon="cfe-calendar-icon"
+                placeholder="dd/mm/aaaa"
+                formControlName="fechaDesde"
+              ></p-calendar>
+            </div>
+            <div class="col">
+              <p-calendar
+                dateMask
+                dateFormat="dd/mm/yy"
+                class="p-inputtext-lg cfe-calendar h-56"
+                [showIcon]="true"
+                icon="cfe-calendar-icon"
+                placeholder="dd/mm/aaaa"
+                formControlName="fechaHasta"
+              ></p-calendar>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="cfe-filtros-fondo cfe-filtros-opciones">
+      <button
+        class="cfe-boton-secondary cfe-boton-m mr-3 boton-w"
+        (click)="limpiarFiltros()"
+      >
+        Limpiar filtros
+      </button>
+      <button
+        class="cfe-boton-primary cfe-boton-m mr-2 boton-w"
+        (click)="buscar()"
+      >
+        Buscar
+      </button>
+    </div>
+  </div>
+</form>

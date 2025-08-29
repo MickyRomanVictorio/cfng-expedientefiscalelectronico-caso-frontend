@@ -1,0 +1,65 @@
+@if(etiqueta(); as etiq){
+
+  @if (etiq.flRevertido === '1') {
+    <div class="pb-2">
+      <span class="py-1 px-2 text-xs border-round-md font-semibold etq-cs-revertido"
+        style="white-space: nowrap">
+        Revertido
+      </span>
+    </div>
+  }
+  <div class="flex">
+    @if (etiq.etiquetaColorNro && etiq.etiquetaColorNro !== null) {
+      <span class="py-1 px-2  text-xs border-round-md font-semibold {{etiq.etiquetaCss?etiq.etiquetaCss:''}} {{etiquetaClasesCss[etiq.etiquetaColorNro!]}}"
+        style="white-space: nowrap">
+        {{ etiq.etiqueta }}
+      </span>
+    }
+    @if (etiq.etiquetaColorNro2 && etiq.etiquetaColorNro2 !== null) {
+      <span class="ml-2 py-1 px-2 text-xs border-round-md font-semibold {{etiquetaClasesCss[etiq.etiquetaColorNro2!]}}"
+        style="white-space: nowrap">
+        {{ etiq.etiqueta2 }}
+      </span>
+    }
+
+  </div>
+  <div class="flex">
+    @if (etiq.etiquetaRgb) {
+      <span class="text-xs py-1 px-2 border-round" [ngStyle]="colorEtiquetaRgb(etiq.etiquetaRgb!)">
+        {{etiq.etiqueta}}
+      </span>
+    }
+    @if (etiq.etiquetaRgb2 && etiq.etiquetaRgb2 !== null && etiq.etiqueta2) {
+      <span class="ml-2 text-xs py-1 px-2 border-round" [ngStyle]="colorEtiquetaRgb(etiq.etiquetaRgb2!)">
+        {{etiq.etiqueta2}}
+      </span>
+    }
+  </div>
+
+  @if (etiq.flTipoAsignacion) {
+    <div class="pt-2">
+      @if(etiq.flTipoAsignacion==='1'){
+        <span class="text-xs py-1 px-2 border-round bg-primary-100 text-primary-600">Asignación permanente</span>
+      }@else if(etiq.flTipoAsignacion==='2'){
+        <span class="text-xs py-1 px-2 border-round bg-purple-200 text-purple-800">Asignación temporal</span>
+      }
+    </div>
+  }
+
+  @if (etiq.flReasignado === '1') {
+    <div class="pt-2">
+      <span class="text-xs py-1 px-2 border-round surface-400 text-blue-900">Reasignado</span>
+    </div>
+  }
+
+  @if(etiq.flRespuestaProv === 'O') {
+    <div class="pt-3">
+      <span class="py-1 px-2 text-xs border-round-md font-semibold bg-red-100 text-red-800
+                  transition-all transition-duration-200 hover:bg-red-200 hover:text-red-900"
+      style="white-space: nowrap" (click)="eventoRespuesta($event, etiq )">
+        Observado por el F. Provincial
+      </span>
+    </div>
+  }
+
+}

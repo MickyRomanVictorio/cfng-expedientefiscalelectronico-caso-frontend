@@ -1,0 +1,154 @@
+<div class="cfe-container">
+  <div class="derivado__table">
+    <div class="derivado_table__title grid nested-grid">
+      <div class="derivado_table_title__content col-6 flex">
+        <fn-icon
+          [ico]="obtenerIcono('iFolderExclamation')"
+          height="1.8rem"
+          [style]="{ 'margin-left': '-12px' }"
+        ></fn-icon>
+        <h4 class="cfe-subtitulo-1 ml-1">
+          Lista de casos que yo he enviado para acumular que ya aceptaron la
+          acumulación
+        </h4>
+      </div>
+      <div
+        class="col-12 md:col-6 flex flex-column sm:flex-row justify-content-end align-items-center pr-0"
+      >
+        <button
+          class="cfe-boton-secondary cfe-boton-m cfe-boton-icono-izquierda w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start"
+          (click)="exportar('PDF')"
+        >
+          <fn-icon
+            class="ml-1"
+            [ico]="obtenerIcono('iFileDownload')"
+            height="1.6rem"
+          ></fn-icon>
+          Exportar PDF
+        </button>
+        <button
+          class="cfe-boton-secondary cfe-boton-m cfe-boton-icono-izquierda w-full sm:w-auto justify-content-start"
+          (click)="exportar('Excel')"
+        >
+          <fn-icon
+            class="ml-1"
+            [ico]="obtenerIcono('iTable')"
+            height="1.6rem"
+          ></fn-icon>
+          Exportar Excel
+        </button>
+      </div>
+    </div>
+
+    <div class="derivado_table__content">
+      <p-table
+        [value]="derivacionesEnviadasListTemp"
+        [rowHover]="true"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [styleClass]="'p-datatable-sm'"
+        [breakpoint]="'992px'"
+        responsiveLayout="stack "
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>N°</th>
+            <th pSortableColumn="numeroCaso">
+              Número de caso
+              <p-sortIcon field="numeroCaso"></p-sortIcon>
+            </th>
+            <th pSortableColumn="remitente">
+              Remitente
+              <p-sortIcon field="remitente"></p-sortIcon>
+            </th>
+            <th pSortableColumn="origen">
+              Origen
+              <p-sortIcon field="origen"></p-sortIcon>
+            </th>
+            <th class="w-10rem" pSortableColumn="fechaDerivacion">
+              F. derivación
+              <p-sortIcon field="fechaDerivacion"></p-sortIcon>
+            </th>
+            <th class="w-10rem" pSortableColumn="fechaDevolucion">
+              F. aceptación
+            </th>
+            <th class="w-8rem">Ver detalle caso</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-aceptados let-rowIndex="rowIndex">
+          <tr>
+            <td data-column-name="N°">
+              <span>
+                {{ indexPag(rowIndex) }}
+              </span>
+            </td>
+            <td data-column-name="Número de caso">
+              <div>
+                <span>Caso:</span>
+                <span
+                  class="relative flex"
+                  [innerHTML]="getCaso(aceptados.numeroCaso)"
+                ></span>
+                <span>Acumulado a: </span><br />
+                <span
+                  class="relative flex"
+                  [innerHTML]="getCaso(aceptados.numCasoAcumulado)"
+                ></span>
+              </div>
+            </td>
+            <td data-column-name="Remitente">
+              <div *ngIf="aceptados.remitente">
+                <span>Fiscal: </span> {{ aceptados.remitente }}
+              </div>
+            </td>
+            <td data-column-name="Origen">
+              <span class="relative display">{{
+                aceptados.destino | capitalizar
+              }}</span>
+            </td>
+            <td data-column-name="Fecha derivación">
+              <div *ngIf="aceptados.fechaDerivacion">
+                <div>{{ aceptados.fechaDerivacion | dateformat }}</div>
+                <div>{{ aceptados.horaDerivacion | dateformat : "hour" }}</div>
+              </div>
+              <div *ngIf="!aceptados.fechaDerivacion">-</div>
+            </td>
+            <td data-column-name="F. aceptación">
+              <div *ngIf="aceptados.fechaAceptacion">
+                <div>{{ aceptados.fechaAceptacion | dateformat }}</div>
+                <div>{{ aceptados.horaAceptacion | dateformat : "hour" }}</div>
+              </div>
+              <div *ngIf="!aceptados.fechaAceptacion">-</div>
+            </td>
+
+            <td data-column-name="Ir a caso">
+              <div class="opciones">
+                <p-button
+                  class="btn-caso"
+                  (click)="abrirDetalleCaso(aceptados)"
+                >
+                  <fn-icon [ico]="obtenerIcono('iChevronRight')"></fn-icon>
+                </p-button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td class="no-before text-center" colspan="9">
+              No se encontraron registros con los criterios de búsqueda
+              ingresados
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <app-paginator
+        [query]="query"
+        [items]="itemPaginado"
+        [rowsPerPageOptions]="[]"
+        [resetPage]="resetPage"
+        (paginate)="onPaginate($event)"
+      ></app-paginator>
+    </div>
+  </div>
+</div>
+<p-toast></p-toast>

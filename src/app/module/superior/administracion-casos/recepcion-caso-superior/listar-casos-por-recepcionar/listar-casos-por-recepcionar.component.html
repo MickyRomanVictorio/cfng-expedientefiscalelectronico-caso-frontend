@@ -1,0 +1,261 @@
+<div class="cfe-container">
+
+    <div class="cfe_bandeja__header grid">
+        <div class="cfe_bandeja_header__content col-12 md:col-9">
+            <fn-icon [ico]="icono('iFolderSearch')" height="1.6rem"></fn-icon>
+            <h3 class="cfe-titulo-1">Recepcionar Casos******</h3>
+        </div>
+    </div>
+
+    <form class="cfe_bandeja__filters" [formGroup]="formularioFiltrarCasos">
+        <div class="grid mt-1">
+            <div class="col">
+                <div class="field mb-0">
+                    <label for="buscar" class="font-semibold">Buscar:</label>
+                    <input pInputText type="text" class="p-inputtext-lg py-3 text-lg w-full" placeholder="Ingrese algún texto para buscar. por ejemplo el número de caso, nombres de las de las partes, etc" formControlName="buscar" />
+                </div>
+            </div>
+            <div class="col-fixed" style="width: 70px;" [ngClass]="{'cfe-filtro-boton-fondo': mostrarFiltros}">
+                <div class="field mb-0">
+                    <label for="button" class="font-semibold">&nbsp;</label>
+                    <button class="cfe-filtro-boton" (click)="eventoMostrarOcultarFiltros()">
+            <fn-icon
+              [ico]="icono('iFilterShow')"
+              height="2.1rem"
+            ></fn-icon>
+          </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid mt-3 mb-4" *ngIf="!mostrarFiltros">
+            <div class="col">
+                <div class="flex flex-wrap gap-3">
+                    <div class="flex align-items-center">
+                        <p-radioButton value="ultimosMeses" formControlName="tiempoAFiltrar" inputId="ultimoSeisMeses"></p-radioButton>
+                        <label for="para filtrar los últimos 6 meses" class="ml-2" >Últimos 6 meses</label>
+                    </div>
+                    <div class="flex align-items-center">
+                        <p-radioButton value="todos" formControlName="tiempoAFiltrar" inputId="todosLosMeses"></p-radioButton>
+                        <label for="para filtrar todos los meses" class="ml-2" >Todos los meses</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid mt-1 cfe-filtros" *ngIf="mostrarFiltros">
+            <div class="cfe-filtros-fondo">
+                <div class="formgrid grid">
+                    <div class="col-12 md:col-6 field">
+                        <label for="Fecha de asignacion" class="font-semibold mb-2"> Fecha de asignación al fiscal:
+                        </label>
+                        <div class="grid">
+                            <div class="col-12 sm:col-6">
+                                <p-calendar dateMask dateFormat="dd/mm/yy" class="p-inputtext-lg cfe-calendar h-56" [showIcon]="true" icon="cfe-calendar-icon" placeholder="dd/mm/aaaa" formControlName="fechaDesde"></p-calendar>
+                            </div>
+                            <div class="col-12 sm:col-6 sm:mt-0 mt-3">
+                                <p-calendar dateMask dateFormat="dd/mm/yy" class="p-inputtext-lg cfe-calendar h-56" [showIcon]="true" icon="cfe-calendar-icon" placeholder="dd/mm/aaaa" formControlName="fechaHasta"></p-calendar>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-3 field">
+                        <label for="plazos" class="font-semibold mb-0">Plazos</label>
+                        <p-dropdown styleClass="p-inputtext-lg py-1" [options]="plazos.data" optionValue="id" optionLabel="nombre" emptyMessage="Sin resultados" placeholder="Todos" [showClear]="true" formControlName="plazo"></p-dropdown>
+                    </div>
+                    <div class="col-12 md:col-3 field">
+                        <label for="extras" class="font-semibold mb-0">Origen</label>
+                        <p-dropdown styleClass="p-inputtext-lg py-1" [options]="origen.data" optionValue="id" optionLabel="nombre" placeholder="Todos" emptyMessage="Sin resultados" [showClear]="true" formControlName="origen"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+            <div class="cfe-filtros-fondo cfe-filtros-opciones">
+                <button class="cfe-boton-secondary cfe-boton-m mr-3 boton-w" (click)="limpiarFiltros()">Limpiar filtros
+        </button>
+                  <button class="cfe-boton-primary cfe-boton-m mr-2 boton-w" (click)="obtenerCasosPorRecepcionar(0)">Buscar
+        </button>
+            </div>
+        </div>
+
+    </form>
+
+    <hr style="border-width: 4px 0 0 0; border-color: white; margin-top: auto; margin-bottom: 40px;">
+
+    <!--INICIO GRILLA/TABLA-->
+
+    <div class="cfe_bandeja__table">
+        <div class="cfe_bandeja_table__title grid">
+            <div class="num_casos_por_asignar_table_title__content col-12 md:col-4">
+                <fn-icon [ico]="icono('iFolderExclamation')" height="1.8rem" [style]="{'margin-left': '-12px'}"></fn-icon>
+                <h4 class="cfe-subtitulo-1">{{ casosPorRecepcionarFiltrados.length }} Casos por recepcionar</h4>
+            </div>
+            <div class="col-12 md:col-8 flex flex-column sm:flex-row justify-content-end align-items-center pr-0">
+                <button (click)="recibirCasos()" class="cfe-boton-primary cfe-boton-m cfe-boton-m w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0">Recibir
+                </button>
+
+                <button class="cfe-boton-secondary cfe-boton-m cfe-boton-m w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start" (click)="exportar('PDF')">
+                    <fn-icon
+                        class="ml-1"
+                        [ico]="icono('iFileDownload')"
+                        height="1.6rem"
+                    ></fn-icon>
+                    Exportar PDF
+                </button>
+                <button class="cfe-boton-secondary cfe-boton-m cfe-boton-m w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start" (click)="exportar('Excel')">
+                    <fn-icon
+                        class="ml-1"
+                        [ico]="icono('iTable')"
+                        height="1.6rem"
+                    ></fn-icon>
+                    Exportar Excel
+                </button>
+            </div>
+        </div>
+        <div class="cfe_bandeja__legend">
+            <div class="term-item">
+                <span class="dentro-del-plazo"></span> Dentro del Plazo
+                <div class="quantity">({{totalDentroPlazo}})</div>
+                &nbsp;&nbsp;&nbsp;
+                <span class="plazo-por-vencer"></span> Plazo por Vencer
+                <div class="quantity">({{totalPorVencer}})</div>
+                &nbsp;&nbsp;&nbsp;
+                <span class="plazo-vencido"></span> Plazo vencido
+                <div class="quantity">({{totalVencido}})</div>
+            </div>
+        </div>
+        <div class="cfe_bandeja_table__content">
+            <p-table [value]="casosPorRecepcionarFiltrados" [paginator]="true" [rowHover]="true" [rows]="rows" [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }" currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} registros"
+                [rowsPerPageOptions]="[5, 10, 20, 30, 50]" [breakpoint]="'992px'" responsiveLayout="stack" [(selection)]="casosSeleccionados" [loading]="loading">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 20px">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="numeroCaso">Número de caso
+                            <p-sortIcon field="numeroCaso"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="origen">Origen/Remitente
+                            <p-sortIcon field="origen"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="remitente">Etapa
+                            <p-sortIcon field="remitente"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="contacto">Despacho de procedencia
+                            <p-sortIcon field="contacto"></p-sortIcon>
+                        </th>
+                        <th style="width: 175px" pSortableColumn="fechaIngreso">Fecha elevación al despacho
+                            <p-sortIcon field="fechaAceptacion"></p-sortIcon>
+                        </th>
+                        <th style="width: 175px" pSortableColumn="fechaIngreso">Fecha aceptacion F.Superior
+                            <p-sortIcon field="fechaElevaccion"></p-sortIcon>
+                        </th>
+                        <th style="width: 172px" pSortableColumn="delitos">Delitos y partes
+                            <p-sortIcon field="delitos"></p-sortIcon>
+                        </th>
+                        <th style="width: 122px">Clasificación</th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-casorecepcionado>
+                    <tr class="p-selectable-row" [ngClass]="{ unread: casorecepcionado.leido == '0' }">
+                        <td class="table_td_content_start">
+                            <p-tableCheckbox [value]="casorecepcionado"></p-tableCheckbox>
+                            <div class="block lg:hidden">
+                                <div class="btn-more-options" (click)="menu.toggle($event)">
+                                    <div class="btn-more-options-content">
+                                        <span></span><span></span><span></span>
+                                    </div>
+                                </div>
+                                <p-menu #menu [model]="items(casorecepcionado)" [popup]="true" class="menu-options"></p-menu>
+                            </div>
+                        </td>
+                        <td class="table_td_content_start caso-container">
+                            <span class="p-column-title">Número de caso</span>
+                            <div>
+                                <span style="position: relative;display: flex;" [innerHTML]="getCaso(casorecepcionado.numeroCaso
+                                , casorecepcionado.indicadorSemaforo)"></span>
+                            </div>
+                            <div style="margin-top: 15px;">
+                                <span class="cfe-semaforo-dias">
+                    <i class="pi pi-clock mr-2" ></i>
+                    <!-- {{ obtenerFechaTranscurridas(casorecepcionado.fechaEmision) }} -->
+                </span>
+                            </div>
+                        </td>
+
+                        <td class="table_td_content_start">
+                            <span class="p-column-title">Origen</span>
+                            <div>
+                                <div class="mb-1">
+                                    <span class="badge badge-origen">{{ casorecepcionado.tipoRemitente }}</span>
+                                </div>
+                                {{ casorecepcionado.remitente }}
+                            </div>
+
+
+                        </td>
+                        <td class="table_td_content_start remitente-container">
+                            <span class="p-column-title">Etapa</span> {{ casorecepcionado.etapa }}
+                        </td>
+                        <td class="table_td_content_start">
+                            <span class="p-column-title"></span>
+                            <div>
+                                {{ casorecepcionado.despachoProcedencia }}
+                            </div>
+                        </td>
+                        <td class="fecha-container table_td_content_start">
+                            <span class="p-column-title">Fecha elevación al despacho</span>
+                            <div>
+                              <div>{{ casorecepcionado.fechaElevacion }}</div>
+                              <div class="cfe-row-top">{{ casorecepcionado.horaElevacion | dateformat : 'hour' }}</div>
+                            </div>
+                        </td>
+
+                        <td class="fecha-container table_td_content_start">
+                            <span class="p-column-title">Fecha aceptacion F.Superior</span>
+                            <div>
+                              <div>{{ casorecepcionado.fechaAsignacion }}</div>
+                              <div class="cfe-row-top">{{ casorecepcionado.horaAsignacion | dateformat : 'hour' }}</div>
+                            </div>
+                        </td>
+
+
+                        <td class="table_td_content_start">
+                            <span class="p-column-title">Delitos y partes</span>
+                            <div class="btn-crimes-parts" (click)="verDelitosPartes(casorecepcionado.cantidadPartes,casorecepcionado.codCaso,casorecepcionado.idCaso,casorecepcionado.leido)">
+                                Ver delitos y partes ({{casorecepcionado.cantidadPartes}})
+                            </div>
+                        </td>
+                        <td class="table_td_content_start td-justify-center">
+                            <span class="p-column-title">Clasificación</span>
+                            <div class="btn-clasification" (click)="clasificacionCaso(casorecepcionado.codCaso, casorecepcionado.id, casorecepcionado.clasificacion)">
+                                <img [src]="icon('clasification')" alt="Clasification Icon" />
+                            </div>
+                        </td>
+                        <td class="table_td_content_start">
+                            <span class="p-column-title">&nbsp;</span>
+                            <div class=" hidden lg:block">
+                                <div class="btn-more-options" (click)="menu2.toggle($event)">
+                                    <div class="btn-more-options-content">
+                                        <span></span><span></span><span></span>
+                                    </div>
+                                </div>
+                                <p-menu #menu2 [model]="items(casorecepcionado)" [popup]="true" class="menu-options"></p-menu>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="9" style="text-align: center">
+                            No se encontraron registros con los criterios de búsqueda ingresados
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+
+    <!-- FIN GRILLA/TABLA -->
+</div>
+
+<p-toast></p-toast>

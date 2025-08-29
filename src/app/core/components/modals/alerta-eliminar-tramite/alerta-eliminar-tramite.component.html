@@ -1,0 +1,23 @@
+<div class="alert-container text-center" [ngClass]="containerClass">
+  <span class="close" (click)="closeAction()">
+    <img [src]="closeIcon" alt="Close Icon">
+  </span>
+  @if (icon) {
+    <div class="alert-icon">
+      <img [src]="alertIcon" alt="Alert Icon">
+    </div>
+  }
+  <h3 class="alert-title">{{ title }}</h3>
+  @if (showDescription) {
+    <p class="alert-description" [innerHTML]="getDescription()"></p>
+  }
+
+  <div class="alert-options flex align-items-center justify-content-center gap-3">
+    <button class="cfe-boton-opcion cfe-boton-secondary cfe-boton-lg" (click)="cancelAction()">
+      {{ cancelButtonText }}
+    </button>
+    <button class="cfe-boton-opcion cfe-boton-primary cfe-boton-lg" (click)="confirmAction()">
+      {{ confirmButtonText }}
+    </button>
+  </div>
+</div>

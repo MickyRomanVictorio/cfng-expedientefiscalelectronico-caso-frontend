@@ -1,0 +1,33 @@
+<div class="cfe-container">
+  <div class="pb-2">
+    <span>
+      Modificado última vez por: <span class="cfe-bold">{{ nombreUsuarioFormato }} {{ ultimoModificado }}</span>
+    </span>
+  </div>
+  <div class="flex align-items-center">
+    <span>
+      Peso del documento: <span class="cfe-bold">{{ textoDecimales(tramiteResponse.pesoArchivo || "0", 2, " MB") }}</span>
+    </span>
+    <div class="flex align-items-center pl-4 cursor-pointer" (click)="verDetalleFirma()">
+      <span class="underline font-bold cfe-texto-verde">Firmado</span>
+      <img [src]="icono('check-circle')" alt="guardado" class="pr-2">
+    </div>
+  </div>
+  <div class="grid">
+    <div class="col-4">
+
+    </div>
+  </div>
+  <app-menu-tramite  [editar]="false" [tramiteResponse]="tramiteResponse"></app-menu-tramite>
+  <div class="relative">
+    <iframe #pdfIframe
+            [src]="urlDocumento"
+            class="frame"
+            type='application/pdf'
+            title="Pdf reader"
+            alt="Pdf reader"
+            width="100%"
+            style="height: 700px;">
+    </iframe>
+  </div>
+</div>

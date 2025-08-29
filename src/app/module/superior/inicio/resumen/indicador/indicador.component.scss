@@ -1,0 +1,277 @@
+.indicador{
+  cursor: pointer;
+  transition: box-shadow 0.3s ease-in-out;
+  background-color: white;
+}
+.indicador:hover{
+  box-shadow: 0 0 10px rgba(79, 83, 84, 0.6);
+}
+
+.fuente-cantidad {
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 40px;
+  letter-spacing: 0.02em;
+  text-align: left;
+}
+
+.sub-titulo-blanco {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.02em;
+  text-align: left;
+}
+
+.border-circle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+
+  &.indicador {
+      background-color: #D9A927;
+  }
+
+  &.indicadorAdicional {
+      background-color: #F9D599;
+  }
+}
+
+.label-cantidad {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.02em;
+  text-align: left;
+}
+
+.fondoAmarillo {
+  border: solid #D9A927;
+
+  .fuente {
+      color: #D9A927;
+  }
+}
+.fondoAmarillo:hover{
+  background: linear-gradient(to right, #ffffff, #fff7e1);
+}
+
+.fondoVerde {
+  border: solid #3CC85A;
+
+  .fuente {
+      color: #3CC85A;
+  }
+}
+.fondoVerde:hover{
+  background: linear-gradient(to right, #ffffff, #eefdf1);
+}
+
+.fondoAzul {
+  border: solid #0E2E4A;
+
+  .fuente {
+      color: #0E2E4A;
+  }
+}
+.fondoAzul:hover{
+  background: linear-gradient(to right, #ffffff, #edf4fb);
+}
+
+.fondoPlomo {
+  border: solid #CCCCCC;
+
+  .fuente {
+      color: #0E2E4A;
+  }
+}
+.fondoPlomo:hover{
+  background: linear-gradient(to right, #ffffff, #f3f3f3);
+}
+
+.fondoRojo {
+  border: solid #EA4C3A;
+
+  .fuente {
+      color: #EA4C3A;
+  }
+}
+.fondoRojo:hover{
+  background: linear-gradient(to right, #ffffff, #fff3f2);
+}
+
+.fondoguinda {
+  border: solid #963CBE;
+
+  .fuente {
+      color: #963CBE;
+  }
+}
+.fondoguinda:hover{
+  background: linear-gradient(to right, #ffffff, #fbf0ff);
+}
+
+.indicador-card {
+ border-radius: 8px;
+  font-family: 'Roboto', Arial, sans-serif;
+   background: #fff;
+ 
+  overflow: hidden;
+  min-height: 380px;
+  //padding: 24px;
+}
+
+
+.indicador-left {
+  background: var(--surface-section, #f4f4f4);
+  min-height: 240px;
+}
+
+.icono-indicador img {
+  display: block;
+  margin: 0 auto;
+}
+.titulo-indicador {
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: 2%;
+  font-size: 20px;
+  color: #333333;
+  margin-bottom: 8px;
+}
+.cantidad-indicador {
+  width: 86px;
+  height: 48px;
+letter-spacing: 2%;
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center  ;
+}
+
+.fuente-cantidad-grande {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+.acordeon-header-custom {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 32px;
+  background-color: white !important;
+}
+
+
+.plazo-verde {
+  background: #3CC85A4C ; 
+  color: #3CC85A;
+  // verde claro, puedes ajustar el color
+  border-radius: 999px;
+  padding: 4px 16px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+}
+.plazo-naranja {
+  background: #F1970033 ; 
+  color: #F19700;
+  // verde claro, puedes ajustar el color
+  border-radius: 999px;
+  padding: 4px 16px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+}
+.plazo-rojo {
+  background: #C1292E4D ; 
+  color: #C1292E;
+  // verde claro, puedes ajustar el color
+  border-radius: 999px;
+  padding: 4px 16px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+}
+.plazo-blanco{
+  background: white ; 
+  color: black;
+  // verde claro, puedes ajustar el color
+  border-radius: 999px;
+  padding: 4px 16px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid black;
+}
+.color-naranja {color :#F3B562}
+.color-verde {color :#6BCB77}
+.color-negro {color :#3A3A3A}
+.color-gris {color :#9E9E9E}
+.color-rojo {color :#E57373}
+.color-celeste {color :#81D4FA}
+.color-guinda{color: #963CBE}
+
+
+
+.circulito-negro{
+  background-color: black;
+}
+/* Estilo general del acordeón */
+
+.custom-accordion {
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-top: 2rem;
+}
+
+.accordion-header {
+  padding: 12px 16px;
+  color: #1B1C1E;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: 2%;
+   border-top: 1px solid #f0f0f0;
+}
+
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.accordion-content.open {
+  max-height: 500px; /* Ajusta según el contenido */
+}
+
+.accordion-footer {
+  padding: 12px 16px;
+  color: #1B1C1E;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  border-top: 1px solid #f0f0f0;
+  font-weight: 500;
+   line-height: 24px;
+  letter-spacing: 2%;
+}
+
+/* Estilos para los elementos internos */
+.acordeon-detalle-content {
+  padding: 0 16px 8px;
+}
+.acordeon-tipo-contenido{
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0%;
+}
+
+.mr-grande {
+  margin-right: 1.5rem;
+}

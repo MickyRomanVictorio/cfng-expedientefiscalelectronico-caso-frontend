@@ -1,0 +1,107 @@
+.cfe-container-registro {
+  background-color: white !important;
+
+  .cfe-titulo-3 {
+    font-size: 16px !important;
+  }
+}
+
+.contenedor-crear {
+  padding: 25px !important;
+}
+
+:host ::ng-deep .dropdown-sentencia {
+  width: 210px !important;
+  font-size: 15px !important;
+}
+
+.p-label-bottom {
+  display: inline-block !important;
+  margin-bottom: 0.5rem !important;
+}
+
+:host ::ng-deep .table-deudores-agraviados {
+  .p-datatable-thead {
+    background: var(--mpfn-jade-background) !important;
+    font-weight: bold;
+    font-size: 12px !important;
+  }
+
+  .p-datatable-tbody {
+    font-size: 12px !important;
+
+    tr {
+      background-color: var(--mpfn-white) !important;
+      margin-bottom: 20px !important;
+    }
+  }
+
+}
+
+.full-middle {
+  vertical-align: middle !important;
+}
+
+.delito-sentencia-row {
+  display: grid;
+  align-items: center;
+}
+
+.delito-sentencia-row-bottom {
+  margin-bottom: 8px;
+}
+
+.delito-sentencia-grid-row {
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.delito-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.delito-dropdown {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+
+$badge-documentos: (
+  dni: var(--info),
+  ruc: var(--secondary),
+  pasaporte: var(--text-color),
+  "carnet-de-extranjeria": var(--mpfn-green-dark)
+);
+
+.badge {
+  color: var(--mpfn-cedula-texto);
+
+  @each $doc-type, $color-value in $badge-documentos {
+    &-#{$doc-type} {
+      background-color: $color-value;
+    }
+  }
+}
+
+.inputs-mancomunados {
+  font-size: 12px !important;
+  .col-12 {
+    border-right: 2px solid #ccc;
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+  .label-titulo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+  @media (max-width: 768px) {
+    .col-12 {
+      border-right: none;
+    }
+  }
+}

@@ -1,0 +1,28 @@
+:host ::ng-deep .table-apelaciones{
+  .p-datatable-thead{
+      background: var(--mpfn-jade-background) !important;
+      font-weight: bold;
+  }
+  .p-datatable-tbody{
+      tr{
+          background-color: var(--mpfn-white) !important;
+          margin-bottom: 20px !important;
+      }
+  }
+}
+
+input[type="radio"] {
+  transform: scale(1.4);
+  -webkit-transform: scale(1.4);
+  -moz-transform: scale(1.4);
+  -ms-transform: scale(1.4);
+  -o-transform: scale(1.4);
+}
+
+input[type="checkbox"] {
+  transform: scale(1.4);
+  -webkit-transform: scale(1.4);
+  -moz-transform: scale(1.4);
+  -ms-transform: scale(1.4);
+  -o-transform: scale(1.4);
+}

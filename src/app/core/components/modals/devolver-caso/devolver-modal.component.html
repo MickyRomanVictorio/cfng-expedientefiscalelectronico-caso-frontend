@@ -1,0 +1,69 @@
+<div class="casos-devolver-container">
+  <div class="w-full">
+    <app-encabezado-modal
+      [titulo]="titulo"
+      [referenciaModal]="referenciaModal"
+      [numeroCaso]="numeroCaso"
+    ></app-encabezado-modal>
+    <P
+      class="cfe-boton-primary cfe-boton-m mt-3"
+      style="display: flex; justify-content: left !important"
+    >
+      <img class="icono-mensaje" [src]="icon('error')" alt="Close Icon" /> La
+      devolución solo debe ser por aspectos de forma y no de fondo
+    </P>
+
+    <form class="bandeja_tramites__filters" [formGroup]="formulario">
+      <h5 class="cfe-subtitulo-1 derivadoA" style="margin-top: 5px">Se devuelve la derivación por el/los siguientes motivos</h5>
+      <div class="col-12 field" style="margin-top: 15px">
+        <div class="flex align-items-center">
+          <div>
+            <p-checkbox
+              [binary]="true"
+              inputId="motivo1"
+              formControlName="carpetaIncompleta"
+              label="carpeta incompleta"
+            ></p-checkbox>
+          </div>
+          <div style="margin-left: 15px">
+            <p-checkbox
+              [binary]="true"
+              inputId="motivo2"
+              formControlName="carpetaMalFoliada"
+              label="carpeta mal foliada"
+            ></p-checkbox>
+          </div>
+          <div style="margin-left: 15px">
+            <p-checkbox
+              [binary]="true"
+              inputId="motivo3"
+              formControlName="consignarNombreDespacho"
+              label="Error al consignar nombre de despacho fiscal"
+            ></p-checkbox>
+          </div>
+        </div>
+      </div>
+
+      <P><b>{{ descripcion }}</b></P>
+
+      <textarea
+        rows="5"
+        cols="30"
+        pInputTextarea
+        [maxlength]="1000"
+        formControlName="detalleDevolucion"
+        (input)="onInputDescripcionChange()"
+      ></textarea>
+      <div class="w-full formgrid grid mt-2" style="display: flex">
+        <p style="margin-left: auto">Quedan {{ remainingChars }} carácteres</p>
+      </div>
+
+      <span>{{tieneMotivo}}</span>
+      <span>{{formularioValido}}</span>
+      <app-tabpanel-acto-procesal
+        [idCaso]="idCaso"
+        [devolverRecibidosPorRevisarHijo]="devolverRecibidosPorRevisarPadre"
+      ></app-tabpanel-acto-procesal>
+    </form>
+  </div>
+</div>

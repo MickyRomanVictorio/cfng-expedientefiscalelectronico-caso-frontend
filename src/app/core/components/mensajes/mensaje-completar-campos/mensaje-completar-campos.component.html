@@ -1,0 +1,22 @@
+<div
+    class="flex-center border-round-lg p-3 gap-2 label-bg-error"
+    [ngClass]="{ 'hidden': cerrarLabel }"
+>
+    <fn-icon
+        class="label-info-error"
+        [ico]="iconUtil.obtenerIcono('iInfoCircle')"
+        height="1.5rem"
+    />
+    <span class="text-md" [innerHTML]="titulo()"></span>
+    @if ( closable() ) {
+        <div class="ml-auto">
+            <fn-icon
+                class="cursor-pointer"
+                [ico]="iconUtil.obtenerIcono('iClose')"
+                height="1.5rem"
+                (click)="cerrandoLabel()" 
+                onkeydown=""
+            />
+        </div>
+    }
+</div>

@@ -1,0 +1,35 @@
+.close {
+  cursor: pointer;
+  position: absolute;
+  right: 30px;
+  top: 20px;
+}
+
+.cfe-filtros1 {
+  padding: 1px 8px;
+
+  .cfe-filtros-fondo1 {
+    display: flex;
+    width: 100%;
+    padding: 5px 10px 5px 10px;
+    justify-content: flex-end;
+  }
+
+  .cfe-filtros-opciones1 {
+    width: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    position: relative;
+    top: -30px;
+    margin-bottom: -15px;
+  }
+}
+
+.cfe-container-background-white {
+  background: var(--mpfn-white);
+}
+
+.error-message {
+  color: red;
+}

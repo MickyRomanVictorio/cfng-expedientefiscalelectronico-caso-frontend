@@ -1,0 +1,13 @@
+$alertas: (
+    error: (bg: var(--mpfn-rojo-pastel), color: var(--danger)),
+    warning: (bg: var(--mpfn-mpe-pastel), color: var(--mpfn-yellow-dark))
+);
+
+@each $tipo, $valores in $alertas {
+    .label-bg-#{$tipo} {
+        background-color: map-get($valores, bg);
+        .label-info {
+            color: map-get($valores, color);
+        }
+    }
+}

@@ -1,0 +1,22 @@
+<div
+    class="flex-center border-round-lg p-3 gap-2 label-bg-danger"
+    [ngClass]="{ 'hidden': cerrarLabel }"
+>
+    <fn-icon
+        class="label-info-red"
+        [ico]="iconUtil.obtenerIcono('iInfoCircle')"
+        height="1.5rem"
+    />
+    <span class="text-md">
+        El servicio de interoperabilidad con el Poder Judicial <strong class="label-info-red">no está activo</strong> en este momento. {{descripcion()}}
+        @if(this.tieneActa()){ Pero puede generar un acta de la audiencia.}
+    </span>
+    <div class="ml-auto">
+        <fn-icon
+            class="cursor-pointer"
+            [ico]="iconUtil.obtenerIcono('iClose')" height="1.5rem"
+            (click)="cerrarLabel = true"
+            onkeydown=""
+        />
+    </div>
+</div>

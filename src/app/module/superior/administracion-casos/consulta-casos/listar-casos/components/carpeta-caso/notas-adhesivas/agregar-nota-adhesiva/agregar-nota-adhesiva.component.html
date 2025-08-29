@@ -1,0 +1,49 @@
+<div [formGroup]="form" class="grid grid-nogutter px-6 pb-5">
+    <div class="col-12">
+        <div class="flex justify-content-between flex-wrap py-3">
+            <span class="flex align-items-center justify-content-center font-semibold uppercase">
+                Agregar una nueva nota
+            </span>
+            <div class="flex align-items-center justify-content-center">
+                <p-button (click)="close()" icon="pi pi-times"
+                    styleClass="p-button-rounded text-color p-button-text"></p-button>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="field">
+            <div>Selecciona el color del Post-it:</div>
+            <div class="color-options flex gap-1">
+                <a (click)="activeColor($event, coloresPostIt.GREEN)"
+                    [ngStyle]="{'background-color': coloresPostIt.GREEN}"
+                    [ngClass]="{'active': coloresPostIt.GREEN == notaCaso.colorNota}"
+                    class="popst-it-green flex align-items-center justify-content-center">
+                    <i class="pi pi-check"></i>
+                </a>
+                <a (click)="activeColor($event, coloresPostIt.ORANGE)"
+                    [ngStyle]="{'background-color': coloresPostIt.ORANGE}"
+                    [ngClass]="{'active': coloresPostIt.ORANGE == notaCaso.colorNota}"
+                    class="popst-it-orange flex align-items-center justify-content-center"><i
+                        class="pi pi-check"></i></a>
+                <a (click)="activeColor($event, coloresPostIt.YELLOW)"
+                    [ngStyle]="{'background-color': coloresPostIt.YELLOW}"
+                    [ngClass]="{'active': coloresPostIt.YELLOW == notaCaso.colorNota}"
+                    class="popst-it-yellow flex align-items-center justify-content-center"><i
+                        class="pi pi-check"></i></a>
+            </div>
+        </div>
+        <div class="field">
+            <div class="py-2">Contenido del Post-it</div>
+            <textarea required="required" (input)="countWords()" rows="5" pInputTextarea class="w-full"
+                [maxlength]="maxLength" formControlName="textoNota"></textarea>
+            <div class="py-2 text-right text-600	">Quedan {{ maxLength- wordCount }} caracteres</div>
+        </div>
+        <div class="field">
+            <div class="flex justify-content-end flex-wrap gap-3">
+                <p-button (click)="close()" label="Cancelar" styleClass="p-button-secondary"></p-button>
+                <p-button [disabled]="!this.form.valid" (click)="save()" label="Guardar"
+                    styleClass="p-button-warning"></p-button>
+            </div>
+        </div>
+    </div>
+</div>

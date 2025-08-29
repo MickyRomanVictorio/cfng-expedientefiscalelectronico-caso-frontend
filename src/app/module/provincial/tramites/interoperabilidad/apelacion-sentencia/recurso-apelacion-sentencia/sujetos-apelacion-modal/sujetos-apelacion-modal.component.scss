@@ -1,0 +1,18 @@
+$boton-cerrar-width: 50px;
+
+.encabezado-modal{
+  width: 100%;
+  position: relative;
+  margin-bottom: 10px;
+  .encabezado-titulo{
+    width: calc(100% - $boton-cerrar-width);
+    display: inline-block;
+    margin: 0;
+  }
+  .encabezado-cerrar{
+    position: absolute;
+    right: -8px;
+    top: 0;
+    cursor: pointer;
+  }
+}

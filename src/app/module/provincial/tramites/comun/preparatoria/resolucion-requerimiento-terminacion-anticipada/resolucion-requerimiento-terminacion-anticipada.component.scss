@@ -1,0 +1,79 @@
+@use "../../../../../../../assets/styles/scss/abstracts/index" as *;
+
+.registrar_resolucion__container {
+  .cfe-opciones-botones {
+    display: flex;
+    margin-top: 1em;
+    justify-content: space-between;
+    align-items: center;
+
+    p {
+      font-size: 18px;
+      font-weight: normal;
+      color: $black;
+      margin: 0;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+}
+
+:host ::ng-deep .p-tabview-nav {
+  border: 0;
+}
+
+:host ::ng-deep .p-tabview-panels {
+  padding: 0;
+}
+
+:host ::ng-deep .table-penas {
+  .p-datatable-thead {
+    background: var(--mpfn-jade-background) !important;
+    font-weight: bold;
+
+    tr {
+      th {
+        border: 1px solid rgb(179, 179, 179) !important;
+      }
+    }
+  }
+
+  .p-datatable-tbody {
+    tr {
+      background-color: var(--mpfn-white) !important;
+      margin-bottom: 20px !important;
+      cursor: pointer;
+
+      td {
+        border: 1px solid rgb(179, 179, 179) !important;
+      }
+    }
+  }
+}
+
+:host {
+    ::ng-deep {
+        .custom-dialog {
+            .close-button {
+                position: absolute;
+                top: 33px;
+                right: 20px;
+                background: none;
+                border: none;
+                font-size: 35px;
+                cursor: pointer;
+                color: #333;
+                &:hover {
+                    color: #4b4b4b;
+                }
+            }
+        }
+    }
+}
+
+
+:host::ng-deep .reparacion-civil-dialog {
+    .p-dialog-content {
+        background: var(--mpfn-background);
+    }
+}

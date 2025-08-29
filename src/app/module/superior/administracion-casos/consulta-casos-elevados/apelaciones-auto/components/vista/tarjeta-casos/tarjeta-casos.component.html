@@ -1,0 +1,20 @@
+@if (listaCasos.length > 0) {
+  <div class="pt-3">
+    <div class="carpeta-container">
+      @for (caso of listaCasos; track $index) {
+      <div class="pb-6">
+          <app-carpeta-caso class="tour-a-1" [casofiscal]="caso" (casoSeleccionado)="casoSeleccionado.emit($event)"></app-carpeta-caso>
+      </div>
+      }
+    </div>
+    <app-paginator
+      class="tour-a-6"
+      [query]="paginacionCondicion"
+      [items]="paginacionConfiguracion"
+      [rowsPerPageOptions]="[]"
+      [resetPage]="paginacionReiniciar"
+      (paginate)="eventoCambiarPagina($event)"
+    ></app-paginator>
+  </div>
+}
+

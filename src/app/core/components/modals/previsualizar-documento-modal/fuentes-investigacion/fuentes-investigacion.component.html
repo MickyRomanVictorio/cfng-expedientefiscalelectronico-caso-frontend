@@ -1,0 +1,96 @@
+<div class="cfe-container">
+  <form [formGroup]="formEvidencias">
+    <div class="font-bold"> 
+      <span
+        >Fuentes de investigación que pueden ser tomadas como actos de
+        investigación</span
+      >
+    </div>
+    <br />
+  </form>
+  <br />
+  <div class="cfe_bandeja_table__content">
+    <p-table
+      [value]="evidenciasFiltradas"
+      [rowHover]="true"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      styleClass="table_td_content_responsive"
+      responsiveLayout="stack"
+      [(selection)]="evidenciaSeleccionada"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="numEvidencia">
+            N°
+            <p-sortIcon field="numEvidencia"></p-sortIcon>
+          </th>
+          <th pSortableColumn="tipoEvidencia">
+            Fuentes de investigacion
+            <p-sortIcon field="tipoEvidencia"></p-sortIcon>
+          </th>
+          <th class="col-width" pSortableColumn="extensionArchivo">
+            Formato
+            <p-sortIcon field="extensionArchivo"></p-sortIcon>
+          </th>
+          <th class="col-width" pSortableColumn="pesoArchivo">
+            Peso
+            <p-sortIcon field="pesoArchivo"></p-sortIcon>
+          </th>
+          <th class="col-width">
+          </th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-evidencia>
+        <tr class="p-selectable-row">
+          <td class="table_td_content_start caso-container">
+            <span class="p-column-title">N°</span>
+            {{ evidencia.numEvidencia }}
+          </td>
+          <td class="table_td_content_start">
+            <span class="p-column-title">Fuentes de investigacion</span>
+            <div class="evidencia-container">
+              <fn-icon
+                [ico]="icono(evidencia.extensionArchivo)"
+                height="1.8rem"
+                [style]="{ 'margin-left': '-12px' }"
+              ></fn-icon>
+              <div class="evidencia-text">{{ evidencia.tipoEvidencia }}</div>
+            </div>
+          </td>
+          <td class="table_td_content_start">
+            <span class="p-column-title">Formato</span>
+
+            <span
+              class="badge badge-fuente-investigacion-{{
+                obtenerClaseTipoEvidencia(evidencia.extensionArchivo)
+              }} w-8"
+              >{{ evidencia.extensionArchivo }}</span
+            >
+          </td>
+          <td class="table_td_content_start">
+            <span class="p-column-title">Peso</span>
+            {{ evidencia.pesoArchivo }}
+          </td>
+
+          <td class="table_td_content_start">
+            <span class="p-column-title">Opcion</span>
+            <a class="flex align-content-center cursor-pointer" (click)="descargarDocumentoPdf(evidencia)">
+              <img class="cfe-icon" src="../../../../../../assets/icons/ico_download.svg"
+                alt="Icono de descarga" />
+            </a>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <app-paginator
+      [query]="query"
+      [items]="itemPaginado"
+      [rowsPerPageOptions]="[]"
+      [resetPage]="resetPage"
+      (paginate)="onPaginate($event)"
+    ></app-paginator>
+  </div>
+</div>
+
+<p-toast></p-toast>

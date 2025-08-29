@@ -1,0 +1,12 @@
+/* Estilo personalizado para los chips */
+::ng-deep .p-multiselect-token {
+  background-color: transparent !important; /* Color de fondo del chip */
+  color: var(--mpfn-black) !important; /* Color del texto dentro del chip */
+}
+
+/* Estilo para el ícono de eliminación del chip */
+::ng-deep .p-multiselect-token-icon {
+  color: var(--mpfn-red) !important; /* Color del ícono de la "X" */
+  font-size: 2rem !important; /* Tamaño del ícono de la "X" */
+  cursor: pointer; /* Cambiar el cursor al pasar sobre un chip */
+}

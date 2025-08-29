@@ -1,0 +1,133 @@
+<div class="grid"   [ngClass]="{'container-view-list': !isGrid}">
+  <div class="col-12">
+    <div class="flex flex-wrap gap-2 justify-content-between ">
+      <div *ngIf="casosfiscales" class="flex">
+        <img class="w-1rem" [src]="icon('exclamationFolder')" alt="Folder Icon">
+        <h4 class="-ml-2 text-base font-family-grilla">{{ casosfiscales.length }} Casos listados</h4>
+      </div>
+      <div class="flex flex-column sm:flex-row justify-content-between">
+         <div class="fflex align-items-center gap-1 md:gap-3 mr-0 sm:mr-3 flex-column sm:flex-row" *ngIf="!isGrid" >
+          <p-button label="Exportar PDF" class="btn-navigate" styleClass="font-bold w-full sm:w-auto text-left" (onClick)="exportar('PDF')">
+            <img [src]="icon('pdf')" alt="PDF Icon">
+          </p-button>
+          <p-button label="Exportar Excel" class="btn-navigate" styleClass="font-bold w-full sm:w-auto text-left" (onClick)="exportar('Excel')">
+            <img [src]="icon('excel')" alt="Excel Icon">
+          </p-button>
+        </div>
+        <div class="flex gap-3 align-items-center mt-3 sm:mt-0">
+          <a (click)="changeViewType($event, 'grid')" class="list-type" href="#"><i class="pi pi-table"></i></a>
+          <a (click)="changeViewType($event, 'list')" class="list-type" href="#"><i class="pi pi-bars"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 tableView">
+
+    <p-table [tableStyle]="{'min-width': '20rem'}" [loading]="isLoading" (onPage)="changePage($event)"
+      [paginator]="true" [rows]="SHOW_ROWS" [first]="FIRST" *ngIf="!isGrid" [value]="casosfiscales"
+      styleClass="p-datatable-striped" >
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th pSortableColumn="numeroCaso">Nro Caso
+            <p-sortIcon field="numeroCaso"></p-sortIcon>
+          </th>
+          <th pSortableColumn="etapa">Etapa
+            <p-sortIcon field="etapa"></p-sortIcon>
+          </th>
+          <th pSortableColumn="fiscal">Fiscal
+            <p-sortIcon field="fiscal"></p-sortIcon>
+          </th>
+          <th pSortableColumn="ultimoTramite">Último trámite
+            <p-sortIcon field="ultimoTramite"></p-sortIcon>
+          </th>
+          <th>Delitos</th>
+          <th pSortableColumn="fechaIngreso">F. Ingreso
+            <p-sortIcon field="fechaIngreso"></p-sortIcon>
+          </th>
+          <th pSortableColumn="fechaUltimoTramite">F. Último trámite
+            <p-sortIcon field="fechaUltimoTramite"></p-sortIcon>
+          </th>
+          <th>Plazo de etapa</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-casofiscal let-columns="columns">
+        <tr style="position: relative;"
+            (click)="abrirDetalleCaso(casofiscal)">
+          <td>
+            <div>
+              <div class="p-column-title font-bold">Nro Caso</div>
+              <div [innerHTML]="colorizeCode(casofiscal.numeroCaso)"></div>
+            </div>
+          </td>
+          <td>
+            <div>
+              <div class="p-column-title font-bold">Etapa</div>
+              {{ casofiscal.etapa }}
+            </div>
+          </td>
+          <td>
+            <div>
+              <div class="p-column-title font-bold">Fiscal</div>
+              {{ casofiscal.fiscal }}
+            </div>
+          </td>
+          <td>
+            <div>
+              <div class="p-column-title font-bold">Último trámite</div>
+              {{ casofiscal.ultimoTramite }}
+            </div>
+          </td>
+          <td>
+            <div>
+              <div class="p-column-title font-bold">Delitos</div>
+              {{ flatDelitos(casofiscal.delitos) }}
+            </div>
+          </td>
+          <td>
+            <div>
+              <div class="p-column-title font-bold">F. Ingreso</div>
+              {{ casofiscal.fechaIngreso }}
+            </div>
+          </td>
+          <td>
+            <div>
+              <div class="p-column-title font-bold">F. Último trámite</div>
+              {{ casofiscal.fechaUltimoTramite }}
+            </div>
+          </td>
+          <td>
+            <div class="w-full">
+              <div class="p-column-title font-bold">Plazo de etapa</div>
+              <div class="custom-progressbar">
+                <div *ngFor="let plazo of casofiscal.plazos">
+                  <app-barra-progreso-caso [titulo]="plazo.nombreActoProcesal" [inicio]="plazo.diasTrasncurridos"
+                                           [diasPlazo]="plazo.diasPlazo" [indicadorPlazo]="plazo.indSemaforo">
+                  </app-barra-progreso-caso>
+                </div>
+              </div>
+
+              <div class="py-2 mt-2">
+                <button class="cfe-boton-secondary cfe-boton-sm" routerLink="../listar-casos-anulados">Plazos y Pagos</button>
+              </div>
+            </div>
+          </td>
+
+        </tr>
+      </ng-template>
+    </p-table>
+
+  </div>
+
+  <div class="col-12 dataGrid">
+    <p-dataView [loading]="isLoading" (onPage)="changePage($event)" [first]="FIRST" *ngIf="isGrid" [rows]="SHOW_ROWS"
+      [paginator]="true" #dv [value]="casosfiscales" layout="grid"  [ngClass]="'data-casos'" >
+      <ng-template let-casofiscal pTemplate="gridItem">
+        <div class="col-12 lg:col-6  xl:col-4">
+          <div class="xl:px-3 pb-8 lg:px-3">
+            <app-carpeta-caso [casofiscal]="casofiscal"></app-carpeta-caso>
+          </div>
+        </div>
+      </ng-template>
+    </p-dataView>
+  </div>
+</div>

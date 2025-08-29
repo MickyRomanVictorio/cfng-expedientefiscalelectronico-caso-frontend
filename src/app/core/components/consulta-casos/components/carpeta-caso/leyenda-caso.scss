@@ -1,0 +1,22 @@
+/* Estilos base: sin border-radius (para pantallas móviles y pequeñas) */
+.leyenda-plazo-inicio {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.leyenda-plazo-fin {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* Cuando la pantalla sea mayor a SM (576px), agregar los bordes redondeados */
+@media (min-width: 576px) {
+  .leyenda-plazo-inicio {
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+  }
+
+  .leyenda-plazo-fin {
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+  }
+}

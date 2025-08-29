@@ -1,0 +1,43 @@
+<form [formGroup]="formulario" class="formgrid grid mt-3">
+  <div class="col-12 md:col-8 flex">
+    <div>
+      <label for="fechaAcuerdo" class="p-label-bottom font-semibold"
+        >Sujeto procesal:</label
+      >
+      <button
+        class="cfe-boton-primary cfe-boton-lg mt-1"
+        (click)="openModalSujetos()"
+      >
+        <span class="font-bold">Seleccionar sujeto procesal</span>
+      </button>
+    </div>
+    @if(sujetosAceptados){
+    <div class="flex align-items-center">
+      <img
+        [src]="iconAsset.obtenerRutaIcono('check-circle')"
+        alt="validado"
+        class="mt-5 ml-2 pr-2 h-2rem"
+      />
+    </div>
+    }
+  </div>
+  <div class="w-full mt-3 mb-2 ml-2">
+    <label for="observaciones" class="cfe-semi-bold"
+      >Observaciones (opcional)</label
+    >
+  </div>
+  <div class="w-full ml-2">
+    <textarea
+      formControlName="observaciones"
+      pInputTextarea
+      id="observaciones"
+      class="w-full p-inputtextarea p-inputtext p-component p-element"
+      rows="4"
+      [maxLength]="200"
+    ></textarea>
+    <contador-footer-textarea
+      [textarea]="formulario.get('observaciones')"
+      [size]="200"
+    ></contador-footer-textarea>
+  </div>
+</form>

@@ -1,0 +1,38 @@
+<app-alertas-tramite
+  [alertas]="alertas"
+  [idCaso]="idCaso"
+  [idEtapa]="idEtapa"
+></app-alertas-tramite>
+
+<div class="w-full">
+  <app-asociar-sujetos-delitos
+    [idActoTramiteCaso]="idActoTramiteCaso"
+    [etapa]="etapa"
+    (seHanRegistradoAsociaciones)="
+      establecerSiSeHanRegistradoAsociaciones($event)
+    "
+    [modoLectura]="tramiteEstadoFirmado"
+  />
+</div>
+
+<div class="w-full">
+  <div class="col-12 md:col-4 relative">
+    <button
+      type="button"
+      class="cfe-boton-primary cfe-boton-lg w-full"
+      (click)="mostrarModal()"
+    >
+      <span class="family-poppin-bold">Asignación de plazo </span>
+    </button>
+
+    @if ( plazoRequest ) {
+    <div class="icono-guardado">
+      <img
+        [src]="iconAsset.obtenerRutaIcono('check-circle')"
+        alt="guardado"
+        class="pr-2 h-2rem"
+      />
+    </div>
+    }
+  </div>
+</div>

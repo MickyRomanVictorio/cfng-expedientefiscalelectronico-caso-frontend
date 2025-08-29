@@ -1,0 +1,16 @@
+.subir-audio-contenedor.dragover {
+    .border-dashed {
+        background-color: var(--mpfn-white);
+        animation: glow 0.7s infinite alternate;
+        cursor: copy;
+    }
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 0 0 10px rgb(255 255 255);
+    }
+    to {
+        box-shadow: 0 0 15px rgba(233, 166, 49, 0.2901960784);
+    }
+}

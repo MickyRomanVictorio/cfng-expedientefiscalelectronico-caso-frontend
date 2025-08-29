@@ -1,0 +1,310 @@
+<div class="apelaciones-resultados p-grid p-nogutter mt-4 p-4">
+
+    <div class="flex mb-3">
+        <fn-icon class="mr-2" [ico]="obtenerIcono('iAlert')" height="1.4rem"></fn-icon>
+        <div class="ml-4">
+            <ul class="m-0 p-0">
+                <li>Para los sujetos que se les ha concedido la apelación, se les creará la <strong>pestaña de
+                        apelaciones</strong>, la cual será elevado al fiscal superior.</li>
+                <li>Para los sujetos que se les deniega la apelación y quieren presentar su <strong>queja</strong>,
+                    luego se les puede generar su <strong>queja por denegatoria de apelación</strong>.</li>
+            </ul>
+        </div>
+    </div>
+    <div class="p-col-12 mt-5">
+        <div class="flex align-items-center">
+            <span class="cfe-titulo-4 mb-3">Apelaciones al proceso inmediato</span>
+        </div>
+        <p-messages [(value)]="messageProcesoInmediato" [enableService]="false" *ngIf="showMessageProcesoInmediato" [closable]="true"></p-messages>
+        <form [formGroup]="formProcesoInmediato">
+            <div class="grid">
+                <div class="field col-12 md:col-3">
+                    <label class="font-semibold">¿Quién Apeló?</label>
+                    <div>
+                        <p-dropdown formControlName="sujetoApelo"
+                                    styleClass="p-inputtext-lg"
+                                    placeholder="Seleccione un sujeto"
+                                    appendTo="body"
+                                    optionLabel="nombreSujeto"
+                                    emptyMessage="Sin resultados"
+                                    emptyFilterMessage="No se encontraron resultados"
+                                    optionValue="idSujetoCaso"
+                                    [options]="lstSujetosApelantes"
+                                    [filter]="true">
+                        </p-dropdown>
+                    </div>
+                </div>
+                <div class="field col-12 md:col-3">
+                    <label class="font-semibold">Resultado de la apelación</label>
+                    <div>
+                        <p-dropdown formControlName="resultadoApelacion"
+                                    styleClass="p-inputtext-lg"
+                                    placeholder="Seleccione una opción"
+                                    emptyMessage="Sin resultados"
+                                    appendTo="body"
+                                    optionLabel="noDescripcion"
+                                    optionValue="id"
+                                    (onChange)="cambioApelacionInmediata($event.value,formProcesoInmediato)"
+                                    [options]="lstResultadoApelaciones">
+                        </p-dropdown>
+                    </div>
+                </div>
+                <div class="field col-12 md:col-2">
+                    <ng-container *ngIf="validarQuejaInmediato(formProcesoInmediato)">
+                        <label class="font-semibold">Queja</label>
+                        <div>
+                            <p-dropdown formControlName="queja" [options]="lstQueja" styleClass="p-inputtext-lg"
+                                placeholder="-" appendTo="body" optionLabel="nombre" optionValue="id">
+                            </p-dropdown>
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="col-12 md:col-4">
+                    <div class="flex justify-content-end align-items-center gap-3 mt-5">
+                        @if(!modoLectura) {
+                            <button type="button" class="cfe-boton-primary cfe-boton-m ml-2 boton-w"
+                                    [disabled]="formProcesoInmediato.invalid" (click)="guardarApelacionProcesoInmediato()">
+                              Agregar y Guardar
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <div class="p-col-12 mt-5">
+        <div class="flex align-items-center">
+            <span class="cfe-titulo-4 mb-3">Lista del Apelaciones realizadas al proceso inmediato</span>
+        </div>
+        <p-table class="cfe-table-primary" responsiveLayout="stack" dataKey="nombre" currentPageReportTemplate="{first} de {last} registros"
+                 [value]="listaProcesoInmediato"
+                 [paginator]="true"
+                 [rows]="10"
+                 [showCurrentPageReport]="true"
+                 [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Nº</th>
+                    <th>¿Quién apeló?</th>
+                    <th>Tipo de sujeto</th>
+                    <th>¿Qué resultado se obtuvo de la apelación?</th>
+                    <th>¿Queja?</th>
+                    <th>Quitar</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-imputado let-rowIndex="rowIndex">
+                <tr>
+                    <td>{{ rowIndex + 1 }}</td>
+                    <td>{{ imputado.nombreSujeto }}</td>
+                    <td>{{ imputado.nombreTipoParteSujeto }}</td>
+                    <td style="font-weight: bold;">{{ imputado.resultadoApelacion }}</td>
+                    <td>{{imputado.resultadoApelacion=='CONCEDE APELACIÓN'? '-': imputado.queja }}</td>
+                    <td>
+                        @if(!modoLectura) {
+                          <fn-icon (click)="eliminarRegistroApelado(imputado.idActoTramiteSujeto, imputado.idApelacionResultado)" [ico]="obtenerIcono('iTrash')" height="2.4rem" style="cursor: pointer">
+                          </fn-icon>
+                        }
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="6">
+                        <div class="text-center">Aún no se ha registrado una apelación. Si es que nadie apeló, no
+                            necesita registrar nada.</div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+    </div>
+    <div class="p-col-12">
+        <div class="flex align-items-center">
+            <h6 class="cfe-titulo-4 mb-3">Apelaciones a la salidas alternas</h6>
+        </div>
+        <p-messages [(value)]="messageSalidaAlterna" [enableService]="false" *ngIf="showMessageSalidaAlterna" [closable]="true"></p-messages>
+        <form [formGroup]="formSalidasAlternas">
+            <div class="grid">
+                <div class="field col-12 md:col-3">
+                    <label class="font-semibold">Reparación civil apelada</label>
+                    <div>
+                        <p-dropdown formControlName="reparacionCivil"
+                                    styleClass="p-inputtext-lg"
+                                    placeholder="Seleccione una reparación civil"
+                                    appendTo="body"
+                                    emptyMessage="Sin resultados"
+                                    emptyFilterMessage="No se encontraron resultados"
+                                    optionLabel="codigoReparacion"
+                                    optionValue="idReparacion"
+                                    (onChange)="listarReparacionCivil($event.value)"
+                                    [options]="lstReparacionCivilApelada"
+                                    [filter]="true">
+                        </p-dropdown>
+                    </div>
+                </div>
+                <div class="field col-12 md:col-3">
+                    <label class="font-semibold">¿Quién Apeló?</label>
+                    <div>
+                        <p-dropdown formControlName="sujetoApelo"
+                                    optionLabel="nombreSujeto"
+                                    optionValue="idSujetoCaso"
+                                    emptyMessage="Sin resultados"
+                                    emptyFilterMessage="No se encontraron resultados"
+                                    styleClass="p-inputtext-lg"
+                                    appendTo="body"
+                                    placeholder="Seleccione un sujeto"
+                                    [options]="lstSujetosApelantes"
+                                    [filter]="true">
+                        </p-dropdown>
+                    </div>
+                </div>
+                <div class="field col-12 md:col-3">
+                    <label class="font-semibold">Resultado de la apelación</label>
+                    <div>
+                        <p-dropdown formControlName="resultadoApelacion"
+                            (onChange)="cambioApelacionInmediata($event.value,formSalidasAlternas)"
+                            [options]="lstResultadoApelaciones" styleClass="p-inputtext-lg"
+                            placeholder="Seleccione una opción" emptyMessage="Sin resultados"  appendTo="body" optionLabel="noDescripcion"
+                            optionValue="id">
+                        </p-dropdown>
+                    </div>
+                </div>
+                <div class="field col-12 md:col-1">
+                    <ng-container *ngIf="validarQuejaInmediato(formSalidasAlternas)">
+                        <label class="font-semibold">Queja</label>
+                        <div>
+                            <p-dropdown formControlName="queja" [options]="lstQueja" styleClass="p-inputtext-lg"
+                                placeholder="-" appendTo="body" optionLabel="nombre" optionValue="id">
+                            </p-dropdown>
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="col-12 md:col-2">
+                    <div class="flex justify-content-end align-items-center gap-3 mt-5">
+                        @if(!modoLectura) {
+                            <button (click)="guardarApelacionSalidaAlterna()" [disabled]="formSalidasAlternas.invalid" type="button"
+                                class="cfe-boton-primary cfe-boton-m ml-2 boton-w">Agregar y Guardar</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="p-col-12 mt-3" *ngIf="infoSujetosReparacionCivil">
+        <div class="card">
+            <div class="card-header">
+                <div class="grid">
+                    <div class="col-12 md:col-12">
+                        <span class="badge-estados"
+                          [ngClass]="'badge-estados-' + (tipoReparacionCivil | lowercase) + ' mr-3'">{{capitalizedFirstWord(tipoReparacionCivil)}}</span>
+                        <b>{{obtenerCodigoReparacionCivil}}</b>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body mt-2">
+                <div class="grid">
+                    <div class="col-12 md:col-3">
+                        <div class="sujetos-container">
+                            <p><strong>Imputados:</strong></p>
+                            <ul *ngFor="let imputado of agruparPorLlave(infoSujetosReparacionCivil, COLUMNA_INPUTADO)">
+                                <li [ngClass]="{ 'no-guiones': imputado == '-' }">{{ imputado }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-3">
+                        <div class="sujetos-container">
+                            <p><strong>Agraviados:</strong></p>
+                            <ul
+                                *ngFor="let agraviado of agruparPorLlave(infoSujetosReparacionCivil, COLUMNA_AGRAVIADO)">
+                                <li [ngClass]="{ 'no-guiones': agraviado == '-' }">{{ agraviado }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-3">
+                        <div class="sujetos-container">
+                            <p><strong>Actores Civiles:</strong></p>
+                            <ul *ngFor="let actor of agruparPorLlave(infoSujetosReparacionCivil, COLUMNA_ACTOR_CIVIL)">
+                                <li [ngClass]="{ 'no-guiones': actor == '-' }">{{ actor }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="p-col-12 mt-5">
+        <div class="flex align-items-center">
+            <h6 class="cfe-titulo-4 mb-3">Lista del Apelaciones realizadas a las salidas alternas</h6>
+        </div>
+        <p-table class="cfe-table-primary" [value]="listaSalidaAlterna" responsiveLayout="stack" [paginator]="true"
+            dataKey="nombre" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+            [tableStyle]="{ 'min-width': '50rem' }" currentPageReportTemplate="{first} de {last} registros">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Nº</th>
+                    <th>Reparación civil</th>
+                    <th>Acto Procesal</th>
+                    <th>¿Quién apeló?</th>
+                    <th>¿Qué resultado se obtuvo de la apelación?</th>
+                    <th>¿Queja?</th>
+                    <th>Quitar</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-imputado let-rowIndex="rowIndex">
+                <tr>
+                    <td>{{ rowIndex + 1 }}</td>
+                    <td>{{ imputado.codigoReparacion }}</td>
+                    <td>{{ imputado.nombreActoProcesal }}</td>
+                    <td>{{ imputado.nombreSujeto }}</td>
+                    <td style="font-weight: bold;">{{ imputado.resultadoApelacion }}</td>
+                    <td>{{imputado.resultadoApelacion=='CONCEDE APELACIÓN'? '-': imputado.queja }}</td>
+                    <td>
+                        @if(!modoLectura) {
+                          <fn-icon  onKeyPress (click)="eliminarRegistroApelado(imputado.idActoTramiteSujeto, imputado.idApelacionResultado)" [ico]="obtenerIcono('iTrash')" height="2.4rem" style="cursor: pointer">
+                          </fn-icon>
+                        }
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7">
+                        <div class="text-center">Aún no se ha registrado una apelación. Si es que nadie apeló, no
+                            necesita registrar nada.</div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+    </div>
+
+    <div class="p-col-12 mt-5 mb-5">
+        <div class="grid">
+            <div class="col-12 md:col-4 flex align-items-end justify-content-end">
+                <div class="py-2">
+                    <span class="font-bold">Fiscalía Superior a donde se eleva la apelación</span>
+                </div>
+            </div>
+            <div class="col-12 md:col-5">
+                <p-messages [(value)]="message" [enableService]="false" *ngIf="showMessage" [closable]="false"></p-messages>
+                <p-dropdown optionValue="value"
+                            emptyMessage="Sin resultados"
+                            placeholder="Seleccione la Fiscalia Superior"
+                            filterBy="py-1 p-inputtext-lg"
+                            optionLabel="label"
+                            [options]="fiscaliasPronvinciales"
+                            (onChange)="guardarFiscaliaSuperior($event.value)"
+                            [formControl]="fiscaliaApelacionControl"
+                            [filter]="true"
+                            [showClear]="true"
+                ></p-dropdown>
+            </div>
+            <div *ngIf="validGuardarFiscaliaSuperior" class="col-12 md:col-3 mt-2 flex align-items-end">
+                <div class="py-2">
+                    <span class="msg-guardado font-bold mr-2">Datos Guardados Correctamente</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

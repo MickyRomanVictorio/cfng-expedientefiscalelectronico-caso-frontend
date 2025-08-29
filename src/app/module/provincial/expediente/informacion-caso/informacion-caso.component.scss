@@ -1,0 +1,104 @@
+.header__casoFiscal {
+  width: 100%;
+  .cfe-titulo-1 {
+    padding: 10px 0px 10px 0px;
+  }
+  .resaltar-naranja {
+    color: var(--mpfn-semaforo-amarillo);
+  }
+  .cfe-boton-xs{
+    width: 32px;
+    height: 32px;
+    margin-left: 8px;
+    fn-icon{
+      -webkit-transition: all .25s ease-in-out;
+      -moz-transition: all .25s ease-in-out;
+      -ms-transition: all .25s ease-in-out;
+      -o-transition: all .25s ease-in-out;
+      transition: all .25s ease-in-out;
+    }
+    &.isHideHeader{
+      fn-icon{
+        -webkit-transform: rotate(180deg);
+        -moz-transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
+        -o-transform: rotate(180deg);
+        transform: rotate(180deg);
+      }
+    }
+  }
+}
+.box-acto-procesal{
+  border-radius: 8px;
+  padding: 10px;
+  background-color: var(--mpfn-background-opaque);
+  &.documento{
+    background-color: #FFFFFF;
+  }
+  h2{
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--mpfn-black);
+  }
+}
+.labelefe-delitos{
+  color: var(--mpfn-lightblue);
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.header__casoFiscal--content{
+  -webkit-transition: height .25s ease-in-out;
+  -moz-transition: height .25s ease-in-out;
+  -ms-transition: height .25s ease-in-out;
+  -o-transition: height .25s ease-in-out;
+  transition: height .25s ease-in-out;
+  height: 100%;
+  &.isHideHeader{
+    height: 0;
+    overflow: hidden;
+  }
+}
+.cabecera-incidentales{
+  color: #06A77D !important;
+  
+}
+
+/* sonar-ignore */
+.boton-etiqueta{
+  &--red{
+      background-color: #C1292E;
+  }
+}
+
+.tooltip-titulo {
+  color: var(--mpfn-gray1);
+}
+
+.tooltip-lista-delitos {
+  margin-top: 10px;
+  padding-left: 25px !important;
+  li {
+    font-size: 0.85em;
+    color: var(--mpfn-black);
+    margin-top: 10px;
+    font-weight: 600;
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}
+
+.caso-concluido {
+  background-color: var(--gray-600) !important;
+}
+
+
+.boton-accion--purple-dark, .boton-etiqueta--purple-dark {
+  background-color: #A855F7 !important;
+}
+
+.boton-accion--green-dark, .boton-etiqueta--green-dark {
+  background-color: #34D399 !important;
+}

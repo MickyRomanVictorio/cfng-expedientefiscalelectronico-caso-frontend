@@ -1,0 +1,18 @@
+.deleteFile {
+    padding: 5px;
+    border-radius: 5px;
+
+    &:hover {
+        background-color: #ccc;
+    }
+}
+
+.selectedFileItem {
+    font-size: 14px;
+}
+
+.center {
+    display: flex !important;
+    justify-content: center !important;
+    padding: 2rem;
+}

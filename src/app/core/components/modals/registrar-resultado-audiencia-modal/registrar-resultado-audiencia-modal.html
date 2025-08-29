@@ -1,0 +1,27 @@
+<div class="registrar-resultado-audiencia px-4 py-3">
+  <div class="modal__header">
+    <div class="modal_header__content">
+      <div [innerHTML]="titulo" class="cfe-titulo-1"></div>
+    </div>
+    <div class="flex align-items-center justify-content-center">
+      <p-button onKeyPress (click)="close()" icon="pi pi-times" styleClass="p-button-rounded text-color p-button-text"></p-button>
+    </div>
+  </div>
+  @switch (tipo) {
+    @case (1) {
+      <app-fundada-procedente [data]="data"></app-fundada-procedente>
+    }
+    @case (2) {
+      <app-fundada-procedente-terminacion-anticipada [data]="data"></app-fundada-procedente-terminacion-anticipada>
+    }
+    @case (3) {
+     <app-fundada-procedente-terminacion-desaprobada [data]="data"></app-fundada-procedente-terminacion-desaprobada>
+    }
+    @case (4) {
+      <app-infundada-improcedente [data]="data"></app-infundada-improcedente>
+     }
+    @default {
+      <span>Seleccion Invalida</span>
+    }
+  }
+</div>

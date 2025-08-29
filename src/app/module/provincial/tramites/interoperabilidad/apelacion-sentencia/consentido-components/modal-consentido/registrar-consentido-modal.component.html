@@ -1,0 +1,210 @@
+<div class="">
+  <div class="cfe-encabezado-modal">
+    <h3
+      [innerHTML]="tituloModal"
+      class="cfe-encabezado-titulo cfe-subtitulo-3 cfe-semi-bold"
+    ></h3>
+
+    <fn-icon
+      (click)="cancelar()"
+      [ico]="obtenerIcono('iClose')"
+      class="cfe-encabezado-cerrar"
+      height="2rem"
+    >
+    </fn-icon>
+  </div>
+  <br />
+  <h6
+    class="cfe-encabezado-titulo cfe-subtitulo-3 cfe-semi-bold"
+    [innerHTML]="tituloCaso"
+  ></h6>
+  <h6>
+    {{ soloLectura ? "Visualizar" : "Seleccione " }} los sujetos procesales a
+    los que se les consiente la {{ tipo === "queja" ? "queja" : "apelación" }}.
+  </h6>
+  <div>
+    <i class="pi pi-circle-fill mr-2" [style.color]="'var(--mpfn-green)'"></i>
+    Recurso de apelación presentado por el fiscal ({{ misApelaciones }})
+  </div>
+  <div class="cfe-tabla-white">
+    <p-table
+      [sortField]="'nombre'"
+      [sortOrder]="1"
+      [styleClass]="'p-datatable-sm'"
+      [value]="sujetosProcesalesFiltrados"
+      responsiveLayout="stack"
+    >
+      <ng-template let-columns pTemplate="header">
+        <tr>
+          <th></th>
+          <th style="width: 3rem">N°</th>
+          <th class="columna-nro" pSortableColumn="nro">¿Quién apeló?</th>
+          <th class="columna-nro" pSortableColumn="nro">
+            ¿En contra de quién se apeló?
+          </th>
+          <th class="columna-delito" pSortableColumn="delito">Delito</th>
+          <th
+            class="columna-resultado-primera-instancia"
+            pSortableColumn="resultado-primera-instancia"
+          >
+            Tipo de Sentencia
+          </th>
+          <th class="columna-apelar" pSortableColumn="apelar">Clase de Pena</th>
+
+          <th class="columna-apelar" pSortableColumn="apelar">
+            Reparación civil
+          </th>
+          <th class="columna-apelar" pSortableColumn="apelar">
+            Resultado de apelación
+          </th>
+          @if(tipo === 'queja') {
+          <th class="columna-apelar-queja" pSortableColumn="apelar">
+            Resultado de queja
+          </th>
+          }
+          <th class="columna-apelar" pSortableColumn="apelar">
+            {{ tipo === "queja" ? "Consentido queja" : "Consentida apelación" }}
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template let-i="rowIndex" let-item pTemplate="body">
+        <tr class="p-selectable-row">
+          <td style="text-align: center; vertical-align: middle">
+            <span class="p-column-title font-semibold"></span>
+            <i
+              *ngIf="item.flApelacion && item.sujetoQuienApela == null"
+              class="pi pi-circle-fill mr-2"
+              [style.color]="'var(--mpfn-green)'"
+            ></i>
+          </td>
+          <td style="text-align: center; vertical-align: middle">
+            {{ i + 1 }}
+          </td>
+          <td style="text-align: center; vertical-align: middle">
+            <span class="p-column-title font-semibold">¿Quién apeló?</span>
+            {{ item.sujetoQuienApela ?? "-" | nombrePropio }}
+          </td>
+
+          <td style="text-align: center; vertical-align: middle">
+            <div>{{ item.sujeto | nombrePropio }}</div>
+          </td>
+          <td style="text-align: left; vertical-align: middle">
+            <span class="p-column-title font-semibold">Delito</span>
+            {{ item.delito | capitalizar }}
+          </td>
+          <td style="text-align: center; vertical-align: middle">
+            <span class="p-column-title font-semibold"
+              >Tipo de Sentencia(PPC)</span
+            >
+            {{ item.tipoSentencia | capitalizar }}
+          </td>
+
+          <td style="text-align: left; vertical-align: middle">
+            <span class="p-column-title font-semibold">Apelar Pena</span>
+            @if(item.pena !== null && item.pena !== '') {
+            <label>
+              <input
+                *ngIf="item.pena !== ''"
+                [ngModel]="item.flApelacionPena === '1'"
+                [disabled]="true"
+                type="checkbox"
+              />
+              {{ item.pena }}
+            </label>
+            }@else {
+            <span class="p-column-title font-semibold">-</span>
+            }
+          </td>
+          <td style="text-align: center; vertical-align: middle">
+            <span class="p-column-title font-semibold">Apelar Reparacion</span>
+            <label>
+              <input
+                [ngModel]="item.flApelacionReparacionCivil === '1'"
+                [disabled]="true"
+                type="checkbox"
+              />
+            </label>
+          </td>
+          <td style="text-align: center; vertical-align: middle">
+            <span class="p-column-title font-semibold"
+              >Tipo de Sentencia(PPC)</span
+            >
+            {{
+              item.noTipoRespuestaInstancia1
+                ? (item.noTipoRespuestaInstancia1 | capitalizar)
+                : "-"
+            }}
+          </td>
+          @if(tipo === 'queja') {
+          <td style="text-align: center; vertical-align: middle">
+            <span class="p-column-title font-semibold">Respuesta queja</span>
+            {{
+              item.noTipoRespuestaQueja
+                ? (item.noTipoRespuestaQueja | capitalizar)
+                : "-"
+            }}
+          </td>
+          }
+          <td style="text-align: center; vertical-align: middle">
+            <ng-container
+              *ngIf="
+                tipo === 'queja'
+                  ? item.idTipoRespuestaQueja === 1060 
+                  : item.idTipoRespuestaInstancia1 === 1024 && item.flQueja !== '1'
+              "
+            >
+              <label>
+                <input
+                  (change)="onSelectionChange(item, $event)"
+                  [ngModel]="
+                    tipo === 'queja'
+                      ? item.quejaConsentido === 1049
+                      : item.apelacionConsentido === 1049
+                  "
+                  [disabled]="soloLectura || esOtroTramiteGuardado(item)"
+                  type="checkbox"
+                />
+              </label>
+            </ng-container>
+            <ng-container
+              *ngIf="
+                !(tipo === 'queja'
+                  ? item.idTipoRespuestaQueja === 1060
+                  : item.idTipoRespuestaInstancia1 === 1024)
+              "
+            >
+              <span class="p-column-title font-semibold">-</span>
+            </ng-container>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8">No se encontró información de sujetos procesales.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <app-paginator
+      (paginate)="onPaginate($event)"
+      [items]="itemPaginado"
+      [query]="query"
+      [rowsPerPageOptions]="[]"
+    >
+    </app-paginator>
+  </div>
+</div>
+<div class="col-12 flex align-items-center justify-content-center mt-2 mb-2">
+  <button
+    class="cfe-boton-opcion cfe-boton-secondary cfe-boton-lg font-semibold with-button"
+    (click)="cancelar()"
+  >
+    Cancelar
+  </button>
+  <button
+    class="ml-3 cfe-boton-primary cfe-boton-lg font-semibold with-button"
+    [disabled]="!mostrarBtnAceptar"
+    (click)="aceptar()"
+  >
+    Aceptar
+  </button>
+</div>

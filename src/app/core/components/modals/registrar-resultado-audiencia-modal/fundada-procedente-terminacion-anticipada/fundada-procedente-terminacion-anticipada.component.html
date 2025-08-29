@@ -1,0 +1,32 @@
+<div class="flex mb-3 ml-4">
+  <fn-icon
+    class="mr-2"
+    [ico]="iconUtil.obtenerIcono('iAlert')"
+    height="1.4rem"
+  ></fn-icon>
+  <div>
+    Se creará un cuaderno de <strong>“Terminación anticipada”</strong> en ese se
+    resolverá este requerimiento
+  </div>
+</div>
+<p-tabMenu
+  [model]="items"
+  [(activeItem)]="activeItem"
+  (activeItemChange)="onTabChange($event)"
+  class="cfe-tabs-view-anidado"
+></p-tabMenu>
+<div class="tab-content">
+  <ng-container *ngIf="activeItem?.id === '0'">
+    <app-registro-penas-anticipadas
+      [data]="data"
+      [modoLectura]="tramiteEnModoVisor || tramiteEstadoFirmadoRecibido"
+    ></app-registro-penas-anticipadas>
+  </ng-container>
+  <ng-container *ngIf="activeItem?.id === '1'">
+    <app-registrar-reparacion-civil [data]="data" [modoLectura]="tramiteEnModoVisor || tramiteEstadoFirmadoRecibido" />
+  </ng-container>
+  <ng-container *ngIf="activeItem?.id === '2'">
+    <app-apelaciones-penas-reparaciones [data]="data" [modoLectura]="tramiteEnModoVisor || tramiteEstadoFirmadoRecibido"></app-apelaciones-penas-reparaciones>
+  </ng-container>
+
+</div>

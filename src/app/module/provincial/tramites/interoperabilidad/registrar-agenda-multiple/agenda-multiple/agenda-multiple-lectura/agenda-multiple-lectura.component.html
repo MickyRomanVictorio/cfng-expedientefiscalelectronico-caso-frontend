@@ -1,0 +1,24 @@
+<div class="flex p-1 ml-1">
+  <div class="text-xl font-semibold text-primary mb-1 mt-2 family-poppin-bold">
+    Ver detalle de audiencia
+  </div>
+  <div class="ml-auto">
+      <span class="cursor-pointer">
+          <fn-icon [ico]="iconUtil.obtenerIcono('iClose')" (click)="ref.close()" onkeydown="" height="1.5rem"/>
+      </span>
+  </div>
+</div>
+
+<app-agregar-agenda-multiple
+  [modoLectura]="modoLectura"
+  [agendaNotificacion]="agendaNotificacion"
+  [mostrarFechaNotificacion]="mostrarFechaNotificacion"
+/>
+
+<div class="field col-12 flex flex-column sm:flex-row justify-content-end">
+  <p-button
+    (onClick)="ref.close()"
+    styleClass="p-button-lg cfe-boton-primary text-white family-poppin-bold btn-adjust-filter w-column-full">
+    <span class="ml-4 mr-4">Aceptar</span>
+  </p-button>
+</div>

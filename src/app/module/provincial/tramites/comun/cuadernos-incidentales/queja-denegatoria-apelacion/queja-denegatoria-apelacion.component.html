@@ -1,0 +1,27 @@
+<div class="flex justify-content-start mt-3 mb-3">
+  <div class="col-12 sm:col-12 md:col-6 lg:col-3">
+    @if (verSujetos) {
+    <label class="font-bold adjust-origin-label text-left">
+      Seleccionar sujetos procesales para los cuales se presentará la queja por
+      denegatoria
+    </label>
+    <div class="flex align-items-center gap-2 mt-2">
+      <div class="flex-auto flex">
+        <button
+          class="cfe-boton-primary cfe-boton-lg w-col-250"
+          (click)="mostrarSujetos()"
+        >
+          Seleccionar Sujetos
+        </button>
+        @if(iconButton!=''){
+        <img
+          [src]="iconSVG(iconButton)"
+          alt=""
+          style="width: 25px; margin: 7px"
+        />
+        }
+      </div>
+    </div>
+    }
+  </div>
+</div>

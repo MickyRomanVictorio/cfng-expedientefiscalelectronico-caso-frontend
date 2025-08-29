@@ -1,0 +1,100 @@
+<div class="sujetos_inconcurrencia">
+  <div class="modal__header">
+    <div class="modal_header__content mt-1">
+      <div class="cfe-titulo-1">Seleccionar los sujetos procesales</div>
+    </div>
+    <div class="flex align-items-center justify-content-center">
+      <p-button onKeyPress (click)="dialogRef.close()" icon="pi pi-times"
+        styleClass="p-button-rounded text-color p-button-text"></p-button>
+    </div>
+  </div>
+  <div class="titulo-numero-caso mb-3">
+    Incidente:
+    <span [innerHTML]="stringUtil.obtenerNumeroCaso(numeroCaso)"></span>
+  </div>
+  <div class="subtitulo mb-3 font-bold">
+    Seleccione los sujetos procesales que no asistieron a la citación para el acuerdo de terminación anticipada y
+    opcional a quienes se va reprogramar
+  </div>
+
+  <p-table class="cfe-table-primary sujeto_procesal_table" [value]="listaSujetosProcesales" [paginator]="true"
+    [rows]="10" [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
+    currentPageReportTemplate="{first} de {last} registros">
+    <ng-template pTemplate="header">
+      <tr>
+        <th scope>Nº</th>
+        <th scope>Nombres y apellidos/Razón social.</th>
+        <th scope>Tipo de sujeto procesal</th>
+        <th scope>Delito(s)</th>
+        <th scope>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <p-checkbox [(ngModel)]="seleccionarTodosNoAsistio" [binary]="true" [disabled]="modoLectura"
+              (onChange)="onToggleSeleccionarTodosNoAsistio($event.checked)">
+            </p-checkbox>
+            <span>No asistió a citación</span>
+          </div>
+        <th scope>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <p-checkbox [disabled]="modoLectura || !seleccionarTodosNoAsistio" [(ngModel)]="seleccionarTodosReprogramar"
+              [binary]="true" (onChange)="onToggleSeleccionarTodosReprogramado($event.checked)">
+            </p-checkbox>
+            <span>Reprogramar</span>
+          </div>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-sujeto let-rowIndex="rowIndex">
+      <tr>
+        <td>{{ rowIndex + 1 }}</td>
+        <td>{{ sujeto.nombreSujeto }}</td>
+        <td>{{ sujeto.tipoSujetoProcesal }}</td>
+        <td>
+          @if(sujeto.delitos.length>0){
+          @for (delito of sujeto.delitos; track delito.id) {
+          <span class="delitos-item">{{ mostrarDelitos(delito) }}</span>
+          }
+          }
+          @else{
+          <span class="delitos-item">No se han tipificado delitos</span>
+          }
+        </td>
+        <td>
+          <p-checkbox class="flex justify-content-center align-items-center" [disabled]="modoLectura" [binary]="true"
+            [(ngModel)]="sujeto.noAsistio" (onChange)="onNoAsistioChange(sujeto, $event.checked)"
+            inputId="noAsistioCheckbox-{{rowIndex}}">
+          </p-checkbox>
+        </td>
+        <td>
+          <p-checkbox class="flex justify-content-center align-items-center"
+            [disabled]="modoLectura || !sujeto.noAsistio" [binary]="true" [(ngModel)]="sujeto.reprogramado"
+            (onChange)="sujeto.reprogramado = $event.checked" inputId="reprogramadoCheckbox-{{rowIndex}}">
+          </p-checkbox>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="7">
+          <div class="text-center">No se han encontrado sujetos procesales</div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  @if(tieneAlgunNoAsistio){
+  <div class="flex-center border-round-lg px-4 py-3 gap-2 mt-3 mb-3 label-bg-warning">
+    <span class="text-md">
+      Como fiscal, podrá registrar a los sujetos procesales que no asistieron para el registro del acta de
+      inconcurrencia
+    </span>
+  </div>
+  }
+  <div class="flex justify-content-center align-items-center gap-3 mt-4">
+    <button (click)="dialogRef.close()" type="button"
+      class="cfe-boton-secondary cfe-boton-lg inline w-full md:w-auto family-poppin-bold">{{modoLectura?'Cerrar':'Cancelar'}}</button>
+    @if(!modoLectura){
+    <button type="button" [disabled]="!botonHabilitado" (click)="guardarSujetos()"
+      class="cfe-boton-primary cfe-boton-lg inline ml-0 md:ml-2 mt-1 md:mt-0 md:w-auto family-poppin-bold">Aceptar</button>
+    }
+  </div>
+</div>

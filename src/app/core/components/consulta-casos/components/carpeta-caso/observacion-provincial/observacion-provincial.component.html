@@ -1,0 +1,25 @@
+<div class="cfe-container  p-4 relative">
+  <fn-icon
+    class="absolute top-0 right-0 cursor-pointer mt-2 ml-3"
+    [ico]="obtenerIcono('iClose')"
+    height="2rem"
+    (click)="ref.close()"
+  ></fn-icon>
+
+  <div class="cfe-titulo-1 text-lg">
+    Detalle de la observación del trámite - Caso:
+    <span [innerHTML]="codigoHtml(caso.numeroCaso!)"></span>
+  </div>
+
+  <div class="py-3">
+    <div class="font-semibold">Trámite</div>
+    <p>{{caso.ultimoTramite}}</p>
+    <div class="font-semibold">Detalle de la observación</div>
+    <p>{{caso.observacionProv}}</p>
+    <div class="font-semibold">Fecha de observación</div>
+    <p>{{caso.fechaObservacionProv}}</p>
+    <div class="font-semibold">Usuario que realiza la observación</div>
+    <p>{{caso.fiscal}}</p>
+  </div>
+
+</div>

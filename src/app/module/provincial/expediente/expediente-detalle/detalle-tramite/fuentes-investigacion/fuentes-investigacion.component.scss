@@ -1,0 +1,89 @@
+@use '../../../../../../../assets/styles/scss/abstracts/template' as *;
+
+.cfe-container {
+  width: 100%;
+
+  .fuentes_investigacion__filters {
+    width: 100%;
+  }
+
+  .fuentes_investigacion__table {
+
+    .fuentes_investigacion_table__content {
+
+      .accordion-item {
+        border: 1px solid #ccc;
+      }
+
+      .accordion-header {
+        background-color: #E7EAED;
+      }
+
+    }
+
+  }
+
+}
+
+
+/* Clases para el formato del documento */
+.formato-imagen,
+.formato-audio,
+.formato-documento,
+.formato-video {
+  color: white;
+  padding: 6px 6px;
+  border-radius: 4px;
+  font-size: 0.7em;
+}
+
+.formato-imagen {
+  background-color: #2196F3; /* Azul */
+}
+
+.formato-audio {
+  background-color: #4CAF50; /* Verde */
+}
+
+.formato-documento {
+  background-color: #F44336; /* Rojo */
+}
+
+.formato-video {
+  background-color: #00BCD4; /* Cyan */
+}
+
+.origen-mpe,
+.origen-despacho {
+  color: white;
+  padding: 6px 6px;
+  border-radius: 4px;
+  font-size: 0.7em;
+}
+
+/* Clases para el origen */
+.origen-mpe {
+  background-color: #FFC107; /* Amarillo */
+}
+
+.origen-despacho {
+  background-color: #9C27B0; /* Morado */
+}
+
+.origen-efe {
+  background-color: #27b067; /* Verde */
+}
+
+/* Clases para el modal */
+.p-button-warning {
+  background-color: #FF9800;
+  border-color: #FF9800;
+  color: white;
+}
+
+.p-dialog .p-dialog-header {
+  background-color: #FF9800;
+  color: white;
+}
+
+

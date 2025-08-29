@@ -1,0 +1,84 @@
+<div class="flex p-1 ml-1">
+  <div class="flex align-items-center text-xl font-semibold text-primary mb-1 mt-2 family-poppin-bold">
+    <fn-icon [ico]="iconUtil.obtenerIcono('iViewFile')" height="1.6rem"></fn-icon>
+    <span>ENVIAR TRÁMITE
+      @if ( !mostrarObjetivoEnviarTramite ) {
+        PARA REVISAR
+      }:</span>
+  </div>
+  <div class="ml-auto">
+      <span class="cursor-pointer">
+          <fn-icon [ico]="iconUtil.obtenerIcono('iClose')" onkeydown=""  (click)="cerrarModal()" height="1.5rem"/>
+      </span>
+  </div>
+</div>
+
+<div class="p-1 ml-1">
+  <form [formGroup]="formularioEnviar">
+    <div class="formgrid grid">
+      <div class="field col-12">
+        <span [innerHTML]="obtenerNumeroCaso(numeroCaso)"></span>
+      </div>
+      <div class="field col-12">
+        <span>Trámite: </span> <strong>{{ stringUtil.capitalizedFirstWord(tramiteUltimo) }}</strong>
+      </div>
+      <input class="hidden">
+      @if ( mostrarObjetivoEnviarTramite ) {
+        <div class="field col-12">
+          <label for="tipoObjetivo" class="font-bold text-sm">Objetivo</label>
+          <p-dropdown
+            placeholder="Seleccione una opción"
+            optionLabel="coDescripcion"
+            optionValue="id"
+            [options]="objetivoEnviarTramite"
+            formControlName="tipoObjetivo"
+            appendTo="body"
+            [emptyMessage]="mensajeListaVacia"
+            (onChange)="alCambiarObjetivoEnviarTramite()">
+          </p-dropdown>
+        </div>
+      }
+
+      <div class="field col-12">
+        <label for="destinatario" class="font-bold text-sm">Destino</label>
+        @if ( objetivoEnviarTramiteParaRevision ) {
+          <p-dropdown
+            styleClass="p-inputtext-md custom-dropdown"
+            [options]="listaDestinatarios"
+            emptyMessage="No se encontraron resultados"
+            placeholder="Seleccione una opción"
+            formControlName="destinatario"
+            appendTo="body"
+          ></p-dropdown>
+        } @else {
+          <p-multiSelect
+            [options]="listaDestinatarios"
+            formControlName="destinatario"
+            placeholder="Seleccione una o varias opciones"
+            [emptyMessage]="mensajeListaVacia"
+            appendTo="body"
+            styleClass="p-inputtext-lg w-full" display="chip" [showHeader]="false">
+          </p-multiSelect>
+        }
+
+      </div>
+      <div class="field col-12">
+        <label for="comentarios" class="font-bold text-sm">Observaciones y/o comentarios</label>
+          <textarea pInputTextarea formControlName="comentarios" class="w-full text-md" rows="5" [maxlength]="longitudMaximaObservaciones"
+          placeholder="Comentarios del envío"></textarea>
+          <small class="block text-right mt-1" [ngClass]="{'p-error': cantidadCaracteresObservacion > longitudMaximaObservaciones }">
+            {{cantidadCaracteresObservacion}}/{{longitudMaximaObservaciones}} máximo de caracteres
+            </small>
+      </div>
+    </div>
+</form>
+</div>
+
+<div class="field col-12 flex flex-column sm:flex-row justify-content-end mt-2">
+  <p-button
+    [disabled]="!formularioValido"
+    (onClick)="confirmarEnvioTramite()"
+    styleClass="p-button-lg cfe-boton-primary text-white family-poppin-bold btn-adjust-filter w-column-full">
+    <span class="ml-4 mr-4">Enviar</span>
+  </p-button>
+</div>

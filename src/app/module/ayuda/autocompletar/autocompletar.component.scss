@@ -1,0 +1,14 @@
+.icon-container {
+  position: relative;
+}
+
+.icon-container fn-icon {
+  position: absolute;
+  left: 10px;
+  top: -40px;
+  z-index: 1;
+  color: var(--mpfn-primary);
+  pointer-events: none;
+  font-size: 1.4rem !important;
+  margin-right: 50px !important;
+}

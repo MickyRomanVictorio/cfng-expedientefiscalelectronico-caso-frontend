@@ -1,0 +1,62 @@
+<div
+  class="custom-file-upload-container"
+  (drop)="soltarArchivo($event)"
+  (dragover)="arrastrarArchivo($event)"
+>
+  <input
+    type="file"
+    (change)="seleccionarArchivo($event)"
+    #entradaArchivo
+    style="display: none"
+    accept="image/*"
+  />
+
+  <div *ngIf="mostrarDetallesArchivo" class="grid file-details">
+    <div class="col-12">
+      <div class="text-center p-0">
+        <div class="relative">
+          <img
+            [src]="imgMiniatura"
+            alt="Miniatura"
+            class="border-1 border-round border-dark cfe-contenedor-recurso"
+            style="width: 50%"
+          />
+          <button class="cfe-boton-m cfe-boton-secondary cfe-boton-descargar-recurso">
+            <i
+              class="absolute top-0 pi pi-download"
+              (click)="descargarArchivo()"
+              style="cursor: pointer" onkeypress=""
+            ></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="mostrarEnlaceEliminar" class="col-12 p-0">
+      <div class="text-center">
+        <span (click)="deleteFile()" class="link" style="cursor: pointer" onkeypress="">
+          {{ eliminarArchivo }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="ui-dnd-message ui-fileupload-droppable"
+    *ngIf="!mostrarDetallesArchivo"
+  >
+    <p>
+      <i class="pi pi-upload pr-2"></i>
+      <span
+        (click)="entradaArchivo?.click()"
+        style="cursor: pointer; text-decoration: underline" onkeypress=""
+      >
+        {{ subirArchivo }}
+      </span>
+      <span class="text-gray-900"> {{ textoDetallado }}</span>
+    </p>
+    <!-- Mensaje de error -->
+    <p *ngIf="mostrarTamanoError" class="text-red-500">
+      {{ mensajeErrorTamano }}
+    </p>
+  </div>
+</div>

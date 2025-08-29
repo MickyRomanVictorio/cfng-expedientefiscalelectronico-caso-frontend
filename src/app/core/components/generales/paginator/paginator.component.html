@@ -1,0 +1,36 @@
+<!-- Paginador -->
+
+<div class="efe-paginator p-2">
+    <div class="efe-paginator-info">
+      {{ query.page * query.limit < items.data.total ? query.page * query.limit : items.data.total }} de {{ items.data.total }} registros
+    </div>
+    <div class="efe-paginator-control">
+        <span class="mr-3">Anterior</span>
+        <button class="cfe-boton-secondary cfe-boton h-40" (click)="previousPage()" [disabled]="currentPage === 1 || totalPages === 0">
+            <fn-icon [ico]="obtenerIcono('iChevronLeft')" height="1.6rem"></fn-icon>
+        </button>
+    
+        <ng-container *ngIf="totalPages > 0">
+            <button class="option-dinamic-button" (click)="goToPage(1)" [class.active]="currentPage === 1">{{1}}</button>
+            <ng-container *ngIf="startPage > 2">
+                <span>...</span>
+            </ng-container>
+    
+            <button class="option-dinamic-button" *ngFor="let page of pagesToShow()" (click)="goToPage(page)" [class.active]="page === currentPage">
+                {{page}}
+            </button>
+    
+            <ng-container *ngIf="endPage < totalPages - 1">
+                <span>...</span>
+            </ng-container>
+            <button class="option-dinamic-button" (click)="goToPage(totalPages)" [class.active]="currentPage === totalPages"
+                *ngIf="shouldShowPage(totalPages) && totalPages > 1">{{totalPages}}</button>
+        </ng-container>
+    
+        <button class="cfe-boton-secondary cfe-boton h-40" (click)="nextPage()" [disabled]="currentPage === totalPages || totalPages === 0">
+            <fn-icon [ico]="obtenerIcono('iChevronRight')" height="1.6rem"></fn-icon>
+        </button>
+        <span class="ml-3">Siguiente</span>
+    </div>
+  </div>
+

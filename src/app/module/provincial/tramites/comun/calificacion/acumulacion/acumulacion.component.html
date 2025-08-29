@@ -1,0 +1,34 @@
+<br />
+
+<div class="formgrid grid">
+  <div class="col-11 field">
+    <label for="actoProcesal" class="font-semibold"
+      >Número de caso al que se va acumular</label
+    >
+    <p-dropdown
+      [disabled]="tramiteEstadoFirmado"
+      [options]="listaCasos"
+      [filter]="true"
+      filterBy="numeroCaso"
+      optionValue="idCaso"
+      optionLabel="numeroCaso"
+      placeholder="Seleccione"
+      styleClass="py-1 p-inputtext-lg"
+      [(ngModel)]="casoSeleccionado"
+      (onChange)="alSeleccionarCaso()"
+      emptyMessage="Resultados no encontrados"
+    >
+      <ng-template let-caso pTemplate="item">
+        <div class="grid">
+          <div class="col text-base">
+            {{ caso.numeroCaso }}
+          </div>
+        </div>
+      </ng-template>
+    </p-dropdown>
+
+    <div class="p-col-12 mt-5">
+      <p-messages [(value)]="message" [enableService]="false" *ngIf="showMessage" [closable]="false"></p-messages>
+    </div>
+  </div>
+</div>

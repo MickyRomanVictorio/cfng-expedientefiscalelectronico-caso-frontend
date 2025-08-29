@@ -1,0 +1,13 @@
+.btn-link{
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.w-600 {
+  width: 300px;
+}
+
+:host ::ng-deep .with-button {
+  width: 200px !important;
+  height: 50px !important;
+}

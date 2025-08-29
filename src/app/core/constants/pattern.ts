@@ -1,0 +1,1 @@
+export const PATTERN_CORREO = /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/;

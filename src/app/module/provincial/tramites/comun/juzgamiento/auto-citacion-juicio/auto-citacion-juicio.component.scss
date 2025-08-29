@@ -1,0 +1,13 @@
+.check-cuaderno {
+  margin-top: 5.5em;
+}
+
+.color-icon-success {
+  color: var(--mpfn-green-dark);
+}
+
+@media screen and (max-width: 990px) {
+  .check-cuaderno {
+    margin-top: 0em;
+  }
+}

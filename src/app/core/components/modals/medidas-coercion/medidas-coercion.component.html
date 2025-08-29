@@ -1,0 +1,252 @@
+<div class="medidas-coercion-container">
+  <div class="flex justify-content-between flex-wrap mb-2">
+    <div class="flex align-items-center justify-content-center">
+      <div class="cfe-titulo-2">Medidas de Coerción</div>
+    </div>
+    <div class="flex align-items-center justify-content-center">
+      <button
+        (click)="close()"
+        class="boton-cerrar-modal"
+        aria-label="Cerrar modal"
+      >
+        &times;
+      </button>
+    </div>
+  </div>
+  @if(!modoLectura){
+    <p class="cfe-subtitulo-2 mb-2 mt-2">1. Seleccione un sujeto procesal</p>
+  }
+  <p-table
+    [value]="listaSujetosProcesales"
+    [rowHover]="true"
+    [showCurrentPageReport]="true"
+    [(selection)]="sujetosSeleccionados"
+    selectionMode="multiple"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [breakpoint]="'992px'"
+    responsiveLayout="scroll"
+  >
+    <ng-template pTemplate="header">
+      <tr class="cfe-table-header">
+        @if(!modoLectura){
+          <th id="check" class="col-1">
+            <p-tableHeaderCheckbox [disabled]="validarDesactivarCheckTodo"></p-tableHeaderCheckbox>
+          </th>
+        }
+        @else{
+          <th id="check" class="col-1">N°</th>
+        }
+        <th id="sujeto" class="col-4 sm:col-4">Sujeto procesales</th>
+        <th id="documento" class="col-3 sm:col-3">Documento</th>
+        <th id="tipoSujeto" class="col-4 sm:col-4">Tipo de sujeto procesal</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-sujeto let-i="rowIndex">
+      <tr class="p-selectable-row">
+        @if(!modoLectura){
+          <td class="col-1">
+            <p-tableCheckbox
+              [value]="sujeto"
+              [disabled]="
+                sujeto.idTipoParteSujeto !== 4 || sujeto.flVerificado !== '1'
+              "
+            ></p-tableCheckbox>
+          </td>
+        }
+        @else{
+          <td class="col-1">
+            {{ i + 1 }}
+          </td>
+        }
+        <td class="col-4 sm:col-4">{{ sujeto.nombreSujeto }}</td>
+        <td class="col-3 sm:col-3">
+          @if (sujeto.flVerificado && sujeto.flVerificado === '1') {
+          <div class="">
+            {{ sujeto.noTipoDocumento }} : {{ sujeto.numeroDocumento }}
+          </div>
+          }@else {
+          <div class="font-red">Pendiente de validación</div>
+          }
+        </td>
+
+        <td class="col-4 sm:col-4">
+          <p-dropdown
+            id="tipoSujeto"
+            placeholder="Seleccione tipo de sujeto procesal"
+            class="w-full"
+            styleClass="p-inputtext-md z-index"
+            [options]="listaTipoParteSujeto"
+            optionLabel="nombre"
+            optionValue="id"
+            appendTo="body"
+            [(ngModel)]="sujeto.idTipoParteSujeto"
+            [disabled]="sujeto.idTipoParteSujetoOriginal === 4 || modoLectura"
+          ></p-dropdown>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+          <td colspan="8">
+              <div class="text-center">No se han encontrado sujetos</div>
+          </td>
+      </tr>
+  </ng-template>
+  </p-table>
+  @if(!modoLectura){
+  <div class="mt-3">
+    <a
+      class="cfe-enlace-general"
+      routerLink="{{ obtenerUrlSujetos() }}"
+      (click)="close()"
+    >
+      Ir a sujetos procesales</a
+    >
+  </div>
+
+  <p class="cfe-subtitulo-2 mb-2 mt-3">
+    2. Seleccione una medida de coerción
+  </p>
+
+  <div class="grid">
+    <div class="col field">
+      <label for="tipo" class="font-semibold">Tipo de medida de coerción</label>
+      <p-dropdown
+        styleClass="p-inputtext-m py-1 mt-2 w-100"
+        [options]="listaTipoMedidaCoercion"
+        optionLabel="noDescripcion"
+        [(ngModel)]="tipoMedidaCoercionSeleccionada"
+        placeholder="Ningún tipo de medida de coerción"
+        emptyMessage="Sin resultados"
+        [showClear]="true"
+        dataKey="id"
+        (onChange)="obtenerMedidasCoercion()"
+      ></p-dropdown>
+    </div>
+  </div>
+
+  <p for="medida" class="font-semibold mb-3">Medida de coerción</p>
+  <div class="grid">
+    <div class="col field">     
+      <p-multiSelect
+        [options]="listaMedidasCoercion"
+        [(ngModel)]="medidasCoercionSeleccionadas"
+        optionLabel="nombre"
+        placeholder="Ninguna medida de coerción"
+        emptyFilterMessage="No se encontraron medidas de coerción"
+        emptyMessage="No hay medidas de coerción disponibles"
+        [disabled]="!activarMedidaCoercion"
+      >
+        <ng-template let-value pTemplate="selectedItems">
+          <div
+            class="selected-item-chip"
+            *ngFor="let medida of medidasCoercionSeleccionadas"
+          >
+            <span class="chip-content">{{ medida.nombre }}</span>
+          </div>
+          <div
+            *ngIf="
+              !medidasCoercionSeleccionadas ||
+              medidasCoercionSeleccionadas.length === 0
+            "
+            class="placeholder"
+          >
+            Seleccione Medidas
+          </div>
+        </ng-template>
+
+        <ng-template let-medida pTemplate="item">
+          <div class="item">
+            {{ medida.nombre }}
+          </div>
+        </ng-template>
+      </p-multiSelect>
+    </div>
+  </div>
+  @if (verMensaje) {
+  <p-messages severity="error" styleClass="custom-error-message">
+    <ng-template pTemplate>
+      <img
+        [src]="iconAsset.obtenerRutaIcono('alert_circle_red')"
+        alt="Icono de advertencia"
+        class="icon"
+      />
+      <div class="font-alerta ml-2">{{ mensaje }}</div>
+      <button class="close-button ml-auto" (click)="cerrarMensaje()">X</button>
+    </ng-template>
+  </p-messages>
+  }
+    <div class="flex justify-content-end flex-wrap">
+      <button
+        class="cfe-boton-primary cfe-boton-lg"
+        pButton
+        [disabled]="sujetosSeleccionados.length == 0"
+        (click)="agregarMedidasCoercion()"
+      >
+        AGREGAR
+      </button>
+    </div>
+  }
+
+
+  <div class="col mt-2 cfe-subtitulo-2">
+    <span>Medidas para los sujetos</span>
+  </div>
+  <p-table
+    [value]="listaMedidasCoercionSujetos"
+    [paginator]="true"
+    [rowHover]="true"
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [totalRecords]="listaMedidasCoercionSujetos.length"
+    currentPageReportTemplate="{first} de {last} sujetos"
+    [rowsPerPageOptions]="[5, 10, 20, 30, 50, 100]"
+    [breakpoint]="'992px'"
+    responsiveLayout="stack"
+    class="table_td_content_responsive"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th id="numero">N°</th>
+        <th id="sujeto">Sujeto procesales</th>
+        <th id="tipo">Tipo de medida de coersión</th>
+        <th id="medida">Medida de coerción</th>
+        @if(!modoLectura){
+          <th id="accion">Acción</th>
+        }
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-data let-i="rowIndex">
+      <tr class="p-selectable-row">
+        <td>{{ i + 1 }}</td>
+        <td>{{ data.nombreSujeto }}</td>
+        <td>{{ data.descTipoMedidaCoercitiva }}</td>
+        <td>{{ data.descMedidaCoercitiva }}</td>
+        @if(!modoLectura){
+          <td>
+            <fn-icon
+              class="icono-clickable"
+              [ico]="iconUtil.obtenerIcono('iTrash')"
+              height="1.9rem"
+              (click)="eliminarItem(data)"
+              onkeypress=""
+            >
+            </fn-icon>
+          </td>
+        }
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td class="no-before" colspan="8">
+          <div class="flex justify-content-center flex-wrap">
+            <div class="flex align-items-center justify-content-center">
+              Agregue sujetos procesales
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

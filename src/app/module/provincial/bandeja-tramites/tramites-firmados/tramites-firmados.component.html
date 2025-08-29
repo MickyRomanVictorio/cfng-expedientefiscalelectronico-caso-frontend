@@ -1,0 +1,319 @@
+<div class="pl-1 md:pl-1 pr-0 grid mb-0 md:mb-3">
+  <div class="col-12 md:col-6 flex align-items-center">
+    <fn-icon
+      [ico]="iconUtil.obtenerIcono('iFolderExclamation')"
+      height="1.8rem"
+    ></fn-icon>
+    <span class="family-poppin-bold">
+      Trámites firmados del despacho ({{ totalRegistros }})
+      </span>
+  </div>
+  <div
+    class="col-12 md:col-6 flex flex-column sm:flex-row justify-content-end align-items-center pr-0"
+  >
+    <button
+      class="cfe-boton-secondary cfe-boton-m cfe-boton-icono-izquierda font-normal w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 flex justify-content-start"
+      (click)="exportarPdfExcel('PDF')"
+    >
+      <fn-icon
+        class="ml-1"
+        [ico]="iconUtil.obtenerIcono('iFileDownload')"
+        height="1.6rem"
+      ></fn-icon>
+      <span class="family-poppin-bold">Exportar PDF</span>
+    </button>
+    <button
+      class="cfe-boton-secondary cfe-boton-m cfe-boton-icono-izquierda font-normal w-full sm:w-auto flex justify-content-start"
+      (click)="exportarPdfExcel('Excel')"
+    >
+      <fn-icon
+        class="ml-1"
+        [ico]="iconUtil.obtenerIcono('iTable')"
+        height="1.6rem"
+      ></fn-icon>
+      <span class="family-poppin-bold">Exportar Excel</span>
+    </button>
+  </div>
+
+  <div class="flex flex-wrap flex-column sm:flex-row px-0 pb-4">
+    @for (filtro of filtrosTramite; track $index) {
+    <p-button
+      [label]="filtro.descripcion"
+      (onClick)="filtrar(filtro.codigo); filtrosTramiteSelec = filtro.codigo"
+      styleClass="cfe-boton-outline cfe-boton-secondary p-button-rounded p-button-sm mt-2 mr-2 w-auto font-normal text-left {{
+        filtro.codigo === filtrosTramiteSelec ? 'active' : ''
+      }}"
+    >
+      @if (filtro.color!=='') {
+      <i
+        class="pi pi-circle-fill mr-2 opacity-60"
+        [style.color]="filtro.color"
+      ></i>
+      }
+    </p-button>
+    }
+  </div>
+
+  <div class="w-full">
+    <p-table
+      [value]="bandejaTramites"
+      [rows]="10"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      responsiveLayout="stack"
+      [breakpoint]="'992px'"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th scope="col" pSortableColumn="orden">
+            N°
+            <p-sortIcon field="orden"></p-sortIcon>
+          </th>
+          <th scope="col" pSortableColumn="tramiteFirmadoPor.nombreCompleto">
+            Firmado por
+            <p-sortIcon field="tramiteFirmadoPor.nombreCompleto"></p-sortIcon>
+          </th>
+          <th scope="col" pSortableColumn="coCaso">
+            Número de caso
+            <p-sortIcon field="coCaso"></p-sortIcon>
+          </th>
+          <th scope="col" pSortableColumn="noActoProcesal">
+            Acto Procesal
+            <p-sortIcon field="noActoProcesal"></p-sortIcon>
+          </th>
+          <th scope="col" pSortableColumn="noTramite">
+            Trámite
+            <p-sortIcon field="noTramite"></p-sortIcon>
+          </th>
+          <th scope="col" style="width: 135px" pSortableColumn="feCreacion">
+            F. creación
+            <p-sortIcon field="feCreacion"></p-sortIcon>
+          </th>
+          <th scope="col" style="width: 120px" pSortableColumn="feFirma">
+            F. firma
+            <p-sortIcon field="feFirma"></p-sortIcon>
+          </th>
+          <th scope="col" style="width: 125px">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-tramite let-rowIndex="rowIndex">
+        <tr class="p-selectable-row">
+          <td class="table_td_content_start">
+            <span class="p-column-title">N°</span>
+              {{ (( query.page -1 ) * query.limit) + (rowIndex + 1) }}
+          </td>
+          <td class="table_td_content_start caso-container">
+            <span class="p-column-title">Firmado por</span>
+            <div>
+                {{ tramite.tramiteEnviadoPor?.nombreCompleto }}
+              <br>
+                <strong>{{
+                  tramite.tramiteEnviadoPor?.dePerfil | capitalizar
+                }}</strong>
+            </div>
+          </td>
+          <td class="table_td_content_start caso-container">
+            <span class="p-column-title">Número de caso</span>
+            <div>
+              <div class="flex">
+                @if (filtroColorTipoCuaderno(tramite); as color) { @if
+                (color!=='') {
+                <i
+                  class="pi pi-circle-fill mr-2 opacity-60"
+                  [style.color]="color"
+                ></i>
+                } }
+                <div>
+                  <div
+                    [innerHTML]="stringUtil.formatearCodigoCaso(tramite.coCaso)"
+                    style="white-space: nowrap"
+                  ></div>
+                  <div class="font-bold pt-1">
+                    {{ tramite.noEtapa | capitalizar }}
+                  </div>
+                </div>
+              </div>
+              @if (tramite.estadoCedula==='1') {
+              <p-button
+                styleClass="p-button-outlined p-button-secondary p-button-sm mt-1"
+                (onClick)="
+                  verDetalleDeNotificaciones(tramite.coCaso, tramite.idCaso)
+                "
+              >
+                <strong> Ver estado de cédula </strong>
+              </p-button>
+              }
+            </div>
+          </td>
+          <td class="table_td_content_start">
+            <span class="p-column-title">Acto Procesal</span>
+              {{ tramite.noActoProcesal | capitalizar }}
+          </td>
+          <td class="table_td_content_start remitente-container">
+            <span class="p-column-title">Trámite</span>
+            <div>
+              @if (tramite.documentoTramite!==null &&
+              tramite.documentoTramite!=='') {
+              <div class="font-bold mb-1">
+                <strong>{{ tramite.documentoTramite | capitalizar }}</strong>
+              </div>
+              }
+              <div>
+                {{ tramite.noTramite | capitalizar }}
+              </div>
+            </div>
+          </td>
+          <td class="table_td_content_start fecha-container">
+            <span class="p-column-title">F. creación</span>
+            <div>
+              {{ tramite.feCreacion | date : "dd MMM yyyy h:mm a" : "es" }}
+            </div>
+          </td>
+          <td class="table_td_content_start fecha-container">
+            <span class="p-column-title">F. firma</span>
+            <div>
+              {{ tramite.feFirma | date : "dd MMM yyyy h:mm a" : "es" }}
+            </div>
+          </td>
+          <td class="table_td_content_start">
+
+            <span class="p-column-title">Acciones</span>
+
+            <div
+              class="flex flex-wrap"
+              [style.min-width]="'132px'"
+            >
+
+              <button
+                class="cfe-boton-secondary cfe-boton-opcion"
+                (click)="previewTramite(tramite)"
+                pTooltip="Previsualizar trámite"
+                tooltipEvent="hover"
+                tooltipPosition="left"
+              >
+                <fn-icon
+                  [ico]="iconUtil.obtenerIcono('iEye')"
+                  height="1.6rem"
+                ></fn-icon>
+              </button>
+
+              <button
+                class="cfe-boton-secondary cfe-boton-opcion"
+                (click)="verHistorialTramite(tramite)"
+                pTooltip="Historial del trámite"
+                tooltipEvent="hover"
+                tooltipPosition="left"
+              >
+                <fn-icon
+                  [ico]="iconUtil.obtenerIcono('iRestaurar')"
+                  height="1.6rem"
+                ></fn-icon>
+              </button>
+
+              <button
+                class="cfe-boton-secondary cfe-boton-opcion"
+                (click)="validarNotificacionPartes(tramite)"
+                pTooltip="Notificar partes"
+                tooltipEvent="hover"
+                tooltipPosition="left"
+              >
+                <fn-icon
+                  [ico]="iconUtil.obtenerIcono('iAltavoz')"
+                  height="1.6rem"
+                ></fn-icon>
+              </button>
+
+              @if (mostrarEditar(tramite)) {
+                <opcion-editar-tramite
+                  [idCaso]="tramite.idCaso"
+                  [idActoTramiteCaso]="tramite.idActoTramiteCaso"
+                  [idEtapa]="tramite.idEtapa"
+                  [idTipoIngresoTramite]="tramite.idTipoIngresoTramite"
+                  [idEstadoTramite]="tramite.idEstadoTramite"
+                  [flgConcluido]="tramite.flgConcluido"
+                  [idTipoCuaderno]="tramite.idTipoCuaderno"
+                />
+              }
+
+              @if (mostrarEliminar(tramite)) {
+                <opcion-eliminar-tramite
+                  [idActoTramiteCaso]="tramite.idActoTramiteCaso"
+                  [idTipoIngresoTramite]="tramite.idTipoIngresoTramite"
+                  [idEstadoTramite]="tramite.idEstadoTramite"
+                  (actualizarBandeja)="actualizarBandeja()"
+                />
+              }
+
+
+            </div>
+
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8" style="text-align: center">
+            En estos momentos, no hay trámites firmados.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <app-paginator
+      [query]="query"
+      [items]="itemPaginado"
+      (paginate)="onPaginate($event)"
+      [resetPage]="resetPage"
+    ></app-paginator>
+  </div>
+</div>
+<p-toast></p-toast>
+
+<p-dialog
+  [(visible)]="verModalNotificar"
+  [showHeader]="false"
+  [style]="{ width: '45vw', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }"
+  [baseZIndex]="10000"
+>
+  <div class="flex justify-content-end">
+    <i
+      class="pi pi-times"
+      (click)="verModalNotificar = false"
+      style="cursor: pointer"
+      onkeypress=""
+    ></i>
+  </div>
+  <div class="p-4">
+    <div class="grid justify-content-center">
+      <img
+        [src]="iconAsset.obtenerRutaIcono('info')"
+        alt="Icono de advertencia"
+        class="icon"
+      />
+    </div>
+
+    <h3 class="cfe-titulo-1 grid justify-content-center mt-3 mb-3">
+      TIPO DE NOTIFICACIÓN
+    </h3>
+
+    <p class="grid justify-content-center">
+      Seleccione el tipo de notificación a realizar
+    </p>
+
+    <div class="grid mt-6 justify-content-center">
+      <button
+        pButton
+        class="cfe-boton-primary cfe-boton-lg mr-5"
+        (click)="redirigirNotificador(1)"
+      >
+        Orden de notificación
+      </button>
+
+      <button
+        pButton
+        class="cfe-boton-primary cfe-boton-lg"
+        (click)="redirigirNotificador(2)"
+      >
+        Orden de citación
+      </button>
+    </div>
+  </div>
+</p-dialog>

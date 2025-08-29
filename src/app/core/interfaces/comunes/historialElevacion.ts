@@ -1,0 +1,25 @@
+export interface HistorialElevacionInterface {
+  tipoElevacion : string,
+  codigoCaso : string,
+  accion : string,
+  nombreFiscalOrigen : string,
+  cargoFiscalOrigen : string,
+  entidadFiscalOrigen : string, 
+  despachoFiscalOrigen : string, 
+  nombreFiscalDestino : string,
+  cargoFiscalDestino : string,
+  entidadFiscalDestino : string, 
+  despachoFiscalDestino : string, 
+  actoProcesal : string,
+  idTramite: string,
+  tramite : string,
+  observacion : string, 
+  fechaRegistro : string, 
+  horaRegistro : string,
+  idActoTramiteCaso : string,
+  idNode : string,
+  idDocumentoVersiones : string,
+  idActoTramiteEstado: string,
+}
+
+

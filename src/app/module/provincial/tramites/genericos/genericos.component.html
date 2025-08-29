@@ -1,0 +1,349 @@
+@if( esTramiteEnlazado ) {
+
+    <div class="mt-4"></div>
+
+    @if ( !tramiteEstadoRecibido ) {
+        <mensaje-completar-informacion 
+            [titulo] = "obtenerTituloTramite()"
+        />
+    }
+
+}
+
+<div [formGroup]="genericosFormulario">
+
+  @if ( esOficio ) {
+    <div
+      class="col-12 mt-3"
+      [style]="{'margin-bottom': '-8px'}"
+    >
+      <label for="Tipo de oficio" class="font-semibold mb-3" [style]="{'display': 'inline-block'}">Tipo de oficio:</label>
+      <div class="flex flex-wrap gap-3">
+        @for (item of tipoOficios; track $index) {
+          <div class="flex align-items-center">
+            <p-radioButton
+              [value]="item.codigo"
+              formControlName="tipoOficio"
+              [inputId]="item.codigo"
+            ></p-radioButton>
+            <label
+              for="Tipo de oficio"
+              class="ml-2"
+            >{{ item.nombre }}</label>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <div class="col-12 mt-3 mb-4">
+    <label for="nombre" class="font-semibold mb-2">{{ nombreDocumento }}:</label>
+    <input
+      id="nombre"
+      pInputText
+      type="text"
+      class="p-inputtext py-3 w-full mt-2"
+      [style]="{'height': '50px'}"
+      placeholder="{{placeHolderNombreDocumento()}}"
+      formControlName="nombre"
+      [maxlength]="200"
+    />
+  </div>
+
+  @if ( esOficio ) {
+    <div
+      class="col-12 mb-3"
+      [style]="{'margin-top': '-8px'}"
+    >
+      <p-checkbox
+        [binary]="true"
+        inputId="binary"
+        formControlName="esRegistroManual"
+        label="Registro manual - destinatario (opcional)"
+        (ngModelChange)="alCambiarRegistroManual($event)"
+      ></p-checkbox>
+    </div>
+  }
+
+  @if ( esOficio ) {
+    <ng-container>
+      <div class="flex">
+        <div class="col-8">
+          <label for="Número de RUC - Destinatario" class="font-semibold mb-2">Número de RUC - Destinatario:</label>
+          <input
+            pInputText
+            type="text"
+            class="p-inputtext py-3 w-full mt-2"
+            [style]="{'height': '50px'}"
+            formControlName="numeroRucDestinatario"
+            [class.campo-deshabilitado]="!esRegistroManual"
+            [maxlength]="11"
+            [minlength]="11"
+            (keydown)="validarSoloNumeros($event)"
+            (paste)="validarSoloNumerosAlPegar($event)"
+          />
+        </div>
+        <div class="col-4">
+          <button 
+            class="cfe-boton-primary cfe-boton-m"
+            [style]="{'margin-top':'28px'}"
+            (click)="buscarPorRuc()"
+          >Buscar</button>
+        </div>
+      </div>
+      <div class="col-12 mt-1 mb-4">
+        <label for="Razón social - Destinatario" class="font-semibold mb-2">Razón social - Destinatario:</label>
+        <input
+          pInputText
+          type="text"
+          class="p-inputtext py-3 w-full mt-2"
+          [style]="{'height': '50px'}"
+          formControlName="razonSocialDestinatario"
+          [class.campo-deshabilitado]="!esRegistroManual"
+          [maxlength]="500"
+        />
+      </div>
+    </ng-container>
+  }
+
+  @if (tramiteSeleccionado!.idTramite === TRAMITES.DECLARACION) {
+    <div class="col-12 mt-3 mb-4">
+      <label for="Sujetos procesales" class="font-semibold mb-2">Sujetos procesales:</label>
+      <p-multiSelect 
+        class="w-full"
+        styleClass="w-full"
+        [options]="sujetosProcesales" 
+        formControlName="sujetosProcesales" 
+        optionLabel="nombre"
+        [selectedItemsLabel]="obtenerElementosSeleccionadosEtiqueta()"
+      />
+    </div>
+  }
+
+  @if (!esTramiteEnlazado && mostrarCheckEscaneado) {
+    <div class="col-12 mt-3 mb-4">
+      <p-checkbox
+        [binary]="true"
+        inputId="binary"
+        (onChange)="seleccionarDocumentoEscaneado($event)"
+        formControlName="esEscaneada"
+        label="{{textoEscaneado}}"
+      ></p-checkbox>
+    </div>
+  }
+
+  @if (mostrarActoInvestigacion && !extenderActoInvestigacion){
+    <div class="col-12 mt-3 mb-4">
+      <p-checkbox
+        [binary]="true"
+        inputId="binary"
+        (onChange)="seleccionarActoInvestigacion($event)"
+        formControlName="esActoInvestigacion"
+        label="Acto de investigación"
+      ></p-checkbox>
+    </div>
+  } @else if(mostrarActoInvestigacion && extenderActoInvestigacion) {
+    <fieldset>
+      <legend>
+        <p-checkbox
+          [binary]="true"
+          inputId="binary"
+          (onChange)="seleccionarActoInvestigacion($event)"
+          formControlName="esActoInvestigacion"
+          label="Acto de investigación"
+        ></p-checkbox>
+      </legend>
+
+      <div class="col-8">
+        <label for="idActoTramiteCasoInv" class="font-semibold mb-2">Seleccionar documento:</label>
+        <p-dropdown
+          id="idActoTramiteCasoInv"
+          styleClass="p-inputtext-m py-1 mt-3"
+          [options]="documentos"
+          optionValue="id"
+          optionLabel="nombre"
+          placeholder="Seleccione un documento"
+          emptyMessage="Sin resultados"
+          autoWidth="false"
+          [style]="{'width':'100%'}"
+          formControlName="idActoTramiteCasoInv"
+        ></p-dropdown>
+      </div>
+
+    </fieldset>
+  }
+
+  @if (mostrarFormularioAlterno) {
+    <div class="formgrid grid col-12">
+      <div class="col-12 md:col-6">
+        <div class="field col-12">
+          <label for="observaciones" class="font-semibold">Indique de forma resumida el contenido del acta</label>
+          <textarea
+            id="observaciones"
+            pInputTextarea
+            class="w-full"
+            rows="4"
+            (input)="contadorCaracterObservaciones()"
+            [maxlength]="maximoCaracteresObservacion"
+            formControlName="observaciones"
+          ></textarea>
+          <div class="text-right text-600">
+            {{ contadorCaracteresObservacion }}/{{ maximoCaracteresObservacion }}
+            caracteres
+          </div>
+        </div>
+
+        @if (!documentoCargado) {
+          <div class="field col-12">
+            <label for="subirCargo" class="font-semibold">Subir documento</label>
+            <fn-file-upload
+              id="subirCargo"
+              class="fz-14"
+              [(files)]="files"
+              (processSignDocument)="processSignDocument($event)"
+              [fileLimit]="1"
+              [isInMemory]="true"
+              type="pdf"
+              [isSignDigital]="true"
+              [maxFileSize]="1024 * 1024 * 100"
+              [perFileLabel]="'en total'"
+            ></fn-file-upload>
+          </div>
+        } @else {
+          <div class="field col-12">
+            <div class="font-semibold">Documento subido</div>
+
+            <p-table
+              [value]="files"
+              [rowHover]="true"
+              styleClass="p-datatable-sm mt-1"
+            >
+              <ng-template pTemplate="header">
+                <tr>
+                  <th 
+                    id="Documento"
+                    class="col-w-1-6 text-sm">Documento</th>
+                  <th 
+                    id="Tamaño"
+                    class="text-center text-sm">Tamaño</th>
+                  <th 
+                    id="Tipo de copia"
+                    class="text-center text-sm">Tipo de copia</th>
+                  <th 
+                    id="Acciones"
+                    class="text-center text-sm">Acciones</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-file>
+                <tr>
+                  <td class="text-sm">
+                    {{ file.nombreOrigen }}
+                  </td>
+                  <td class="text-center text-sm">
+                    @if (esFirmadoGuardado) {
+                      <fn-icon
+                        [ico]="obtenerIcono('iCheck')"
+                        height="1.6rem"
+                        color="#06A77D"
+                      ></fn-icon>
+                    }
+                    {{ formatoPesoArchivo(file.tamanyo) }}
+                  </td>
+                  <td>
+                    <div class="flex flex-column gap-3">
+                      @for (dataRadio of tipoCopias; track $index) {
+                        <div class="flex align-items-center">
+                          <p-radioButton
+                            inputId="or{{ dataRadio.id }}"
+                            name="idTipoCopia"
+                            value="{{ dataRadio.id }}"
+                            formControlName="idTipoCopia"
+                            (click)="seleccionarTipoCopia(dataRadio)"
+                            onKeyPress=""
+                          ></p-radioButton>
+                          <label
+                            for="or{{ dataRadio.id }}"
+                            class="ml-2 text-sm cursor-pointer"
+                          >{{ dataRadio.noDescripcion }}</label
+                          >
+                        </div>
+                      }
+                    </div>
+                  </td>
+                  <td class="text-center">
+                    @if (!esFirmadoGuardado) {
+                      <fn-icon
+                        class="cursor-pointer"
+                        [ico]="obtenerIcono('iTrashCan')"
+                        height="1.5rem"
+                        (click)="eliminarDocumento(file)"
+                        onKeyPress=""
+                      />
+                    }
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        }
+
+        <div class="col-12">
+          <div class="flex justify-content-between">
+            <button
+              [disabled]="!esFormularioValido || esFirmadoGuardado"
+              class="cfe-boton-secondary text-primary font-bold cfe-boton-lg"
+            >
+              Cancelar
+            </button>
+            <button
+              [disabled]="!esFormularioValido || esFirmadoGuardado"
+              class="cfe-boton-primary font-semibold cfe-boton-lg"
+              (click)="firmarGuardar()"
+            >
+              Firmar y Guardar
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="grid col-12 md:col-6 mt-1">
+        <div class="col pr-0 mt-8" style="height: 50%">
+          @if (tieneDocumentoAdjunto) {
+            <app-visor-pdf-cargo [documentoAdjunto]="documentoAdjunto"></app-visor-pdf-cargo>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  @if( esTramiteEnlazado ) {
+
+      <div class="field col-12 flex flex-column sm:flex-row justify-content-between mt-3">
+
+        @if ( !tramiteEstadoRecibido ) {
+            <a 
+                class="cfe-enlace"
+                (click)="abrirModalSeleccionarTramite()"
+            >
+            ¿Este documento no pertenece a este trámite?</a>
+        } @else {
+            <span></span>
+        }
+
+        @if ( esPosibleEditarFormulario ) {
+          
+            <p-button
+                [disabled]="!esFormularioValido"
+                (onClick)="preguntarGuardadoTramiteGenerico()"
+                styleClass="p-button-lg cfe-boton-primary text-white family-poppin-bold btn-adjust-filter w-column-full"
+            >
+                <span class="ml-4 mr-4">Guardar</span>
+            </p-button>
+        }
+        
+    </div>
+  
+  }
+
+</div>
+
+<cfe-lib-firma-digital-cliente></cfe-lib-firma-digital-cliente>

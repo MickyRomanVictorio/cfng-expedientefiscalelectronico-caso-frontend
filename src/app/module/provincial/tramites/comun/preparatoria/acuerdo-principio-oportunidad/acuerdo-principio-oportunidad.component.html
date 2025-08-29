@@ -1,0 +1,13 @@
+@if(!validGuardarTramite){
+  <div class="w-full mb-4">
+    <mensaje-generico [titulo]="'Debe registrar todos los sujetos procesales y asegurarse de seleccionar todos los delitos implicados para cada uno. Esta información es obligatoria antes de generar el Acta de principio de oportunidad.'" />
+  </div>
+}
+<div class="flex justify-content-start align-items-center mt-3 mb-3">
+  <button class="cfe-boton-primary cfe-boton-lg w-4 family-poppin-bold" (click)="verAcuerdos()">
+    Acuerdos del acta
+  </button>
+  @if(validGuardarTramite){
+    <img [src]="icono('check-circle')" alt="guardado" class="ml-2 h-2rem mt-2">
+  }
+</div>

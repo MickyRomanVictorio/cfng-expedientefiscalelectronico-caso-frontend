@@ -1,0 +1,45 @@
+.tarjeta-contenedor-principal{
+  cursor: pointer;
+}
+.tarjeta-contenedor-principal, .card-body-z, .tarjeta-cabecera-contenedor{
+  position: relative;
+}
+.tarjeta-cabecera-contenedor{
+  border-top-left-radius: 17px;
+  background-color: #fff;
+  padding-top: 2px;
+  padding-left: 2px;
+  padding-right: 3px;
+  clip-path: polygon(0 0, 88% 0, 100% 100%, 0 100%);
+  z-index: 2;
+  transition: background-color 0.3s ease;
+}
+.card-body-z{
+  transition: border 0.3s ease,
+  box-shadow 0.3s ease;
+  border: #fff solid 2px;
+  background-color: #fff;
+  z-index: 1;
+  margin-top: -2px;
+}
+.card-body-z.leido{
+  border: #e7eaed solid 2px !important;
+  background-color: #E7EAED;
+}
+.tarjeta-contenedor-principal:hover .card-body-z{
+  border: #3F9FD6 solid 2px !important;
+  // box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+.tarjeta-contenedor-principal:hover .tarjeta-cabecera-contenedor{
+  background-color: #3F9FD6;
+}
+.tarjeta-cabecera-contenedor:has(.tarjeta-cabecera.leido){
+  background-color: #E7EAED;
+}
+.tarjeta-cabecera-contenedor:has(.tarjeta-cabecera.plazo-vencido){
+  background-color: #f4d8d8;
+}
+.tarjeta-cabecera-contenedor:has(.tarjeta-cabecera.solo-lectura){
+  background-color: #1b1c1e;
+}
+

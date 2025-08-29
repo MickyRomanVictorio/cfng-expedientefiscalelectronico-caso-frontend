@@ -1,0 +1,17 @@
+<div class="agregar-reparacion-civil">
+    <div class="modal__header">
+        <div class="modal_header__content">
+            <div class="cfe-titulo-1">Agregar reparación civil</div>
+        </div>
+        <div class="flex align-items-center justify-content-center">
+            <p-button onKeyPress (click)="dialogRef.close()" icon="pi pi-times"
+                styleClass="p-button-rounded text-color p-button-text"></p-button>
+        </div>
+    </div>
+    <app-registrar-editar-sujetos [data]="data" 
+                                  [salidaAlterna]="salidaAlterna"
+                                  [tipoAcuerdoActa]="tipoAcuerdoActa"
+                                  [tipoSentencia]="tipoSentencia"
+                                  [delitosTramiteSujeto]="delitosTramiteSujeto"
+                                  (salirModal)="close($event)"/>
+</div>

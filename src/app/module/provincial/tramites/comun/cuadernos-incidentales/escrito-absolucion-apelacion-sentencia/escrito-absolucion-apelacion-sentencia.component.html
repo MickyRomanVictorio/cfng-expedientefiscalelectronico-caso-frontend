@@ -1,0 +1,19 @@
+<div>
+  <form [formGroup]="formGroup">
+    <div class="grid mt-3">
+      <div class="col-12 sm:col-12 md:col-6 lg:col-3">
+        <label class="font-bold adjust-origin-label text-left">
+          Seleccionar sujetos procesales para los cuales se presentará el recurso de absolución:
+        </label>
+        <div class="flex align-items-center gap-2">
+          <div class="flex-auto flex">
+            <button (click)="openModalSujetos()" class="cfe-boton-primary cfe-boton-lg w-full">
+              Seleccionar sujetos
+            </button>
+            <img alt="" [src]="icon(iconButton)" style="width: 25px;margin: 7px;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

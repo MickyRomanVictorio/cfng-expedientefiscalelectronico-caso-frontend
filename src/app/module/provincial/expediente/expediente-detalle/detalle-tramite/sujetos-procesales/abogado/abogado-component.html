@@ -1,0 +1,68 @@
+<div class="cfe-titulo-1">Lista de Abogados</div>
+
+<p-table [value]="listaAbogado" class="cfe-table-primary"
+         responsiveLayout="stack"
+         [showCurrentPageReport]="true"
+         [tableStyle]="{ 'min-width': '50rem' }"
+         currentPageReportTemplate="{first} de {last} registros"
+         >
+  <ng-template pTemplate="header">
+    <tr>
+      <th scope>N°</th>
+      <th scope>Tipo de Documento</th>
+      <th scope>Número doc</th>
+      <th scope>Nombres y Apellidos</th>
+      <th scope>Colegiatura</th>
+      <th scope class="text-center">Fecha Apersonamiento</th>
+      <th scope class="text-center">Estado</th>
+      <th scope>Acciones</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-abogado let-rowIndex="rowIndex">
+    <tr [class.font-bold]="!abogado.habilitado">
+      <td>{{ rowIndex + 1 }}</td>
+      <td>{{ abogado.tipoDocumento }}</td>
+      <td>{{ abogado.nroDocumento }}</td>
+      <td>{{ abogado.nombresCompletos }} {{ abogado.apellidoPaterno }} {{ abogado.apellidoMaterno }}</td>
+      <td>{{ abogado.colegiatura }}</td>
+      <td class="text-center">{{ abogado.fapersonamiento }}</td>
+      <td class="text-center">
+        <div class="flex justify-content-center">
+            <p-inputSwitch [(ngModel)]="abogado.habilitado" (onChange)="habilitar(abogado)"></p-inputSwitch>
+            <span class="ml-2 mt-1"> {{abogado.habilitado?'Habilitado':'Deshabilitado'}}</span>
+        </div>
+      </td>
+      <td>
+        <div class="flex">
+          <fn-icon
+          class="ml-1 mt-1 cursor-pointer"
+          [ico]="iconUtil.obtenerIcono('iEdit')"
+          (click)="editarAbogado(abogado.idAbogado)"
+          height="1.5rem"
+          onKeyPress
+        ></fn-icon>
+        <fn-icon
+          class="cursor-pointer"
+          [ico]="iconUtil.obtenerIcono('iTrash')"
+          (click)="eliminarAbogado(abogado.idAbogado)"
+          height="2.1rem"
+          onKeyPress
+        ></fn-icon>
+      </div>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="8">
+        <div class="text-center">Aún no se ha registrado abogados</div>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+<div class="flex justify-content-end mt-3">
+  <button class="cfe-boton-primary cfe-boton-m font-semibold"
+    (click)="abrirModalAgregarEditar()">
+    <fn-icon class="ml-1" [ico]="iconUtil.obtenerIcono('iAdd')" height="1.2rem"></fn-icon>Agregar abogados
+  </button>
+</div>

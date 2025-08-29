@@ -1,0 +1,22 @@
+.cfe-opciones-botones {
+  display: flex !important;
+  margin-top: 1em !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+.p-label-bottom{
+  display: inline-block !important;
+  margin-bottom: 0.5rem !important;
+}
+.field-checkbox{
+  margin-bottom: 0!important;
+}
+
+::ng-deep .p-dropdown-panel {
+  min-width: 100% !important;
+}
+
+::ng-deep .p-dropdown-item {
+  white-space: normal !important; 
+  word-wrap: break-word;
+}

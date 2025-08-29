@@ -1,0 +1,17 @@
+<div class="bar-footer-section flex align-items-center justify-content-center gap-2">
+
+    <div *ngFor="let note of notes" [ngStyle]="{'background-color': note.colorNota}" class="sticky-note p-2">
+        <a (click)="detalleNota(note)" class="extracto-nota" >
+            {{ note.textoNota }}
+        </a>
+        <a (click)="deleteNote($event, note.idNota!)" class="block delete-note" href="#">
+            <img src="../../../../../../../../../../assets/icons/uil_trash.svg" alt="Icono eliminar" />
+        </a>
+        <div class="folded-corner">
+        </div>
+    </div>
+    <a *ngIf="notes.length <=2" (click)="openStikyInput($event)" href="#"
+        class="add-icon flex align-items-center justify-content-center">
+        <img src="../../../../../../../../../../assets/icons/plus-square.svg" alt="Icono de advertencia" />
+    </a>
+</div>

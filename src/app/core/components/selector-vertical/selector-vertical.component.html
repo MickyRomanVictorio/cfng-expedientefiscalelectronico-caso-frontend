@@ -1,0 +1,52 @@
+
+
+<div class="selector_contenedor">
+    <div class="titulo">{{ titulo() }}</div>
+    @let elementosVacios = elementos().length === 0;
+    @if ( !elementosVacios ) {
+        @if ( tieneBuscador() ) {
+            <div class="buscador">
+                <input
+                    #buscadorActoProcesal
+                    pInputText
+                    class="p-inputtext-md w-full input-buscador"
+                    [maxLength]="200"
+                    [placeholder]="placeholder()"
+                    [(ngModel)]="textoABuscar"
+                    (ngModelChange)="alBuscarElemento($event)"
+                />
+            </div>
+        }
+        @let widthContenedor = tieneBuscador() ? '360px' : '425px';
+        <ul
+            [style.max-height]="widthContenedor"
+            [style.min-height]="widthContenedor"
+        >
+            @for (item of elementosFiltrados; track $index) {
+                <li
+                    [class.seleccionado]="item.codigo === elementoSeleccionado()"
+                    (click)="seleccionarElemento(item)"
+                    onkeypress=""
+                >
+                    <span
+                        class="nombre_elemento"
+                        [class.destacar]="item.destacar"
+                    >
+                        {{ item.nombre }}
+                    </span>
+                    @if ( tieneSubelementos() ) {
+                        <fn-icon
+                            [ico]="iconUtil.obtenerIcono('iChevronRight')"
+                            height="28px"
+                        />
+                    }
+                </li>
+            }
+        </ul>
+    }@else {
+        <div class="sin-elementos">
+            {{ textoElementosVacios() }}
+        </div>
+    }
+
+</div>

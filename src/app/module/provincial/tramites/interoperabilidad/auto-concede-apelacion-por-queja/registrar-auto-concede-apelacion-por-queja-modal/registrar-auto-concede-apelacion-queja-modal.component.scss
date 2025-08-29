@@ -1,0 +1,72 @@
+.delitos-titulo {
+  display: flex;
+
+  .delitos-contenedor {
+    display: flex;
+    flex-wrap: wrap;
+
+    .delito-tipo {
+      background-color: var(--mpfn-background2);
+      font-family: var(--mpfn-font-regular);
+      max-width: 250px;
+      font-size: 0.75rem;
+      text-align: center;
+      padding: 5px 2px;
+      border-radius: 5px;
+      margin-left: 10px;
+      margin-bottom: 10px;
+    }
+  }
+}
+/*
+.columna-nro {
+  width: 2%;
+}
+
+.columna-nombre {
+  width: 10%;
+}
+
+.columna-tipo {
+  width: 10%;
+}
+
+.columna-resultado-primera-instancia {
+  width: 10%;
+}
+
+.columna-consentimiento {
+  width: 5%;
+}*/
+
+.delito-registrado {
+  margin-bottom: 10px;
+  padding-left: 15px;
+  position: relative;
+
+  &::before {
+    content: ".";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    font-size: 34px;
+    left: 0;
+    top: -22px;
+  }
+}
+
+.delitos-no-encontrados {
+  margin-top: 5px;
+  margin-left: 10px;
+}
+.filter-container {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+  align-items: center;
+
+  .filter-dropdown {
+    min-width: 250px;
+  }
+}

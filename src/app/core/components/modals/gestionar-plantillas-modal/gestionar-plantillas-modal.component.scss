@@ -1,0 +1,161 @@
+.cfe-container-plantillas {
+    background: #ffffff;
+    border-radius: 4px;
+    width: 100%;
+  padding: 3rem;
+}
+
+$boton-cerrar-width: 50px;
+
+.encabezado-modal{
+  width: 100%;
+  position: relative;
+  margin-bottom: 10px;
+  .encabezado-titulo{
+    width: calc(100% - $boton-cerrar-width);
+    display: inline-block;
+    margin: 0;
+  }
+  .encabezado-cerrar{
+    position: absolute;
+    right: -8px;
+    top: 0;
+    cursor: pointer;
+  }
+}
+
+.p-error {
+    color: #C83C3C;
+    font-family: "Inter-regular", sans-serif;
+    font-size: 0.95em;
+}
+
+.btn-invalid {
+    cursor: not-allowed;
+}
+
+.close {
+    cursor: pointer;
+    position: absolute;
+    right: 30px;
+    top: 20px;
+    img {
+        width: 16px;
+    }
+}
+
+input:disabled {
+    opacity: 0.3;
+}
+
+.disabled-contenct {
+    pointer-events: none;
+    opacity: 0.7;
+    background-color: #e2e2e2;
+    //font-weight: bold;
+}
+
+:host ::ng-deep .cfe-caso {
+    margin-left: 5px;
+    span {
+        color: #f19700 !important;
+    }
+}
+
+ :host ::ng-deep .colorAmbarCaso {
+    color: var(--mpfn-secondary);
+}
+
+:host ::ng-deep .cfe-boton-m {
+    padding: 8.5px 4.5px !important;
+    min-width: 81px;
+    font-size: 1rem;
+}
+
+ :host ::ng-deep .p-dialog .p-dialog-content {
+    background: #F5F2E0 !important;
+    color: #212529;
+    border-radius: 7px;
+}
+
+:host ::ng-deep .p-dialog div {
+    background: #F5F2E0 !important;
+    color: #212529;
+    padding: 0px !important;
+    border-radius: 7px;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+/**TODO : import ***/
+
+@import url('https://unpkg.com/leaflet@1.9.3/dist/leaflet.css');
+@import url('https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css');
+#map {
+    height: 450px;
+}
+
+.map-label {
+    margin-left: 8px;
+    margin-bottom: 4px;
+}
+
+.ocultar {
+    display: none !important;
+}
+
+ :host::ng-deep .tarjeta {
+    background-color: var(--mpfn-white) !important;
+}
+
+ :host::ng-deep .tarjeta div {
+    margin-top: 10px;
+}
+
+:host::ng-deep .etiqueta {
+    font-weight: bold;
+}
+
+:host::ng-deep .contenido {
+    font-weight: normal !important;
+    margin-left: 12px !important;
+}
+
+:host::ng-deep .fecha {
+    font-weight: normal !important;
+    font-size: 0.8rem;
+}
+
+ :host::ng-deep .alertas__header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px 0 25px 0;
+    .alertas_header__content {
+        display: flex;
+        align-items: center;
+        .cfe-titulo-1 {
+            padding-left: 5px;
+            margin-top: -5px;
+            font-size: 15px;
+        }
+        img {
+            width: 25px;
+            &:nth-child(3) {
+                width: 23px;
+            }
+        }
+    }
+}
+.p-radiobutton_align{
+    vertical-align: baseline !important;
+   }

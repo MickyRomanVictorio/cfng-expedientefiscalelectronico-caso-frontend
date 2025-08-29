@@ -1,0 +1,275 @@
+<div class="cfe-container">
+  <!-- Filters Section -->
+
+  <div class="card background-white p-4">
+    <form [formGroup]="filterForm" class="grid">
+      <!-- Período -->
+      <div class="col-12 md:col-3">
+        <div class="field">
+          <label class="font-bold block mb-2">Período</label>
+          <p-dropdown
+            formControlName="periodo"
+            [options]="rangeOptions"
+            optionLabel="label"
+            [style]="{ width: '100%' }"
+            placeholder="Seleccione período"
+            (onChange)="onPeriodoChange($event)"
+          ></p-dropdown>
+        </div>
+      </div>
+
+      @if (periodoValue === 'A' || periodoValue === 'M') {
+
+      <div class="col-12 md:col-3">
+        <div class="field">
+          <label class="font-bold block mb-2">Año</label>
+          <p-dropdown
+            formControlName="anio"
+            [options]="yearOptions"
+            optionLabel="label"
+            [style]="{ width: '100%' }"
+            placeholder="Seleccione el año"
+          ></p-dropdown>
+        </div>
+      </div>
+
+      @if (periodoValue === 'M') {
+
+      <div class="col-12 md:col-3">
+        <div class="field">
+          <label class="font-bold block mb-2">Mes</label>
+          <p-dropdown
+            formControlName="mes"
+            [options]="mesOptions"
+            optionLabel="label"
+            [style]="{ width: '100%' }"
+            placeholder="Seleccione el año"
+          ></p-dropdown>
+        </div>
+      </div>
+
+      } } @else {
+
+      <!-- Fecha inicio -->
+      <div class="col-12 md:col-3">
+        <div class="field">
+          <label class="font-bold block mb-2">Fecha inicio</label>
+          <p-calendar
+            formControlName="fechaInicio"
+            [showIcon]="true"
+            dateFormat="dd/mm/yy"
+            [style]="{ width: '100%' }"
+            placeholder="Seleccione fecha"
+          ></p-calendar>
+        </div>
+      </div>
+
+      <!-- Fecha fin -->
+      <div class="col-12 md:col-3">
+        <div class="field">
+          <label class="font-bold block mb-2">Fecha fin</label>
+          <p-calendar
+            formControlName="fechaFin"
+            [showIcon]="true"
+            dateFormat="dd/mm/yy"
+            [style]="{ width: '100%' }"
+            placeholder="Seleccione fecha"
+          ></p-calendar>
+        </div>
+      </div>
+
+      }
+
+      <!-- Especialidad-->
+      <div class="col-12 md:col-3">
+        <div class="field">
+          <label class="font-bold block mb-2">Especialidad</label>
+          <p-dropdown
+            formControlName="especialidad"
+            [options]="especialidades"
+            optionLabel="nombre"
+            optionValue="codigo"
+            [style]="{ width: '100%' }"
+            placeholder="Especialidad"
+            appendTo="body"
+            [panelStyle]="{ 'min-width': '100%', 'white-space': 'nowrap' }"
+          ></p-dropdown>
+        </div>
+      </div>
+
+      <!-- Instancia-->
+      <div class="col-12 md:col-3">
+        <div class="field">
+          <label class="font-bold block mb-2">Instancia</label>
+          <p-dropdown
+            formControlName="instancia"
+            [options]="instanciaOptions"
+            optionLabel="label"
+            [style]="{ width: '100%' }"
+            placeholder="Seleccione la instancia"
+            appendTo="body"
+            [panelStyle]="{ 'min-width': '100%', 'white-space': 'nowrap' }"
+          ></p-dropdown>
+        </div>
+      </div>
+
+      <!-- Distrito Judicial-->
+      <div class="col-12 md:col-3">
+        <div class="field">
+          <label class="font-bold block mb-2">Distrito Judicial</label>
+          <p-dropdown
+            formControlName="distritoJudicial"
+            [options]="distritoFiscales"
+            optionLabel="nombre"
+            optionValue="id"
+            [style]="{ width: '100%' }"
+            placeholder="Seleccione el distrito Judicial"
+            appendTo="body"
+            [panelStyle]="{ 'min-width': '100%', 'white-space': 'nowrap' }"
+            (onChange)="onDistritoJudicialChange($event)"
+          ></p-dropdown>
+        </div>
+      </div>
+
+      <!-- Dependencia Fiscal-->
+      <div class="col-12 md:col-3">
+        <div class="field">
+          <label class="font-bold block mb-2">Dependencia Fiscal</label>
+          <p-dropdown
+            formControlName="dependenciaFiscal"
+            [options]="dependenciasFiscales"
+            optionLabel="nombre"
+            optionValue="codigo"
+            [style]="{ width: '100%' }"
+            placeholder="Seleccione la dependencia Fiscal"
+            appendTo="body"
+            [panelStyle]="{ 'min-width': '100%', 'white-space': 'nowrap' }"
+          ></p-dropdown>
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="col-12 flex justify-content-end gap-2">
+        <p-button
+          label="Buscar"
+          styleClass="cfe-boton-primary cfe-boton-m mr-2 boton-w"
+          (onClick)="search()"
+        ></p-button>
+        <p-button
+          label="Limpiar filtros"
+          styleClass="cfe-boton-secondary cfe-boton-m mr-3 boton-w"
+          (onClick)="clearFilters()"
+        ></p-button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Table Section -->
+  <div class="card background-white p-4">
+    <div class="flex justify-content-end mb-3">
+      <button
+        class="cfe-boton-secondary cfe-boton-m w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start"
+        (click)="exportarPdfExcel('PDF')"
+      >
+        <fn-icon
+          class="ml-1"
+          [ico]="icono('iFileDownload')"
+          height="1.6rem"
+        ></fn-icon>
+        Exportar PDF
+      </button>
+
+      <button
+        class="cfe-boton-secondary cfe-boton-m w-full sm:w-auto justify-content-start"
+        (click)="exportarPdfExcel('Excel')"
+      >
+        <fn-icon class="ml-1" [ico]="icono('iTable')" height="1.6rem"></fn-icon>
+        Exportar Excel
+      </button>
+    </div>
+
+    <div class="field">
+      <label class="font-bold block mb-2"
+        ><h3>Reporte de Productividad</h3></label
+      >
+    </div>
+
+    <p-table
+      [value]="results"
+      [paginator]="true"
+      [rows]="10"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      styleClass="p-datatable-striped"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Nº</th>
+          <th>Distrito Judicial</th>
+          <th>Instancia</th>
+          <th>Id Dependencia</th>
+          <th>Dependencia</th>
+          <th>Especialidad</th>
+          <th>Procedencia</th>
+          <th>Etapa Procesal</th>
+          <th>Estado del Caso</th>
+          <th>Periodo</th>
+          <th>Año</th>
+          <th>Mes</th>
+          <th>Despacho</th>
+          <th>Ingreso</th>
+          <th>Resuelto</th>
+          <th>Pendiente</th>
+          <th>Fecha Ingreso</th>
+          <th>Dni</th>
+          <th>Fiscal</th>
+          <th>Tipo caso final</th>
+          <th>Distrito</th>
+          <th>Servidor</th>
+          <th>Fecha Actual</th>
+          <th>ID Único</th>
+          <th>Codigo Caso</th>
+          <th>Estado Inicial</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-record let-i="rowIndex">
+        <tr>
+          <td>{{ i + 1 }}</td>
+          <td>{{ record.distritoFiscal }}</td>
+          <td>{{ record.instancia }}</td>
+          <td>{{ record.codigoDependencia }}</td>
+          <td>{{ record.dependencia }}</td>
+          <td>{{ record.especialidad }}</td>
+          <td>{{ record.procedencia }}</td>
+          <td>{{ record.etapa }}</td>
+          <td>{{ record.estadoCaso }}</td>
+          <td>NUEVO</td>
+          <td>{{ record.fechaIngreso | anio }}</td>
+          <td>{{ record.fechaIngreso | mes }}</td>
+          <td>{{ record.despacho }}</td>
+          <td>{{ record.ingreso }}</td>
+          <td>{{ record.resuelto }}</td>
+          <td>{{ record.pendiente }}</td>
+          <td>{{ record.fechaIngreso | formatoFecha }}</td>
+          <td>{{ record.dni }}</td>
+          <td>{{ record.fiscal }}</td>
+          <td>{{ record.tipoCasoFinal }}</td>
+          <td>{{ record.distrito }}</td>
+          <td>EFE</td>
+          <td>{{ fechaActual | date : "dd/MM/yyyy HH:mm" }}</td>
+          <td>{{ record.idCaso }}</td>
+          <td>{{ record.codigoCaso }}</td>
+          <td>{{ record.estadoInicial }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td class="no-before text-center" colspan="9">
+            No se encontraron registros con los criterios de búsqueda ingresados
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

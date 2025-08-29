@@ -1,0 +1,732 @@
+<div class="gestionar-informacion-sujeto-procesal-contenedor">
+    <form class="gestionar-informacion-sujeto-procesal-filters"
+        [formGroup]="formularioInformacionGeneralSujetoProcesal">
+        <div class="w-full formgrid grid mb-2">
+            <div class="cfe-titulo-1">Datos generales</div>
+            <div class="w-full formgrid grid">
+                <div class="field col-12 md:col-4">
+                    <label class="font-bold text-sm">Tipo de persona</label>
+                    <p-dropdown styleClass="p-inputtext-md"
+                                optionLabel="nombre"
+                                placeholder="Seleccione tipo de persona"
+                                emptyMessage="Resultados no encontrados"
+                                [options]="listTipoPartePersona"
+                                [class.input-disabled]="isEstadoTipoPersona"
+                                formControlName="tipoPartePersona"
+                                (onChange)="cambiarTipoPartePersona()" />
+                </div>
+                <div class="field col-12 md:col-4">
+                    <label class="font-bold text-sm">Tipo de sujeto procesal</label>
+                    <p-dropdown styleClass="p-inputtext-md"
+                                optionLabel="nombre"
+                                placeholder="Seleccione tipo de sujeto procesal"
+                                emptyFilterMessage="No se encontraron resultados"
+                                emptyMessage="Resultados no encontrados"
+                                [options]="listTipoParteSujeto"
+                                [filter]="true"
+                                formControlName="tipoParteSujeto"
+                                (onChange)="habilitarRadioCondicion()" />
+                </div>
+                @if (showCondicion) {
+                  <div class="field col-12 md:col-4">
+                    <label class="font-bold text-sm">Condición</label>
+                      <div class="w-full flex gap-4">
+                        <div class="flex align-items-center">
+                            <label class="cfe-semi-bold text-sm">
+                              <p-radioButton
+                                name="condicion"
+                                [value]=0
+                                inputId="sinCondicion"
+                                formControlName="condicion" />
+                               Sin condición
+                            </label>
+                          </div>
+                        <div class="flex align-items-center">
+                          <label class="cfe-semi-bold text-sm">
+                            <p-radioButton
+                              name="condicion"
+                              value=1
+                              inputId="fallecido"
+                              formControlName="condicion" />
+                            Fallecido
+                          </label>
+                        </div>
+                        <div class="flex align-items-center">
+                          <label class="cfe-semi-bold text-sm">
+                            <p-radioButton
+                              name="condicion"
+                              value=2
+                              inputId="noHabido"
+                              formControlName="condicion"/>
+                            No Habido
+                          </label>
+                        </div>
+                        @if (showCondicionDetenido) {
+                          <div class="flex align-items-center">
+                            <label class="cfe-semi-bold text-sm">
+                              <p-radioButton
+                                name="condicion"
+                                value=3
+                                inputId="detenido"
+                                formControlName="condicion" />
+                              Detenido
+                            </label>
+                          </div>
+                        }
+                      </div>
+                  </div>
+                }
+            </div>
+        </div>
+
+        @if (showCheckAgraviado) {
+        <div class="mb-4 w-full formgrid grid">
+            <label class="cfe-semi-bold text-sm">
+                <p-checkbox formControlName="agraviadoEsDenunciante" [binary]="true" inputId="manual" />
+                Considerar el denunciante como agraviado</label>
+        </div>
+        }
+
+        <!--Persona Natural-->
+        @if (isPersonaFormulario && !isEstadoFormulario) {
+        <div class="w-full formgrid grid">
+            <div class="w-full formgrid grid">
+                <div class="field col-12 md:col-4">
+                    <label class="font-bold text-sm">Origen</label>
+                    <div class="w-full flex gap-4">
+                        <div class="flex align-items-center">
+                            <label class="cfe-semi-bold text-sm">
+                                <p-radioButton name="rdOrigen" value="0" inputId="peruano" formControlName="rdOrigen"
+                                    (onClick)="actualizaTipoOrigen()" />
+                                Peruano</label>
+                        </div>
+
+                        <div class="flex align-items-center">
+                            <label class="cfe-semi-bold text-sm">
+                                <p-radioButton name="rdOrigen" value="1" inputId="extranjero" formControlName="rdOrigen"
+                                    (onClick)="actualizaTipoOrigen()" />
+                                Extranjero</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field col-12 md:col-4">
+                    <label class="font-bold text-sm">Pais</label>
+                    <p-dropdown
+                            styleClass="p-inputtext-md"
+                            placeholder="Seleccione un pais"
+                            emptyMessage="Resultados no encontrados"
+                            optionLabel="nombre"
+                            [options]="listPaisSujeto"
+                            formControlName="paisSujeto"
+                            (onChange)="actualizarPais()" />
+                </div>
+            </div>
+
+            @if(esDenuncianteDenunciadoAgraviado){ 
+            <div class="mb-4 w-full flex align-items-end gap-4">
+                <label class="cfe-semi-bold text-sm">
+                    <p-checkbox formControlName="esMenorEdad" [binary]="true" inputId="menorEdad"
+                        (onChange)="activarMenorEdad()" />
+                    Es menor de edad</label>
+            </div>
+            }
+
+            <div class="w-full formgrid grid">
+                <div class="field col-12 md:col-4">
+                    <label class="font-bold text-sm">Tipo de documento</label>
+                    <p-dropdown styleClass="p-inputtext-md"
+                                optionLabel="nombre"
+                                placeholder="Seleccione un tipo de documento"
+                                emptyMessage="Resultados no encontrados"
+                                [options]="listTipoDocumentoNatural"
+                                formControlName="tipoDocumentoNatural"
+                                (onChange)="cambiarTipoDocumentoNatural($event)" />
+                </div>
+
+                <div class="field col-12 md:col-4">
+                    <label htmlFor="labelNuDocumento" class="font-bold text-sm">Número de documento</label>
+                    <input pInputText
+                                class="p-inputtext-md w-full"
+                                [class.input-disabled]="!formularioInformacionGeneralSujetoProcesal.value.tipoDocumentoNatural"
+                                id="numero-documento"
+                                [maxLength]="longitudMaximaInput"
+                                placeholder="Ingrese el número de documento"
+                                formControlName="nuDocumento"
+                                (keypress)="alfanumericoInput ? permitirLetrasNumeros($event) : permitirSoloNumeros($event)"
+                                />
+                </div>
+
+                <div class="field col-12 md:col-4">
+                    <label htmlFor="buttonNuDocumento" class="cfe-semi-bold">&nbsp;</label>
+                    <button type="button"
+                            pButton
+                            *ngIf="!formularioInformacionGeneralSujetoProcesal.get('esMenorEdad')?.value"
+                            [icon]="(showBuscarDni === 'Buscar' || showBuscarDni === '') ? 'pi pi-search' : 'pi pi-sync'"
+                            class="cfe-boton-primary"
+                            [disabled]="!showBuscarDni || validarBuscarNaturalDocumento('nuDocumento')"
+                            [label]="obtenerLabelBotonDniBuscar() || ''"
+                            (click)="buscarNaturalDocumento()"> 
+                    </button>
+
+                </div>
+            </div>
+
+            <div class="mb-4 w-full flex align-items-end gap-4">
+                <label class="cfe-semi-bold text-sm">
+                    <p-checkbox formControlName="registroManual" [binary]="true" inputId="manual"
+                        (onChange)="activarRegistroManualPersonaNatural($event)" />
+                    Registro manual</label>
+            </div>
+
+            <div class="w-full flex formgrid grid">
+                @if (!esManualReniec) {
+                <div class="col-12 md:col-4 mb-3">
+                    <label for="profile" class="cfe-semi-bold">Foto de perfil</label>
+                    @if (consultaReniec?.foto) {
+                    <img class="block h-15rem m-auto" alt="profile"
+                        [src]="'data:image/png;base64,' + consultaReniec!.foto">
+                    }
+                    @if (!consultaReniec?.foto) {
+                    <img class="block h-15rem m-auto" alt="profile" [src]="faceReniec">
+                    }
+                </div>
+                }
+
+                <div class="col-12 md:col-8" [class.col-12]="esManualReniec">
+                    <div class="w-full formgrid grid">
+                        <div class="field col-12 md:col-6">
+                            <label for="labelNombresSujeto" class="font-bold text-sm">Nombres</label>
+                            <input pInputText lettersOnly upperCaseInput class="p-inputtext-md w-full"
+                                            placeholder="Ingrese los nombres"
+                                            [maxLength]="60"
+                                            formControlName="nombresSujeto" />
+                        </div>
+
+                        <div class="field col-12 md:col-6">
+                            <label for="fathername" class="font-bold text-sm">Apellido Paterno</label>
+                            <input  pInputText
+                                    lettersOnly
+                                    upperCaseInput
+                                    class="p-inputtext-md w-full"
+                                    placeholder="Ingrese el apellido paterno"
+                                    [maxLength]="40"
+                                    formControlName="paternoSujeto" />
+                        </div>
+                    </div>
+
+                    <div class="w-full formgrid grid">
+                        <div class="field col-12 md:col-6">
+                            <label for="mothername" class="font-bold text-sm">Apellido Materno (opcional)</label>
+                            <input  pInputText
+                                    lettersOnly
+                                    upperCaseInput
+                                    id="mothername"
+                                    class="p-inputtext-md w-full"
+                                    placeholder="Ingrese el apellido materno"
+                                    [maxLength]="40"
+                                    formControlName="maternoSujeto" />
+                        </div>
+
+                        @if(esDenunciadoInvestigadoImputadoAcusado){ 
+                        <div class="field col-12 md:col-2">
+                            <label for="aliasname" class="font-bold text-sm">Alias (opcional)</label>
+                            <input  pInputText
+                                    upperCaseInput
+                                    id="aliasname"
+                                    class="p-inputtext-md w-full"
+                                    placeholder="Ingrese el alias"
+                                    [maxLength]="40"
+                                    formControlName="noAliasSujeto" />
+                        </div>
+                        }
+                    </div>
+
+                    <div class="w-full formgrid grid">
+                        <div class="field col-12 md:col-4">
+                            <label class="font-bold text-sm">Fecha de nacimiento (opcional)</label>
+                            <p-calendar class="p-inputtext-md cfe-calendar h-40"
+                                        [showIcon]="true"
+                                        icon="cfe-calendar-icon"
+                                        dateMask
+                                        placeholder="dd/mm/aaaa"
+                                        [minDate]="minDate"
+                                        [maxDate]="fechaMaxima"
+                                        formControlName="fechaNacimiento"
+                                        dateFormat="dd/mm/yy"
+                                        (onSelect)="calcularEdad()"
+                                        (input)="calcularEdad()" />
+                        </div>
+
+                        <div class="field col-12 md:col-2">
+                            <label for="integeronly" class="font-bold text-sm">Edad (opcional)</label>
+                            <input 
+                                pInputText inputId="integeronly" 
+                                class="p-inputtext-md w-full" 
+                                digitOnly 
+                                placeholder="###" 
+                                [maxLength]="2"
+                                formControlName="edadSujeto" 
+                                [ngClass]="{
+                                        'ng-invalid ng-dirty': formularioInformacionGeneralSujetoProcesal.get('edadSujeto')?.invalid &&
+                                                            (formularioInformacionGeneralSujetoProcesal.get('edadSujeto')?.touched ||
+                                                             formularioInformacionGeneralSujetoProcesal.get('edadSujeto')?.dirty)
+                                   }" />
+                            <small class="p-error block mt-1" 
+                                    *ngIf="formularioInformacionGeneralSujetoProcesal.get('esMenorEdad')?.value 
+                                            && formularioInformacionGeneralSujetoProcesal.get('edadSujeto')?.value > 17">
+                                No corresponde a un menor de edad
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="w-full formgrid grid">
+                        <div class="field col-12 md:col-6">
+                            <label class="font-bold text-sm">Sexo</label>
+                            <div class="w-full flex gap-4 mt-2  text-sm">
+                                @for (sexo of listSexo; track $index) {
+                                <p-radioButton name="sexoSujeto" [value]="sexo" label="{{ sexo.nombre }}"
+                                    formControlName="sexoSujeto">
+                                </p-radioButton>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="field col-12 md:col-6">
+                            <label class="font-bold text-sm">Estado civil (opcional)</label>
+                            <p-dropdown styleClass="p-inputtext-md"
+                                     placeholder="Seleccione un estado civil"
+                                     [showClear]="true"
+                                     [options]="listEstadoCivil"
+                                     formControlName="estadoCivil"
+                                     optionLabel="nombre" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full formgrid grid">
+                <div class="field col-12 md:col-4">
+                    <label class="font-bold text-sm">Grado de instrucción (opcional)</label>
+                    <p-dropdown styleClass="p-inputtext-md"
+                                placeholder="Seleccione un grado de instrucción"
+                                [showClear]="true"
+                                [options]="listGradoInstruccion"
+                                formControlName="gradoInstruccion"
+                                optionLabel="nombre" />
+                </div>
+
+                <div class="field col-12 md:col-4">
+                    <label for="alias" class="font-bold text-sm">Profesión u oficio (opcional)</label>
+                    <p-dropdown styleClass="p-inputtext-md"
+                                placeholder="Seleccione el profesión u oficio"
+                                [options]="listProfesionOficio"
+                                [showClear]="true"
+                                formControlName="profesionOficio"
+                                optionLabel="nombre"
+                                (onChange)="changeProfesionOficio($event)"
+                                (onClear)="limpiarProfesionOficio()"
+                                />
+                </div>
+
+                <div class="field col-12 md:col-4">
+                    <label for="alias" class="font-bold text-sm">&nbsp;</label>
+                    <input class="p-inputtext-md w-full"
+                                pInputText
+                                lettersOnly
+                                trimSpaces
+                                upperCaseInput
+                                maxlength="100"
+                                placeholder="Ingrese otra profesión u oficio"
+                                formControlName="otroProfesionOficio" />
+                </div>
+            </div>
+        </div>
+        }
+
+        <!-- Persona Juridica -->
+        @if (isJuridicaFormulario && !isEstadoFormulario) {
+        <div class="w-full formgrid grid">
+            <div class="w-full formgrid grid">
+                <div class="field col-4 col-sm-12">
+                    <label htmlFor="labelNuDocumentoRuc" class="font-bold text-sm">Número de RUC</label>
+                    <input pInputText
+                        class="p-inputtext-md w-full"
+                        id="numero-documento-ruc"
+                        [maxLength]="11"
+                        placeholder="Ingrese el RUC de la persona jurídica"
+                        formControlName="nuDocumentoJuridica"
+                        (input)="changeNuDocumentoJuridica($event)"/>
+                </div>
+
+                <div class="field col-4 col-sm-12 centrar-items">
+                    <label htmlFor="labelNuDocumentoRuc">&nbsp;</label>
+                    @if (showBuscarRuc !== '') {
+                    <button type="button" pButton icon="pi pi-search"
+                        class="cfe-boton-primary text-white font-semibold mt-2" (click)="buscarJuridicaDocumento()"></button>
+                    }    
+                </div>
+            </div>
+
+            <div class="w-full formgrid grid">
+                <div class="field col-12">
+                    <label htmlFor="labelRazonSocial" class="font-bold text-sm">Razón Social</label>
+                    <input pInputText
+                           placeholder="Razón social de la persona jurídica"
+                           formControlName="razonSocial"
+                           class="p-inputtext-md w-full"
+                           />
+                </div>
+            </div>
+
+            <div class="cfe-titulo-1">Representante legal o procurado</div>
+
+            <div class="w-full formgrid grid">
+                <div class="field col-4 col-sm-12">
+                    <label class="font-bold text-sm">Tipo de documento (opcional)</label>
+                    <p-dropdown
+                            styleClass="p-inputtext-md"
+                            [options]="listTipoDocumentoDeclarante"
+                            optionLabel="nombre"
+                            [showClear]="true"
+                            placeholder="Seleccione un tipo de documento"
+                            emptyMessage="Resultados no encontrados"
+                            formControlName="tipoDocumentoDeclarante"
+                            (onChange)="changeTipoDocumentoJuridica($event)" />
+                </div>
+
+                <div class="field col-4 col-sm-12">
+                    <label for="nuDocumentoDeclarante" class="font-bold text-sm">Número de documento (opcional)</label>
+                    <input pInputText
+                            class="p-inputtext-md w-full"
+                            [disabled]="isPersonaFormulario"
+                            id="idNuDocumentoDeclarante"
+                            [maxLength]="longitudMaximaDeclaranteInput"
+                            placeholder="Ingrese el número de documento"
+                            formControlName="nuDocumentoDeclarante"
+                            (keypress)="alfanumericoDeclaranteInput ? permitirLetrasNumeros($event) : permitirSoloNumeros($event)" />
+                </div>
+                <div class="field col-4 col-sm-12">
+                    <label htmlFor="labelNuDocumentoRuc">&nbsp;</label>
+                    <button type="button"
+                        pButton
+                        icon="pi pi-search"
+                        class="cfe-boton-primary"
+                        [disabled]="formularioInformacionGeneralSujetoProcesal.value.tipoDocumentoDeclarante?.id !== 1 || validarBuscarNaturalDocumento('nuDocumentoDeclarante')"
+                        [label]="''"
+                        (click)="buscarDeclaranteDocumento()">
+                    </button> 
+                </div>
+            </div>
+
+            <div class="w-full formgrid grid">
+                <div class="field col-12">
+                    <label class="cfe-semi-bold text-sm">
+                        <p-checkbox formControlName="registroJuridicaDeclaranteManual" [binary]="true" inputId="manual"
+                            (onChange)="activarRegistroManualDeclarantePersonaJuridica($event)" />
+                        Registro manual</label>
+                </div>
+            </div>
+
+            <div class="w-full formgrid grid">
+                <div class="field col-4 col-sm-12">
+                    <label for="nombresDeclaranteSujeto" class="font-bold text-sm">Nombres</label>
+                    <input pInputText
+                        class="p-inputtext-md w-full"
+                        placeholder="Nombres"
+                        id="idNombresDeclaranteSujeto"
+                        lettersOnly
+                        upperCaseInput
+                        formControlName="nombresDeclaranteSujeto" />
+                </div>
+
+                <div class="field col-4 col-sm-12">
+                    <label for="paternoDeclaranteSujeto" class="font-bold text-sm">Apellido Paterno</label>
+                    <input pInputText
+                        class="p-inputtext-md w-full"
+                        placeholder="Apellido paterno"
+                        id="idPaternoDeclaranteSujeto"
+                        lettersOnly
+                        upperCaseInput
+                        formControlName="paternoDeclaranteSujeto" />
+                </div>
+
+                <div class="field col-4 col-sm-12">
+                    <label for="maternoDeclaranteSujeto" class="font-bold text-sm">Apellido Materno (opcional)</label>
+                    <input pInputText class="p-inputtext-md w-full"
+                           placeholder="Apellido materno"
+                           id="idMaternoDeclaranteSujeto"
+                           lettersOnly
+                           upperCaseInput
+                           formControlName="maternoDeclaranteSujeto" />
+                </div>
+            </div>
+            <div class="cfe-titulo-1">Datos de contacto</div>
+
+            <div class="w-full formgrid grid">
+                <div class="field col-6 col-sm-12">
+                    <label for="nombresDeclaranteSujeto" class="font-bold text-sm">Correo electrónico principal (opcional)</label>
+                    <input pInputText
+                           class="p-inputtext-md w-full"
+                           id="idCorreoDeclaranteSujeto"
+                           formControlName="correoDeclaranteSujeto"
+                           [maxLength]="100" placeholder="Correo Electrónico" />
+                </div>
+
+                <div class="field col-6 col-sm-12">
+                    <label for="paternoDeclaranteSujeto" class="font-bold text-sm">Teléfono principal (opcional)</label>
+                    <input pInputText
+                            class="p-inputtext-md w-full"
+                            id="idTelefonoDeclaranteSujeto"
+                            formControlName="telefonoDeclaranteSujeto"
+                            [maxLength]="20"
+                        (keypress)="permitirSoloNumeros($event)" placeholder="Número de teléfono" />
+                </div>
+            </div>
+        </div>
+        }
+
+
+        @if(isPersonaFormulario || isJuridicaFormulario){
+            <div>
+                <app-listar-direccion-sujeto-procesal 
+                    [listaDirecciones]="inputListaDireccionesOriginal"
+                    (buscarPorTexto)="eventoBuscarPorTextoDirecciones($event)"
+                    [paginacionCondicion]="paginacionCondicionDirecciones"
+                    [paginacionConfiguracion]="paginacionConfiguracionDirecciones"
+                    [paginacionReiniciar]="paginacionReiniciarDirecciones"
+                    (cambiarPagina)="eventoCambiarPaginaDirecciones($event)"
+                    [nacionalidad]="nacionalidad" 
+                    [tipoPersona]="tipoPersona"
+                    (onListaDirecciones)="onListaDirecciones($event)" 
+                    [sujeto]="idSujetoCaso"
+                    [tipoRegistro]="tipoRegistro" 
+                    [sujeto]="sujeto2" 
+                    [lstTipoVia]="lstTipoVia" />
+            </div>
+        }
+
+        @if (isPersonaFormulario && !isEstadoFormulario && esDenuncianteDenunciadoAgraviado) {
+        <ng-container #Datos_Investigacion>
+            <h4 class="title-with-icon">
+                <label class="font-bold text-sm">Datos de la investigación</label>
+        
+                <button (click)="visualizarFormulario.DatosInvestigacion = !visualizarFormulario.DatosInvestigacion"
+                    class="btn-icon" aria-label="Toggle formulario">
+        
+                    @if (visualizarFormulario.DatosInvestigacion) {
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M7 10l5 5 5-5z" fill="currentColor" />
+                    </svg>
+                    }
+        
+                    @else {
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M7 14l5-5 5 5z" fill="currentColor" />
+                    </svg>
+                    }
+                </button>
+            </h4>
+        
+            @if (visualizarFormulario.DatosInvestigacion) {
+            <ng-container>
+                <div class="formgrid grid">
+                    <div class="field col-12 md:col-3">
+                        <label class="font-bold text-sm"> Funcionario público </label>
+        
+                        <div class="flex flex-wrap gap-6 mt-2">
+                            @for (rdb of CONSTANTES.SI_NO_CONTROL; track rdb) {
+                            <ng-container>
+                                <div class="flex align-items-center">
+                                    <p-radioButton (onClick)="onToggleControlRdb('cargoFuncionario', rdb.value);
+                                             onToggleControlRdb('institucionPublica', rdb.value)"
+                                        formControlName="funcionarioPublico"
+                                        [value]="rdb.value"
+                                        [inputId]="'funcionarioPublico-' + rdb.value" [label]="rdb.label"
+                                        name="funcionarioPublico" />
+                                </div>
+                            </ng-container>
+                            }
+                        </div>
+                    </div>
+        
+                    <div class="field col-12 md:col-4">
+                        <label class="font-bold text-sm"> Cargo del funcionario público</label>
+                        <p-dropdown
+                            formControlName="cargoFuncionario"
+                            [options]="lstCargoFuncionario" optionValue="id" optionLabel="nombre"
+                            filterBy="nombre" filter="true"
+                            emptyMessage="No se encontraron resultados" placeholder="Seleccionar cargo del funcionario público"
+                            emptyFilterMessage="No se encontraron resultados" />
+                    </div>
+        
+                    <div class="field col-12 md:col-5">
+                        <label class="font-bold text-sm"> Institución pública </label>
+                        <p-dropdown 
+                            formControlName="institucionPublica"
+                            [options]="lstInstitucionPublica" optionValue="id" optionLabel="nombre"
+                            filterBy="nombre" filter="true"
+                            emptyMessage="No se encontraron resultados" placeholder="Seleccionar institucion publica"
+                            emptyFilterMessage="No se encontraron resultados" />
+                    </div>
+                </div>
+        
+                <div class="formgrid grid">
+                    <div class="field col-12 md:col-3">
+                        <label class="font-bold text-sm"> Cuenta con defensor DD.HH </label>
+                        <div class="flex flex-wrap gap-6 mt-2">
+                            @for (rdb of CONSTANTES.SI_NO_CONTROL; track rdb) {
+                            <ng-container>
+                                <div class="flex align-items-center">
+                                    <p-radioButton (onClick)="onToggleControlRdb('tipoDefensor', rdb.value)"
+                                        formControlName="defensor" [value]="rdb.value"
+                                        [inputId]="'defensor-' + rdb.value" [label]="rdb.label"
+                                        name="defensor" />
+                                </div>
+                            </ng-container>
+                            }
+                        </div>
+                    </div>
+        
+                    <div class="field col-12 md:col-4">
+                        <label class="font-bold text-sm"> Tipo de defensor </label>
+                        <p-dropdown 
+                            formControlName="tipoDefensor" 
+                            [options]="lstTipoDefensor"
+                            optionValue="id" optionLabel="nombre"
+                            filterBy="nombre" emptyMessage="No se encontraron resultados"
+                            filter="true"
+                            placeholder="Seleccionar tipo de defensor" emptyFilterMessage="No se encontraron resultados" />
+                    </div>
+                </div>
+        
+                <div class="formgrid grid">
+                    <div class="field col-12 md:col-3">
+                        <label class="font-bold text-sm"> Cuenta con asociación defensora </label>
+                        <div class="flex flex-wrap gap-6 mt-2">
+                            @for (rdb of CONSTANTES.SI_NO_CONTROL; track rdb) {
+                            <ng-container>
+                                <div class="flex align-items-center">
+                                    <p-radioButton (onClick)="onToggleControlRdb('cargoAsociacion', rdb.value)"
+                                        formControlName="asociacionDefensor" [value]="rdb.value"
+                                        [inputId]="'asociacionDefensor-' + rdb.value" [label]="rdb.label"
+                                        name="asociacionDefensor" />
+                                </div>
+                            </ng-container>
+                            }
+                        </div>
+                    </div>
+        
+                    <div class="field col-12 md:col-4">
+                        <label class="font-bold text-sm"> Cargo de asociación </label>
+                        <p-dropdown 
+                            formControlName="cargoAsociacion" 
+                            [options]="lstCargoAsociacion"
+                            optionValue="id" optionLabel="nombre"
+                            filter="true"
+                            filterBy="nombre" emptyMessage="No se encontraron resultados" placeholder="Seleccionar cargo" />
+                    </div>
+                </div>
+        
+                <div class="formgrid grid">
+                    @if (esDenuncianteAgraviado) {
+                    <ng-container>
+                        <div class="field col-12 md:col-3">
+                            <label class="font-bold text-sm"> Fecha de valoracion </label>
+                            <p-calendar formControlName="fechaValorizacion" [minDate]="minDate" [maxDate]="maxDate"
+                                [showIcon]="true" icon="cfe-calendar-icon" [styleClass]="'w-full'" dateFormat="dd/mm/yy"
+                                placeholder="dd/mm/aaaa" class="p-inputtext-md cfe-calendar h-40" dateMask />
+                        </div>
+                    </ng-container>
+                    }
+        
+                    @if (esDenunciadoImputado) {
+                    <ng-container>
+                        <div class="field col-12 md:col-3">
+                            <label class="font-bold text-sm"> Fecha de detención </label>
+                            <p-calendar formControlName="fechaDetencion" [minDate]="minDate" [maxDate]="maxDate"
+                                [showIcon]="true" icon="cfe-calendar-icon" [styleClass]="'w-full'" dateFormat="dd/mm/yy"
+                                placeholder="dd/mm/aaaa" class="p-inputtext-md cfe-calendar h-40" dateMask />
+                        </div>
+                    </ng-container>
+                    }
+        
+                    @if (esAgraviadoDenunciadoImputado) {
+                    <ng-container>
+                        <div class="field col-12 md:col-4">
+                            <label class="font-bold text-sm"> Condición de la parte </label>
+                            <p-dropdown formControlName="condicionParte" 
+                                [options]="lstCondicionParte"
+                                optionValue="id" optionLabel="nombre" filter="true"
+                                filterBy="nombre" emptyMessage="No se encontraron resultados"
+                                placeholder="Seleccionar condición" />
+                        </div>
+                    </ng-container>
+                    }
+                </div>
+        
+                @if (esDenuncianteAgraviado) {
+                <ng-container>
+                    <div class="formgrid grid">
+                        <div class="field col-12 md:col-4">
+                            <label class="font-bold text-sm"> Tipo de violencia </label>
+                            <p-dropdown formControlName="tipoViolencia" [options]="lstTipoViolencia"
+                                optionValue="id" optionLabel="nombre" filter="true"
+                                filterBy="nombre" emptyMessage="No se encontraron resultados"
+                                placeholder="Seleccionar tipo de violencia" />
+                        </div>
+        
+                        <div class="field col-12 md:col-4">
+                            <label class="font-bold text-sm"> Factor de riesgo </label>
+                            <p-dropdown formControlName="tipoRiesgo" [options]="lstTipoRiesgo"
+                                optionValue="id" optionLabel="nombre" filter="true"
+                                filterBy="nombre" emptyMessage="No se encontraron resultados"
+                                placeholder="Seleccionar factor de riesgo" />
+                        </div>
+        
+                        <div class="field col-12 md:col-4">
+                            <label class="font-bold text-sm"> Tipo de discapacidad </label>
+                            <p-dropdown formControlName="tipoDiscapacidad"
+                                [options]="lstTipoDiscapacidad" optionValue="id" optionLabel="nombre"
+                                filter="true" filterBy="nombre"
+                                emptyMessage="No se encontraron resultados" placeholder="Seleccionar tipo discapacidad" />
+                        </div>
+                    </div>
+                </ng-container>
+                }
+        
+                <div class="formgrid grid">
+                    <div class="field col-12">
+                        <label class="font-bold text-sm">Observaciones </label>
+                        <textarea pInputTextarea formControlName="observacion" rows="5"
+                            maxlength="{{ longitudMaximaObservaciones }}" class="p-inputtext p-2 w-full">
+                                    </textarea>
+                        <contador-footer-textarea [textarea]="formularioInformacionGeneralSujetoProcesal.get('observacion')"
+                            [size]="longitudMaximaObservaciones"></contador-footer-textarea>
+                    </div>
+                </div>
+            </ng-container>
+            }
+        </ng-container>
+        }
+
+        <div>
+            <app-listar-delitos-sujeto-procesal 
+                [listaDelitos]="inputListaDelitosOriginal"
+                [listaDelitosCompleta]="inputListaDelitos"
+                (buscarPorTexto)="eventoBuscarPorTextoDelitos($event)"
+                [paginacionCondicion]="paginacionCondicionDelitos"
+                [paginacionConfiguracion]="paginacionConfiguracionDelitos"
+                [paginacionReiniciar]="paginacionReiniciarDelitos"
+                (cambiarPagina)="eventoCambiarPaginaDelitos($event)"
+                [sujeto]="idSujetoCaso" 
+                (onListaDelitos)="onListaDelitos($event)" 
+                [numeroCaso]="numeroCaso"
+                [nombreSujeto]="nombreSujeto"
+                [idCaso]="idCasoFiscal"/>
+        </div>
+      <div class="mt-4 w-full flex align-items-end justify-content-end">
+          <button (click)="agregar()" type="submit" class="cfe-boton-primary cfe-boton-lg ml-2 boton-w">Guardar</button>
+      </div>
+    </form>
+</div>

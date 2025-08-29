@@ -1,0 +1,11 @@
+<h3 class='subetapas-titulo'>Sub etapas de {{ etapaActual }}</h3>
+
+<ul class="subetapas">
+    @for (subetapa of subetapasLista; track subetapa.nombre) {
+        <li class="{{ subetapa.clase }}">
+            <fn-icon [ico]="iconUtil.obtenerIcono('iCheckCircle')" height="1.2rem" class="icon-completado"></fn-icon>
+            {{ subetapa.nombre }}
+            <fn-icon [ico]="iconUtil.obtenerIcono('iArrowRight')" height="1.2rem"></fn-icon>
+        </li>
+    }
+</ul>

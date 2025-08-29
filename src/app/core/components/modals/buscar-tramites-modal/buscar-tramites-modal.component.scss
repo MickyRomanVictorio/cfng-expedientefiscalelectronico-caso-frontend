@@ -1,0 +1,17 @@
+.buscar-tramite-container {
+  border-radius: 4px;
+}
+
+.lista-ancho-maximo{
+  max-width: 200px;
+}
+
+::ng-deep  .p-dropdown-items span {
+  white-space: normal;
+}
+
+
+::ng-deep .p-dialog {
+  max-width: 1200px; 
+  width: 80%;
+}

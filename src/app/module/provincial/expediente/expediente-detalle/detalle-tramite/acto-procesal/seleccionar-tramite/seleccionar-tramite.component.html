@@ -1,0 +1,68 @@
+<div class="tramite_a_realizar">
+
+    <div
+        class="acto_tramite_seleccionado"
+        (click)="abrirSelectorActoTramite()"
+        onKeyPress=""
+        [class.modo_lectura]="lectura()"
+    >
+        <div class="acto_tramite_seleccionado_contenedor">
+            <span 
+                class="acto-procesal-nombre"
+                [class.placeholder]="!estaElActoProcesalSeleccionado"
+                [class.acto-procesal]="estaElActoProcesalSeleccionado"
+            >
+                {{ !estaElActoProcesalSeleccionado ? 'Acto procesal' : actoProcesalSeleccionado?.nombre }}
+            </span> <b>></b> 
+            <span 
+                class="tramite-nombre"
+                [class.placeholder]="!estaElTramiteSeleccionado"
+                [class.tramite]="estaElTramiteSeleccionado"
+            >
+                {{ !tramiteSeleccionado ? 'Trámite' : tramiteSeleccionado.nombre }}
+            </span>
+        </div>
+        <fn-icon
+            [ico]="iconUtil.obtenerIcono('iChevronRight')"
+            [style.transform]="selectorExpandido ? 'rotate(270deg)' : 'rotate(90deg)'"
+            height="28px"
+        />
+    </div>
+
+    @if ( estaElActoProcesalSeleccionado && estaElTramiteSeleccionado) {
+        <div class="icono-guardado">
+            <img 
+                [src]="iconAsset.obtenerRutaIcono('check-circle')"
+                alt="guardado"
+                class="pr-2 h-2rem"
+            >
+        </div>
+    }
+
+    @if ( selectorExpandido ) {
+        <div class="selectores_contenedor">
+            <div class="selector_acto_procesal">
+                <selector-vertical
+                    titulo="Actos procesales"
+                    [elementos]="actosProcesalesAMostrar"
+                    [tieneSubelementos]="true"
+                    [tieneBuscador]="true"
+                    [elementoSeleccionado]="actoProcesalSeleccionado?.codigo"
+                    (alCambiarElementoSeleccionado)="alCambiarActoProcesalEvento($event)"
+                    textoElementosVacios="No se encontraron actos procesales"
+                />
+            </div>
+            <div class="selector_tramite">
+                <selector-vertical
+                    titulo="Trámites"
+                    [elementos]="tramitesAMostrar"
+                    [tieneSubelementos]="false"
+                    [elementoSeleccionado]="tramiteSeleccionado?.codigo"
+                    (alCambiarElementoSeleccionado)="alCambiarTramiteEvento($event)"
+                    textoElementosVacios="Seleccione un acto procesal para ver los trámites"
+                />
+            </div>
+        </div>
+    }
+
+</div>

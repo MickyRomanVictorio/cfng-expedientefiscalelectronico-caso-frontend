@@ -1,0 +1,117 @@
+<div class="w-full" [formGroup]="form">
+  <div class="casos-anulados-container">
+    <div class="header flex justify-content-between flex-wrap">
+      <span
+        class="flex align-items-center justify-content-center font-semibold"
+      >
+        &nbsp;
+      </span>
+      <div class="flex align-items-center justify-content-center">
+        <p-button
+          (click)="close()"
+          icon="pi pi-times"
+          styleClass="p-button-rounded text-color p-button-text"
+        ></p-button>
+      </div>
+    </div>
+
+    <div class="col-12" [formGroup]="form">
+      <h5>Modificar destino de la derivación</h5>
+
+      <div class="p-fluid p-formgrid grid">
+        <div class="field col-12 md:col-12">
+          <label for=""> Distrito fiscal</label>
+          <p-dropdown
+            optionLabel="nombre"
+            optionValue="id"
+            (onChange)="verTipoEspecialidad($event)"
+            styleClass="p-inputtext-lg py-1"
+            [options]="listaDistritoFiscal"
+            emptyMessage="Sin resultados"
+            placeholder="Seleccione un distrito fiscal"
+            [showClear]="false"
+            formControlName="distritoFiscal"
+          >
+          </p-dropdown>
+        </div>
+
+        <div class="field col-12 md:col-12">
+          <label for=""> Tipo de especialidad</label>
+          <p-dropdown
+            optionLabel="nombre"
+            optionValue="id"
+            (onChange)="verEspecialidad($event)"
+            [options]="tipoEspecialidad"
+            styleClass="p-inputtext-lg py-1"
+            [options]="tipoEspecialidad"
+            emptyMessage="Sin resultados"
+            placeholder="Seleccione un tipo de especialidad"
+            [showClear]="false"
+            formControlName="tipoEspecialidad"
+          >
+          </p-dropdown>
+        </div>
+
+        <div class="field col-12 md:col-12">
+          <label for=""> Especialidad</label>
+          <p-dropdown
+            optionLabel="nombre"
+            optionValue="id"
+            (onChange)="verFiscalias($event)"
+            styleClass="p-inputtext-lg py-1"
+            [options]="listaEspecialidades"
+            emptyMessage="Sin resultados"
+            placeholder="Seleccione una especialidad"
+            [showClear]="false"
+            formControlName="especialidad"
+          >
+          </p-dropdown>
+        </div>
+
+        <div class="field col-12 md:col-12">
+          <label for=""> Fiscalía </label>
+          <p-dropdown
+            optionLabel="nombre"
+            optionValue="id"
+            styleClass="p-inputtext-lg py-1"
+            [options]="listaFiscalias"
+            emptyMessage="Sin resultados"
+            placeholder="Seleccione una fiscalía"
+            [showClear]="false"
+            formControlName="fiscalia"
+            (onChange)="verDespachos($event)"
+          >
+          </p-dropdown>
+        </div>
+
+        <div class="field col-12 md:col-12">
+          <label for=""> Despacho</label>
+          <p-dropdown
+            optionLabel="nombre"
+            optionValue="id"
+            styleClass="p-inputtext-lg py-1"
+            [options]="listaDespachos"
+            emptyMessage="Sin resultados"
+            placeholder="Seleccione despacho"
+            [showClear]="false"
+            formControlName="despacho"
+          >
+          </p-dropdown>
+        </div>
+      </div>
+    </div>
+    <div></div>
+    <div class="p-fluid p-formgrid grid mt-3">
+      <div class="field col-12 md:col-12">
+        <div class="flex justify-content-end">
+          <button
+            (click)="showActualizarDerivacion()"
+            class="cfe-boton-primary cfe-boton-m mr-2 boton-w"
+          >
+            ACTUALIZAR
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

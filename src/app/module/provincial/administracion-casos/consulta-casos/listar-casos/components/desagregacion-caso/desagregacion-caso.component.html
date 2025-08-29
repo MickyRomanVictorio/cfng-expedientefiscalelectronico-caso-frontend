@@ -1,0 +1,53 @@
+<div class="cfe-dialog__header">
+  <h3>Detalle de la desagregación - Fecha: {{datePipe.transform(fechaDesagregacion, "d 'de' MMMM 'del' y", '', 'es-PE')}}</h3>
+  <fn-icon
+    [ico]="iconUtil.obtenerIcono('iClose')"
+    height="28px"
+    (click)="close()"
+  ></fn-icon>
+</div>
+  <div class="cfe-tabla-white pt-2">
+    <p-table
+      [value]="casoDesagregado"
+      [scrollable]="true"
+      scrollHeight="flex"
+      [tableStyle]="{ 'min-width': '50rem' }"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th scope="col" class="w-1">Grupo</th>
+          <th scope="col" class="w-1">Partes</th>
+          <th scope="col" class="w-1">Número de Caso</th>
+          <th scope="col" class="w-4">Delito(s)</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-grupo>
+        <tr>
+          <td>{{ grupo.grupo }}</td>
+          <td>
+            <div *ngFor="let parte of grupo.partesSujetos">
+              {{ parte.partes }} ({{parte.numeroDocumento}})
+            </div>
+          </td>
+          <td><span [innerHTML]="grupo.coCaso !== 'Por asignar' ? stringUtil.formatearCodigoCaso(grupo.coCaso) : grupo.coCaso"></span></td>
+          <td>
+            <div class="delito-registrado overflow-y-auto h-6rem">
+              <div
+                *ngFor="let delito of grupo.delitos"
+                class="border-round-xl m-1 p-2"
+                style="background: rgba(241, 151, 0, 0.2117647059)"
+              >
+                {{ delito.labelDelito }}
+              </div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8">No se encontraron registros.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  
+</div>

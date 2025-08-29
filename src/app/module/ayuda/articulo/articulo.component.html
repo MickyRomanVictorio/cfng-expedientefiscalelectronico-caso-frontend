@@ -1,0 +1,114 @@
+<div class="cfe-container max-w-3xl mx-auto px-4 md:px-6">
+  <div class="grid text-center">
+    <div class="col-4" style="padding: 0 !important;">
+      <h3 class="cfe-titulo-1">Módulo de ayuda al usuario</h3>
+      <h6 class="m-0">EFE: Expediente fiscal electrónico</h6>
+    </div>
+    <div class="col-8">
+      <div class="field mb-0 w-full">
+        <app-ayuda-autocompletar></app-ayuda-autocompletar>
+      </div>
+    </div>
+  </div>
+  <div class="grid mt-3 mb-3">
+    <div class="col-12">
+      <app-ayuda-breadcrumb [data]="breadCumList"></app-ayuda-breadcrumb>
+    </div>
+  </div>
+  <div class="cfe_bandeja__table">
+    <div class="grid mt-3 ml-5 mr-5">
+      <div class="col-12 flex flex-column">
+        <div class="grid">
+          <div class="col-8 div_izquierdo">
+            <div class="grid">
+              <div class="col-12 flex flex-column mb-3">
+                <span class="flex align-items-center w-full">
+                  <fn-icon
+                    [ico]="iconUtil.obtenerIcono('iViewFile')"
+                    height="1.6rem"
+                  ></fn-icon>
+                  <span class="cfe-titulo-2">{{ categoriaDetalle?.noCategoria }}</span>
+                </span>
+              </div>
+              <div class="col-12 flex flex-column mb-3 contenido_html" [innerHTML]="categoriaDetalle?.contenido"></div>
+              <div class="col-12 flex flex-column mb-3">
+                <h2 class="cfe-titulo-2">Tags</h2>
+                <div class="col-12 flex flex-row gap-2">
+                  @for (tag of categoriaDetalle?.tags; let i = $index; track i) {
+                    <button class="cfe-boton-secondary cfe-boton-sm" (click)="buscarTag(tag.idTag)">
+                      {{ tag.noTag }}
+                    </button>
+                  }
+                </div>
+              </div>
+              <div *ngIf="!showComentario" class="col-12 flex flex-column mb-3">
+                <h2 class="cfe-titulo-2">¿Te ha resultado útil esta información?</h2>
+                <div class="col-12 flex flex-row gap-2">
+                  <button class="cfe-boton-secondary cfe-boton-lg">
+                    Sí
+                  </button>
+                  <button class="cfe-boton-secondary cfe-boton-lg" (click)="mostrarComentario()">
+                    No
+                  </button>
+                </div>
+              </div>
+              <div *ngIf="showComentario" class="col-12 flex flex-column mb-3">
+                <h2 class="cfe-titulo-2">¿Cómo podemos mejorar?</h2>
+                <div class="col-12 flex flex-column">
+                  <textarea
+                    rows="5"
+                    cols="30"
+                    class="p-inputtext-lg py-3 text-lg w-full"
+                    maxlength="200"
+                    [(ngModel)]="comentario"
+                  >
+                  </textarea>
+                  <button class="cfe-boton-primary cfe-boton-lg col-3 mt-2" (click)="guardarComentario()">
+                    Enviar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-4 div_derecho">
+            <div class="grid">
+              <span *ngIf="categoriasRelacionadas.length > 0" class="col-12 flex flex-column">
+                <h2 class="cfe-titulo-2">Otros temas relacionados:</h2>
+              </span>
+              @for (categoria of categoriasRelacionadas; let i = $index; track i) {
+                <span
+                  class="flex items-center cursor-pointer p-button p-component px-3 py-2 ayuda-boton-categoria cfe-boton-lg w-full"
+                  (click)="navigateToDetail(categoria)"
+                >
+                  <fn-icon
+                    [ico]="iconUtil.obtenerIcono('iViewFile')"
+                    height="1.6rem"
+                  ></fn-icon>
+                  <span class="ml-2 mt-1 mb-1">{{ categoria.noCategoria }}</span>
+                  <span class="ml-auto">&gt;</span>
+                </span>
+              }
+              <span *ngIf="preguntasRelacionadas.length > 0" class="col-12 flex flex-column mt-3">
+                <h2 class="cfe-titulo-2">Preguntas frecuentes relacionadas:</h2>
+              </span>
+              @for (categoria of preguntasRelacionadas; let i = $index; track i) {
+                <span
+                  class="flex items-center cursor-pointer p-button p-component px-3 py-2 ayuda-boton-categoria cfe-boton-lg w-full"
+                  (click)="navigateToDetail(categoria)"
+                >
+                  <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M13.292 1.83301H5.50033C5.0141 1.83301 4.54778 2.02616 4.20396 2.36998C3.86015 2.7138 3.66699 3.18011 3.66699 3.66634V18.333C3.66699 18.8192 3.86015 19.2856 4.20396 19.6294C4.54778 19.9732 5.0141 20.1663 5.50033 20.1663H16.5003C16.9866 20.1663 17.4529 19.9732 17.7967 19.6294C18.1405 19.2856 18.3337 18.8192 18.3337 18.333V6.87467L13.292 1.83301Z" stroke="#0E2E4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M9.16699 9.44174C9.35033 9.07507 9.62533 8.70841 9.99199 8.52507C10.3716 8.3056 10.8148 8.22231 11.2482 8.28899C11.6816 8.35567 12.0792 8.56831 12.3753 8.89174C12.6503 9.25841 12.8337 9.62507 12.8337 10.0834C12.8337 11.2751 11.0003 11.9167 11.0003 11.9167" stroke="#0E2E4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M11 15.583H11.01" stroke="#0E2E4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span class="ml-2 mt-1 mb-1">{{ categoria.noCategoria }}</span>
+                  <span class="ml-auto">&gt;</span>
+                </span>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

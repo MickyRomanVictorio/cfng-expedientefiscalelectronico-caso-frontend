@@ -1,0 +1,271 @@
+@if ( servicioNoActivo ) {
+    <mensaje-interoperabilidad-pj />
+  } @if ( !servicioNoActivo ) {
+  <div class="grid h-full w-full m-0 border-round-sm mt-15">
+    <div class="col-12 m-0 p-0">
+      @if ( tieneActoTramiteCasoDocumento ) { @if ( !tramiteEstadoRecibido ) {
+        <mensaje-completar-informacion
+          titulo = "Reprogramación de notificación de audiencia"
+        />
+      }}
+      <form [formGroup]="formRegistro" class="mt-3">
+        <div class="col-12 m-0 p-0">
+          <div class="formgrid grid">
+            <div class="field col-12 lg:col-4">
+              <label for="fechaNotificacion" class="font-semibold"
+                >Fecha de notificación</label
+              >
+              <p-calendar
+                id="fechaNotificacion"
+                dateMask
+                dateFormat="dd/mm/yy"
+                class="p-inputtext-lg cfe-calendar h-56"
+                [showIcon]="true"
+                icon="cfe-calendar-icon"
+                placeholder="dd/mm/aaaa"
+                formControlName="fechaNotificacion"
+              ></p-calendar>
+              <small
+                class="error-message"
+                *ngIf="
+                  formRegistro.get('fechaNotificacion')!.touched &&
+                  formRegistro.get('fechaNotificacion')!.hasError('required')
+                "
+              >
+                Seleccione la fecha
+              </small>
+            </div>
+            @if(esJuzgamiento){
+            <div class="field col-12 lg:col-4">
+              <label for="cboAudiencias" class="font-semibold"
+                >Fechas y horas de las audiencias anteriores</label
+              >
+              <p-dropdown
+                id="cboAudiencias"
+                styleClass="py-1 p-inputtext-lg"
+                [options]="listaAudiencias"
+                placeholder="Seleccione"
+                optionValue="idAgendaFiscal"
+                formControlName="cboAudiencias"
+                (onChange)="eventoSeleccionarAudiencia($event)"
+                emptyMessage="No se encontraron resultados"
+              >
+                <ng-template let-item pTemplate="selectedItem">
+                  {{ item.fechaHoraAudicencia | date : "dd/MM/yyyy HH:mm" }}
+                </ng-template>
+                <ng-template let-item pTemplate="item">
+                  {{ item.fechaHoraAudicencia | date : "dd/MM/yyyy HH:mm" }}
+                </ng-template>
+              </p-dropdown>
+            </div>
+            }@else{
+            <div class="field col-12 lg:col-4">
+              <label for="fechaAudiencia" class="font-semibold"
+                >Fecha y hora de audiencia anterior</label
+              >
+              <p-calendar
+                dateMask
+                dateFormat="dd/mm/yy"
+                class="p-inputtext-lg cfe-calendar h-56"
+                [showIcon]="true"
+                icon="cfe-calendar-icon"
+                placeholder="dd/mm/aaaa"
+                formControlName="fechaAudiencia"
+                [disabled]="flagregistrar"
+              ></p-calendar>
+              <small
+                class="error-message"
+                *ngIf="
+                  formRegistro.get('fechaAudiencia')!.touched &&
+                  formRegistro.get('fechaAudiencia')!.hasError('required')
+                "
+              >
+                Seleccione la fecha
+              </small>
+            </div>
+            }
+  
+            <div class="field col-12 lg:col-4">
+              <label for="fechaAudienciaNueva" class="font-semibold">
+                @if(esJuzgamiento){Fecha y hora de reprogramación}@else{Fecha y
+                hora de nueva audiencia}
+              </label>
+              @if(esJuzgamiento){
+              <p-calendar
+                dateFormat="dd/mm/yy"
+                class="p-inputtext-lg cfe-calendar h-56"
+                [showIcon]="true"
+                icon="cfe-calendar-icon"
+                [showTime]="true"
+                hourFormat="24"
+                placeholder="dd/mm/aaaa HH:mm"
+                formControlName="fechaAudienciaNueva"
+                emptyMessage="No se encontraron resultados"
+                [minDate]="minDateFechaAudiencia"
+              ></p-calendar>
+              }@else{
+              <p-calendar
+                dateMask
+                dateFormat="dd/mm/yy"
+                class="p-inputtext-lg cfe-calendar h-56"
+                [showIcon]="true"
+                icon="cfe-calendar-icon"
+                placeholder="dd/mm/aaaa"
+                formControlName="fechaAudienciaNueva"
+                [disabled]="flagregistrar"
+              ></p-calendar>
+              }
+              <small
+                class="error-message"
+                *ngIf="
+                  formRegistro.get('fechaAudienciaNueva')!.touched &&
+                  formRegistro.get('fechaAudienciaNueva')!.hasError('required')
+                "
+              >
+                Seleccione la fecha
+              </small>
+            </div>
+            <div class="field col-12 lg:col-6">
+              <div class="flex gap-3">
+                @for (dataRadio of tipoActividadAgenda; track $index) {
+                <div class="flex align-items-center">
+                  <p-radioButton
+                    name="tipoCitacion"
+                    [value]="dataRadio.id"
+                    formControlName="tipoCitacion"
+                    inputId="or{{ false }}{{ dataRadio.id }}"
+                  />
+                  <label
+                    for="or{{ false }}{{ dataRadio.id }}"
+                    class="ml-2 text-sm cursor-pointer"
+                    >Reunión {{ dataRadio.coDescripcion.toLowerCase() }}</label
+                  >
+                </div>
+                }
+              </div>
+            </div>
+  
+            <div class="col-12 mb-2">
+              @if(esReunionVirtual){
+              <label for="urlReunion" class="font-semibold"
+                >URL Reunión (Opcional):</label
+              >
+              <input
+                pInputText
+                id="urlReunion"
+                class="p-inputtext-md text-md py-3 w-full"
+                placeholder="URL Reunión"
+                formControlName="urlReunion"
+                maxlength="250"
+              />
+              <small
+                class="error-message"
+                *ngIf="
+                  formRegistro.get('urlReunion')!.touched &&
+                  formRegistro.get('urlReunion')!.hasError('invalidUrl')
+                "
+                >Ingrese una URL válida.</small
+              >
+              }
+            </div>
+  
+            <div class="field col-12 lg:col-6">
+              <label for="cboDistritoJudicial" class="font-semibold"
+                >Distrito Judicial</label
+              >
+              <p-dropdown
+                id="cboDistritoJudicial"
+                formControlName="cboDistritoJudicial"
+                styleClass="py-1 p-inputtext-lg"
+                [options]="distritoJudicialList"
+                placeholder="Seleccione el distrito judicial"
+                (ngModelChange)="listarJuzgadosPazLetrado($event)"
+                optionLabel="nombre"
+                optionValue="id"
+                emptyMessage="No se encontraron resultados"
+              >
+              </p-dropdown>
+              <small
+                class="error-message"
+                *ngIf="
+                  formRegistro.get('cboDistritoJudicial')!.touched &&
+                  formRegistro.get('cboDistritoJudicial')!.hasError('required')
+                "
+              >
+                Seleccione distrito judicial
+              </small>
+            </div>
+  
+            <div class="field col-12 lg:col-6">
+              <label for="cboJuzgado" class="font-semibold">Juzgado</label>
+              <p-dropdown
+                id="cboJuzgado"
+                formControlName="cboJuzgado"
+                styleClass="py-1 p-inputtext-lg"
+                [options]="juzgadosList"
+                placeholder="Seleccione el juzgado"
+                optionLabel="descEntidad"
+                optionValue="codEntidad"
+                emptyMessage="No se encontraron resultados"
+              >
+              </p-dropdown>
+              <small
+                class="error-message"
+                *ngIf="
+                  formRegistro.get('cboJuzgado')!.touched &&
+                  formRegistro.get('cboJuzgado')!.hasError('required')
+                "
+              >
+                Seleccione Juzgado
+              </small>
+            </div>
+  
+            <div class="field col-12 lg:col-12">
+              <label for="txtObservacion" class="font-semibold"
+                >Observaciónes (Opcional)</label
+              >
+              <textarea
+                id="txtObservacion"
+                rows="5"
+                formControlName="txtObservacion"
+                class="p-inputtext p-2 w-full"
+                [ngClass]="{
+                  'ng-invalid ng-dirty': errorMsg('txtObservacion')
+                }"
+                maxlength="200"
+              ></textarea>
+              <small
+                error
+                *ngIf="errorMsg('txtObservacion')"
+                class="p-error block"
+              >
+                {{ errorMsg("txtObservacion") }}
+              </small>
+              <small
+                class="block text-right mt-1"
+                [ngClass]="{
+                  'p-error': counterReportChar() > longitudMaximaObservaciones
+                }"
+              >
+                {{ counterReportChar() }}/{{ longitudMaximaObservaciones }}
+                caracteres
+              </small>
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-content-end">
+          @if(!flagregistrar){
+          <button
+            (click)="eventoRegistrarAgenda()"
+            [disabled]="!formsValidation"
+            class="cfe-boton-primary cfe-boton-m mr-2 boton-w"
+          >
+            Guardar
+          </button>
+          }
+        </div>
+      </form>
+    </div>
+  </div>
+  }
+  

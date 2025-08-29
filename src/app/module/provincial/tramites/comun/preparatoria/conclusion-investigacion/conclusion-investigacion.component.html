@@ -1,0 +1,30 @@
+<app-alertas-tramite
+  [alertas]="alertas"
+  [idCaso]="idCaso"
+  [idEtapa]="idEtapa"
+></app-alertas-tramite>
+
+<div class="grid mt-3">
+  <div class="field col-12 lg:col-6">
+    <div class="formgrid grid">
+      <div class="field col-11">
+        <button
+        type="button"
+        [disabled]="tramiteEstadoFirmado"
+        class="cfe-boton-primary cfe-boton-lg w-full"
+        (click)="mostrarModal()"
+      >
+        <span class="family-poppin-bold">Asignación de plazo</span>
+      </button>
+
+      </div>
+      @if ( plazoRequest ) {
+        <div class="field col-1">
+            <div class="mt-1">
+              <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+            </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

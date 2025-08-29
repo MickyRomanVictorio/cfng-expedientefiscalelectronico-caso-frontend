@@ -1,0 +1,83 @@
+<div class="mt-4 w-full">
+  <label class="font-bold text-sm mb-4">Delitos</label>
+
+
+   @if(this.ocultarBuscador){
+  <form [formGroup]="formDelitoSujetoProcesal">
+     <div class="grid mt-1">
+       <div class="col md:col-3">
+         <div class="field flex align-items-center gap-2">
+           <label class="text-sm mb-0">Buscador:</label>
+           <input pInputText lettersOnly upperCaseInput 
+             class="p-inputtext w-full" 
+             [maxLength]="60" 
+             formControlName="buscar" 
+             (keyup)="eventoBuscarSegunTexto()"
+             />
+         </div>
+       </div>
+     </div>
+  </form>
+  }
+
+  @if (listaDelitos.length > 0) {
+    <p-table class="cfe-table-primary" [value]="listaDelitos" [tableStyle]="{ 'min-width': '50rem' }">
+      <ng-template pTemplate="header">
+        <tr>
+          <th scope>N°</th>
+          <th scope>Artículo</th>
+          <th scope>Delito genérico/ Delito sub-génerico/ Delito específico</th>
+          <th scope>Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-index="rowIndex" let-delito>
+        <tr>
+          <td>{{ index + 1 }}</td>
+          <td>{{ delito.articulo }}</td>
+          <td>
+            {{ delito.delitoGenerico }} / {{ delito.delitoSubgenerico }} / {{ delito.delitoEspecifico }}
+          </td>
+          <td class="flex gap-2">
+            <fn-icon
+                class="cursor-pointer"
+                [ico]="iconUtil.obtenerIcono('iTrash')"
+                (click)="eliminarDelitoSujeto(delito.idDelitoSujeto,index)"
+                height="2.1rem"
+                onKeyPress
+              ></fn-icon>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <app-paginator
+      [query]="paginacionCondicion"
+      [items]="paginacionConfiguracion"
+      [rowsPerPageOptions]="[]"
+      [resetPage]="paginacionReiniciar"
+      (paginate)="eventoCambiarPagina($event)"
+    ></app-paginator>
+
+    <div class="w-full flex align-items-end justify-content-end gap-3 mt-3">
+      <p-button
+        (click)="tipificarDelitos()"
+        icon="pi pi-plus"
+        label="Agregar delitos"
+        styleClass="p-button cfe-boton-primary text-white font-semibold px-4 py-1.2"
+        onKeyPress
+      ></p-button>
+    </div>
+  } @else {
+    <div class="w-full flex flex-column justify-content-center align-items-center pt-4 pb-4 mt-3 contenido-sin-delitos">
+      <span class="font-bold text-gray-600 mb-4">Sin delitos registrados</span>
+      <p-button
+        (click)="tipificarDelitos()"
+        icon="pi pi-plus"
+        label="Tipificar delitos"
+        styleClass="p-button cfe-boton-primary text-white font-semibold px-4 py-1.2"
+        onKeyPress
+      ></p-button>
+    </div>
+  }
+</div>
+
+

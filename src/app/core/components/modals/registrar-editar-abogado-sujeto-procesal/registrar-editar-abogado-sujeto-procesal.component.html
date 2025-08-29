@@ -1,0 +1,206 @@
+<div class="crear-editar-abogados">
+    <div class="modal__header">
+      <div class="modal_header__content">
+        <div [innerHTML]="titulo" class="cfe-titulo-1"></div>
+      </div>
+      <div class="flex align-items-center justify-content-center">
+        <p-button onKeyPress (click)="ref.close()" icon="pi pi-times" styleClass="p-button-rounded text-color p-button-text"></p-button>
+      </div>
+    </div>
+
+    <form [formGroup]="formAbogado">
+        @if(textoValidacion){
+        <div class="mb-3">
+            <mensaje-generico [closable]="textoValidacion == null"
+                                  [tipoAlerta]="'error'"
+                                  [titulo]="textoValidacion"/>
+        </div>
+        }
+        <div class="mb-3 w-full flex align-items-end">
+            <label for="tipoRegistro" class="cfe-semi-bold text-sm">
+                <p-checkbox
+                [binary]="true"
+                id="tipoRegistro"
+                formControlName="tipoRegistro"
+                (onChange)="cambiarRegistroManual($event)"
+                [disabled]="true">
+              </p-checkbox><span class="ml-2">Registro manual</span></label>
+        </div>
+
+        <div class="grid">
+            <div class="col-12 md:col-5">
+                <label for="tipoDocIdentidad" class="p-label-bottom font-bold text-sm">Tipo de documento</label>
+                <p-dropdown
+                optionLabel="nombre"
+                optionValue="id"
+                styleClass="p-inputtext-md"
+                appendTo="body"
+                [options]="lstTipoDocIdentidad"
+                emptyMessage="Sin resultados"
+                placeholder="Seleccione tipo de documento"
+                (onChange)="cambiarTipoDocumento($event)"
+                formControlName="tipoDocIdentidad"
+              ></p-dropdown>
+            </div>
+            <div class="col-12 md:col-5">
+                <label for="nroDocumento" class="p-label-bottom font-bold text-sm">Número de documento</label>
+                <input
+                formControlName="nroDocumento"
+                pInputText
+                [class.input-disabled]="!formAbogado.value.tipoDocIdentidad"
+                upperCaseInput
+                [maxLength]="longitudMaximaInput"
+                (input)="resetearCambioInputDocumento()"
+                (keypress)="alfanumericoInput ? validOnlyAlphanumeric($event) : validOnlyNumbers($event)"
+                (paste)="alfanumericoInput ? validOnlyAlphanumericOnPaste($event) : validOnlyNumberOnPaste($event)"
+                (drop)="alfanumericoInput ? validOnlyAlphanumericDrop($event): validOnlyNumberDrop($event)"
+                class="p-inputtext-md w-full"
+                type="text"
+                placeholder="Ingrese el número de documento"
+              />
+            </div>
+                <div class="col-12 md:col-2 flex align-items-end">
+                    <button [disabled]="!showBtnBuscar || validarBuscarNaturalDocumento()"
+                            pButton
+                            type="button"
+                            class="cfe-boton-primary ml-2 font-semibold"
+                            (click)="buscarAbogadoReniec()">
+                            <fn-icon class="mr-1"
+                            [ico]="iconUtil.obtenerIcono('iSearch')"
+                            height="1.6rem" />Buscar
+                    </button>
+                </div>
+
+        </div>
+        <div class="grid flex">
+            <div class="col-12 md:col-12">
+                <label for="nombresCompletos" class="p-label-bottom font-bold text-sm">Nombres</label>
+                <input
+                formControlName="nombresCompletos"
+                lettersOnly
+                trimSpaces
+                upperCaseInput
+                [maxLength]="60"
+                pInputText
+                class="p-inputtext-md w-full"
+                [attr.placeholder]="showBtnBuscar ? 'Consulte un número de documento' : 'Ingrese los nombres del abogado'"
+                type="text"/>
+            </div>
+        </div>
+
+        <div class="grid flex">
+            <div class="col-12 md:col-6">
+                <label for="apellidPaterno" class="p-label-bottom font-bold text-sm">Apellido paterno</label>
+                <input formControlName="apellidPaterno"
+                       pInputText
+                       trimSpaces
+                       lettersOnly
+                       [maxLength]="40"
+                       upperCaseInput
+                       class="p-inputtext-md w-full"
+                       [attr.placeholder]="showBtnBuscar ? 'Consulte un número de documento' : 'Ingrese el apellido paterno del abogado'"
+                       type="text"/>
+            </div>
+            <div class="col-12 md:col-6">
+                <label for="apellidoMaterno" class="p-label-bottom font-bold text-sm">Apellido materno</label>
+                <input formControlName="apellidoMaterno"
+                       pInputText
+                       trimSpaces
+                       lettersOnly
+                       [maxLength]="40"
+                       upperCaseInput
+                       class="p-inputtext-md w-full"
+                       [attr.placeholder]="showBtnBuscar ? 'Consulte un número de documento' : 'Ingrese el apellido materno del abogado'"
+                       type="text"/>
+            </div>
+        </div>
+        <div class="grid flex">
+            <div class="col-12 md:col-6">
+                <label for="correo" class="p-label-bottom font-bold text-sm">Email</label>
+                <input formControlName="correo"
+                       [maxLength]="100"
+                       placeholder="Ingrese el email del abogado"
+                       pInputText
+                       class="p-inputtext-md w-full"
+                       type="text"/>
+            </div>
+            <div class="col-12 md:col-6">
+                <label for="celular" class="p-label-bottom font-bold text-sm">Celular</label>
+                <input formControlName="celular"
+                        digitOnly
+                        placeholder="Ingrese el celular del abogado"
+                        [maxLength]="9"
+                        pInputText class="p-inputtext-md w-full"
+                        type="text"/>
+            </div>
+        </div>
+        <div class="grid flex">
+            <div class="col-12 md:col-6">
+                <div class="field col-12 md:col-6">
+                    <label for="sexo" class="font-bold text-sm">Sexo</label>
+                    <div class="w-full flex gap-4 mt-2 text-sm">
+                      <p-radioButton formControlName="sexo" value="1" label="Masculino"></p-radioButton>
+                      <p-radioButton formControlName="sexo" value="2" label="Femenino"></p-radioButton>
+                    </div>
+                  </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <label for="numeroColegiatura" class="p-label-bottom font-bold text-sm">Número de colegiatura</label>
+                <input digitOnly
+                       placeholder="Ingrese número de colegiatura"
+                       [maxLength]="10"
+                       formControlName="numeroColegiatura"
+                       pInputText
+                       class="p-inputtext-md w-full"
+                       type="text"/>
+            </div>
+        </div>
+        <div class="grid flex">
+            <div class="col-12 md:col-5">
+                <label for="fechaApersonamiento" class="p-label-bottom font-bold text-sm">Fecha de apersonamiento (opcional)</label>
+                <p-calendar
+                    formControlName="fechaApersonamiento"
+                    dateMask
+                    appendTo="body"
+                    dateFormat="dd/mm/yy"
+                    class="p-inputtext-md cfe-calendar h-40"
+                    [showIcon]="true "
+                    icon="cfe-calendar-icon"
+                    placeholder="dd/mm/aaaa" >
+                </p-calendar>
+            </div>
+            <div class="col-12 md:col-5">
+                <label for="fechaFinServicio" class="p-label-bottom font-bold text-sm">Fecha fin de servicio (opcional)</label>
+                <p-calendar
+                    formControlName="fechaFinServicio"
+                    appendTo="body"
+                    dateMask dateFormat="dd/mm/yy "
+                    class="p-inputtext-md cfe-calendar h-40"
+                    [showIcon]="true" icon="cfe-calendar-icon "
+                    placeholder="dd/mm/aaaa" >
+                </p-calendar>
+            </div>
+        </div>
+        <div class="grid mt-1">
+            <div class="col-12 md:col-12">
+                <div class="w-full pb-1">
+                    <label for="detalles" class="font-bold text-sm">Detalles (opcional)</label>
+                </div>
+                <div class="w-full">
+                    <textarea rows="3"
+                    cols="30"
+                    [maxlength]="500"
+                    class="w-full p-inputtextarea p-inputtext"
+                    formControlName="detalles"
+                    placeholder="Ingrese detalles del abogado"
+                    pInputTextarea></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-content-between align-items-center gap-3 mt-4">
+            <button (click)="ref.close()" type="button" class="cfe-boton-secondary cfe-boton-m">Cancelar</button>
+            <button (click)="guardar()" type="submit" class="cfe-boton-primary cfe-boton-m boton-w">{{edicion?'Editar':'Agregar'}} Abogado</button>
+        </div>
+
+    </form>
+  </div>

@@ -1,0 +1,38 @@
+.btn-more-options {
+    padding: 6px 0px;
+    width: 37px;
+    cursor: pointer;
+    .btn-more-options-content {
+        display: flex;
+        flex-wrap: wrap;
+        span {
+            width: 5.5px;
+            height: 5.5px;
+            display: inline-block;
+            background-color: var(--mpfn-gray5);
+            border-radius: 50%;
+            margin: 0 1px;
+            transition: 300ms background-color ease;
+        }
+    }
+    &:hover {
+        .btn-more-options-content {
+            span {
+                background-color: var(--mpfn-gray5);
+            }
+        }
+    }
+}
+
+:host ::ng-deep .menu-options {
+    position: absolute;
+    .p-menu {
+        font-size: 15px;
+        &.p-menu-overlay {
+            min-width: 208px;
+            top: 14px !important;
+            right: auto !important;
+            left: 125px !important;
+        }
+    }
+}

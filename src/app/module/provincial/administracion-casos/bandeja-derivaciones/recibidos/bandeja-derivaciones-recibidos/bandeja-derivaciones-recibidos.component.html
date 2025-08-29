@@ -1,0 +1,160 @@
+<div class="cfe-container pb-0">
+  <div class="grid mt-1">
+    <div class="col pb-0">
+      <div class="flex justify-content-start flex-wrap">
+        <div class="flex align-items-center justify-content-center">
+          <fn-icon [ico]="icono('iFolderSearch')" height="1.6rem"></fn-icon>
+          <h3 class="cfe-titulo-1 mx-2">
+            Bandeja de derivaciones - Casos Recibidos
+          </h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cfe-container">
+  <form class="bandeja_tramites__filters" [formGroup]="fs.form">
+    <div class="grid mt-1">
+      <div class="col">
+        <div class="field mb-0">
+          <label for="buscar" class="font-semibold">Buscar:</label>
+          <input
+            autocomplete="off"
+            pInputText
+            id="buscar"
+            type="text"
+            class="p-inputtext-lg py-3 text-lg w-full"
+            placeholder="Ingrese algún texto para buscar, por ejemplo el número de caso, nombre de las partes, etc"
+            [formControlName]="fs.field.busqueda"
+            (input)="buscarSegunTexto()"
+          />
+        </div>
+      </div>
+      <div
+        class="col-fixed"
+        style="width: 70px"
+        [ngClass]="{ 'cfe-filtro-boton-fondo': mostrarFiltros }"
+      >
+        <div class="field mb-0">
+          <label class="font-semibold">&nbsp;</label>
+          <button
+            class="cfe-filtro-boton"
+            (click)="eventoMostrarOcultarFiltros()"
+          >
+            <fn-icon [ico]="icono('iFilterShow')" height="2.1rem"></fn-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid mt-3 mb-4" *ngIf="!mostrarFiltros">
+      <div class="col"></div>
+    </div>
+
+    <div class="grid mt-1 cfe-filtros" *ngIf="mostrarFiltros">
+      <div class="cfe-filtros-fondo">
+        <div class="formgrid grid">
+          <div class="col-6 field" *ngIf="showFilterDate">
+            <div class="flex align-items-center">
+              <p-radioButton
+                id="fechaDevolucion"
+                value="0"
+                [formControlName]="fs.field.tipoFecha"
+                inputId="fechaDevolucion"
+              />
+              <label for="fechaDevolucion" class="ml-2 mr-4"
+                >{{ filterTipoDateLabel }}</label
+              >
+
+              <p-radioButton
+                id="fechaDerivacion"
+                value="1"
+                [formControlName]="fs.field.tipoFecha"
+                inputId="fechaDerivacion"
+              />
+              <label for="fechaDerivacion" class="ml-2"
+                >Fecha de derivación</label
+              >
+            </div>
+          </div>
+          <div class="col-6 field" *ngIf="showFilterDate"></div>
+          <div class="col-12 field">
+            <label class="font-semibold mb-3"> {{filterDateLabel}} </label>
+            <div class="grid">
+              <div class="col">
+                <p-calendar
+                  id="fechaDesde"
+                  dateMask
+                  dateFormat="dd/mm/yy"
+                  class="p-inputtext-lg cfe-calendar h-56"
+                  [showIcon]="true"
+                  icon="cfe-calendar-icon"
+                  placeholder="dd/mm/aaaa"
+                  [formControlName]="fs.field.fechaDesde"
+                ></p-calendar>
+              </div>
+              <div class="col">
+                <p-calendar
+                  dateMask
+                  dateFormat="dd/mm/yy"
+                  class="p-inputtext-lg cfe-calendar h-56"
+                  [showIcon]="true"
+                  icon="cfe-calendar-icon"
+                  placeholder="dd/mm/aaaa"
+                  [formControlName]="fs.field.fechaHasta"
+                ></p-calendar>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cfe-filtros-fondo cfe-filtros-opciones">
+        <button
+          class="cfe-boton-primary cfe-boton-m mr-2 boton-w"
+          (click)="buscar()"
+        >
+          Buscar
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <!-- <app-tab-recibidos
+    [canAcumulados]="recibidosService.canAculumados"
+    [canDerivados]="recibidosService.cantDerivados"
+    (cambiarTab)="cambiarTab($event)"
+  ></app-tab-recibidos> -->
+
+  <app-tabs-view
+    [tabs]="tabs"
+    (onChangeIndex)="cambiarTab($event)"
+    [indexSeleccionado]="tabActivo"
+    [useRouter]="true"
+  ></app-tabs-view>
+
+  <p-tabView class="cfe-tabs-view" [(activeIndex)]="tabActivo">
+    <p-tabPanel 
+      *ngIf="tabActivo === 0">
+      <p-tabMenu 
+        [model]="itemsDerivados"
+        class="cfe-tabs-view-anidado" 
+        (onTabClick)="navegar($event)"
+        (activeItemChange)="changeTab($event)"
+      />
+    </p-tabPanel>
+
+    <p-tabPanel *ngIf="tabActivo === 1">
+      <p-tabMenu
+        [model]="itemsAcumulados" 
+        class="cfe-tabs-view-anidado" 
+        (onTabClick)="navegar($event)"
+        (activeItemChange)="changeTab($event)"
+      />
+    </p-tabPanel>
+    <div>
+      <router-outlet></router-outlet>
+    </div>
+  </p-tabView>
+
+</div>

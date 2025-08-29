@@ -1,0 +1,90 @@
+.grid {
+    // min-width: 650px;
+    max-width: 650px;
+}
+
+.fuente-cantidad {
+    font-size: 40px;
+    font-weight: 600;
+    line-height: 40px;
+    letter-spacing: 0.02em;
+    text-align: left;
+}
+
+.sub-titulo-blanco {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0.02em;
+    text-align: left;
+}
+
+.border-circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+
+    &.indicador {
+        background-color: #D9A927;
+    }
+
+    &.indicadorAdicional {
+        background-color: #F9D599;
+    }
+}
+
+.label-cantidad {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.02em;
+    text-align: left;
+}
+
+.fondoAmarillo {
+    border: solid #D9A927;
+
+    .fuente {
+        color: #D9A927;
+    }
+}
+
+.fondoVerde {
+    border: solid #3CC85A;
+
+    .fuente {
+        color: #3CC85A;
+    }
+}
+
+.fondoAzul {
+    border: solid #0E2E4A;
+
+    .fuente {
+        color: #0E2E4A;
+    }
+}
+
+.fondoPlomo {
+    border: solid #CCCCCC;
+
+    .fuente {
+        color: #0E2E4A;
+    }
+}
+
+.fondoRojo {
+    border: solid #EA4C3A;
+
+    .fuente {
+        color: #EA4C3A;
+    }
+}
+
+.fondoguinda {
+    border: solid #963CBE;
+
+    .fuente {
+        color: #963CBE;
+    }
+}

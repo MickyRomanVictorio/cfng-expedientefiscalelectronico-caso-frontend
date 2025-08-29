@@ -1,0 +1,40 @@
+<filtro-cuaderno-ejecucion
+  (eventoBuscarCuaderno)="buscarCuadernoEjecucion($event); resetPage = true"
+/>
+
+<div class="bg-white pl-4 pt-3 pb-3">
+  @if(cantidadRegistrosTotales > 0){
+  <div class="grid mb-2">
+    <div class="col-12 md:col-6">
+      <div class="flex align-items-center">
+        <img
+          [src]="iconAsset.obtenerRutaIcono('exclamationFolder')"
+          alt="Folder Icon"
+          style="width: 22px"
+        />
+        <h4 class="casos_listados_count mt-2 mb-0">
+          {{ textoCantidadCuadernos }}
+        </h4>
+      </div>
+    </div>
+  </div>
+  } @if (listaCuadernos.length === 0 && numeroBusqueda > 1) {
+  <div class="px-4 py-6 text-center font-bold">
+    No se encontraron registros con los criterios de búsqueda ingresados
+  </div>
+  } @if (listaCuadernos.length === 0 && numeroBusqueda === 1) {
+  <div class="px-4 py-6 text-center font-bold">
+    En estos momentos, no hay cuadernos de ejecución creados
+  </div>
+  } @if (listaCuadernos.length > 0) {
+  <div class="pt-4 pl-3">
+    <grilla-cuadernos-ejecucion [listaCuadernos]="listaCuadernos" />
+  </div>
+  <app-paginator
+    [query]="query"
+    [items]="itemPaginado"
+    (paginate)="onPaginate($event)"
+    [resetPage]="resetPage"
+  ></app-paginator>
+  }
+</div>

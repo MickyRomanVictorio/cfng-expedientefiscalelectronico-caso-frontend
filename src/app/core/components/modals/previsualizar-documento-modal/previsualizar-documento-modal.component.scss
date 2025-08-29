@@ -1,0 +1,27 @@
+:host ::ng-deep .cfe-tabs-view {
+  background: var(--mpfn-white);
+  flex-grow: 1 !important;
+  overflow: auto !important;
+}
+
+:host ::ng-deep .p-tabview {
+  height: 100% !important;
+}
+
+:host ::ng-deep .p-tabview-panels {
+  padding: 1.25rem;
+  border-radius: 0px;
+  height: 100% !important;
+}
+
+:host ::ng-deep .p-tabview-panel {
+  height: 100% !important;
+}
+
+.cfe-icon {
+  width: 30px !important;
+}
+
+.border-gray {
+  border-color: var(--mpfn-gray2);
+}

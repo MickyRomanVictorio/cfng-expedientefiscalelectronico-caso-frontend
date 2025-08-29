@@ -1,0 +1,269 @@
+<div class="cfe-container">
+
+  <div class="cfe_bandeja__header grid">
+    <div class="col-12 md:col-9 cfe_bandeja_header__content">
+      <fn-icon [ico]="iconUtil.obtenerIcono('iFolderSearch')" height="1.6rem"></fn-icon>
+      <span class="cfe-titulo-1 family-poppin-bold">Respuesta del Superior</span>
+      <fn-icon [ico]="iconUtil.obtenerIcono('iTooltip')" height="1.6rem" (click)="startTour()"></fn-icon>
+    </div>
+
+  </div>
+
+  <form class="cfe_bandeja__filters" [formGroup]="formularioFiltrarRespuestas">
+    <div class="grid mt-1">
+      <div class="col tour-a-2">
+        <div class="field mb-0">
+          <label for="buscar" class="font-semibold">Buscar</label>
+          <input pInputText type="text" class="p-inputtext-lg py-3 text-lg w-full" (keyup)="filtrarCasos()"
+                 placeholder="Ingrese algún texto para buscar, por ejemplo el número de caso, nombre de las partes, etc"
+                 formControlName="buscar" />
+        </div>
+      </div>
+      <div class="col-fixed tour-a-3" [ngClass]="{'cfe-filtro-boton-fondo': mostrarFiltros}">
+        <div class="field mb-0">
+          <label for="button" class="font-semibold">&nbsp;</label>
+          <button class="cfe-filtro-boton" (click)="eventoMostrarOcultarFiltros()">
+            <fn-icon [ico]="iconUtil.obtenerIcono('iFilterShow')" height="2.1rem"></fn-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    @if (mostrarFiltros) {
+      <div class="grid mt-1 cfe-filtros">
+        <div class="cfe-filtros-fondo px-4 flex-column">
+          <div class="formgrid grid py-3" >
+            <div class="flex flex-wrap gap-4">
+              <div class="flex align-items-center">
+                <p-radioButton value="1" formControlName="tiempoAFiltrar" (onClick)="prepararDataBusqueda()"
+                               inputId="elevacion"></p-radioButton>
+                <label for="elevacion" class="ml-2">Fecha de Elevación</label>
+              </div>
+              <div class="flex align-items-center">
+                <p-radioButton value="0" formControlName="tiempoAFiltrar" (onClick)="prepararDataBusqueda()"
+                              inputId="respuesta"></p-radioButton>
+                <label for="respuesta" class="ml-2">Fecha de Respuesta</label>
+              </div>
+            </div>
+          </div>
+              <div class="formgrid grid">
+                <div class="col-12 md:col-6 field">
+                  <label class="font-semibold mb-2" for="Fecha de asignacion" class="font-semibold">
+                    Fecha
+                  </label>
+                  <div class="grid">
+                    <div class="col-12 sm:col-6">
+                      <p-calendar dateMask dateFormat="dd/mm/yy" class="p-inputtext-lg cfe-calendar h-56 mt-1" [showIcon]="true" icon="cfe-calendar-icon" placeholder="dd/mm/aaaa" formControlName="fechaDesde"></p-calendar>
+                    </div>
+                    <div class="col-12 sm:col-6 sm:mt-0 mt-3">
+                      <p-calendar dateMask dateFormat="dd/mm/yy" class="p-inputtext-lg cfe-calendar h-56 mt-1" [showIcon]="true" icon="cfe-calendar-icon" placeholder="dd/mm/aaaa" formControlName="fechaHasta"></p-calendar>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 md:col-6 field">
+                  <label for="tipoElevacion" class="font-semibold mb-0">Tipo de Elevación</label>
+                  <p-dropdown styleClass="p-inputtext-lg py-1 mt-1" [options]="tipoElevacion" optionValue="id" optionLabel="noDescripcion" placeholder="Todos" [showClear]="true" formControlName="tipoElevacion"></p-dropdown>
+                </div>
+
+
+              </div>
+        </div>
+        <div class="cfe-filtros-fondo cfe-filtros-opciones px-4">
+          <button class="cfe-boton-secondary cfe-boton-lg family-poppin-bold mr-3" (click)="limpiarFiltros()">Limpiar filtros</button>
+          <button class="cfe-boton-primary cfe-boton-lg family-poppin-bold" (click)="obtenerRespuestas()">Buscar</button>
+        </div>
+      </div>
+    }
+
+
+  </form>
+
+  <div class="cfe_bandeja__table">
+    <div class="cfe_bandeja_table__title grid">
+      <div class="num_casos_por_asignar_table_title__content col-12 md:col-6">
+        <div class="flex text-xl font-bold text-primary mb-3">
+          <fn-icon class="mr-2" [ico]="iconUtil.obtenerIcono('iFolderExclamation')" height="1.8rem" [style]="{'margin-left': '-12px'}"></fn-icon>
+          {{ totalRespuestas }} registros listados - {{totalCasos }} - casos - {{totalPestanias}} pestañas de apelación
+        </div>
+      </div>
+      <div class="col-12 md:col-6 flex flex-column sm:flex-row justify-content-end align-items-center pr-0">
+        <button class="cfe-boton-secondary cfe-boton-m cfe-boton-m w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start family-poppin-bold" (click)="exportarPdfExcel('PDF')">
+          <fn-icon class="mr-2" [ico]="iconUtil.obtenerIcono('iFileDownload')" height="1.6rem"></fn-icon>
+          Exportar PDF
+        </button>
+        <button class="cfe-boton-secondary cfe-boton-m cfe-boton-m w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start family-poppin-bold" (click)="exportarPdfExcel('Excel')">
+          <fn-icon class="mr-2" [ico]="iconUtil.obtenerIcono('iTable')" height="1.6rem"></fn-icon>
+          Exportar Excel
+        </button>
+      </div>
+    </div>
+    <div class="cfe_bandeja_table__content">
+      <p-table
+        [value]="respuestaSuperiorFiltrada"
+        [rowHover]="true"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [breakpoint]="'992px'"
+        responsiveLayout="stack"
+
+      >
+      <ng-template pTemplate="header">
+        <tr>
+
+          <th pSortableColumn="codCaso" scope="col" >Número de caso /<br/> Cuaderno Incidental
+            <p-sortIcon field="codCaso"></p-sortIcon>
+          </th>
+          <th pSortableColumn="descEtapa" scope="col">Etapa
+            <p-sortIcon field="descEtapa"></p-sortIcon>
+          </th>
+          <th pSortableColumn="fiscal" scope="col">Fiscal Superior
+            <p-sortIcon field="fiscal"></p-sortIcon>
+          </th>
+          <th pSortableColumn="descTramite" scope="col">Último tramite
+            <p-sortIcon field="descTramite"></p-sortIcon>
+          </th>
+          <th pSortableColumn="delitos" scope="col">Delitos
+            <p-sortIcon field="delitos"></p-sortIcon>
+          </th>
+          <th  pSortableColumn="fechaElevacion" scope="col">F. Elevación
+            <p-sortIcon field="fechaElevacion"></p-sortIcon>
+          </th>
+          <th pSortableColumn="fechaResultado" scope="col">F. Respuesta
+            <p-sortIcon field="fechaResultado"></p-sortIcon>
+          </th>
+          <th class="w-col-10" scope="col">Historial - Ir a Caso </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-respuesta>
+        <tr class="p-selectable-row tour-a-1">
+
+          <td class="table_td_content_start caso-container">
+            <span class="p-column-title">Número de caso /<br/> Cuaderno Incidental</span>
+            <div class="plazo-item-row">
+              <div class="mb-2"><span  [innerHTML]="stringUtil.obtenerNumeroCaso(respuesta.codCaso)"></span></div>
+              <div>
+                @let et = etiqueta({
+                  descTipoElevacion:respuesta.descTipoElevacion,
+                  idTipoElevacion:respuesta.idTipoElevacion
+                });
+                @let et2 = etiqueta2({
+                  idTipoElevacion:respuesta.idTipoElevacion,
+                  idTipoContienda:respuesta.idTipoContienda,
+                  nuPestana:respuesta.nuPestana,
+                  nuCuaderno:respuesta.nuCuaderno
+                });
+                <app-etiqueta-caso
+                 [etiqueta]="{
+                  etiquetaRgb:et.color,
+                  etiqueta:et.valor,
+                  etiquetaRgb2:et2.color,
+                  etiqueta2:et2.valor,
+                 }"
+                ></app-etiqueta-caso>
+
+                @if ([TipoElevacionCodigo.ApelacionesAutoPrincipal,
+                  TipoElevacionCodigo.ApelacionesAutoIncidental,
+                  TipoElevacionCodigo.ApelacionesAutoExtremos].includes(respuesta.idTipoElevacion.toString())) {
+                  <div class="pt-2">
+                    <app-etiqueta-caso
+                      [etiqueta]="{
+                      etiquetaColorNro:9,
+                      etiqueta: respuesta.noTipoCuadernoIncidental
+                    }"
+                    ></app-etiqueta-caso>
+                  </div>
+                }
+
+
+              </div>
+            </div>
+          </td>
+          <td class="table_td_content_start">
+            <span class="p-column-title">Etapa</span>
+            <div>
+              <div>{{ respuesta.descEtapa }}</div>
+            </div>
+          </td>
+          <td class="table_td_content_start remitente-container">
+            <span class="p-column-title">Fiscal Superior</span>
+            <div>
+              <div >{{ respuesta.fiscal }}</div>
+            </div>
+          </td>
+          <td class="table_td_content_start">
+            <span class="p-column-title">Último tramite</span>
+            <div>
+              <div >{{ respuesta.descTramite }}</div>
+            </div>
+          </td>
+          <td class="table_td_content_start">
+            <span class="p-column-title">Delitos</span>
+
+            @if (respuesta.delitos!==null) {
+
+              <div title="{{ respuesta.delitos }}">
+                <div >{{ flatDelitos(respuesta.delitos) }}</div>
+              </div>
+            }
+
+          </td>
+          <td class="table_td_content_start fecha-container">
+            <span class="p-column-title">F. Elevación</span>
+            <div>
+              <div>{{ respuesta.fechaElevacion }}</div>
+            </div>
+          </td>
+          <td class="table_td_content_start fecha-container">
+            <span class="p-column-title">F. Respuesta</span>
+            <div>
+              <div>{{ respuesta.fechaResultado }}</div>
+            </div>
+          </td>
+
+          <td class="table_td_content_start flex align-items-center gap-2">
+            <span class="p-column-title">Historial - Ir a Caso</span>
+
+            <div
+              class="cfe-btn-clasification tour-a-4"
+              (click)="abrirModalHistorial(respuesta)"
+            >
+              <fn-icon
+                [ico]="iconUtil.obtenerIcono('iRestaurar')"
+                height="1.4rem"
+              ></fn-icon>
+            </div>
+            <div
+              class="cfe-btn-clasification tour-a-5"
+              (click)="eventoMostrarDetalle(
+                respuesta.idEtapa,
+                respuesta.idCaso,
+                respuesta.idActoTramiteCasoEleva,
+                respuesta.idActoTramiteCasoRespuesta
+              )"
+            >
+              <fn-icon
+                [ico]="iconUtil.obtenerIcono('iChevronRight')"
+                height="1.4rem"
+              ></fn-icon>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8" style="text-align: center;">No se encontraron registros con los criterios de búsqueda ingresados
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <app-paginator
+      [query]="query"
+      [items]="itemPaginado"
+      [rowsPerPageOptions]="[]"
+      [resetPage]="resetPage"
+      (paginate)="onPaginate($event)"
+    ></app-paginator>
+    </div>
+  </div>
+</div>
+
+<p-toast></p-toast>

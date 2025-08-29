@@ -1,0 +1,140 @@
+@if (verFormulario) {
+  @if (!tramiteEstadoRecibidoOFirmado) {
+    <mensaje-completar-informacion titulo="{{tramiteSeleccionado?.nombreTramite}}" />
+  }
+  <div class="mt-3">
+    <form [formGroup]="formularioAutoResuelvePrisionPreventiva">
+      <div class="grid">
+        <div class="formgrid grid col-12 lg:col-4">
+          <div class="field col-10">
+            <label for="fechaNotificacion" class="font-bold text-sm">Fecha de notificación</label>
+            <p-calendar
+              [dateFormat]="'dd/mm/yy'"
+              class="p-inputtext-lg cfe-calendar h-40"
+              [showIcon]="true"
+              dateMask
+              icon="cfe-calendar-icon"
+              placeholder="dd/mm/aaaa"
+              formControlName="fechaNotificacion"
+              appendTo="body"
+              dataType="string"
+              [minDate]="fechaHecho"
+              [maxDate]="fechaActual"
+              [ngClass]="{'ng-invalid ng-dirty': formularioAutoResuelvePrisionPreventiva.get('fechaNotificacion')?.invalid && formularioAutoResuelvePrisionPreventiva.get('fechaNotificacion')?.touched}">
+            </p-calendar>
+          </div>
+          @if ( formularioAutoResuelvePrisionPreventiva.get('fechaNotificacion')?.value ) {
+            <div class="field col-1">
+              <label for="">&nbsp;</label>
+              <div class="mt-1">
+                <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+      <div class="grid">
+        <div class="formgrid grid col-12">
+          <div class="field col-12 lg:col-4">
+            <div class="formgrid flex align-items-center">
+              <div class="field col-10">
+                <button class="cfe-boton-secondary cfe-boton-lg w-full family-poppin-bold btn-adjust-filter"
+                        (click)="modalResultadoAudiencia()">
+                  Apelaciones de audiencia
+                </button>
+              </div>
+              @if ( formularioAutoResuelvePrisionPreventiva.get('resultadoAudiencia')?.value ) {
+              <div class="field col-1">
+                <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+              </div>
+              }
+            </div>
+          </div>
+          <div class="field col-12 lg:col-4">
+            <div class="formgrid flex align-items-center">
+              <div class="field col-10">
+                <button class="cfe-boton-secondary cfe-boton-lg w-full family-poppin-bold btn-adjust-filter"
+                (click)="modalAudiosAudiencia()">Audios de
+                  audiencia
+                </button>
+              </div>
+              @if ( audiosAudienciaCorrectos ) {
+              <div class="field col-1">
+                <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+              </div>
+              }
+            </div>
+          </div>
+          <div class="field col-12 lg:col-4">
+            <div class="formgrid flex align-items-center">
+              <div class="field col-10">
+                <button class="cfe-boton-primary cfe-boton-lg w-full family-poppin-bold btn-adjust-filter"
+                        (click)="modalResultadosPrisionPreventiva()">Seleccionar
+                  resultado
+                </button>
+              </div>
+              @if ( formularioAutoResuelvePrisionPreventiva.get('resultadoPrisionPreventiva')?.value ) {
+                <div class="field col-1">
+                  <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="formgrid grid col-12">
+          <div class="field col-11">
+            <label for="observaciones" class="font-bold text-sm">Observaciones (opcional)</label>
+            <textarea pInputTextarea class="w-full text-md" rows="6" formControlName="observaciones"
+              [maxLength]="longitudMaximaObservaciones"></textarea>
+            <small class="block text-right mt-1"
+              [ngClass]="{'p-error': cantidadCaracteresObservacion > longitudMaximaObservaciones }">
+              {{cantidadCaracteresObservacion}}/{{longitudMaximaObservaciones}} máximo de caracteres
+            </small>
+          </div>
+          @if ( formularioAutoResuelvePrisionPreventiva.get('observaciones')?.value &&
+          formularioAutoResuelvePrisionPreventiva.get('observaciones')?.value.length > 0 ) {
+            <div class="field col-1">
+              <label for="">&nbsp;</label>
+              <div class="mt-1">
+                <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </form>
+    @if ( !tramiteOriginadoEnEfe ) {
+
+    <div class="field col-11 flex flex-column sm:flex-row justify-content-between mt-3">
+      @if ( !tramiteEstadoRecibidoOFirmado ) {
+      <a class="cfe-enlace" (click)="modalActualizarActoYTramite()">
+        ¿Este documento no pertenece a este trámite?</a>
+      } @else {
+      <span></span>
+      }
+
+      @if ( esPosibleEditarFormulario ) {
+      <p-button
+        [disabled]="!formularioValido"
+        (onClick)="guardarFormularioMesa()"
+        styleClass="p-button-lg cfe-boton-primary text-white family-poppin-bold btn-adjust-filter w-column-full">
+        <span class="ml-4 mr-4">Guardar</span>
+      </p-button>
+      }
+    </div>
+    }
+
+  </div>
+
+} @else {
+<mensaje-interoperabilidad-pj [tieneActa]="true"/>
+<p-checkbox
+  class="mb-2 mt-3"
+  [binary]="true"
+  inputId="motivo1"
+  label="Generaré un acta de la audiencia"
+  (onChange)="activarFormulario($event.checked)"/>
+}

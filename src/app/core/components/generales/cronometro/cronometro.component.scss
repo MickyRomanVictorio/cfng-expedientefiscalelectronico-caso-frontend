@@ -1,0 +1,16 @@
+.cronometro-contenedor {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem; /* espacio entre icono y texto */
+  }
+  
+  .icono-timer {
+    margin-left: -12px;
+  }
+  
+  .texto-cronometro {
+    font-weight: bold;
+    font-size: 14px;
+    font-family: var(--mpfn-font-bold);
+    color: var(--mpfn-red-wine);
+  }

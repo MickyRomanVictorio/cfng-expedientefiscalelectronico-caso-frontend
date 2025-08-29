@@ -1,0 +1,256 @@
+@if(!fiscalAsignado && tieneRegistroEnBandeja){
+<div class="cfe-mensaje-amarillo cfe-mensaje-ajuste">
+  <fn-icon [ico]="obtenerIcono('iAlert')" height="1.4rem"></fn-icon>
+  <div>
+    Para poder registrar este trámite, debe actualizar el destino de elevación,
+    <a class="cfe-url-black cursor-pointer" (click)="actualizarInformacion()"
+      >Actualice aquí</a
+    >
+    o en la
+    <a href="/app/administracion-casos/contiendas" class="cfe-url-black"
+      >Bandeja de contienda</a
+    >
+  </div>
+</div>
+
+}@else{
+<div [formGroup]="form" class="col-12 mt-2">
+  <div class="formgrid grid col-12">
+    <div class="field col-12 md:col-4">
+      <label for="resultado" class="font-semibold">Resultado</label>
+      <div class="flex align-items-center gap-2">
+        <div class="flex-grow-1">
+          <p-dropdown
+              id="resultado"
+              styleClass="py-1 p-inputtext-lg"
+              [options]="resultados"
+              optionValue="id"
+              optionLabel="noDescripcion"
+              emptyMessage="Sin resultados"
+              placeholder="Seleccione un tipo de resultado"
+              formControlName="resultado"
+              [disabled]="false"
+            ></p-dropdown>
+        </div>
+        @if (form.get('resultado')?.value) {
+          <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem" />
+        }
+      </div>
+    </div>
+
+    <div class="field col-12 md:col-4">
+      <label for="fechaDisposicion" class="font-semibold">Fecha de disposición:</label>
+      <div class="flex align-items-center gap-2">
+        <div class="flex-grow-1">
+        <p-calendar
+          id="fechaDisposicion"
+          dateMask
+          dateFormat="dd/mm/yy"
+          class="p-inputtext-lg cfe-calendar h-56"
+          [showIcon]="true"
+          icon="cfe-calendar-icon"
+          placeholder="dd/mm/aaaa"
+          formControlName="fechaDisposicion"
+        ></p-calendar>
+        </div>
+        @if (form.get('fechaDisposicion')?.value) {
+          <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem" />
+        }
+      </div>
+    </div>
+
+    <div class="field col-12 md:col-4">
+      <label for="motivo" class="font-semibold">Motivo</label>
+      <div class="flex align-items-center gap-2">
+        <div class="flex-grow-1">
+          <p-dropdown
+            id="motivo"
+            styleClass="py-1 p-inputtext-lg"
+            [options]="motivos"
+            optionValue="id"
+            optionLabel="noDescripcion"
+            emptyMessage="Sin resultados"
+            placeholder="Seleccione un motivo"
+            formControlName="motivo"
+          ></p-dropdown>
+        </div>
+        @if (form.get('fechaDisposicion')?.value) {
+          <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem" />
+        }
+      </div>
+    </div>
+
+    <div class="field col-12">
+      <label for="descripcion" class="font-semibold">Descripcion (opcional)</label>
+      <textarea
+        id="descripcion"
+        pInputTextarea
+        class="w-full"
+        rows="4"
+        (input)="contadorCaracterDescripcion()"
+        [maxlength]="maximoCaracteresDescripcion"
+        formControlName="descripcion"
+      ></textarea>
+      <div class="text-right text-600">
+          {{ contadorCaracteresDescripcion }}/{{ maximoCaracteresDescripcion }}
+          caracteres
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!flagTieneEfe" class="formgrid grid col-12">
+    <div class="field col-12 font-semibold">DOCUMENTO</div>
+    <div class="col-12 md:col-6">
+      <div class="field col-12">
+        <label for="observaciones" class="font-semibold">Observaciones (opcional)</label>
+        <textarea
+          id="observaciones"
+          pInputTextarea
+          class="w-full"
+          rows="4"
+          (input)="contadorCaracterObservaciones()"
+          [maxlength]="maximoCaracteresObservacion"
+          formControlName="observaciones"
+        ></textarea>
+        <div class="text-right text-600">
+          {{ contadorCaracteresObservacion }}/{{ maximoCaracteresObservacion }}
+          caracteres
+        </div>
+      </div>
+
+      @if (!documentoCargado) {
+      <div class="field col-12">
+        <label for="subirCargo" class="font-semibold">Subir cargo</label>
+        <fn-file-upload
+          id="subirCargo"
+          class="fz-14"
+          [(files)]="files"
+          (processSignDocument)="processSignDocument($event)"
+          [fileLimit]="1"
+          [isInMemory]="true"
+          type="pdf"
+          [isSignDigital]="true"
+          [maxFileSize]="1024 * 1024 * 100"
+          [perFileLabel]="'en total'"
+        ></fn-file-upload>
+      </div>
+      }@else {
+      <div class="field col-12">
+        <div class="font-semibold">Documento subido</div>
+
+        <p-table
+          [value]="files"
+          [rowHover]="true"
+          styleClass="p-datatable-sm mt-1"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="col-w-1-6 text-sm">Documento</th>
+              <th class="text-center text-sm">Tamaño</th>
+              <th class="text-center text-sm">Tipo de copia</th>
+              <th class="text-center text-sm">Acciones</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-file>
+            <tr>
+              <td class="text-sm">
+                {{ file.nombreOrigen }}
+              </td>
+              <td class="text-center text-sm">
+                <fn-icon *ngIf="esFirmadoGuardado" [ico]="obtenerIcono('iCheck')" height="1.6rem" color="#06A77D"></fn-icon>
+                {{ formatoPesoArchivo(file.tamanyo || filesPeso*1024*1024) }}
+              </td>
+              <td>
+                <div class="flex flex-column gap-3">
+                  @for (dataRadio of tipoCopias; track $index) {
+                  <div class="flex align-items-center">
+                    <p-radioButton
+                      inputId="or{{ dataRadio.id }}"
+                      name="idTipoCopia"
+                      value="{{ dataRadio.id }}"
+                      formControlName="idTipoCopia"
+                      (click)="seleccionarTipoCopia(dataRadio)"
+                    ></p-radioButton>
+                    <label
+                      for="or{{ dataRadio.id }}"
+                      class="ml-2 text-sm cursor-pointer"
+                      >{{ dataRadio.noDescripcion }}</label
+                    >
+                  </div>
+                  }
+                </div>
+              </td>
+              <td class="text-center">
+                <fn-icon
+                  *ngIf="!esFirmadoGuardado"
+                  class="cursor-pointer"
+                  [ico]="obtenerIcono('iTrashCan')"
+                  height="1.5rem"
+                  (click)="eliminarDocumento(file)">
+                </fn-icon>
+                <fn-icon
+                  *ngIf="esFirmadoGuardado"
+                  class="cursor-pointer"
+                  [ico]="obtenerIcono('iDownload')"
+                  height="2.1rem"
+                  (click)="descargarArchivo(file, file.nombre)"
+                ></fn-icon>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+      }
+
+      <div class="col-12">
+        <div [ngClass]="['flex justify-content-between']">
+          <button
+            label="Cancelar"
+            [disabled]="!formularioValido || esFirmadoGuardado"
+            class="cfe-boton-secondary text-primary font-bold btn-adjust"
+            (click)="cancelar()"
+          >
+            Cancelar
+          </button>
+          <button
+            [disabled]="!formularioValido || esFirmadoGuardado"
+            class="cfe-boton-primary font-semibold btn-adjust"
+            (click)="confirmarGuardarDigitalizado()"
+          >
+            Firmar y Guardar
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="grid col-12 md:col-6 mt-1">
+      <div class="col pr-0 mt-8" style="height: 50%">
+        @if (tieneDocumentoAdjunto) {
+        <app-visor-pdf-cargo
+          [documentoAdjunto]="documentoAdjunto"
+        ></app-visor-pdf-cargo
+        >}
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="flagTieneEfe && fechaDisposicion" class="formgrid grid col-12 md:col-12 mt-1">
+    <div class="grid col-12 md:col-12 mt-6">
+      <div class="col pr-0 mt-8">
+        @if (tieneDocumentoAdjunto) {
+          <app-visor-pdf-cargo
+            [documentoAdjunto]="documentoAdjunto"
+          ></app-visor-pdf-cargo
+          >}
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="flagTieneEfe && fechaDisposicion && !idAccionEstadoProvincial" class="flex justify-content-end gap-2 flex-wrap w-full sm:mr-0">
+  <button class="cfe-boton-secondary cfe-boton-lg boton-w" (click)="observarTramite()" [disabled]="deshabilitado">
+    <span class="p-2 ml-3 mr-3">OBSERVAR TRÁMITE</span>
+  </button>
+  <button class="cfe-boton-primary cfe-boton-lg boton-w" (click)="mostrarModalConfirmacion()" [disabled]="deshabilitado">
+    RECIBIR TRÁMITE
+  </button>
+</div>
+<cfe-lib-firma-digital-cliente></cfe-lib-firma-digital-cliente>
+}

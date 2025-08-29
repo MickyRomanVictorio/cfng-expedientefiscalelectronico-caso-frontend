@@ -1,0 +1,211 @@
+<div class="bandeja_tramites__table">
+  <div class="bandeja_tramites_table__title grid">
+    <div
+      class="bandeja_tramites_table_title__content col-12 md:col-6 flex-wrap"
+    >
+      <fn-icon
+        [ico]="icono('iFolderExclamation')"
+        height="1.8rem"
+        [style]="{ 'margin-left': '-12px' }"
+      ></fn-icon>
+      <h4 class="cfe-subtitulo-1">{{ titleDocumento }}</h4>
+      @if(esTabRecibido){
+      <div class="flex border-1 border-500 border-round-3xl px-3 py-1 ml-3">
+        <span class="circulo circulo--rojo mr-2 mt-1"></span>
+        <span>Pendiente de completar información</span>
+      </div>
+      }
+    </div>
+    <div
+      class="col-12 md:col-6 flex flex-column sm:flex-row justify-content-end align-items-center pr-0"
+    >
+      <button
+        class="cfe-boton-secondary cfe-boton-m w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start"
+        (click)="exportarPdfExcel('PDF')"
+      >
+        <fn-icon
+          class="ml-1"
+          [ico]="icono('iFileDownload')"
+          height="1.6rem"
+        ></fn-icon>
+        Exportar PDF
+      </button>
+      <button
+        class="cfe-boton-secondary cfe-boton-m w-full sm:w-auto justify-content-start"
+        (click)="exportarPdfExcel('Excel')"
+      >
+        <fn-icon class="ml-1" [ico]="icono('iTable')" height="1.6rem"></fn-icon>
+        Exportar Excel
+      </button>
+    </div>
+  </div>
+
+  <div class="bandeja_tramites_table__content">
+    <p-table
+      [value]="documentosBandeja"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [rowHover]="true"
+      responsiveLayout="stack"
+      styleClass="table_td_content_responsive"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="numeroCaso" style="width: 15%">
+            Número de caso
+            <p-sortIcon field="numeroCaso"></p-sortIcon>
+          </th>
+          <th pSortableColumn="numeroDocumento" style="width: 15%">
+            Número del documento
+            <p-sortIcon field="numeroDocumento"></p-sortIcon>
+          </th>
+          <th pSortableColumn="origen" style="width: 10%">
+            Origen
+            <p-sortIcon field="origen"></p-sortIcon>
+          </th>
+          <th pSortableColumn="remitente" style="width: 18%">
+            Remitente
+            <p-sortIcon field="remitente"></p-sortIcon>
+          </th>
+          <th pSortableColumn="contacto" style="width: 18%">
+            Contacto de remitente
+            <p-sortIcon field="contacto"></p-sortIcon>
+          </th>
+          <th pSortableColumn="fechaIngreso" style="width: 14%">
+            Fecha ingreso
+            <p-sortIcon field="fechaIngreso"></p-sortIcon>
+          </th>
+          <th style="width: 10%">
+            <!-- -->
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-docbandeja>
+        <tr class="p-selectable-row">
+          <td data-column-name="Número de caso">
+            <div class="flex">
+              @if(docbandeja.pendienteCompletarDatos){
+              <span class="circulo circulo--rojo"></span>
+              }
+              <span
+                [innerHTML]="obtenerNumeroCaso(docbandeja.numeroCaso)"
+              ></span>
+            </div>
+            @if(docbandeja.estadoDocumento=='Subsanado'){
+            <span class="badge badge-despacho">{{
+              docbandeja.estadoDocumento
+            }}</span>
+            }
+          </td>
+          <td data-column-name="Número del documento">
+            <div class="flex flex-column m-0 p-0">
+              <p class="m-0 p-0">{{ docbandeja.numeroDocumento }}</p>
+              <p class="m-0 p-0">{{ docbandeja.tramite | capitalizar }}</p>
+              <span
+                class="badge badge-origen text-xs w-max"
+                [ngClass]="{
+                  'bg-orange-100 text-orange-400':
+                    docbandeja.medioPresentacion === 'SINOE',
+                  'bg-blue-100 text-blue-400':
+                    docbandeja.medioPresentacion === 'Presencial',
+                  'bg-cyan-100 text-cyan-400':
+                    docbandeja.medioPresentacion === 'Virtual'
+                }"
+                >{{ docbandeja.medioPresentacion }}</span
+              >
+            </div>
+          </td>
+          <td data-column-name="Origen">
+            <span
+              class="badge badge-{{ obtenerClaseDeOrigen(docbandeja.origen) }}"
+              >{{ docbandeja.origen }}</span
+            >
+          </td>
+          <td data-column-name="Remitente">
+            <div>
+              <div class="mb-1">
+                <span class="badge badge-origen">{{
+                  docbandeja.tipoRemitente
+                }}</span>
+              </div>
+              {{ docbandeja.remitente | capitalizar}}
+            </div>
+          </td>
+          <td data-column-name="Contacto de remitente">
+            <div>
+              <div class="contact-item">
+                <span>Teléfono:</span>{{ docbandeja.telefono }}
+              </div>
+              <div class="contact-item">
+                <span>Correo:</span>{{ docbandeja.correo }}
+              </div>
+            </div>
+          </td>
+          <td data-column-name="Fecha ingreso">
+            <div>
+              <div>
+                {{
+                  docbandeja.fechaIngreso
+                    ? (docbandeja.fechaIngreso | dateformat)
+                    : "-"
+                }}
+              </div>
+              <div>
+                {{
+                  docbandeja.horaIngreso
+                    ? (docbandeja.horaIngreso | dateformat : "hour")
+                    : "-"
+                }}
+              </div>
+            </div>
+          </td>
+          <td data-column-name="">
+            <div class="grid">
+              <div class="grid mt-1">
+                @if(esTabRecibido){
+                <div
+                  class="col-6 md:col-6 btn-accion mr-1 mb-1"
+                  pTooltip="Ir al trámite"
+                  tooltipEvent="hover"
+                  (click)="eventoIrATramite(docbandeja)"
+                >
+                  <fn-icon
+                    [ico]="icono('iChevronRight')"
+                    height="1.6rem"
+                  ></fn-icon>
+                </div>
+                } @else {
+                <div
+                  class="col-6 md:col-6 btn-accion mr-1 mb-1"
+                  pTooltip="Previsualizar documento"
+                  tooltipEvent="hover"
+                  (click)="preVisulizarDocumentos(docbandeja)"
+                >
+                  <fn-icon
+                    [ico]="icono('iSearch')"
+                    height="1.5rem"
+                  ></fn-icon>
+                </div>
+                }
+              </div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td class="no-before" colspan="8" style="text-align: center">
+            No se encontraron registros con los criterios de búsqueda ingresados
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <app-paginator
+      [query]="paginacionCondicion"
+      [items]="paginacionConfiguracion"
+      [rowsPerPageOptions]="[]"
+      [resetPage]="paginacionReiniciar"
+      (paginate)="eventoCambiarPagina($event)"
+    ></app-paginator>
+  </div>
+</div>
+<p-toast></p-toast>

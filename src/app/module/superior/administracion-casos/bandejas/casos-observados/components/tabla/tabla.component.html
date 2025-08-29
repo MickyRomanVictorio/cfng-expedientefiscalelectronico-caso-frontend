@@ -1,0 +1,93 @@
+<!--
+<p-table [value]="listaCasos"
+[rowHover]="true"
+[tableStyle]="{ 'min-width': '50rem' }"
+[breakpoint]="'992px'"
+responsiveLayout="stack"
+>
+<ng-template pTemplate="header">
+<tr>
+  <th pSortableColumn="Nº" scope="col">Nº</th>
+  <th scope="col">Número de caso /<br>Cuaderno Incidental</th>
+  <th pSortableColumn="etapa" scope="col">Etapa <p-sortIcon field="etapa"></p-sortIcon></th>
+  <th pSortableColumn="etapa" scope="col">Trámite de elevación<p-sortIcon field="tramiteElavacion"></p-sortIcon></th>
+  <th pSortableColumn="fiscaliaProcedencia" scope="col">Despacho de procedencia<p-sortIcon field="fiscaliaProcedencia"></p-sortIcon></th>
+  <th pSortableColumn="fechaElevacion" scope="col">Fecha de elevacíón<p-sortIcon field="fechaElevacion"></p-sortIcon></th>
+  <th pSortableColumn="fechaElevacion" scope="col">Fecha de observación<p-sortIcon field="fechaObservacion"></p-sortIcon></th>
+  <th pSortableColumn="delitos" scope="col">Observación<p-sortIcon field="observacion"></p-sortIcon></th>
+  <th class="w-col-10" scope="col"></th>
+</tr>
+</ng-template>
+
+<ng-template let-caso let-rowIndex="rowIndex" pTemplate="body">
+  <tr class="p-selectable-row text-700">
+    <td>{{ rowIndex + 1 }}</td>
+
+    <td class="table_td_content_start caso-container">
+      <span class="p-column-title">Número de caso</span>
+      <div class="flex align-items-center mb-3">
+        <div [innerHTML]="obtenerCasoHtml(caso.codigoCaso)" class="font-bold" style="white-space: nowrap"></div>
+      </div>
+      <div class="flex align-items-left mb-3">
+        <span class="text-xs py-1 px-2 border-round-xl" [ngStyle]="estiloTipoElevacion(caso.cssTextoElevacion)">
+          {{caso.tipoElevacion}}
+        </span>
+      </div>
+    </td>
+
+    <td>
+      <div class="font-semibold text-xs">
+        {{caso.etapa}}
+      </div>
+    </td>
+
+    <td>
+      <div class="font-semibold text-xs">
+       {{caso.tramite}}
+      </div>
+    </td>
+
+    <td class="table_td_content_start">
+      <div class="mb-1 text-xs">
+        <div class="font-semibold">{{caso.fiscal }}</div>
+        <div class="py-1">{{ caso.nombreEntidad }}</div>
+        <div class="font-semibold">{{ caso.despachoFiscalOrigen }}</div>
+      </div>
+    </td>
+
+    <td class="fecha-container table_td_content_start">
+      <div>
+        <div>{{ caso.fechaElevacion | dateformat }}</div>
+        <div class="mt-1">{{ caso.horaElevacion | dateformat : 'hour' }}</div>
+      </div>
+    </td>
+
+    <td class="fecha-container table_td_content_start">
+      <div>
+        <div>{{ caso.fechaObservacion | dateformat  }}</div>
+        <div class="mt-1">{{ caso.horaObservacion | dateformat : 'hour' }}</div>
+      </div>
+    </td>
+
+    <td class="table_td_content_start">
+      <span class="p-column-title">ver observación</span>
+      <div class="btn-crimes-parts font-semibold" (click)="eventoVerObservaciones(caso)">
+        ver<br>observación
+      </div>
+    </td>
+
+    <td class="table_td_content_start">
+      <i class="pi pi-ellipsis-v font-bold text-xl cursor-pointer text-600 transition-all transition-duration-200 hover:text-color" (click)="eventoOpcionesFila($event, opcionesCasoRef, caso)"></i>
+    </td>
+  </tr>
+</ng-template>
+</p-table>
+
+
+@if (paginacionConfiguracion.data.total > 0) {
+  <app-paginator [query]="paginacionCondicion" [items]="paginacionConfiguracion" [rowsPerPageOptions]="[]" (paginate)="eventoCambiarPagina($event)"></app-paginator>
+}
+-->
+<!-- Ini - Opciones del Caso -->
+<!-- <p-menu #opcionesCasoRef [model]="opcionesCaso" appendTo="body" [popup]="true"></p-menu> -->
+

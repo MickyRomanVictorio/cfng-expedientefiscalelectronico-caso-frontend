@@ -1,0 +1,30 @@
+<div class="alert-container">
+  <div class="mt-1">
+    <div class="floatRigth my-1">
+      <i class="pi pi-times size-cursor" (click)="closeAction($event)"></i>
+    </div>
+    <h3
+      class="encabezado-titulo cfe-subtitulo-3 cfe-semi-bold"
+      [innerHTML]="title"
+    ></h3>
+  </div>
+
+  <div>
+    <div class="alert-description my-3">
+      <div class="w-full">
+        <span class="font-bold">Motivo</span>
+      </div>
+      <div class="w-full">
+        <p>{{ revertido.motivoReversion }}</p>
+      </div>
+    </div>
+    <div class="alert-description my-3">
+      <div class="w-full">
+        <span class="font-bold">Fecha de reversión</span>
+      </div>
+      <div class="w-full">
+        <p>{{ revertido.fechaReversion }} {{ revertido.horaReversion }}</p>
+      </div>
+    </div>
+  </div>
+</div>

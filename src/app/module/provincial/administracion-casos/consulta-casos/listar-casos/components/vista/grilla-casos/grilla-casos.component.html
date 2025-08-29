@@ -1,0 +1,19 @@
+@if (listaCasos.length > 0) {
+  <div class="col-12">
+    <div class="carpeta-container">
+      @for (caso of listaCasos; track $index) {
+      <div class="px-2 pb-6">
+          <app-carpeta-caso [casofiscal]="caso" (casoSeleccionado)="casoSeleccionado.emit($event)"></app-carpeta-caso>
+      </div>
+      }
+    </div>
+    <app-paginator
+      [query]="paginacionCondicion"
+      [items]="paginacionConfiguracion"
+      [rowsPerPageOptions]="[]"
+      [resetPage]="paginacionReiniciar"
+      (paginate)="eventoCambiarPagina($event)"
+    ></app-paginator>
+  </div>
+}
+

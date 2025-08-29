@@ -1,0 +1,12 @@
+<div class="w-full">
+  <div class="col-12 md:col-4 relative">
+    <p-button label="Desagregar caso" styleClass="w-full cfe-boton-primary cfe-boton-lg"
+      (onClick)="cargarModalDesagregarCaso()"></p-button>
+
+    <div class="icono-guardado">
+      @if(desagregarCasoCargado){
+      <img [src]="icono('check-circle')" alt="guardado" class="pr-2 h-2rem" />
+      }
+    </div>
+  </div>
+</div>

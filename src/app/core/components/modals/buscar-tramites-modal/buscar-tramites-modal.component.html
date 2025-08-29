@@ -1,0 +1,96 @@
+<div class="p-4">
+
+    <form [formGroup]="form">
+        <app-encabezado-modal titulo="SELECCIONAR TIPO DE TRÁMITE" [numeroCaso]="nroCaso"
+            [referenciaModal]="referenciaModal">
+        </app-encabezado-modal>
+        <div class="grid">
+            <div class="col-12 md:col-2">
+              <label for="proceso" class="font-semibold block pb-1" >Tipo proceso</label>
+              <p-dropdown
+                  [options]="listProcesos" optionValue="id" optionLabel="nombre"
+                  emptyMessage="Sin resultados" placeholder="Todos" [showClear]="true"
+                  formControlName="proceso" (ngModelChange)="onChangeProceso($event)"
+                  class="lista-ancho-maximo"
+              ></p-dropdown>
+            </div>
+            <div class="col-12 md:col-3">
+              <label for="proceso" class="font-semibold block pb-1">Subtipo proceso</label>
+              <p-dropdown [options]="listSubtipos" optionValue="id" optionLabel="nombre" filter="true" appendTo="body"
+                  emptyMessage="Sin resultados" placeholder="Todos" [showClear]="true" formControlName="subtipo"
+                  (ngModelChange)="onChangeSubtipo($event)"
+                  class="lista-ancho-maximo"
+                ></p-dropdown>
+            </div>
+            <div class="col-12 md:col-2">
+              <label for="etapa" class="font-semibold block pb-1">Etapa</label>
+              <p-dropdown [options]="listEtapas" optionValue="id" optionLabel="nombre"
+                  emptyMessage="Sin resultados" placeholder="Todos" [showClear]="true" formControlName="etapa"
+                  (ngModelChange)="onChangeEtapa($event)"
+                  class="lista-ancho-maximo"
+                  ></p-dropdown>
+            </div>
+            <div class="col-12 md:col-2">
+              <label for="acto" class="font-semibold block pb-1">Acto Procesal</label>
+              <p-dropdown [options]="listActos" optionValue="id" optionLabel="nombre"  filter="true"
+                  emptyMessage="Sin resultados" placeholder="Todos" [showClear]="true" formControlName="acto"
+                  (ngModelChange)="onChangeActo($event)"
+                  class="lista-ancho-maximo"
+              ></p-dropdown>
+            </div>
+            <div class="col-12 md:col-3">
+              <label for="tramite" class="font-semibold block pb-1">Buscar trámite</label>
+              <input pInputText class="p-inputtext-md cfe-input-md w-full" placeholder="Todos" id="tramite"
+                  formControlName="tramite" (input)="onInput()" />
+            </div>
+        </div>
+    </form>
+
+    <div class="tableView">
+
+        <p-table
+            [value]="lisTramitesFiltrados"
+            [rowHover]="true"
+            [tableStyle]="{ 'min-width': '50rem' }"
+            [breakpoint]="'992px'"
+            responsiveLayout="stack "
+            class="table_td_content_responsive"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Etapa</th>
+                    <th>Acto Procesal</th>
+                    <th>Trámite</th>
+                    <th>Acción</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-tramite>
+                <tr>
+                    <td>{{ tramite.etapa }}</td>
+                    <td>{{ tramite.acto }}</td>
+                    <td>{{ tramite.nombreTramite }}</td>
+                    <td>
+                        <button class="cfe-boton-secondary" pButton (click)="seleccionarTramite(tramite)">
+                            Seleccionar
+                        </button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="4" class="text-center">
+                        No se encontraron registros con los criterios de búsqueda ingresados
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <app-paginator
+            [query]="query"
+            [items]="itemPaginado"
+            [rowsPerPageOptions]="[]"
+            [resetPage]="resetPage"
+            (paginate)="onPaginate($event)"
+        ></app-paginator>
+
+    </div>
+</div>

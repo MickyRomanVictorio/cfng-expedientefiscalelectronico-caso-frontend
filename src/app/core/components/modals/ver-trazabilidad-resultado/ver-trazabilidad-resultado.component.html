@@ -1,0 +1,100 @@
+<div class="py-2 px-2">
+  <fn-icon
+    class="absolute top-0 right-0 cursor-pointer mt-2 mr-2"
+    [ico]="obtenerIcono('iClose')"
+    height="2rem"
+    (click)="close()"
+  ></fn-icon>
+  <div class="cfe-titulo-1 text-xl">
+    Trazabilidad del resultado correspondiente al requerimiento realizado
+  </div>
+  <div class="cfe-titulo-1 text-sm text-600">
+    A continuación se muestra la trazabilidad de los estados correspondientes al
+    requerimiento solicitado:
+  </div>
+  <!-- <div class="flex align-content-center mt-2">
+    <div class="border-circle bg-red-500 w-1rem h-1rem mt-1"></div>
+    <div class="pl-2 text-600">Plazo para apelar está próximo a vencer</div>
+  </div> -->
+  <div class="tableView pt-3">
+    <p-table
+      [loading]="false"
+      [paginator]="false"
+      [rows]="5"
+      [first]="0"
+      [value]="listaTrazabilidadFiltrado"
+      [rowHover]="true"
+      responsiveLayout="stack"
+    >
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th>N°</th>
+          <th>
+            Resultado <br />
+            (1era instancia)
+          </th>
+          <th>
+            Resultado <br />
+            (2da instancia)
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-imputado let-columns="columns">
+        <tr>
+          <td>
+            <div>
+              <div class="p-column-title font-bold block lg:hidden">N°</div>
+              <div class="flex align-content-center">
+                <div
+                  *ngIf="imputado.plazoVerncer"
+                  class="border-circle bg-red-500 w-1rem h-1rem mr-1 mt-1"
+                ></div>
+                {{ imputado.numero }}
+              </div>
+            </div>
+          </td>
+          <td>
+            <div>
+              <div class="p-column-title font-bold block lg:hidden">
+                Resultado (1era instancia)
+              </div>
+              {{ imputado.descRsp1eraInstancia }}
+              @if(imputado.descRes1eraInstancia){
+              <div class="text-red-500">
+                {{ imputado.descRes1eraInstancia | capitalizar }}
+              </div>
+              }
+            </div>
+          </td>
+          <td>
+            <div>
+              <div class="p-column-title font-bold block lg:hidden">
+                Resultado (2da instancia)
+              </div>
+              <div class="flex align-content-center color-conteo-regresivo">
+                <div [innerHTML]="iconoRelojSvg" class="pr-2"></div>
+                <div>{{ imputado.descRes2daInstancia }}</div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <app-paginator
+      [query]="query"
+      [items]="itemPaginado"
+      [rowsPerPageOptions]="[]"
+      [resetPage]="resetPage"
+      (paginate)="onPaginate($event)"
+    ></app-paginator>
+  </div>
+  <div class="text-center pt-3">
+    <button
+      type="button"
+      class="cfe-boton-primary cfe-boton-m inline"
+      (click)="close()"
+    >
+      Aceptar
+    </button>
+  </div>
+</div>

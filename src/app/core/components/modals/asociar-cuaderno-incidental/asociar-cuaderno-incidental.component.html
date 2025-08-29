@@ -1,0 +1,132 @@
+<div class="flex flex-row-reverse flex-wrap pt-2 pr-2">
+  <div
+    class="flex align-items-center justify-content-center w-1rem h-1rem font-bold border-round m-2"
+  >
+    <span (click)="cerrarModal()">
+      <img [src]="iconAsset.obtenerRutaIcono('close')" alt="Close Icon" />
+    </span>
+  </div>
+</div>
+<div class="pb-5 pl-5 pr-5">
+  <div class="grid mb-5 titulo">
+    <span><img alt="settings" [src]="'../../../../../assets/icons/settings.svg'" /></span>
+    Para poder recibir el trámite&nbsp;<strong> {{ nombreTramite }} </strong
+    >&nbsp; es necesario asociarlo @if( tipo === 2 ) {a una pestaña de apelación
+    que pertenece} a un cuaderno incidental de tipo&nbsp;<strong>
+      {{ nombreCuaderno }}
+    </strong>
+  </div>
+  <div class="grid mb-5 subtitulo d-flex align-items-center">
+    @if (tipo === 1) {
+    <div class="col-8 flex align-items-center">
+      Lista de cuadernos incidentales de&nbsp;<strong>{{
+        nombreCuaderno
+      }}</strong>
+    </div>
+    <div class="col-4 flex align-items-center justify-content-end">
+      @if (listaCuadernosInicidentales.length > 0) {
+      <button
+        class="cfe-boton-secondary cfe-boton-sm"
+        pButton
+        (click)="nuevoCuaderno()"
+      >
+        Nuevo cuaderno incidental
+      </button>
+      }
+    </div>
+    }@else if (tipo === 2) {
+    <div>
+      Lista de pestañas de apelaciones de los cuadernos incidentales
+      de&nbsp;<strong>{{ nombreCuaderno }}</strong>
+    </div>
+    }
+  </div>
+
+  <div class="cfe-table-green mb-5">
+    <p-table
+      [value]="listaCuadernosInicidentales"
+      [(selection)]="cuadernoAsociado"
+      [paginator]="listaCuadernosInicidentales.length > 0"
+      [rowHover]="true"
+      [rows]="10"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="{first} de {last} registros"
+      [rowsPerPageOptions]="[5, 10, 20, 30, 50, 100]"
+      [tableStyle]="{ 'min-width': '45rem' }"
+      [breakpoint]="'992px'"
+      responsiveLayout="stack"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 4rem"></th>
+          <th class="cabecera">Número de cuaderno</th>
+          <th class="cabecera">Sujetos Procesales</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-item>
+        <tr>
+          <td>
+            <p-tableRadioButton [value]="item" />
+          </td>
+          <td>
+            <span [innerHTML]="obtenerNumeroCaso(item.numeroCaso)"></span>
+            @if (tipo == 2) {
+            <div>
+              <p-tag
+                severity="success"
+                [value]="'Apelación N° ' + item.numeroApelacion"
+              ></p-tag>
+              <p-tag
+                severity="info"
+                [value]="item.estado"
+                styleClass="ml-2"
+              ></p-tag>
+            </div>
+            }
+          </td>
+          <td>
+            @for (l of item.sujetos ; track $index) {
+            <p>{{ l }}</p>
+            }
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="3" class="fila">
+            @if (tipo === 1) {
+            <div class="text-center">
+              No existen registros. Para poder asociar el trámite, es necesario
+              que exista al menos un cuaderno incidental del tipo&nbsp;<strong>
+                {{ nombreCuaderno }}, </strong
+              >&nbsp;registre uno para poder continuar
+
+              <button
+                class="cfe-boton-secondary cfe-boton-sm mt-3 mb-3 d-block mx-auto"
+                pButton
+                (click)="nuevoCuaderno()"
+              >
+                Nuevo cuaderno incidental
+              </button>
+            </div>
+            }@else if (tipo === 2) {
+            <div class="text-center">No existen registros.</div>
+            }
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  @if (listaCuadernosInicidentales.length>0) {
+  <div class="grid justify-content-end">
+    <button
+      class="cfe-boton-primary cfe-boton-m"
+      pButton
+      [disabled]="cuadernoAsociado === null"
+      (click)="asociar()"
+    >
+      @if (tipoAccion === 'E') { Actualizar asociación }@else{ Asociar }
+    </button>
+  </div>
+  }
+</div>

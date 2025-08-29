@@ -1,0 +1,29 @@
+<div class="flex p-1 ml-1">
+  <div class="text-xl font-semibold text-primary mb-1 mt-2 family-poppin-bold">
+    Registrar agenda de programación de audiencia múltiple
+  </div>
+  <div class="ml-auto">
+      <span class="cursor-pointer">
+          <fn-icon [ico]="iconUtil.obtenerIcono('iClose')" (click)="cerrarModal()" onkeydown="" height="1.5rem"/>
+      </span>
+  </div>
+</div>
+
+<app-agenda-multiple
+  [mostrarFechaNotificacion]="mostrarFechaNotificacion"
+  [agendasMultiples]="agendasMultiples"
+/>
+
+<div class="field col-12 flex flex-column sm:flex-row justify-content-center mt-4 p-3 gap-4">
+  <p-button
+    (onClick)="cerrarModal()"
+    styleClass="p-button-lg cfe-boton-secondary family-poppin-bold btn-adjust-filter w-column-full">
+    <span class="ml-4 mr-4">Cancelar</span>
+  </p-button>
+  <p-button
+    (onClick)="dataAudiencia()"
+    styleClass="p-button-lg cfe-boton-primary text-white family-poppin-bold btn-adjust-filter w-column-full">
+    <span class="ml-4 mr-4">Aceptar</span>
+  </p-button>
+</div>
+

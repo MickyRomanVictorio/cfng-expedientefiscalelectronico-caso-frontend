@@ -1,0 +1,55 @@
+<div class="modal-alert-container" [ngClass]="containerClass">
+	<span *ngIf="!ocultarCierre" class="modal-alert-close" (click)="closeAction()">
+		<img [src]="closeIcon" alt="Close Icon">
+	</span>
+
+	<div *ngIf="icon" class="modal-alert-icon">
+		<img [src]="alertIcon" alt="Alert Icon">
+	</div>
+
+	<div class="modal-alert-title text-2xl font-semibold text-primary mb-4">{{ title }}</div>
+
+	<p *ngIf="showDescription" class="modal-alert-description" [class.left]="validarEstiloListaDescripcion()" [innerHTML]="getDescription()"></p>
+
+	<div *ngIf="!ocultarBotones && !rowsView" class="modal-alert-options mt-5">
+
+		<button *ngIf="confirm" class="cfe-boton-secondary cfe-boton-lg mr-3"
+			(click)="cancelAction()">
+			{{ cancelButtonText }}
+		</button>
+
+		<button *ngIf="confirmHechosCasos" class="cfe-boton-secondary cfe-boton-lg mr-3"
+			(click)="cancelAction()">
+			{{ irHechosCasosButtonText }}
+		</button>
+
+       <button class="cfe-boton-primary cfe-boton-lg"
+               (click)="confirmAction()">
+         {{ confirmButtonText }}
+       </button>
+
+       <button *ngIf="confirmSecond" class="cfe-boton-primary cfe-boton-lg ml-3"
+               (click)="confirmAction2()">
+         {{ confirmSecondButtonText }}
+       </button>
+	</div>
+  <div *ngIf="!ocultarBotones && rowsView" class="mt-5">
+    <div class="flex justify-content-center pb-4 border-bottom-1 modal-divider">
+      <button *ngIf="confirm" class="cfe-boton-primary cfe-boton-lg"
+              (click)="cancelAction()">
+        {{ cancelButtonText }}
+      </button>
+    </div>
+    <div class="flex flex-wrap justify-content-center mt-4 gap-4">
+      <button class="cfe-boton-primary cfe-boton-lg"
+              (click)="confirmAction()">
+        {{ confirmButtonText }}
+      </button>
+      <button *ngIf="confirmSecond" class="cfe-boton-primary cfe-boton-lg"
+              (click)="confirmAction2()">
+        {{ confirmSecondButtonText }}
+      </button>
+    </div>
+  </div>
+
+</div>

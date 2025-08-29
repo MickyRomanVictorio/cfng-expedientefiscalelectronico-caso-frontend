@@ -1,0 +1,77 @@
+<div class="cfe-dialog__header">
+  <h2>
+    Ver detalle de plazos fiscal: <span>{{ nombreFiscal }} </span>
+  </h2>
+  <fn-icon
+    [ico]="iconUtil.obtenerIcono('iClose')"
+    height="28px"
+    (click)="close()"
+  ></fn-icon>
+</div>
+<div class="cfe-dialog__content">
+  <div class="cfe-table">
+    <p-table class="cfe-bold" [value]="detalleEtapa">
+      <ng-template pTemplate="header">
+        <tr>
+          <th scope="col">INDICADOR</th>
+          <th scope="col">Asignación</th>
+          <th scope="col">Recepción</th>
+          <th scope="col">Calificación</th>
+          <th scope="col">
+            Invest.Prelim. <br />
+            (Fiscal)
+          </th>
+          <th scope="col">
+            Invest.Prelim. <br />
+            (P.N.P)
+          </th>
+          <th scope="col">
+            Invest. <br />
+            Preparatoria
+          </th>
+          <th scope="col">
+            Conclu. <br />
+            Invest. <br />
+            Preparatoria
+          </th>
+          <th scope="col">Total</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-item>
+        <!-- <ng-template pTemplate="body" let-caso let-i="rowIndex"> -->
+        <tr class="cfe-semi-bold">
+          <td>
+            <!-- <ng-container [ngSwitch]="caso.indicador">
+              <span *ngSwitchCase="'VERDE'" class="dentro-del-plazo"></span>
+              <span *ngSwitchCase="'AMBAR'" class="plazo-por-vencer"></span>
+              <span *ngSwitchCase="'ROJO'" class="plazo-vencido"></span>
+            </ng-container> -->
+            <span
+              [ngClass]="{
+                'indicador-verde': item.indicador === 'VERDE',
+                'indicador-ambar': item.indicador === 'AMBAR',
+                'indicador-rojo': item.indicador === 'ROJO'
+              }"
+            ></span>
+            {{ item.indicador }}
+          </td>
+          <td>{{ item.asignacion }}</td>
+          <td>{{ item.recepcion }}</td>
+          <td>{{ item.calificacion }}</td>
+          <td>{{ item.preliminarFiscal }}</td>
+          <td>{{ item.preliminarPnp }}</td>
+          <td>{{ item.preparatoria }}</td>
+          <td>{{ item.preparatoriaConcluido }}</td>
+          <td>{{ item.total }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="9" class="no-before" style="text-align: center">
+            No se encontraron detalles para este registro
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

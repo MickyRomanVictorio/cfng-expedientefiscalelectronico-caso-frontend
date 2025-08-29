@@ -1,0 +1,327 @@
+/* Estilos generales del reproductor */
+.player {
+  width: 100%;
+  // width: 1000px;
+  max-width: 1200px;
+  background: white;
+  border-radius: 8px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #666;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/* Título y nombre del archivo */
+.player__filename {
+  font-size: 14px;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0 20px;
+}
+
+/* Controles de reproducción */
+.player__controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.player__button {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.player__button:hover {
+  background-color: #f0f0f0;
+  border-radius: 50%;
+}
+
+.player__button:active {
+  transform: scale(0.95);
+}
+
+.player__icon {
+  width: 20px;
+  height: 20px;
+  transition: fill 0.2s ease;
+}
+
+/* Barra de duración */
+.player__seek-wrapper {
+  position: relative;
+  flex-grow: 1;
+  margin: 0 8px;
+  display: flex;
+  align-items: center;
+}
+
+.player__seek-wrapper:hover .time-indicator {
+  display: block;
+}
+
+.progress-bar-container {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  background-color: #ddd;
+  border-radius: 2px;
+  cursor: pointer;
+  margin: 0 10px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  position: absolute;
+  height: 100%;
+  background-color: #ff8c00;
+  left: 0;
+  top: 0;
+  width: var(--seek-percent, 0%);
+  transition: width 0.1s ease;
+}
+
+/* Bolita encima de la barra de progreso */
+.player__thumb {
+  position: absolute;
+  top: -5px;
+  left: var(--seek-percent, 0%);
+  width: 12px;
+  height: 12px;
+  background-color: #ff8c00;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: left 0.1s ease;
+}
+
+/* Tooltip de la barra de duración */
+.player__tooltip {
+  position: absolute;
+  background-color: orange;
+  padding: 4px 8px;
+  color: white;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  top: -30px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  pointer-events: none;
+}
+
+.player__tooltip::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #FF9800;
+}
+
+.player__tooltip.visible {
+  opacity: 1;
+}
+
+/* Control de volumen */
+.volume-bar-container {
+  width: 100%;
+  height: 4px;
+  background-color: #e0e0e0;
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+.volume-bar-fill {
+  position: absolute;
+  height: 100%;
+  background: #ff8c00;
+  left: 0;
+  top: 0;
+  width: var(--volume-percent, 0%);
+  transition: width 0.1s ease;
+}
+
+/* Bolita encima de la barra de volumen */
+.player__volume-thumb {
+  position: absolute;
+  top: -5px;
+  left: var(--volume-percent, 0%);
+  width: 12px;
+  height: 12px;
+  background-color: #ff8c00;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: left 0.1s ease;
+}
+
+/* Tiempo de reproducción */
+.player__time {
+  font-size: 14px;
+  color: #666;
+  min-width: 45px;
+  text-align: center;
+}
+
+/* Indicador de tiempo flotante */
+.time-indicator {
+  position: absolute;
+  top: -25px;
+  background: #ff8c00;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: white;
+  transform: translateX(-50%);
+  display: none;
+}
+
+/* Control de volumen */
+.player__volume-control {
+  display: flex;
+  align-items: center;
+  width: auto;
+  position: relative;
+}
+
+// *******************************
+// *******************************
+// *******************************
+// *******************************
+// *******************************
+
+/* Estilos generales para las barras de progreso */
+.player__seek-wrapper input[type="range"],
+.player__volume-control input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  cursor: pointer;
+  background: transparent;
+}
+
+/* Para mostrar el fondo del progreso */
+.player__seek-wrapper input[type="range"] {
+  background: linear-gradient(to right, #ff8c00 var(--seek-percent, 0%), #e0e0e0 var(--seek-percent, 0%));
+}
+
+.player__volume-control input[type="range"] {
+  background: linear-gradient(to right, #ff8c00 var(--volume-percent, 0%), #e0e0e0 var(--volume-percent, 0%));
+  width: 70px !important;
+}
+
+/* Estilo de la bolita de la barra de duración */
+.player__seek-wrapper input[type="range"]::-webkit-slider-thumb,
+.player__volume-control input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #ff8c00;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.player__seek-wrapper input[type="range"]::-moz-range-thumb,
+.player__volume-control input[type="range"]::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: #ff8c00;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+button:disabled {
+  color: #aaa;
+  cursor: not-allowed !important;
+  opacity: 0.6;
+}
+
+.player__icon--pause:hover {
+  fill: rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Video Mode */
+.player--video {
+  display: block;
+  padding: 0;
+  aspect-ratio: 16 / 9;
+}
+
+.player--video video {
+  width: 100%;
+  height: 100%;
+  border-radius: 0.4rem;
+  object-fit: cover;
+}
+
+.player--video-fullscreen video {
+  object-fit: contain;
+}
+
+/* Fullscreen controls */
+.player:fullscreen .player__controls,
+.player:-webkit-full-screen .player__controls,
+.player:-moz-full-screen .player__controls,
+.player:-ms-fullscreen .player__controls {
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+}
+
+
+/* Imagen */
+.imagen {
+  width: 100%;
+}
+
+.imagen img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}

@@ -1,0 +1,37 @@
+.indicator {
+  &__circle {
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 50%;
+  }
+
+  &.error {
+    .indicator__circle {
+      background-color: #dc3545;
+    }
+
+    p {
+      color: #dc3545 !important;
+    }
+  }
+
+  &.warning {
+    .indicator__circle {
+      background-color: #ffc107;
+    }
+
+    p {
+      color: #ffc107 !important;
+    }
+  }
+
+  &.success {
+    .indicator__circle {
+      background-color: #28a745;
+    }
+
+    p {
+      color: #28a745 !important;
+    }
+  }
+}

@@ -1,0 +1,55 @@
+.sujetos_requerimiento{
+  padding: 20px 30px;
+  width: 1267px;
+
+  .titulo-numero-caso {
+    font-weight: bold;
+    font-size: 1.2em;
+  }
+
+  .label-bg-warning {
+    background-color: #F8EED3;
+  }
+
+  .sujeto_procesal_table {
+    width: 100%;
+    .delitos-item{
+      position: relative;
+      display: block;
+      font-size: 14px;
+      line-height: 20px;
+      &::before{
+        content: '';
+        display: block;
+        width: 2px;
+        height: 2px;
+        background-color: #1B1C1E;
+        position: absolute;
+        top: 10px;
+        left: -12px;
+        border-radius: 50%;
+      }
+    }
+  }
+}
+
+:host::ng-deep .modal__header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0 15px 0;
+
+  .modal_header__content {
+    display: flex;
+    align-items: center;
+
+    .cfe-titulo-1 {
+      font-size: 1.45em;
+
+      span {
+        color: var(--mpfn-secondary) !important;
+      }
+    }
+  }
+}

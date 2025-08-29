@@ -1,0 +1,59 @@
+<ngx-cfng-core-layout-header
+  baseAssetsUrl="{{ baseAssetsUrl }}"
+  [aplicaciones]="aplicacionesHead"
+  [usuario]="usuario"
+  [titulos]="titulos"
+  [menuNavegacion]="menuNavegacion"
+  [alertas]="alertas"
+  (menuNavegacionSeleccionado)="eventoMenuNavegacionSeleccionado($event)"
+/>
+<ng-template #componentAlertaPlazoTemplate let-fn="fn">
+  <app-alerta-plazo
+    [eventoCerrar]="fn"
+    [listaAlertasPlazoPorAtender]="listaAlertasPlazoPorAtender"
+    [listaAlertasPlazoAtendidos]="listaAlertasPlazoAtendidos"
+  ></app-alerta-plazo>
+</ng-template>
+
+<ng-template #componentAlertaGenericaTemplate let-fn="fn">
+  <app-alerta-generica
+    [eventoCerrar]="fn"
+    [listaAlertasGenericaPorAtender]="listaAlertasGenericaPorAtender"
+    [listaAlertasGenericaAtendidos]="listaAlertasGenericaAtendidos"
+  ></app-alerta-generica>
+</ng-template>
+
+<div class="flex">
+  <div
+    class="espacio-sidebar"
+    [ngClass]="{ 'espacio-sideba--ancho': anchoFijoSidebar }"
+  >
+    <ngx-cfng-core-layout-sidebar
+      #sidebar
+      [menuNavegacion]="menuNavegacionOpciones"
+      baseAssetsUrl="{{ baseAssetsUrl }}"
+      (anchoFijoSidebar)="eventoAnchoFijoSidebar($event)"
+      (menuNavegacionSeleccionado)="eventoSubmenuNavegacionSeleccionado($event)"
+    />
+  </div>
+  <div class="contenido">
+    <app-consulta-rapida></app-consulta-rapida>
+    <app-alerta-static
+      [listaAletasUrgentes]="listaAletasUrgentes"
+    ></app-alerta-static>
+    @if(datoBreadCrum.length>0) {
+    <div class="p-3 m-3">
+      <app-breadcrumb 
+        [routes]="datoBreadCrum"
+        [idCaso]="idCaso">
+      </app-breadcrumb>
+       <router-outlet></router-outlet>
+    </div>
+    }@else{
+   <div class="p-3 m-3">
+      <router-outlet></router-outlet>
+    </div>
+    }
+ 
+  </div>
+</div>

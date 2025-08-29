@@ -1,0 +1,330 @@
+@use '../../../../../../../assets/styles/scss/abstracts/index' as *;
+
+
+.acto_procesal__tamanio {
+    width: 500px; 
+  
+    @media (min-width: 1460px) {
+      width: 750px; 
+    }
+  }
+.acto_procesal__container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background-color: $white;
+    .acto_procesal__body{
+    //    padding-right: 2rem;
+       // padding-left: 1rem;
+    }
+    .acto_procesal__header{
+       
+        display: flex;
+        align-items: left;
+      //  justify-content: space-between;
+        margin: 30px 0 25px 0;
+        //padding-left: 50px;
+        .acto_procesal_header__content{
+            display: flex;
+            align-items: left;
+            h3{
+                font-family: $font-bold;
+                color: $primary;
+                font-size: 1.0em;
+                margin: 0;
+                padding: 0 0;
+            }
+        }
+        .acto_procesal_header__navigate{
+            display: flex;
+        }
+    }
+  
+    .acto_procesal__filters{
+       // width: 100%;
+        //padding-left: 50px;
+    }
+    .acto_procesal__table{
+        width: 100%;
+        background: $white;
+        border-radius: 6px;
+        border: 1.5px solid $gray2;
+        margin-top: 10px;
+        .acto_procesal_table__title{
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px 25px 0 25px;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            .acto_procesal_table_title__content{
+                display: flex;
+                align-items: center;
+                img{
+                    width: 22px;
+                    position: relative;
+                    top: -2px;
+                }
+                h4{
+                    margin: 0;
+                    font-family: $font-bold;
+                    font-size: 1.1em;
+                    margin-left: 10px;
+                }
+            }
+            .acto_procesal_table_title__options{
+                display: flex;
+            }
+        }
+        .acto_procesal__legend{
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            padding: 10px 20px 25px 20px;
+            .term-item{
+                font-size: 0.9em;
+                display: flex;
+                font-family: $font-regular;
+                align-items: center;
+                margin-right: 12px;
+                span{
+                    display: inline-block;
+                    width: 13px;
+                    height: 13px;
+                    border-radius: 50%;
+                    background: $gray2;
+                    margin-right: 5px;
+                }
+                .quantity{
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 0.9em;
+                    margin-left: 4px;
+                }
+                &:last-child{
+                    margin-right: 0;
+                }
+            }
+        }
+        .acto_procesal_table__content{
+            width: 100%;
+        }
+    }
+}
+
+:host ::ng-deep .p-dropdown-label {
+    font-size: 1.125rem !important;
+}
+
+:host ::ng-deep .btn-change-view{
+    font-family: $font-semi-bold;
+    .p-button.p-button-outlined{
+        background-color: transparent;
+        color: $primary;
+        border: 2px solid;
+        font-size: 17px;
+    }
+}
+
+:host ::ng-deep .btn-navigate{
+    .p-button{
+        background-color: $gray7;
+        border: 1px solid $gray6;
+        display: flex;
+        align-items: center;
+        color: $primary;
+        transition: 300ms all ease;
+        min-width: 160px;
+        img{
+            margin-right: 8px;
+        }
+        &:hover{
+            background: #0e2e4a0a;
+        }
+    }
+}
+
+:host ::ng-deep .caso-container{
+    align-items: center;
+    position: relative;
+    .plazo-item{
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 6px;
+        position: absolute;
+        left: -5px;
+        top: 22px;
+    }
+    .caso-value{
+        font-family: $font-regular;
+        white-space: nowrap;
+        span{
+            color: $secondary;
+        }
+    }
+}
+
+:host ::ng-deep .p-selectable-row{
+    &:hover{
+        cursor: default;
+    }
+    td{
+        vertical-align: top;
+        font-family: $font-regular;
+    }
+    .remitente-container{
+        font-family: $font-regular;
+        font-size: 0.95em;
+    }
+    .contact-item{
+        font-family: $font-regular;
+        font-size: 0.95em;
+        span{
+            display: inline-block;
+            margin-right: 5px;
+            font-family: $font-semi-bold;
+        }
+    }
+    .fecha-container{
+        font-family: $font-regular;
+        font-size: 0.95em;
+    }
+    .btn-crimes-parts{
+        cursor: pointer;
+        background: $white;
+        color: $black;
+        text-align: center;
+        font-family: $font-semi-bold;
+        font-size: 0.9em;
+        padding: 6px 5px;
+        border-radius: 5px;
+        transition: 300ms all ease;
+        border: 1.5px solid $gray2;
+        &:hover{
+            background: #E0E0E0;
+            border-color: $gray2;
+        }
+    }
+    .btn-clasification{
+        cursor: pointer;
+        width: 55px;
+        height: 55px;
+        background: $gray7;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 4px;
+        transition: 300ms all ease;
+        border: 1.5px solid $gray6;
+        &:hover{
+            background: #f1f1f1;
+        }
+        img{
+            width: 25px;
+        }
+    }
+    .td-justify-center{
+        display: flex;
+        justify-content: center;
+    }
+}
+
+:host ::ng-deep .unread{
+    .caso-container{
+        .caso-value{
+            font-family: $font-bold;
+        }
+    }
+    .remitente-container,
+    .contact-item,
+    .fecha-container{
+        font-family: $font-bold;
+    }
+    .contact-item{
+        span{
+            font-family: $font-bold;
+        }
+    }
+}
+
+.btn-more-options{
+    padding: 6px 6px;
+    cursor: pointer;
+    margin-top: 8px;
+    .btn-more-options-content{
+        width: 6px;
+        display: flex;
+        flex-wrap: wrap;
+        span{
+            width: 6px;
+            height: 6px;
+            display: inline-block;
+            background-color: $gray5;
+            border-radius: 50%;
+            margin-bottom: 4.5px;
+            transition: 300ms background-color ease;
+        }
+    }
+    &:hover{
+        .btn-more-options-content{
+            span{
+                background-color: $primary;
+            }
+        }
+    }
+}
+
+:host ::ng-deep .menu-options{
+    position: absolute;
+    .p-menu{
+        &.p-menu-overlay{
+            min-width: 265px;
+            top: -30px !important;
+            right: 0 !important;
+            left: auto !important;
+        }
+    }
+}
+
+:host ::ng-deep .btn-adjust-height{
+    height: 56px;
+}
+
+:host ::ng-deep .origin-container{
+    position: relative;
+    .adjust-origin-label{
+        position: absolute;
+        top: -24px;
+        left: 7px;
+    }
+}
+
+.filters{
+    transition: 300ms all ease;
+    height: auto;
+    padding: 0.5rem;
+}
+
+.filters-colapsados{
+    height: 0;
+    overflow: hidden;
+    padding: 0;
+}
+.btn-link{
+    text-decoration: underline;
+    cursor: pointer;
+}
+.cfe-texto-general {
+  color: var(--mpfn-turno);
+  font-family: var(--mpfn-font-semi-bold);
+}
+
+.combos_size{
+    max-width: 640px;
+}

@@ -1,0 +1,34 @@
+export interface DireccionRequest {
+    idDireccion: string | null;
+    tipoDireccion: string;
+    tipoDireccionNombre?: string;
+    dpto: string;
+    dptoNombre?: string;
+    provincia: string;
+    provinciaNombre?: string;
+    distrito: string;
+    distritoNombre?: string;
+    cpoblado: string | null;
+    codCentroPoblado?: string | null;
+    tipoVia: number;
+    nombre: string;
+    nroDireccion: string;
+    prefijoUrb: string;
+    nombreUrb: string;
+    block: string;
+    interior: string;
+    etapa: string;
+    mz: string;
+    lote: string;
+    referencia: string | null;
+    sujeto: string | null;
+    lat: string | null;
+    lon: string | null;
+    pais: string;
+    registradoPor: string | null;
+    fechaRegistro: string | null;
+    actualizadoPor: string | null;
+    fechaActualizacion: string | null;
+    habilitado:boolean;
+    paisNombre?: string;
+}

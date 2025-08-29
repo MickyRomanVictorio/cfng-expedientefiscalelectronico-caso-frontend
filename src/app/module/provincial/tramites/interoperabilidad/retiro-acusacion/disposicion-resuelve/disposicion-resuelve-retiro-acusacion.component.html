@@ -1,0 +1,94 @@
+@if ( !tieneActoTramiteCasoDocumento ) {
+  <mensaje-interoperabilidad-pj />
+}
+
+@if ( tieneActoTramiteCasoDocumento ) {
+  @if ( !tramiteEstadoRecibido ) {
+    <mensaje-completar-informacion
+        [titulo] = "tramiteSeleccionado!.nombreTramite"
+    />
+  }
+
+  <form [formGroup]="formularioAutoResuelve">
+    <div class="formgrid grid mt-3">
+      <div class="field col-12 lg:col-3">
+        <div class="formgrid grid">
+          <div class="field col-10">
+              <label for="resultado" class="font-bold text-sm">Seleccionar sujetos procesales los cuales se aplicara el pronunciamiento</label>
+              <button class="cfe-boton-primary cfe-boton-lg w-full" (click)="openModalSujetos()">{{nombreBoton}}</button>
+          </div>
+          @if ( modalValidado ) {
+            <div class="field col-1">
+              <label for="">&nbsp;</label>
+                <div class="mt-1">
+                  <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+                </div>
+            </div>
+          }
+        </div>
+      </div>
+      <div class="col-12 grid">
+        <div class="col-6 mb-2">
+          <label for="descripcion" class="font-semibold mb-2"
+            >¿Se excluye al fiscal?</label
+          >
+          <div class="field-checkbox mt-3">
+            <p-checkbox
+              formControlName="excluirFiscal"
+              [binary]="true"
+              inputId="binary"
+              label="Excluir fiscal(opcional)"
+            ></p-checkbox>
+          </div>
+        </div>
+      </div>
+      <div class="field col-11">
+        <label for="observaciones" class="font-bold text-sm">Descripción(opcional)</label>
+        <textarea  pInputTextarea class="w-full text-md" rows="6" formControlName="observaciones" [maxLength]="longitudMaximaObservaciones"></textarea>
+        <small
+          class="block text-right mt-1"
+          [ngClass]="{'p-error': cantidadCaracteresObservacion > longitudMaximaObservaciones }">
+          {{cantidadCaracteresObservacion}}/{{longitudMaximaObservaciones}} máximo de caracteres
+        </small>
+      </div>
+      @if ( formularioAutoResuelve.get('observaciones')?.value && formularioAutoResuelve.get('observaciones')?.value.length > 0 ) {
+        <div class="field col-1">
+          <label for="">&nbsp;</label>
+            <div class="mt-1">
+              <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+            </div>
+        </div>
+      }
+    </div>
+  </form>
+}
+@if(idJerarquia == 1 && pdfUrlTramite !== null) {
+  <div class="text-xl font-semibold text-primary my-4">
+    <span class="family-poppin-bold">Documento: </span>
+    <span>{{ obtenerTitulo }}</span>
+  </div>
+  <iframe
+    title="Documento Trámite"
+    [src]="pdfUrlTramite"
+    width="100%"
+    style="height: 500px"
+  ></iframe>
+}
+@if (idJerarquia === 1 && !ocultarBotones) {
+  <div class="text-right pt-3">
+    <button
+      type="button"
+      class="cfe-boton-secondary cfe-boton-m inline"
+      (click)="eventoObservarTramite()"
+    >
+      Observar Trámite
+    </button>
+    <button
+      type="button"
+      class="cfe-boton-primary cfe-boton-m inline ml-2"
+      (click)="eventoRecibirTramite()"
+    >
+      Recibir Trámite
+    </button>
+  </div>
+}

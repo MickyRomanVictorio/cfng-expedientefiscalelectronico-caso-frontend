@@ -1,0 +1,16 @@
+:host ::ng-deep .cuotas-container {
+    margin-top: 1rem;
+    .cuotas-footer {
+        display: flex;
+        margin-top: 1rem;
+    }
+}
+
+.p-label-bottom{
+  display: inline-block !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.border-red {
+  border: 1px solid #dc3545 !important;
+}

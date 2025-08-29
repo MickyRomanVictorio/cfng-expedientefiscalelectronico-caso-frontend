@@ -1,0 +1,77 @@
+<div class="modal-container">
+
+    <h3 [innerHTML]="caso()"></h3>
+
+
+    <span
+        class="close"
+        (click)="close()"
+    >X</span>
+
+   <div class="card">
+
+    <div class="formgrid grid">
+      <div class="field col-12 md:col-12"><h4>Plazos Actuales</h4></div>
+      <div class="field col-12 md:col-6">
+          <label for="firstname6">Fecha de inicio de investigación preliminar</label>
+          <input pInputText id="firstname6" type="text" readonly disabled class="p-inputtext  py-3 w-full">
+      </div>
+      <div class="field col-12 md:col-6">
+          <label for="lastname6">Fecha fin de investigación preliminar</label>
+          <input pInputText id="lastname6" type="text" readonly disabled class="p-inputtext py-3 w-full">
+      </div>
+  </div>
+    <div class="formgrid grid">
+      <div class="field col-12 md:col-12"><h4>Asignar nuevo Plazo</h4></div>
+      <div class="field col-12 md:col-4">
+          <label for="firstname6">Plazo nuevo</label>
+          <input pInputText id="firstname6" type="text" class="p-inputtext  py-3 w-full">
+      </div>
+      <div class="field col-12 md:col-4">
+        <label for="firstname6">Unidad de Medida</label>
+        <p-dropdown
+                    styleClass="p-inputtext-lg py-1"
+                    [options]="unidadMedida"
+                    optionValue="id"
+                    optionLabel="nombre"
+                    emptyMessage="Sin resultados"
+                    placeholder="Todos"
+                    [showClear]="true"
+                    formControlName="unidadMedida"
+                  ></p-dropdown>
+    </div>
+      <div class="field col-12 md:col-4">
+          <label for="lastname6">Nueva fecha fin calculada</label>
+          <input pInputText id="lastname6" type="text" class="p-inputtext  py-3 w-full">
+      </div>
+      <div class="field col-12">
+        <label for="address">Sede de Investigación</label>
+        <p-dropdown
+        styleClass="p-inputtext-lg py-1"
+        [options]="fiscalias"
+        optionValue="id"
+        optionLabel="nombre"
+        emptyMessage="Sin resultados"
+        placeholder="Todos"
+        [showClear]="true"
+        formControlName="sede"
+      ></p-dropdown>
+    </div>
+      <div class="field col-12">
+          <label for="address">Descripción</label>
+          <textarea pInputTextarea id="address"  type="text" rows="4" class="p-inputtext  p-2 w-full"></textarea>
+      </div>
+
+
+  </div>
+  <div class=" flex justify-content-end  option-container">
+    <p-button
+    styleClass="p-button-lg w-full font-semibold btn-mpfn-secondary"
+    label="Ampliar"
+  ></p-button>
+  </div>
+    </div>
+
+  </div>
+
+

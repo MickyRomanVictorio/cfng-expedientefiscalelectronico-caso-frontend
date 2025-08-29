@@ -1,0 +1,40 @@
+<div class="p-2"
+    [ngClass]="{'bg-green-alert': dataAlert.severity == 'success',
+                'bg-yellow-ligth-alert mb-3': dataAlert.severity == 'warn',
+                'bg-red-alert': dataAlert.severity == 'error'}"
+      style="border-radius: 8px">
+    <div *ngIf="dataAlert.severity == 'error'" class="ml-1"></div>
+    <div class="alert-content" style="display: flex;
+    align-items: center;"
+
+        [ngClass]="{'ml-0': dataAlert.severity != 'error',
+                    'ml-1 pl-9': dataAlert.severity == 'error',
+                    'alert-success': dataAlert.severity == 'success',
+                    'alert-warn': dataAlert.severity == 'warn',
+                    'alert-error': dataAlert.severity == 'error'}">
+        <span class="alert-icon" style="margin-top: 0.5rem;">
+            <fn-icon *ngIf="dataAlert.severity == 'error'" [ico]="obtenerIcono('iInfoCircle')" class="color-red" height="1.2rem"/>
+            <fn-icon *ngIf="dataAlert.severity == 'warn'" [ico]="obtenerIcono('iInfoCircle')" class="color-yellow" height="1.2rem"/>
+            <fn-icon *ngIf="dataAlert.severity == 'success'" [ico]="obtenerIcono('iCheckCircle')" class="color-green" height="1.2rem"/>
+        </span>
+        <span *ngIf="dataAlert.severity != 'error'" class="ml-1 mt-1 lh-1-5 mr-3">
+            <span *ngIf="dataAlert.isVerification" class="color-green text-bold">Verificación realizada: </span>
+            <span class="color-black2"> {{ dataAlert.detail }} </span>
+            <span class="color-black2 text-bold"> {{ dataAlert.detail1 }} </span>
+        </span>
+        <span *ngIf="dataAlert.severity == 'error'" class="ml-1 mt-1 color-black lh-1-5">
+            Si el hecho que pretendes denunciar
+            <span class="font-semibold">ocurrió en las últimas horas y existe flagrancia </span>(se tiene un detenido)
+            <span class="font-semibold">por favor acércate a presentar tu denuncia inmediatamente </span>
+            a la comisaría más cercana o a la fiscalía de turno.
+        </span>
+        <div *ngIf="showButton" class="text-right">
+          <span class="alert-icon">
+              <button
+              class="p-button-lg bg-secondary font-semibold nfont-semibold btn-adjust btn-presentar cursor">
+               <span (click)="goMain()" >Presentar denuncia</span>
+             </button>
+          </span>
+        </div>
+    </div>
+</div>

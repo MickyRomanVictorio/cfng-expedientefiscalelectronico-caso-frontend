@@ -1,0 +1,12 @@
+.border-red {
+  border-color: var(--mpfn-red) !important;
+}
+.btn-link{
+  text-decoration: underline;
+  cursor: pointer;
+}
+.disabled {
+  pointer-events: none;
+  opacity: 0.6;
+  cursor: not-allowed;
+}

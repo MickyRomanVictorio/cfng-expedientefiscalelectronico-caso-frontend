@@ -1,0 +1,40 @@
+
+.crear-direcciones{
+    padding: 20px 40px;
+    width: 1267px;
+}
+
+ :host::ng-deep .modal__header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px 0 15px 0;
+    .modal_header__content {
+        display: flex;
+        align-items: center;
+        .cfe-titulo-1 {
+            margin-top: -5px;
+            margin-left: 7px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+    }
+}
+
+
+/*TODO :... import */
+@import url('https://unpkg.com/leaflet@1.9.3/dist/leaflet.css');
+@import url('https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css');
+#map {
+    height: 450px;
+}
+
+.map-label {
+    margin-left: 8px;
+    margin-bottom: 4px;
+}
+
+.ocultar {
+    display: none !important;
+}

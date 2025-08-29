@@ -1,0 +1,88 @@
+.delitos-titulo{
+    display: flex;
+    .delitos-contenedor{
+        display: flex;
+        flex-wrap: wrap;
+        .delito-tipo{
+            background-color: var(--mpfn-background2);
+            font-family: var(--mpfn-font-regular);
+            max-width: 250px;
+            font-size: 0.75rem;
+            text-align: center;
+            padding: 5px 2px;
+            border-radius: 5px;
+            margin-left: 10px;
+            margin-bottom: 10px;
+        }
+    }
+}
+.margenes{
+    margin-left: 50px;
+    margin-right: 50px;
+}
+.columna-nro {
+    width: 10%;
+}
+
+
+.columna-tipo-sujeto{
+    width: 10%;
+}
+.columna-tipo-documento{
+    text-align: center!important;
+    width: 10%;
+}
+.columna-numero-documento{
+    text-align: center!important;
+    width: 15%;
+}
+.columna-nombre {
+    width: 15%;
+}
+.columna-telefono {
+    width: 10%;
+}
+.columna-correo{
+    width: 10%;
+}
+
+.columna-delitos{
+    width: 40%;
+}
+
+.columna-consentimiento {
+    width: 10%;
+}
+
+
+.delito-registrado{
+    margin-bottom: 10px;
+    padding-left: 15px;
+    position: relative;
+    &::before{
+        content: ".";
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        font-size: 34px;
+        left: 0;
+        top: -22px;
+    }
+}
+
+.delitos-no-encontrados{
+    margin-top: 5px;
+    margin-left: 10px;
+}
+.btn-tipicar-delitos{
+    background: #1f64A1;
+    color: white;
+    border-radius: 2px;
+    &:hover {
+        background: #1f64A1!important; /* Mantener el mismo color de fondo */
+        color: white!important; /* Mantener el mismo color de texto */
+    }
+
+
+
+}

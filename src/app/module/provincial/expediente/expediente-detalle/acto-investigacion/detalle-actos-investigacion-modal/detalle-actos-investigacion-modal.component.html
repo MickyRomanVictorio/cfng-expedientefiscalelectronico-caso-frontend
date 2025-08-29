@@ -1,0 +1,187 @@
+<div class="encabezado-modal w-12 mb-3 relative">
+  <h3
+    class="encabezado-titulo cfe-subtitulo-3 cfe-semi-bold family-poppin-bold"
+  >
+    {{titulo}}
+  </h3>
+  <fn-icon
+    class="encabezado-cerrar absolute cursor-pointer top-0 right-0"
+    [ico]="obtenerIcono('iClose')"
+    height="2rem"
+    (click)="cancelar()"
+  ></fn-icon>
+</div>
+
+<h3 class="cfe-subtitulo-4 cfe-semi-bold">
+  {{ respuesta }}
+</h3>
+<p class="text-color-secondary">{{item.fechaIngreso}}</p>
+
+
+@if(tipoAccionActual===tipoAccionEnum.VISUALIZAR){
+<div class="flex gap-2">
+  <span class="cfe-parrafo mt-2 mb-0 font-bold">Clasificación:</span>
+  <span class="cfe-parrafo mt-2 mb-0">{{item.clasificacion}}</span>
+</div>
+<h3 class="cfe-subtitulo-4 cfe-semi-bold mt-3">Elementos de convicción</h3>
+<div class="bandeja_tramites_table__content">
+  <p-table [value]="listaElementosDeConviccion" [paginator]="false"
+      [breakpoint]="'992px'" responsiveLayout="stack" class="table_td_content_responsive">
+      <ng-template pTemplate="header">
+          <tr>
+              <th>N°</th>
+              <th>Descripción</th>
+              <th class="w-8">Sujetos</th>
+              <th>Fecha ingreso</th>
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+          <tr>
+              <td data-column-name="Número de caso">
+                  {{rowIndex+1}}
+              </td>
+              <td data-column-name="Descripción">
+                  {{ item.descripcion }}
+              </td>
+              <td data-column-name="Sujetos">
+                <div class="flex flex-column p-0 m-0">
+                  {{sujetosProcesales(item)}}
+                  @if(superaLimiteDeCaracteres(item.sujetos)){
+                    <span class="p-0 m-0 cursor-pointer underline text-blue-600 w-max" (click)="alternarVista(item)">{{item.isCollapsed ? 'Ver más' : 'Ver menos'}}</span>
+                  }
+                </div>
+              </td>
+              <td data-column-name="Fecha ingreso">
+                {{ item.fechaRegistro }}
+              </td>
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+          <tr>
+              <td class="no-before" colspan="8" style="text-align: center;">No se encontraron registros con los criterios de búsqueda ingresados
+              </td>
+          </tr>
+      </ng-template>
+  </p-table>
+</div>
+}
+
+@if(tipoAccionActual===tipoAccionEnum.EDITAR){
+<form [formGroup]="actoInvestigacionForm">
+  <p class="cfe-parrafo mt-2 mb-0 font-bold">Clasificación:</p>
+  <p-dropdown
+    tyleClass="py-1 p-inputtext-lg"
+    [options]="listaCatalogoClasificacion"
+    placeholder="Seleccione clasificación"
+    (ngModelChange)="eventoCambiarClasificacion($event)"
+    optionLabel="noDescripcion"
+    optionValue="id"
+    appendTo="body"
+    formControlName="clasificacion"
+  >
+  </p-dropdown>
+
+  <h3 class="cfe-subtitulo-4 cfe-semi-bold mt-3">Elementos de convicción</h3>
+
+  <div formArrayName="items">
+    @for (item of items.controls; track $index) {
+      @if(item.value.estado === 1){
+      <div
+        [formGroupName]="$index"
+        class="flex flex-row justify-content-between align-content-center gap-4"
+      >
+        <div class="flex align-items-center gap-4 w-6">
+          <div class="flex-grow-none">({{ $index + 1 }})</div>
+          <div class="flex flex-column w-full">
+            <span class="font-bold">Descripción</span>
+            <textarea
+              id="descripcion-{{ $index }}"
+              class="p-inputtext p-inputtextarea p-component w-full"
+              rows="5"
+              placeholder="Motivo de anulación detallada"
+              maxlength="300"
+              formControlName="descripcion"
+            ></textarea>
+            <div class="text-right text-sm">Máximo 200 caracteres</div>
+          </div>
+        </div>
+        <div class="flex flex-row align-items-center gap-4 w-6">
+          <div class="flex flex-column justify-content-between gap-4">
+            <div class="flex flex-column w-3">
+              <span class="font-bold">Sujetos</span>
+              <p-multiSelect
+                tyleClass="py-1 p-inputtext-lg"
+                [options]="listaSujetosProcesales"
+                placeholder="Seleccione sujetos"
+                appendTo="body"
+                formControlName="sujetos"
+                [showToggleAll]="false"
+                display="chip"
+              >
+                <ng-template let-sujeto pTemplate="item">
+                  {{ sujeto.nombre }} {{ sujeto.apellidoPaterno }}
+                  {{ sujeto.apellidoMaterno }} - {{ sujeto.tipoDocumento }}:
+                  {{ sujeto.documento }}
+                </ng-template>
+                <ng-template let-value pTemplate="selectedItems">
+                  @for(option of value; track $index; let last = $last){
+                  <div>
+                    {{ option.nombre }}
+                    @if(!$last){ , }
+                  </div>
+                  } @if(!value || value.length === 0){
+                  <div>Seleccione sujetos</div>
+                  }
+                </ng-template>
+              </p-multiSelect>
+            </div>
+            @if(item.value.id){
+            <div class="flex flex-column">
+              <span class="font-bold">Fecha de registro</span>
+              <p>{{ item.value.fechaRegistro }}</p>
+            </div>
+            }
+          </div>
+          <div>
+            <i
+              class="pi pi-trash text-red-500 text-2xl cursor-pointer"
+              (click)="eventoEliminarElemento($index)"
+            ></i>
+          </div>
+        </div>
+      </div>
+      <hr />
+      }
+    }
+  </div>
+  <!-- {{ actoInvestigacionForm.value | json }} -
+  {{ actoInvestigacionForm.valid | json }} -->
+
+  <div class="flex justify-content-center align-items-center w-12">
+    <p-button
+      label="+ Agregar elemento de convicción"
+      styleClass="p-button-lg cfe-boton-secondary text-primary font-bold p-4"
+      [disabled]="!actoInvestigacionForm.valid"
+      (click)="eventoAgregarElemento()"
+    >
+    </p-button>
+  </div>
+
+  <div class="field col-12">
+    <div class="flex justify-content-between flex-wrap">
+      <p-button
+        styleClass="cfe-boton-secondary cfe-boton-lg mr-3 boton-w"
+        label="Cancelar"
+        (click)="cancelar()"
+      ></p-button>
+      <p-button
+        styleClass="cfe-boton-primary cfe-boton-lg mr-3 boton-w"
+        label="Guardar"
+        [disabled]="!actoInvestigacionForm.valid"
+        (click)="guardarElemento()"
+      >
+      </p-button>
+    </div>
+  </div>
+</form>
+}

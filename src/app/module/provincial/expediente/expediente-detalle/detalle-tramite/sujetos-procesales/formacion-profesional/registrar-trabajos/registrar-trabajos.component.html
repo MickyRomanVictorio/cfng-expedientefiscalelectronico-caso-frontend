@@ -1,0 +1,162 @@
+<div class="cfe-container cfe-container-background-white">
+  <div class="cfe-encabezado-modal">
+    <div
+      class="cfe-encabezado-titulo cfe-subtitulo-3 cfe-semi-bold"      
+    >Registro de trabajo</div>
+
+    <fn-icon
+      class="cfe-encabezado-cerrar"
+      [ico]="iconUtil.obtenerIcono('iClose')"
+      height="2rem"
+      (click)="cerrarModal()"
+      onkeypress=""
+    ></fn-icon>
+  </div>
+  <form [formGroup]="formTrabajoSujetoProcesal" class="mt-3">
+    @if (formTrabajoSujetoProcesal.get('tipoCentro')?.value !== 484) {
+      <div class="mb-4 w-full flex align-items-end gap-4">
+        <label class="cfe-semi-bold">
+          <p-checkbox
+            [binary]="true"
+            inputId="manual"
+            formControlName="esManual"
+            (onChange)="activarRegistroManualCentroTrabjo($event)"
+          ></p-checkbox>
+          Registro manual</label
+        >
+      </div>
+    }  
+
+    <div class="grid">
+      <div class="col-4 field">
+        <label class="font-semibold adjust-origin-label">Tipo de centro</label>
+        <p-dropdown
+          styleClass="p-inputtext-md"
+          [options]="tiposCentro"
+          optionValue="id"
+          optionLabel="noDescripcion"
+          emptyMessage="Sin resultados"
+          placeholder="Seleccione un tipo de centro"
+          [showClear]="true"
+          formControlName="tipoCentro"
+          (onChange)="capturarCambio($event)"
+        ></p-dropdown>
+      </div>
+      @if (formTrabajoSujetoProcesal.get('tipoCentro')?.value !== 484) {
+        <div class="col-6 field">
+          <label class="font-semibold">Número de RUC</label>
+          <input
+            pInputText
+            type="text"
+            class="p-inputtext-md w-full"
+            placeholder="Ingrese el número de RUC"
+            formControlName="numeroRuc"
+            maxlength="11"
+            (input)="soloNumeros($event)"
+          />
+        </div>
+        <div class="col-2 field">
+          <label class="font-semibold">&nbsp;</label>
+          <button
+            class="cfe-boton-primary cfe-boton-m"
+            (click)="consultarRUC()"
+            [disabled]="esManual ? true : false"
+          >
+            <fn-icon [ico]="obtenerIcono('iSearch')" height="1.2rem"></fn-icon
+            >&nbsp;BUSCAR
+          </button>
+        </div>
+      }      
+    </div>
+
+    <div class="grid">
+      <div class="col field">
+        <label class="font-semibold">Centro de trabajo</label>
+        <input
+          [disabled]="true"
+          pInputText
+          type="text"
+          class="p-inputtext-md w-full"
+          [placeholder]="
+            (esManual || formTrabajoSujetoProcesal.get('tipoCentro')?.value === 484)
+              ? 'Ingrese el nombre del centro de trabajo'
+              : 'Consulte un número de ruc'
+          "
+          formControlName="centroTrabajo"
+          upperCaseInput
+          [maxlength]="200"
+        />
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col field">
+        <label class="font-semibold">Puesto</label>
+        <p-dropdown
+          styleClass="p-inputtext-md"
+          [options]="tiposPuesto"
+          optionValue="id"
+          optionLabel="noDescripcion"
+          placeholder="Seleccione un tipo de puesto"
+          emptyMessage="Sin resultados"
+          [showClear]="true"
+          formControlName="tipoPuesto"
+        ></p-dropdown>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col-4 field">
+        <label class="font-semibold">Fecha inicio (opcional)</label>
+        <p-calendar
+          dateMask
+          dateFormat="dd/mm/yy"
+          class="p-inputtext-md cfe-calendar"
+          [showIcon]="true"
+          icon="cfe-calendar-icon"
+          placeholder="dd/mm/aaaa"
+          formControlName="fechaInicio"
+          (ngModelChange)="fechaInicioChange()"
+          [minDate]="minFechaInicio"
+          [maxDate]="maxFechaInicio"
+        ></p-calendar>
+      </div>
+      <div class="col-4 field">
+        <label class="font-semibold">Fecha fin (opcional)</label>
+        <p-calendar
+          dateMask
+          dateFormat="dd/mm/yy"
+          class="p-inputtext-md cfe-calendar"
+          [showIcon]="true"
+          icon="cfe-calendar-icon"
+          placeholder="dd/mm/aaaa"
+          formControlName="fechaFin"
+          (ngModelChange)="fechaFinChange()"
+          [minDate]="minFechaFin"
+        ></p-calendar>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col field">
+        <label class="font-semibold">Detalles (opcional)</label>
+        <textarea
+          rows="3"
+          cols="5"
+          pInputTextarea
+          [autoResize]="true"
+          placeholder="Ingrese detalles adicionales"
+          formControlName="detalle"
+          [maxlength]="200"
+          style="width: 100%"
+        ></textarea>
+      </div>
+    </div>
+    <div class="grid col field justify-content-end">
+      <button
+        class="cfe-boton-primary cfe-boton-m mr-2 boton-w"
+        (click)="registrarTrabajoSujetoProcesal()"
+      >
+        {{ nombreBotonTrabajoSP }}
+      </button>
+    </div>
+  </form>
+</div>
+<p-toast></p-toast>

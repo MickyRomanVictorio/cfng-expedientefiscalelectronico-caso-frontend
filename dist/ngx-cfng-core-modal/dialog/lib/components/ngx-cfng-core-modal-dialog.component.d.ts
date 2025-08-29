@@ -1,0 +1,32 @@
+import { DynamicDialogConfig, DynamicDialogRef } from "primeng/dynamicdialog";
+import { DomSanitizer } from "@angular/platform-browser";
+import { CfeDialogTipoIcono } from "../models/cfe-dialog-tipo-icono";
+import { CfeDialogConfig } from "../models/cfe-dialog-config";
+import { NgxCfngCoreModalDialogConfigService } from "../services/ngx-cfng-core-modal-dialog-config.service";
+import * as i0 from "@angular/core";
+export declare class NgxCfngCoreModalDialogComponent {
+    private readonly modalDialogConfigService;
+    protected ref: DynamicDialogRef;
+    protected config: DynamicDialogConfig<CfeDialogConfig>;
+    private readonly sanitizer;
+    protected containerClass: any;
+    protected icono: CfeDialogTipoIcono | undefined;
+    protected titulo: string;
+    protected descripcion: string;
+    protected textoBotonConfirmar: string;
+    protected textoBotonCancelar: string;
+    protected tieneBotonCancelar: boolean;
+    protected ocultarBotones: boolean;
+    protected ocultarCierre: boolean;
+    constructor(modalDialogConfigService: NgxCfngCoreModalDialogConfigService, ref: DynamicDialogRef, config: DynamicDialogConfig<CfeDialogConfig>, sanitizer: DomSanitizer);
+    ngOnInit(): void;
+    get iconoCerrar(): string;
+    get iconoDialog(): string;
+    get mostrarDescripcion(): boolean;
+    obtenerDescripcion(): any;
+    protected confirmar(): void;
+    protected cancelar(): void;
+    protected cerrar(): void;
+    static ɵfac: i0.ɵɵFactoryDeclaration<NgxCfngCoreModalDialogComponent, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<NgxCfngCoreModalDialogComponent, "ngx-cfng-core-modal-dialog", never, {}, {}, never, never, true, never>;
+}

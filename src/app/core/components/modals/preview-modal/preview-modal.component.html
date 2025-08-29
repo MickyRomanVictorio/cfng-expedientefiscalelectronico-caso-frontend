@@ -1,0 +1,106 @@
+<div class="encabezado-modal w-12 mb-3 relative">
+  <h3
+    class="encabezado-titulo cfe-subtitulo-3 cfe-semi-bold family-poppin-bold"
+  >
+    PREVISUALIZAR TRÁMITE
+  </h3>
+  <a (click)="eventoCerrarModal()">
+    <fn-icon
+      class="encabezado-cerrar absolute cursor-pointer top-0 right-0"
+      [ico]="obtenerIcono('iClose')"
+      height="2rem"
+    ></fn-icon>
+  </a>
+</div>
+
+<div class="grid mt-3">
+  <div class="col-12 md:col-9">
+    @if (datos && datos.estadoCedula!=='0' && esBandejaFirmados) {
+    <div>
+      <button
+        class="btn-pendiente py-2 px-3 border-none justify-content-center align-items-center text-white"
+        tabindex="-1"
+      >
+        Notificaciones pendientes
+      </button>
+    </div>
+    } @if (datos && datos.noTipoDocumento && datos.coDocumento) {
+    <div class="text-lg text-blue-900">
+      <span class="font-bold">
+        {{ stringUtil.capitalizedFirstWord(datos.coDocumento) }}:</span
+      >
+      {{ stringUtil.capitalizedFirstWord(datos.noTramite) }}
+    </div>
+    } @if (esBandejaFirmados) {
+    <a
+      style="
+        color: #20b2aa;
+        text-decoration: underline;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: bold;
+      "
+      (click)="verDetalleFirmasModal()"
+    >
+      Firmado
+      <img
+        alt="Icono check con fondo"
+        [src]="iconAsset.obtenerRutaIcono('check-fondo')"
+        style="height: 1em; vertical-align: middle; margin-left: 0.5rem"
+      />
+    </a>
+    }
+  </div>
+  <div class="col-12 md:col-3">
+    <div>
+      @if (validarBtnFirmar) {
+      <button
+        type="button"
+        tabindex="-1"
+        class="flex justify-content-center align-items-center cursor-pointer text-white w-full btn-accion mt-1 border-none"
+        style="background-color: #f19604"
+        (click)="iniciarFirma()"
+      >
+        <fn-icon
+          [ico]="obtenerIcono('iSign')"
+          height="1.2rem"
+          title="Firmar"
+        ></fn-icon>
+        FIRMAR
+      </button>
+      } @if (mostrarBtnVisar) {
+      <button
+        type="button"
+        tabindex="-1"
+        class="flex justify-content-center align-items-center cursor-pointer text-white w-full btn-accion mt-1 border-none"
+        style="background-color: #00a97d"
+        (click)="procesarVisado()"
+      >
+        <fn-icon
+          [ico]="obtenerIcono('iCheck')"
+          height="1.2rem"
+          title="Visar"
+        ></fn-icon>
+        VISAR
+      </button>
+      }
+    </div>
+  </div>
+</div>
+
+@if (datos && datos.deObservacion!=='' && datos.deObservacion!==null) {
+<h5>Observaciones / Comentarios</h5>
+<div class="w-full bg-yellow-100 border-round-lg p-3 overflow-auto mb-3">
+  {{ datos.deObservacion }}
+</div>
+} @if (documentoRuta!=='' && documentoRuta!==null) {
+<iframe
+  [src]="documentoRuta"
+  class="w-full"
+  style="height: calc(100% - 100px)"
+  title="Documento"
+></iframe>
+} @if (documentoRuta===null) {
+<div class="text-center text-lg text-red-500 py-3">Documento sin contenido</div>
+}
+<cfe-lib-firma-digital-cliente></cfe-lib-firma-digital-cliente>

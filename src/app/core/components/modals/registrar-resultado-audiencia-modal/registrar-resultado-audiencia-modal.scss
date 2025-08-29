@@ -1,0 +1,26 @@
+.registrar-resultado-audiencia {
+    background: var(--institucional-background);
+}
+
+ :host::ng-deep .modal__header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px 0 25px 0;
+    .modal_header__content {
+        display: flex;
+        align-items: center;
+        .cfe-titulo-1 {
+            padding-left: 5px;
+            margin-top: -5px;
+            font-size: 15px;
+            font-weight: lighter;
+        }
+    }
+}
+
+
+:host::ng-deep .p-tabmenu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-link{
+    background: transparent !important;
+}

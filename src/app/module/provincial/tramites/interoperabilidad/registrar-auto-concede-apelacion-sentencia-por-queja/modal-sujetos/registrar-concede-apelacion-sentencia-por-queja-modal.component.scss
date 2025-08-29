@@ -1,0 +1,83 @@
+.delitos-titulo {
+  display: flex;
+
+  .delitos-contenedor {
+    display: flex;
+    flex-wrap: wrap;
+
+    .delito-tipo {
+      background-color: var(--mpfn-background2);
+      font-family: var(--mpfn-font-regular);
+      max-width: 250px;
+      font-size: 0.75rem;
+      text-align: center;
+      padding: 5px 2px;
+      border-radius: 5px;
+      margin-left: 10px;
+      margin-bottom: 10px;
+    }
+  }
+}
+
+.columna-nro {
+  width: 2%;
+}
+
+.columna-nombre {
+  width: 10%;
+}
+
+.columna-tipo {
+  width: 10%;
+}
+
+.columna-resultado-primera-instancia {
+  width: 10%;
+}
+
+.columna-consentimiento {
+  width: 5%;
+}
+
+.delito-registrado {
+  margin-bottom: 10px;
+  padding-left: 15px;
+  position: relative;
+
+  &::before {
+    content: ".";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    font-size: 34px;
+    left: 0;
+    top: -22px;
+  }
+}
+
+.delitos-no-encontrados {
+  margin-top: 5px;
+  margin-left: 10px;
+}
+
+// Estilos para dropdowns multilínea
+::ng-deep .dropdown-multiline .p-dropdown {
+  max-width: 320px;
+}
+::ng-deep .dropdown-multiline .p-dropdown-label {
+  max-width: 280px;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  display: block;
+}
+::ng-deep .dropdown-multiline .p-dropdown-panel {
+  max-width: 320px !important;
+}
+::ng-deep .dropdown-multiline .p-dropdown-item {
+  white-space: normal !important;
+  word-break: break-word;
+  line-height: 1.3;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}

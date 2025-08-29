@@ -1,0 +1,82 @@
+<div class="cfe-container cfe-container-background-white">
+    <div class="cfe-container-penal">
+
+        <app-registrar-penas
+        [tipoSentencia]="TIPO_SENTENCIA"
+        [data]="data"
+        [accion]="ACCION_CREAR"
+        [modoLectura]="modoLectura"
+        (respuestaFormulario)="respuestaFormulario($event)" />
+
+        <div class="p-col-12 mt-6">
+            <p-table class="table-penas" [value]="listaPenas" [rowHover]="true" responsiveLayout="stack"
+                [paginator]="true" dataKey="nombre" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
+                [tableStyle]="{ 'min-width': '50rem' }" currentPageReportTemplate="{first} de {last} registros">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Sujetos Procesales</th>
+                        <th>Delito</th>
+                        <th>Tipo de Sentencia</th>
+                        <th>Pena</th>
+                        <th>Tipo Pena</th>
+                        <th>Acciones</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-pena let-rowIndex="rowIndex">
+                    <tr>
+                        <td>{{ pena.sujeto }}</td>
+                        <td>{{ pena.delito }}</td>
+                        <td>{{ pena.tipoSentencia }}</td>
+                        <td>{{ pena.pena }}</td>
+                        <td>{{ pena.tipoPena }}</td>
+                        <td>
+                            <div class="flex justify-content-center align-items-center">
+                                <fn-icon (click)="abrirVerEditarModal(pena.idActoTramiteDelitoSujeto,pena.idPena,ACCION_VER)"
+                                    [ico]="iconUtil.obtenerIcono('iEye')" height="2rem" style="cursor: pointer;">
+                                </fn-icon>
+                                @if(!modoLectura){
+                                    <fn-icon 
+                                        (click)="abrirVerEditarModal(pena.idActoTramiteDelitoSujeto,pena.idPena,ACCION_EDITAR)"
+                                        [ico]="iconUtil.obtenerIcono('iEdit')" 
+                                        height="1.8rem" 
+                                        style="cursor: pointer;">
+                                    </fn-icon>
+                                    <fn-icon (click)="eliminarPena(pena)" 
+                                        [ico]="iconUtil.obtenerIcono('iTrash')"
+                                        height="2.5rem" 
+                                        style="cursor: pointer;margin-left: -5px;">
+                                    </fn-icon>
+                                }                                
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="6">
+                            <div class="text-center">Ninguna pena agregada</div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+    </div>
+</div>
+<p-dialog [(visible)]="mostrarModalVerEditar" [modal]="true" [showHeader]="false" styleClass="custom-dialog">
+    <button class="close-button" (click)="mostrarModalVerEditar = false">×</button>
+    <ng-template pTemplate="content">
+        <ng-container *ngIf="mostrarModalVerEditar">
+            <div class="dialog-content">
+                <app-registrar-penas
+                    [data]="data"
+                    [tipoSentencia]="TIPO_SENTENCIA"
+                    [accion]="accion"
+                    [idActoTramiteDelitoSujeto]="idActoTramiteDelitoSujeto"
+                    [idPena]="idPena"
+                    (respuestaFormulario)="respuestaFormulario($event)">
+                </app-registrar-penas>
+            </div>
+        </ng-container>
+    </ng-template>
+</p-dialog>

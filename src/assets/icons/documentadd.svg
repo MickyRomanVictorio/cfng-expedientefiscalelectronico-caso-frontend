@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+
+viewBox="0 0 100 125" version="1.1" x="0px" y="0px">
+
+<defs>
+    <ref id="paramX" param="fill" default="black"/>
+  
+
+</defs>
+
+<title>Bell v4.5</title><desc>Created with Sketch.</desc>
+<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g fill-rule="nonzero" fill="url(#paramX)">
+
+<path d="M45.8,0H10C7.8,0,6,1.8,6,4v56c0,2.2,1.8,4,4,4h44c2.2,0,4-1.8,4-4V11.1L45.8,0z M47,6.5l3.8,3.5H47V6.5z M10,60V4h33v10
+		h11l0,46H10z"/>
+	<polygon points="48,32 34,32 34,18 30,18 30,32 16,32 16,36 30,36 30,50 34,50 34,36 48,36 	"/>
+
+</g></g>
+
+<script type="text/ecmascript" xlink:href="https://dev.w3.org/SVG/modules/ref/master/ref2.js"></script>
+
+</svg>

@@ -1,0 +1,308 @@
+<form class="cfe_bandeja__filters" [formGroup]="filterForm">
+  <div class="grid mt-1">
+    <!-- <div class="col">
+        <div class="field mb-0">
+          <label for="buscar" class="font-semibold">Buscar:</label>
+          <input
+            pInputText
+            id="buscar"
+            type="text"
+            class="p-inputtext-lg py-3 text-lg w-full"
+            placeholder="Ingrese algún texto para buscar sobre la tabla como número de caso, acto procesal, etc."
+            formControlName="buscar"
+            (input)="buscarSegunTexto()"
+          />
+        </div>
+      </div>
+      <div class="col-fixed" style="width: 70px">
+        <div class="field mb-0">
+          <label class="font-semibold">&nbsp;</label>
+          <button
+            class="cfe-filtro-boton"
+            (click)="eventoMostrarOcultarFiltros()"
+          >
+            <fn-icon [ico]="icono('iFilterShow')" height="2.1rem"></fn-icon>
+          </button>
+        </div>
+      </div> -->
+  </div>
+
+  <div class="grid mt-1 cfe-filtros">
+    <div class="cfe-filtros-fondo background-white">
+      <div class="formgrid grid w-full">
+        <div class="col-12 md:col-3 field">
+          <label class="font-semibold mb-3">Fiscales</label>
+          <div class="grid">
+            <div class="col">
+              <p-multiSelect
+                id="delitos"
+                [options]="resultsFiscales"
+                optionLabel="nombreFiscal"
+                optionValue="fiscal"
+                formControlName="fiscales"
+                [ngClass]="{ 'sin-seleccion': sinSeleccionFiscales }"
+                styleClass="w-full lista-ancho-maximo"
+                (onChange)="onChangeFiscalesSeleccionados($event)"
+                emptyMessage="Resultados no encontrados"
+                class="lista-ancho-maximo"
+                [panelStyle]="{ 'max-width': '750px' }"
+              ></p-multiSelect>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="col-12 md:col-3 field">
+          <label for="indicador" class="font-semibold">Indicador</label>
+          <p-dropdown
+            id="indicador"
+            styleClass="h-10"
+            [options]="colorOptions"
+            optionValue="value"
+            optionLabel="label"
+            emptyMessage="Resultados no encontrados"
+            placeholder="Todos"
+            [showClear]="true"
+            formControlName="indicador"
+          ></p-dropdown>
+        </div>-->
+      </div>
+    </div>
+    <div class="cfe-filtros-fondo background-white cfe-filtros-opciones">
+      <button
+        class="cfe-boton-secondary cfe-boton-m mr-3 boton-w"
+        (click)="limpiar()"
+      >
+        Limpiar filtros
+      </button>
+      <button
+        class="cfe-boton-primary cfe-boton-m mr-2 boton-w"
+        (click)="buscar()"
+      >
+        Buscar
+      </button>
+    </div>
+  </div>
+</form>
+
+<div class="card background-white p-4">
+  <div class="card-header flex align-items-center justify-content-between">
+    <p>Monitoreo de plazos fiscales del despacho</p>
+    <i
+      class="pi pi-fw pi-chevron-down"
+      (click)="eventoMostrarOcultarMonitoreo()"
+    ></i>
+  </div>
+  @if(!mostrarMonitoreo){
+  <div class="card-body">
+    <div class="container-monitoreo gap-5">
+      <div class="grid-monitoreo gap-3">
+        <div class="monitoreo-item">
+          <div class="flex align-items-center mb-2">
+            <span class="monitoreo-status red"></span>
+            <div class="monitoreo-content">
+              <h2 class="red">Plazo vencido</h2>
+              <h3>{{ plazoVencido }}%</h3>
+            </div>
+          </div>
+          <p>
+            <strong>{{ countVencido }} </strong>del rango consultado
+          </p>
+        </div>
+        <div class="monitoreo-item">
+          <div class="flex align-items-center mb-2">
+            <span class="monitoreo-status orange"></span>
+            <div class="monitoreo-content">
+              <h2 class="orange">Plazo por vencer</h2>
+              <h3>{{ plazoPorVencer }}%</h3>
+            </div>
+          </div>
+          <p>
+            <strong>{{ countPorVencer }} </strong>del rango consultado
+          </p>
+        </div>
+        <div class="monitoreo-item">
+          <div class="flex align-items-center mb-2">
+            <span class="monitoreo-status green"></span>
+            <div class="monitoreo-content">
+              <h2 class="green">Dentro del plazo</h2>
+              <h3>{{ dentroDelPlazo }}%</h3>
+            </div>
+          </div>
+          <p>
+            <strong>{{ countDentro }} </strong>del rango consultado
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+</div>
+
+<div class="cfe_bandeja__table">
+  <div class="cfe_bandeja_table__title grid">
+    <div class="num_casos_por_asignar_table_title__content col-12 md:col-6">
+      <div class="flex text-xl font-bold text-primary mb-3">
+        Reporte de plazos fiscales del despacho
+      </div>
+    </div>
+    <div
+      class="col-12 md:col-6 flex flex-column sm:flex-row justify-content-end align-items-center pr-0"
+    >
+      <!--  <button
+          class="cfe-boton-secondary cfe-boton-m cfe-boton-m w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start"
+          (click)="exportar('PDF')"
+        >
+          <fn-icon
+            class="ml-1"
+            [ico]="iconUtil.obtenerIcono('iFileDownload')"
+            height="1.6rem"
+          ></fn-icon>
+          Exportar PDF
+        </button> -->
+        <button
+          class="cfe-boton-secondary cfe-boton-m cfe-boton-m w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start"
+          (click)="exportar('Excel')"
+        >
+          <fn-icon
+            class="ml-1"
+            [ico]="iconUtil.obtenerIcono('iTable')"
+            height="1.6rem"
+          ></fn-icon>
+          Exportar Excel
+        </button>
+      </div>
+    </div>
+    <div class="flex align-items-center justify-content-between">
+      <div class="cfe_bandeja__legend">
+        <div class="term-item">
+          <span class="plazo-vencido"></span>
+          Plazo vencido &nbsp;&nbsp;&nbsp;
+          <span class="plazo-por-vencer"></span>
+          Plazo por Vencer &nbsp;&nbsp;&nbsp;
+          <span class="dentro-del-plazo"></span>
+          Dentro del plazo
+        </div>
+
+        <div class="tooltipNew" [ngClass]="{ visible: tooltipVisible }">
+          <fn-icon
+            [ico]="iconUtil.obtenerIcono('iInfoCircle')"
+            height="1.6rem"
+            (click)="showTooltip()"
+          ></fn-icon>
+          <div class="top">
+            <app-encabezado-tooltip
+              [titulo]="tituloTootip"
+              [alCerrarModal]="toggleTooltip"
+              [referenciaModal]="referenciaModal"
+            />
+            <ul>
+              <li>
+                <b><span style="color: red">Rojo</span>:</b> cuando los días
+                transcurridos está "en el día 5 (en adelante)".
+              </li>
+              <li>
+                <b><span style="color: gold">Amarillo</span>:</b> cuando los días
+                transcurridos está al "75% (en adelante)" del plazo de 5 días
+                habiles para recibir y calificar.
+              </li>
+              <li>
+                <b><span style="color: green">Verde</span>:</b> cuando los días
+                transcurridos sean "igual o mayor que 0"
+              </li>
+              <li>
+                <b><span style="color: #d3d3d3">Los Estados son</span>:</b>
+                Asignacion , Recepcion y Conclusion de Investigacion Preparatoria
+              </li>
+              <li>
+                <b><span style="color: #a9a9a9">Las Etapas son</span>:</b>
+                Calificacion , Invest Preliminar , Invest Preparatoria
+              </li>
+            </ul>
+            <i></i>
+          </div>
+        </div>
+      </div>
+      <div class="term-item p-4">
+        <p>Total: {{ totalRegistros }} registros</p>
+      </div>
+    </div>
+
+    <div class="bandeja_tramites__table">
+      <div class="bandeja_tramites_table__content">
+        <p-table
+          [value]="filteredEtapaData"
+          [paginator]="true"
+          [rowHover]="true"
+          [rows]="10"
+          [showCurrentPageReport]="true"
+          [tableStyle]="{ 'min-width': '50rem' }"
+          currentPageReportTemplate="{first} de {last} registros"
+          [breakpoint]="'992px'"
+          responsiveLayout="stack"
+          class="table_td_content_responsive"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th>N°</th>
+              <th>Fiscal</th>
+              <th>INDICADOR</th>
+              <th>Asignacion</th>
+              <th>Recepcion</th>
+              <th>Calificacion</th>
+              <th style="width: 175px">Invest.Prelim. (Fiscal)</th>
+              <th style="width: 175px">Invest.Prelim. (P.N.P.)</th>
+              <th style="width: 175px">Invest. Preparatoria</th>
+              <th style="width: 175px">Conclu.Invest. Preparatoria</th>
+              <th style="width: 125px">Total Casos</th>
+              <th style="width: 125px">ACCION</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-registro let-i="rowIndex">
+            <tr class="p-selectable-row">
+              <td>{{ i + 1 }}</td>
+              <td>{{ registro.fiscal }}</td>
+              <td class="semaforo-column">
+                <div class="flex align-items-center gap-2">
+                  <span class="semaforo-circle green">{{
+                    registro.plazoVerde
+                  }}</span>
+                  <span class="semaforo-circle orange">{{
+                    registro.plazoAmbar
+                  }}</span>
+                  <span class="semaforo-circle red">{{
+                    registro.plazoRojo
+                  }}</span>
+                </div>
+              </td>
+              <td class="gray-column-1">{{ registro.asignacion }}</td>
+              <td class="gray-column-1">{{ registro.recepcion }}</td>
+              <td class="gray-column-2">
+                {{ registro.calificacion }}
+              </td>
+              <td class="gray-column-2">{{ registro.preliminarFiscal }}</td>
+              <td class="gray-column-2">{{ registro.preliminarPnp }}</td>
+              <td class="gray-column-2">{{ registro.preparatoria }}</td>
+              <td class="gray-column-1">{{ registro.preparatoriaConcluido }}</td>
+              <td class="total-casos-column">{{ registro.total }}</td>
+              <td>
+                <fn-icon
+                  class="ml-1"
+                  [ico]="iconUtil.obtenerIcono('iViewFile')"
+                  height="1.6rem"
+                  (click)="mostrarDetalleEtapa(registro)"
+                ></fn-icon>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td class="no-before" colspan="8" style="text-align: center">
+                No se encontraron registros con los criterios de búsqueda
+                ingresados
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>

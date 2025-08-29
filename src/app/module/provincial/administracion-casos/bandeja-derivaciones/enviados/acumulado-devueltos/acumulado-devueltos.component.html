@@ -1,0 +1,176 @@
+<div class="cfe-container">
+  <div class="derivado__table">
+    <div class="derivado_table__title grid">
+      <div class="derivado_table_title__content col-6">
+        <fn-icon
+          [ico]="icono('iFolderExclamation')"
+          height="1.8rem"
+          [style]="{ 'margin-left': '-12px' }"
+        >
+        </fn-icon>
+        <h4 class="cfe-subtitulo-1">
+          Lista de casos que yo he enviado para acumular que me lo han devuelto
+        </h4>
+      </div>
+      <div
+        class="col-12 md:col-6 flex flex-column sm:flex-row justify-content-end align-items-center pr-0"
+      >
+        <button
+          class="cfe-boton-secondary cfe-boton-m cfe-boton-icono-izquierda w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start"
+          (click)="exportar('PDF')"
+        >
+          <fn-icon
+            class="ml-1"
+            [ico]="icono('iFileDownload')"
+            height="1.6rem"
+          ></fn-icon>
+          Exportar PDF
+        </button>
+        <button
+          class="cfe-boton-secondary cfe-boton-m cfe-boton-icono-izquierda w-full sm:w-auto justify-content-start"
+          (click)="exportar('Excel')"
+        >
+          <fn-icon
+            class="ml-1"
+            [ico]="icono('iTable')"
+            height="1.6rem"
+          ></fn-icon>
+          Exportar Excel
+        </button>
+      </div>
+    </div>
+
+    <div class="derivado_table__content">
+      <p-table
+        [value]="acumuladosDevueltosFiltrados"
+        [rowHover]="true"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [breakpoint]="'992px'"
+        responsiveLayout="stack "
+        class="table_td_content_responsive"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>N°</th>
+            <th class="w-15rem" pSortableColumn="numeroCaso">
+              Número de caso <p-sortIcon field="numeroCaso"></p-sortIcon>
+            </th>
+            <th pSortableColumn="destino">
+              Destino <p-sortIcon field="destino"></p-sortIcon>
+            </th>
+            <th pSortableColumn="remitente">
+              Remitente de denuncia <p-sortIcon field="remitente"></p-sortIcon>
+            </th>
+            <th class="w-10rem" pSortableColumn="fechaDerivacion">
+              Fecha derivación <p-sortIcon field="fechaDerivacion"></p-sortIcon>
+            </th>
+            <th class="w-10rem" pSortableColumn="fechaDevolucion">
+              F. devolución <p-sortIcon field="fechaDevolucion"></p-sortIcon>
+            </th>
+            <th class="w-13rem">Ver devolución - Caso</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-devuelto let-rowIndex="rowIndex">
+          <tr class="">
+            <td data-column-name="N°">
+              <span>
+                {{ indexPag(rowIndex) }}
+              </span>
+            </td>
+            <td data-column-name="Número de caso">
+              <div>
+                <span>Caso: </span><br /><span
+                  class="relative flex"
+                  [innerHTML]="getCaso(devuelto.coCaso)"
+                ></span>
+              </div>
+              <div class="mt-1">
+                <span>Acumulado a: </span><br /><span
+                  class="relative flex"
+                  [innerHTML]="getCaso(devuelto.casoAcumulado)"
+                ></span>
+              </div>
+              <br />
+              <div *ngIf="devuelto.tipoDerivacion == '1'" class="mb-1">
+                <span class="badge badge-origen">Derivación directa</span>
+              </div>
+            </td>
+            <td data-column-name="Destino">
+              <span>
+                {{ devuelto.destino | capitalizar }}
+              </span>
+            </td>
+            <td data-column-name="Remitente de denuncia">
+              <div>
+                <div class="mb-1">
+                  <span class="badge badge-origen">{{
+                    devuelto.tipoSujeto
+                  }}</span>
+                </div>
+                {{ devuelto.remitenteDenuncia }}
+              </div>
+              <br />
+              <div *ngIf="devuelto.fechaDenuncia">
+                <div>{{ devuelto.fechaDenuncia | dateformat }}</div>
+                <div>{{ devuelto.horaDenuncia | dateformat : "hour24" }}</div>
+              </div>
+              <div *ngIf="!devuelto.fechaDenuncia">-</div>
+            </td>
+            <td data-column-name="Fecha derivación">
+              <div *ngIf="devuelto.fechaDerivacion">
+                <div>{{ devuelto.fechaDerivacion | dateformat }}</div>
+                <div>{{ devuelto.horaDerivacion | dateformat : "hour24" }}</div>
+              </div>
+              <div *ngIf="!devuelto.fechaDerivacion">-</div>
+            </td>
+            <td data-column-name="F. devolución">
+              <div *ngIf="devuelto.fechaDevolucion">
+                <div>{{ devuelto.fechaDevolucion | dateformat }}</div>
+                <div>{{ devuelto.horaDevolucion | dateformat : "hour24" }}</div>
+              </div>
+              <div *ngIf="!devuelto.fechaDevolucion">-</div>
+            </td>
+            <td data-column-name="Ver devolución - Caso">
+              <div class="opciones">
+                <p-button
+                  class="btn-detalle"
+                  icon="pi pi-eye"
+                  (click)="
+                    verDetalleDevolucion(
+                      devuelto.idBandejaDerivacion,
+                      devuelto.coCaso
+                    )
+                  "
+                  title="Ver detalle devolución"
+                />
+                <p-button
+                  class="btn-caso"
+                  (click)="abrirDetalleCaso(devuelto)"
+                  title="Información del caso"
+                >
+                  <fn-icon [ico]="icono('iChevronRight')"></fn-icon>
+                </p-button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td class="no-before text-center" colspan="9">
+              En estos momentos, no hay casos derivados que fueron devueltos
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <app-paginator
+        [query]="query"
+        [items]="itemPaginado"
+        [rowsPerPageOptions]="[]"
+        [resetPage]="resetPage"
+        (paginate)="onPaginate($event)"
+      ></app-paginator>
+    </div>
+  </div>
+</div>
+
+<p-toast></p-toast>

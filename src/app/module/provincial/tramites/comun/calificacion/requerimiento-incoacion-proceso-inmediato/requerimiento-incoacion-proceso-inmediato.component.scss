@@ -1,0 +1,27 @@
+:host ::ng-deep .p-multiselect-panel {
+   width: 100% !important;
+}
+
+:host ::ng-deep .p-multiselect-panel .p-multiselect-filter {
+   font-size: 1rem;
+ }
+ 
+
+.selected-item-chip {
+   background-color: #D9D9D9;
+   color: #000;
+   padding: 5px 10px;
+   border-radius: 20px;
+   margin-right: 5px;
+   display: inline-block;
+   white-space: nowrap;
+}
+
+.item {
+   padding: 5px;
+   cursor: pointer;
+}
+
+.placeholder {
+   color: #aaa;
+}

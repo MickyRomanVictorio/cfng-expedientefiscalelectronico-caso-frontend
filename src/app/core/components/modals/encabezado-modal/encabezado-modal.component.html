@@ -1,0 +1,22 @@
+<div class="encabezado-modal">
+
+    @if (datoComplementario == '') {
+        <h3
+            class="encabezado-titulo cfe-subtitulo-3 cfe-semi-bold family-poppin-bold"
+            [innerHTML]="tituloModal"
+            [style.font-size]="tituloSize + ' !important'"
+        >&nbsp;</h3>
+    }
+    @else {
+        <div [innerHTML]="datoComplementario"></div>
+    }
+
+    <fn-icon 
+        (click)="cerrarModal()"
+        [ico]="obtenerIcono('iClose')"
+        class="encabezado-cerrar"
+        height="2rem"
+        onKeyPress=""
+    />
+
+</div>

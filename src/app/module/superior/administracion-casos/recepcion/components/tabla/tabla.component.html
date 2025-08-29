@@ -1,0 +1,150 @@
+<p-table
+  [value]="listaCasos"
+  [rowHover]="true"
+  [tableStyle]="{ 'min-width': '98rem' }"
+  [breakpoint]="'992px'"
+  responsiveLayout="stack"
+>
+<ng-template pTemplate="header">
+<tr>
+  <th class="pr-0" scope="col">
+    <p-checkbox [binary]="true" [(ngModel)]="seleccionarTodosCasos" (onChange)="eventoSeleccionarTodosCasos($event)"></p-checkbox>
+  </th>
+  <th scope="col" pSortableColumn="numeroCaso">Número de caso / Cuaderno incidental <p-sortIcon field="numeroCaso"></p-sortIcon> </th>
+  <th pSortableColumn="etapa" scope="col">Etapa <p-sortIcon field="etapa"></p-sortIcon></th>
+  <th pSortableColumn="nombreFiscalOrigen" scope="col">Despacho de procedencia <p-sortIcon field="nombreFiscalOrigen"></p-sortIcon></th>
+  <th pSortableColumn="fechaElevacionFecha" scope="col">Fecha de elevación <p-sortIcon field="fechaElevacionFecha"></p-sortIcon></th>
+  <th pSortableColumn="fechaAsignacionFecha" scope="col">Fecha de asignación<p-sortIcon field="fechaAsignacionFecha"></p-sortIcon></th>
+  <th scope="col" pSortableColumn="">Plazo para recibir<p-sortIcon field=""></p-sortIcon></th>
+  <th pSortableColumn="idSemaforo" scope="col">
+      Plazo de pronunciamiento / Fecha última audiencia <p-sortIcon field="idSemaforo"></p-sortIcon>
+  </th>
+  <th class="w-col-10" scope="col"></th>
+</tr>
+</ng-template>
+
+<ng-template let-caso let-rowIndex="rowIndex" pTemplate="body">
+  <tr class="p-selectable-row text-700 tour-a-1" [ngClass]="{ 'surface-100': caso.esLeido==='1' }">
+    <td class="pr-0">
+      <p-checkbox class="tour-a-2" [binary]="true" [(ngModel)]="caso.seleccionado" (onChange)="eventoSeleccionarCaso($event, caso)"></p-checkbox>
+    </td>
+
+    <td class="pl-2">
+
+      <div class="flex align-items-center mb-3">
+        <span class="plazo-item {{plazosLeyendaClasesCss[caso.idSemaforo]}}"></span>
+        <div [innerHTML]="obtenerCasoHtml(caso.numeroCaso)" class="font-bold" style="white-space: nowrap"></div>
+      </div>
+
+      @let etiqueta2 = etiquetas2(caso);
+
+      <app-etiqueta-caso [etiqueta]="{
+        flRevertido: caso.flRevertido,
+        flTipoAsignacion: caso.tipoAsignacion,
+        flReasignado: caso.flagReasignado,
+
+        etiquetaRgb: caso.cssTextoElevacion,
+        etiqueta: caso.tipoElevacion,
+
+        etiquetaRgb2: etiqueta2.color,
+        etiqueta2: etiqueta2.valor
+
+      }" [perfilJerarquia]="PerfilJerarquia.Superior">
+      </app-etiqueta-caso>
+
+    </td>
+
+    <td>
+      <div class="font-semibold">
+        {{caso.etapa}}
+      </div>
+    </td>
+
+    <td class="table_td_content_start">
+      <div class="mb-1">
+        <div class="font-semibold">{{caso.nombreFiscalProcedencia }}</div>
+        <div class="py-1">{{ caso.nombreEntidadProcedencia }}</div>
+        <div class="font-semibold">{{ caso.despachoProcedencia }}</div>
+      </div>
+    </td>
+
+    <td class="fecha-container table_td_content_start">
+      @if (caso.fechaElevacion) {
+        <div>
+          <div>{{ caso.fechaElevacion | dateformat }}</div>
+          <div class="mt-1">{{ caso.horaElevacion | dateformat : 'hour' }}</div>
+        </div>
+      }
+    </td>
+
+    <td class="fecha-container table_td_content_start">
+      @if (caso.fechaAsignacion) {
+        <div>
+          <div>{{ caso.fechaAsignacion | dateformat }}</div>
+          <div class="mt-1">{{ caso.horaAsignacion | dateformat : 'hour' }}</div>
+        </div>
+      }
+    </td>
+
+    <td class="text-center">
+      <div>
+        <i class="pi pi-clock mt-17"></i>
+      </div>
+      <div>{{ caso.plazoRecibir }}</div>
+    </td>
+
+    <td>
+
+      <!-- Si es diferente a Apelación de autores, se muestra el plazo de pronunciamiento -->
+      @if(![TipoElevacionCodigo.ApelacionesAutoPrincipal,
+        TipoElevacionCodigo.ApelacionesAutoIncidental,
+        TipoElevacionCodigo.ApelacionesAutoExtremos].includes(caso.idTipoElevacion)){
+        <div class="text-sm text-600">
+          {{caso.plazoDiasTranscurridos+'/'+caso.plazoDiasTotal}}
+        </div>
+        <div class="progressBarCaso">
+          <p-progressBar [styleClass]="stringUtil.getColor(+caso.idSemaforo) +' border-none'" [value]="mathUtil.calcularPorcentaje(caso.plazoDiasTranscurridos , caso.plazoDiasTotal)" [showValue]="false"></p-progressBar>
+        </div>
+      }
+
+      @if (caso.ultimaFechaAudiencia && caso.ultimaFechaAudiencia.split(' '); as fechaUltimaAudiencia) {
+        <div class="pt-2 text-xs">
+          @if (fechaUltimaAudiencia[0].split('-'); as fecha) {
+            {{ (fecha[2]+'/'+fecha[1]+'/'+fecha[0]) | dateformat }}
+          }
+          <div class="mt-1">{{ fechaUltimaAudiencia[1] | dateformat : 'hour' }}</div>
+        </div>
+      }
+    </td>
+
+    <td class="table_td_content_start">
+      <i class="pi pi-ellipsis-v font-bold text-xl cursor-pointer text-600 transition-all transition-duration-200 hover:text-color tour-a-4"
+        (click)="eventoMostrarOpcionesCaso($event, opcionesCasoRef, caso)"></i>
+    </td> 
+
+  </tr>
+</ng-template>
+
+<ng-template pTemplate="emptymessage">
+  <tr>
+    <td colspan="8" class="text-center">
+      <div class="py-4 font-semibold">
+        @if (esCriterioBusquedaValido) {
+          No se encontraron registros con los criterios de búsqueda ingresados.
+        }@else {
+          En estos momentos, no hay casos {{asignadosRececpcionados}}.
+        }
+      </div>
+    </td>
+  </tr>
+</ng-template>
+
+</p-table>
+
+@if (paginacionConfiguracion.data.total > 0) {
+  <app-paginator [query]="paginacionCondicion" [items]="paginacionConfiguracion" [rowsPerPageOptions]="[]" (paginate)="eventoCambiarPagina($event)"></app-paginator>
+}
+
+<!-- Ini - Opciones del Caso -->
+<p-menu #opcionesCasoRef [model]="opcionesCaso" appendTo="body" [popup]="true"></p-menu>
+<!-- Fin - Opciones del Caso -->

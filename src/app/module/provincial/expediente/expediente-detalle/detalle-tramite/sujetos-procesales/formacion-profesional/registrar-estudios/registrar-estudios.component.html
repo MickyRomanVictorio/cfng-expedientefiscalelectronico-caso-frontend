@@ -1,0 +1,166 @@
+<div class="cfe-container cfe-container-background-white">
+  <div class="cfe-encabezado-modal">
+    <div
+      class="cfe-encabezado-titulo cfe-subtitulo-3 cfe-semi-bold"
+      [innerHTML]="obtenerTituloModal()"
+    ></div>
+
+    <fn-icon
+      class="cfe-encabezado-cerrar"
+      [ico]="iconUtil.obtenerIcono('iClose')"
+      height="2rem"
+      (click)="cerrarModal()"
+      onkeypress=""
+    ></fn-icon>
+  </div>
+
+  <form [formGroup]="formEstudioSujetoProcesal" >
+    <div [hidden]="true">
+      <input
+        pInputText
+        type="text"
+        formControlName="idSujetoEstudio"
+      />
+    </div>
+
+    <div class="grid">
+      <div class="col-4 field">
+        <label class="font-semibold"
+          >Tipo de institución</label
+        >
+        <p-dropdown
+          styleClass="p-inputtext-md"
+          [options]="tiposInstitucion"
+          optionValue="id"
+          optionLabel="noDescripcion"
+          emptyMessage="Sin resultados"
+          placeholder="Seleccione el tipo de institución"
+          [showClear]="true"
+          formControlName="tipoInstitucion"
+        ></p-dropdown>
+      </div>
+      <div class="col-8 field">
+        <label class="font-semibold"
+          >Institución Educativa</label
+        >
+        <p-dropdown
+          styleClass="p-inputtext-md"
+          [options]="tiposInstitucionEducativa"
+          optionValue="id"
+          optionLabel="noDescripcion"
+          placeholder="Seleccione la institución educativa"
+          emptyMessage="Sin resultados"
+          [showClear]="true"
+          formControlName="tipoInstitucionEducativa"
+          (onChange)="changeInstitucionEducativa()"
+        ></p-dropdown>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col field">
+        <label class="font-semibold">Otra institución educativa</label>
+        <input
+          pInputText
+          type="text"
+          class="p-inputtext-md w-full"
+          placeholder="Ingrese el nombre de la institución"
+          formControlName="otraInstitucion"
+          upperCaseInput
+          [maxlength]="100"
+        />
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="col-4 field">
+        <label class="font-semibold adjust-origin-label"
+          >Grado de instrucción</label
+        >
+        <p-dropdown
+          styleClass="p-inputtext-md"
+          [options]="tiposGradoInstruccion"
+          optionValue="id"
+          optionLabel="noDescripcion"
+          emptyMessage="Sin resultados"
+          placeholder="Seleccione el grado de instrucción"
+          [showClear]="true"
+          formControlName="tipoGradoInstruccion"
+        ></p-dropdown>
+      </div>
+      <div class="col-8 field">
+        <label class="font-semibold adjust-origin-label"
+          >Carrera o situación acádemica (opcional)</label
+        >
+        <p-dropdown
+          styleClass="p-inputtext-md"
+          [options]="tiposCarrera"
+          optionValue="id"
+          optionLabel="noDescripcion"
+          placeholder="Seleccione una carrera o situación acádemica"
+          emptyMessage="Sin resultados"
+          [showClear]="true"
+          formControlName="tipoCarrera"
+        ></p-dropdown>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col-4 field">
+        <label class="font-semibold adjust-origin-label"
+          >Fecha inicio (opcional)</label
+        >
+        <p-calendar
+          dateMask
+          dateFormat="dd/mm/yy"
+          class="p-inputtext-md cfe-calendar"
+          [showIcon]="true"
+          icon="cfe-calendar-icon"
+          placeholder="dd/mm/aaaa"
+          formControlName="fechaInicio"
+          (ngModelChange)="fechaInicioChange()"
+          [maxDate]="maxFechaInicio"
+        ></p-calendar>
+      </div>
+      <div class="col-4 field">
+        <label class="font-semibold adjust-origin-label"
+          >Fecha fin (opcional)</label
+        >
+        <p-calendar
+          dateMask
+          dateFormat="dd/mm/yy"
+          class="p-inputtext-md cfe-calendar "
+          [showIcon]="true"
+          icon="cfe-calendar-icon"
+          placeholder="dd/mm/aaaa"
+          formControlName="fechaFin"
+          (ngModelChange)="fechaFinChange()"
+          [minDate]="minFechaFin"
+        ></p-calendar>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col field">
+        <label class="font-semibold adjust-origin-label"
+          >Detalles (opcional)</label
+        >
+        <textarea
+          rows="3"
+          cols="5"
+          pInputTextarea
+          [autoResize]="true"
+          placeholder="Ingrese detalles adicionales"
+          style="width: 100%"
+          formControlName="detalle"
+          [maxlength]="200"
+        ></textarea>
+      </div>
+    </div>
+    <div class="grid col field justify-content-end">
+      <button
+      class="cfe-boton-primary cfe-boton-m"
+      (click)="registrarEstudioSujetoProcesal()"
+    >
+      {{ nombreBotonEstudioSP }}
+    </button>
+    </div>    
+  </form>
+</div>

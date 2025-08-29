@@ -1,0 +1,8 @@
+<div  class="pt-3 progressBarCaso">
+  <div class="flex justify-content-between flex-wrap">
+      <div class="flex align-items-center">{{ titulo }}</div>
+    <div class="flex align-items-center">{{ daysFromInit }}/{{ diasPlazo }} días</div>
+  </div>
+  <p-progressBar [styleClass]="getColor()"
+    [value]="calculatePercentage(daysFromInit, diasPlazo)"></p-progressBar>
+</div>

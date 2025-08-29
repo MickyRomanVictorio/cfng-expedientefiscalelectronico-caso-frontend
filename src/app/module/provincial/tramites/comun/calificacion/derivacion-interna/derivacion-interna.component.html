@@ -1,0 +1,298 @@
+<app-alertas-tramite
+  [alertas]="alertas"
+  [idCaso]="idCaso"
+  [idEtapa]="idEtapa"
+  urlClass="cfe-url cfe-url-black"
+></app-alertas-tramite>
+
+  <ng-container [formGroup]="formularioDerivacion">
+    @if(alertas.length === 0){
+    <div class="formulario-derivacion">
+      <div class="col-8 mt-3 mb-2">
+        <label for="Tipo de especialidad" class="font-semibold mb-2"
+          >Tipo de especialidad:</label
+        >
+        <p-dropdown
+          styleClass="p-inputtext-m py-1 mt-3"
+          [options]="tipoEspecialidades"
+          optionValue="id"
+          optionLabel="nombre"
+          placeholder="Seleccione un tipo de especialidad"
+          emptyMessage="Sin resultados"
+          formControlName="tipoEspecialidad"
+          autoWidth="false"
+          [style]="{ width: '100%' }"
+          (onChange)="alSeleccionarTipoEspecialidad($event.value);"
+        ></p-dropdown>
+      </div>
+      <div class="col-8 mb-2">
+        <label for="Especialidad" class="font-semibold mb-2">Especialidad:</label>
+        <p-dropdown
+          styleClass="p-inputtext-m py-1 mt-2"
+          [options]="especialidades"
+          optionValue="id"
+          optionLabel="nombre"
+          placeholder="Seleccione una especialidad"
+          emptyMessage="Sin resultados"
+          formControlName="especialidad"
+          autoWidth="false"
+          [style]="{ width: '100%' }"
+          (onChange)="alSeleccionarEspecialidad($event.value)"
+        ></p-dropdown>
+      </div>
+      @if(especialidadNoEfe){
+      <div class="col-8 mb-2">
+        <div class="cfe-mensaje-amarillo cfe-mensaje-ajuste">
+          <fn-icon [ico]="obtenerIcono('iAlert')" height="1.4rem"></fn-icon>
+          <div>
+            Esta especialidad <b>no tiene fiscalías con EFE</b>, de todas maneras
+            puede continuar con el registro del trámite. El trámite se registrará
+            con <b>Fiscalía externa</b> como destino. Luego podrá actualizar la
+            fiscalía y el despacho en la
+            <a
+              href="/app/administracion-casos/derivaciones/enviados/derivado-a/derivado-aceptados"
+              class="cfe-url-black"
+              >bandeja de casos enviados aceptados</a
+            >
+            o
+            <a
+              href="/app/administracion-casos/derivaciones/enviados/acumulado-a/acumulado-aceptados"
+              class="cfe-url-black"
+              >bandeja de casos enviados para acumular aceptados</a
+            >. Por favor no olvide realizar la derivación de manera manual.
+          </div>
+        </div>
+      </div>
+      }
+
+      @if(!especialidadNoEfe) {
+
+        @if (mostrarDistritoGeografico) {
+
+          <div class="col-8 mb-2">
+            <label for="Distrito" class="font-semibold mb-2">Distrito:</label>
+            <p-dropdown
+              styleClass="p-inputtext-m py-1 mt-2"
+              [options]="distritos"
+              optionValue="id"
+              optionLabel="nombre"
+              placeholder="Seleccione un distrito"
+              emptyMessage="Sin resultados"
+              formControlName="distrito"
+              autoWidth="false"
+              [style]="{ width: '100%' }"
+              (onChange)="alSeleccionarDistritos()"
+            ></p-dropdown>
+          </div>
+
+        }
+
+        <div
+          class="col-8 mt-3"
+          [ngClass]="{
+            'mb-2': esDerivacionDespachoEspecifico,
+            'mb-1': !esDerivacionDespachoEspecifico
+          }"
+        >
+          <div class="field-checkbox">
+            <p-checkbox
+              formControlName="esDerivacionDespachoEspecifico"
+              [binary]="true"
+              inputId="binary"
+              label="Derivación a un despacho específico"
+              (onChange)="alSeleccionarDerivacionDespachoEspecifico($event)"
+            ></p-checkbox>
+          </div>
+        </div>
+
+        @if (esDerivacionDespachoEspecifico) {
+          <ng-container>
+            <div class="col-8 mb-2">
+              <label for="Dependencia policial" class="font-semibold mb-2"
+                >Fiscalía:</label
+              >
+              <p-dropdown
+                styleClass="p-inputtext-m py-1 mt-3"
+                [options]="fiscalias"
+                optionValue="id"
+                optionLabel="nombre"
+                placeholder="Seleccione una fiscalía"
+                emptyMessage="Sin resultados"
+                formControlName="fiscalia"
+                autoWidth="false"
+                (onChange)="alSeleccionarFiscalia($event.value)"
+                showClear
+                filter
+                filterBy="nombre"
+                emptyFilterMessage="Sin resultados"
+                [style]="{ width: '100%' }"
+              ></p-dropdown>
+            </div>
+            @if ( fiscaliaNoEFE ) {
+              <div class="col-8 mb-2">
+                <div class="cfe-mensaje-amarillo">
+                  <fn-icon [ico]="obtenerIcono('iAlert')" height="1.4rem"></fn-icon>
+                  <div>
+                    <b>Esta fiscalía no tiene EFE</b>, de todas maneras puede continuar
+                    con el registro del trámite. No es obligatorio seleccionar un
+                    despacho, luego se puede actualizar en la
+                    <a
+                      href="/app/administracion-casos/derivaciones/enviados/derivado-a/derivado-aceptados"
+                      class="cfe-url-black"
+                      >bandeja de casos enviados aceptados</a
+                    >
+                    o
+                    <a
+                      href="/app/administracion-casos/derivaciones/enviados/acumulado-a/acumulado-aceptados"
+                      class="cfe-url-black"
+                      >bandeja de casos enviados para acumular aceptados</a
+                    >. Por favor no olvide realizar la derivación de manera manual.
+                  </div>
+                </div>
+              </div>
+            }
+
+            @if ( !fiscaliaNoEFE ) {
+
+              <div class="col-8 mb-2">
+                <label for="despacho" class="font-semibold mb-2">Despacho{{ fiscaliaNoEFE ? ' (opcional)' : '' }}:</label>
+                <p-dropdown
+                  id="despacho"
+                  styleClass="p-inputtext-m py-1 mt-2"
+                  [options]="despachos"
+                  optionValue="id"
+                  optionLabel="nombre"
+                  placeholder="Seleccione un despacho"
+                  emptyMessage="Sin resultados"
+                  formControlName="despacho"
+                  autoWidth="false"
+                  [style]="{ width: '100%' }"
+                  showClear
+                  (onChange)="alSeleccionarDespacho()"
+                ></p-dropdown>
+              </div>
+
+            }
+
+          </ng-container>
+        }
+
+        @if ( !fiscaliaNoEFE ) {
+          
+          <div
+            class="col-8 mb-2"
+            [ngClass]="{ 'mt-3': esDerivacionDespachoEspecifico }"
+          >
+            <div class="field-checkbox">
+              <p-checkbox
+                formControlName="esDerivacionParaAcumulacion"
+                [binary]="true"
+                inputId="binary"
+                label="Derivación para acumulación"
+                (onChange)="alSeleccionarDerivacionParaAcumulacion($event)"
+              ></p-checkbox>
+            </div>
+          </div>
+
+          @if (esDerivacionParaAcumulacion) {
+            <ng-container>
+              <div class="col-8 mb-2 cfe-numero-caso-contenedor">
+                <label
+                  for="Número de caso al que se va acumular"
+                  class="font-semibold mb-2"
+                  >Número de caso al que se va acumular:</label
+                >
+                <input
+                  pInputText
+                  type="text"
+                  class="p-inputtext py-3 w-full mt-2"
+                  [style]="{ height: '50px' }"
+                  formControlName="numeroCasoAlQueSeVaAcumular"
+                  (input)="alCambiarCasoAlQueSeVaAcumular()"
+                />
+                <div
+                  class="cfe-caso-acumular"
+                  [ngClass]="{
+                    'cfe-caso-valido': numeroCasoValidado,
+                    'cfe-caso-invalido': !numeroCasoValidado
+                  }"
+                >
+                  <div class="cfe-caso-icon">
+                    <fn-icon
+                      [ico]="obtenerIcono(numeroCasoValido ? 'iCheck' : 'iClose')"
+                      height="1.4rem"
+                    ></fn-icon>
+                  </div>
+                  <span>Número de caso {{ numeroCasoValido ? "" : "in" }}válido</span>
+                </div>
+              </div>
+              @if ( numeroCasoNoExiste ) {
+                <div class="col-8 mb-2">
+                  <div class="cfe-mensaje-amarillo cfe-caso-concluido">
+                    <fn-icon [ico]="obtenerIcono('iAlert')" height="1.4rem"></fn-icon>
+                    <span>
+                      Este caso ingresado no <b>existe</b>, por lo que <b>no se le puede acumular casos</b>
+                    </span>
+                  </div>
+                </div>
+              }
+              @if ( numeroCasoConcluido ) {
+                <div class="col-8 mb-2">
+                  <div class="cfe-mensaje-amarillo cfe-caso-concluido">
+                    <fn-icon [ico]="obtenerIcono('iAlert')" height="1.4rem"></fn-icon>
+                    <span>
+                      Este caso se encuentra <b>concluido</b>, por lo que <b>no se le puede acumular casos.</b>
+                    </span>
+                  </div>
+                </div>
+              }
+              @if ( numeroCasoNoPerteneceAlDespacho ) {
+                <div class="col-8 mb-2">
+                  <div class="cfe-mensaje-amarillo cfe-caso-concluido">
+                    <fn-icon [ico]="obtenerIcono('iAlert')" height="1.4rem"></fn-icon>
+                    <span>
+                      Este caso <b>no pertenece al despacho seleccionado</b>, por lo que <b>no se le puede acumular casos.</b>
+                    </span>
+                  </div>
+                </div>
+              }
+              @if ( casoPorAcumularValidado ) {
+                <div class="col-8 mb-2">
+                  <div class="cfe-mensaje-verde cfe-caso-concluido">
+                    <fn-icon [ico]="obtenerIcono('iAlert')" height="1.4rem"></fn-icon>
+                    <span>
+                      Este caso <b>fue verificado de forma exitosa</b>, por lo que <b>se le puede acumular casos.</b>
+                    </span>
+                  </div>
+                </div>
+              }
+              @if (!fiscaliaNoEFE && esFiscaliaSeleccionada) {
+                <div class="col-8 mb-2 relative">
+                  <button
+                    class="cfe-boton-primary cfe-boton-m"
+                    [disabled]="!numeroCasoValidado"
+                    (click)="validarExistenciaDelCaso()"
+                  >
+                    Validar existencia de caso
+                  </button>
+                  @if ( casoPorAcumularValidado ) {
+                    <div class="icono-guardado">
+                      <img 
+                        [src]="iconAsset.obtenerRutaIcono('check-circle')"
+                        alt="guardado"
+                        class="pr-2 h-2rem"
+                      >
+                    </div>
+                  }
+                </div>
+              }
+            </ng-container>
+          }
+
+        }
+
+      }
+
+    </div>
+    }
+  </ng-container>

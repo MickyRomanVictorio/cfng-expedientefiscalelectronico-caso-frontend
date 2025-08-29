@@ -1,0 +1,74 @@
+import {ActoTramiteCaso, Delito, Plazo} from '@core/interfaces/comunes/casosFiscales';
+import {ESTADO_REGISTRO} from 'ngx-cfng-core-lib';
+
+export interface Expediente {
+  idCaso: string;
+  numeroCaso: string;
+  dependenciaFiscal: string;
+  numSecuencial: string;
+  anioNumCaso: string;
+  idActoTramiteEstado: string;
+  etapa: string;
+  idEtapa: string;
+  flgAcuerdoReparatorio: string;
+  flgPrincipioOportunidad: string;
+  numExpediente: string;
+  atoTramiteCasoDocumentoUltimo: ActoTramiteCaso[];
+  estadoRegistro: string;
+  fiscal: string;
+  fiscalSuperior: string;
+  nombreEntidad: string;
+  codigoCasoPadreAcumulacion: string;
+  fechaIngreso: string;
+  fechaIngresoDenuncia:string;
+  flgElevacion: string;
+  flgCasoLeido: string;
+  fechaUltimoTramite: string;
+  idTipoComplejidad: number;
+  flgLectura: number;
+  flgDerivado: string;
+  flgAcumulado: number;
+  flgReservado: string;
+  flgCuaderno: string;
+  flgCarpeta: string;
+  actoProcesal: string;
+  idActoTramiteCasoUltimo: string;
+  idEspecialidad: string;
+  idTipoEspecialidad: string;
+  idTipoProceso: string;
+  idTipoProcesoEtapa: string;
+  idTipoCuaderno: number;
+  ultimoTramite: string;
+  usuarioActualTramite: string;
+  nombreUsuarioActualTramite: string;
+  usuarioOrigenTramite: string;
+  nombreUsuarioOrigenTramite: string;
+  idEstadoRegistro: ESTADO_REGISTRO;
+  idJerarquia: string;
+  flgLecturaSuperior: number;
+  cuadernoIncidental?: Cuadernoincidental;
+  plazos: Plazo[];
+  delitos: Delito[];
+  notas: any;
+  pendientes: any;
+  flgConcluido: string;
+  supuestos: string;
+  idActoTramiteCasoDocumentoUltimo?: string;
+  idTipoClasificadorExpediente?:string;
+  nombreTipoClasificadorExpediente?: string;
+  idClasificadorExpediente?: number;
+  codigoCasoPadre?:string;
+  idCasoPadre?:string;
+  idEtapaPadre?:string;
+  flgConcluidoPadre?:string;
+  flgElevacionObservado?:string;
+  flgOpcionApelaciones?:string;
+  horaAsignacion?:string;
+  fechaHecho: string
+  flgPagos:string;
+  idTipoCuadernoCasoPadre:number;
+  cronometro: string;
+  ultimoIdTramite:string;
+}
+
+export interface Cuadernoincidental extends Expediente {}

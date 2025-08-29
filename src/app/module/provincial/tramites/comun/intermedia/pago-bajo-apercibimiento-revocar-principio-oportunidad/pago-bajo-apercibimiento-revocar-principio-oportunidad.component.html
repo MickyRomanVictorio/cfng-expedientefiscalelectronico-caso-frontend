@@ -1,0 +1,8 @@
+<div class="col-6 mt-3" [style]="{'margin-bottom': '-8px'}">
+  <label class="font-semibold mb-3">
+    Fecha de notificación</label>
+  <p-calendar dateMask dateFormat="dd/mm/yy" class="p-inputtext-lg cfe-calendar h-56" [showIcon]="true"
+    icon="cfe-calendar-icon" placeholder="dd/mm/aaaa" [(ngModel)]="fechaNotificacion" (ngModelChange)="alSeleccionar()"
+    [disabled]="deshabilitado">
+  </p-calendar>
+</div>

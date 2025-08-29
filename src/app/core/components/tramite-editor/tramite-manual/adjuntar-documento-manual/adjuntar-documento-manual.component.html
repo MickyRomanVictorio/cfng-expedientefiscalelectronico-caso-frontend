@@ -1,0 +1,47 @@
+<div class="formgrid grid">
+    <div class="field col-12" (dragenter)="onDragEnter($event)" (drop)="onDrop($event)" (dragover)="onDragLeave($event)">
+
+        <div class="border-dashed border-round border-2 surface-border text-center p-5">
+            <p-messages></p-messages>
+
+            <div class="center">
+
+                <button type="button" class="cfe-boton-secondary cfe-boton-lg" (click)="openInputFile($event)">
+                        <fn-icon
+                        [ico]="icono('iAttach')"
+                        height="1.5rem">
+                    </fn-icon>Subir Archivo
+                    </button>
+            </div>
+            <div>O jale los archivos a esta seccion : {{mensaje}}</div>
+
+            <input #inputFile class="hidden" type="file" accept="onSelectFile" (change)="onSelectFile($event)">
+            <div class="font-semibold text-sm text-700">Máximo tamaño de archivo 100MB</div>
+            <div *ngIf="uploading" class="mt-4">
+                <p-progressBar class="cargo-progressbar" [value]="uploadProgress"></p-progressBar>
+            </div>
+        </div>
+
+    </div>
+ <!--Tabla de documentos -->
+    <div *ngIf="selectedFile" class="field col-12">
+      <div class="flex align-items-center justify-content-between selectedFileItem border-round-sm border-1 border-200 px-1 p-3 color-head-table">
+        <div class="flex align-items-center gap-2"><span>Nombre archivo</span></div>
+        <div class="flex align-items-center gap-1"><span>Formato</span></div>
+        <div class="flex align-items-center gap-1"><span>Tamaño</span></div>
+        <div class="flex align-items-center gap-1"><span>Acción</span></div>
+      </div>
+        <div class="flex align-items-center justify-content-between selectedFileItem border-round-sm border-1 border-200 px-1 p-3">
+            <div class="flex align-items-center gap-2"><i class="pi pi-file"></i> <span>{{ selectedFile.name }}</span></div>
+            <div class="flex align-items-center gap-1"><span>.{{ fileExtension }}</span></div>
+            <div class="flex align-items-center gap-1"><span>{{ fileSize }}</span></div>
+            <div class="flex align-items-center gap-1">
+                <a *ngIf="!firmado; else firmadoDiv" (click)="downloadSelectedFile($event)" class="downloadFile" href="#"><i class="pi pi-download"></i></a>
+                <a *ngIf="!firmado; else firmadoDiv" (click)="removeSelectedFile($event)" class="deleteFile" href="#"><i class="pi pi-trash"></i></a>
+                <ng-template #firmadoDiv>
+                    <i class="pi pi-check text-green-500 ml-3"></i>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>

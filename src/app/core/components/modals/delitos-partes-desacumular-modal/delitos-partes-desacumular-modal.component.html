@@ -1,0 +1,118 @@
+<div class="grid grid-nogutter px-6 pb-5">
+    <div class="col-12">
+        <div class="flex justify-content-between flex-wrap py-3">
+            <span class="flex align-items-center justify-content-center font-semibold">
+                INFORMACIÓN ACTUAL DE DELITOS Y PARTES - Caso Nro <span [innerHTML]="colorizeCode('506014501-2021-590-0')">506014501-2021-590-0</span>
+            </span>
+                <div class="flex align-items-center justify-content-center">
+                    <p-button (click)="close()" icon="pi pi-times" styleClass="p-button-rounded text-color p-button-text"></p-button>    
+                </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <p-table [value]="info" [paginator]="true" [rowHover]="true" [rows]="5" [showCurrentPageReport]="true"
+            [tableStyle]="{ 'min-width': '50rem' }" currentPageReportTemplate="{first} de {last} registros">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Nro</th>
+                    <th>Tipo documento</th>
+                    <th>N° Documento</th>
+                    <th>Nombres y Apellidos </th>
+                    <th>Tipo de Sujeto Procesal</th>
+                    <th>Delito(s)</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-index="rowIndex" let-part>
+                <tr>
+                    <td>{{ (index+1) }}</td>
+                    <td>{{ part.tipoDoc }}</td>
+                    <td>{{ part.numDoc }}</td>
+                    <td>{{ part.nombres }}</td>
+                    <td>{{ part.tipoSujeto }}</td>
+                    <td>
+                        <strong>
+                            {{ displayDelitos(part.delitos??[]) }}
+                        </strong>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="6">No se encontró información de denuncias y partes.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <div class="col-12">
+        <strong class="secondary-tittle">SEPARAR PARTES Y/O DELITOS</strong>
+    </div>
+    <div class="col-12 my-3">
+        <strong class="text-sm">1. CREAR GRUPOS</strong>
+    </div>
+    <div class="col-12">
+        <div class="formgrid grid">
+            <div class="field col">
+                <label for="">Selecciones la(s) parte(s) procesal(es)</label>
+                <p-multiSelect (onChange)="parteProcesalChange($event)" styleClass="py-1 p-inputtext-lg w-full"
+                    [showHeader]="false" [options]="partes" [(ngModel)]="partesSeleccionadas"
+                    defaultLabel="Seleccione las partes" optionLabel="nombres" optionValue="id"
+                    display="chip"></p-multiSelect>
+            </div>
+            <div class="field col">
+                <label for="">Selecciones el(los) delito(s) para esta(s) parte(s)</label>
+                <p-multiSelect styleClass="py-1 p-inputtext-lg w-full" [showHeader]="false" [options]="delitos"
+                    [(ngModel)]="delitosSeleccionados" defaultLabel="Seleccione Delito" optionLabel="nombre"
+                    optionValue="id" display="chip"></p-multiSelect>
+            </div>
+            <div class="field col-fixed" style="width: 200px;">
+                <label class="block" for="">&nbsp;</label>
+                <p-button (click)="onGenerate()" styleClass="w-full cfe-boton-m cfe-boton-secondary uppercase" label="agregar"></p-button>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 my-3">
+        <strong class="text-sm">2. VALIDAR GRUPOS</strong>
+    </div>
+    <div class="col-12">
+        <p-table [value]="groups" [paginator]="true" [rowHover]="true" [rows]="5" [showCurrentPageReport]="true"
+            [tableStyle]="{ 'min-width': '50rem' }" currentPageReportTemplate="{first} de {last} registros">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Grupo</th>
+                    <th>Partes</th>
+                    <th>N° Caso</th>
+                    <th>Delito(s)</th>
+                    <th>Editar-Eliminar</th>
+                </tr>
+            </ng-template>
+            <ng-template let-index="rowIndex" pTemplate="body" let-part>
+                <tr>
+                    <td>Grupo {{ (index+1) }}</td>
+                    <td>
+                        <div *ngFor="let p of displayPartes(part.nombres, part.numDoc)">{{ p }}</div>
+                    </td>
+                    <td>{{ part.nroCaso }}</td>
+                    <td>
+                        <strong>
+                            {{ displayDelitos(part.delitos??[]) }}
+                        </strong>
+                    </td>
+                    <td>
+                        <p-button  icon="pi pi-pencil" styleClass="p-button-rounded p-button-text"></p-button>
+                        &nbsp;
+                        <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-text"></p-button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="6">No se encontró información de denuncias y partes.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <div class="col text-right pt-3">
+        <p-button (click)="openConfirmDialog()" styleClass="cfe-boton-m font-semibold cfe-boton-primary uppercase"
+            label="Confirmar desacumulación"></p-button>
+    </div>
+</div>

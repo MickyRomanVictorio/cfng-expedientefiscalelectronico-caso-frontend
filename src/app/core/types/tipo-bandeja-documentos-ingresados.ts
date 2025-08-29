@@ -1,0 +1,7 @@
+
+export const ID_TIPO_BANDEJA_DOCUMENTOS_INGRESADOS = {
+    NUEVOS: 583,
+    RECIBIDOS: 668,
+    OBSERVADOS: 585,
+    NO_PRESENTADOS: 664,
+}  as const

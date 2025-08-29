@@ -1,0 +1,54 @@
+<div class="relative">
+
+  <fn-icon
+    class="absolute top-0 right-0 cursor-pointer mt-0 ml-0"
+    [ico]="iconUtil.obtenerIcono('iClose')"
+    height="2rem"
+    (click)="cerrar()"
+  ></fn-icon>
+
+  <div class="pt-5">
+    <h3
+      [style.margin-top]="'-30px'"
+      [style.font-size]="'1.4em'"
+    >MOTIVO DE ELIMINACIÓN DEL TRÁMITE</h3>
+  </div>
+
+  <div>
+    <form [formGroup]="formulario">
+      <textarea
+        rows="5"
+        cols="30"
+        class="p-inputtext-lg py-3 text-lg w-full"
+        pInputTextarea
+        formControlName="motivo"
+        placeholder="Ingrese el motivo de la eliminación del trámite"
+        [maxlength]="300"
+      ></textarea>
+      <div class="contador-caracteres flex justify-content-end">
+        Quedan {{ caracteresRestantes - obtenerContador }} caracteres
+      </div>
+    </form>
+  </div>
+
+  <div
+    class="alert-options mt-4 flex align-items-center justify-content-center gap-3"
+  >
+    <button
+      class="cfe-boton-opcion cfe-boton-secondary cfe-boton-lg family-poppin-bold"
+      (click)="cancelar()"
+    >
+      Cancelar
+    </button>
+
+    <button
+      class="cfe-boton-opcion cfe-boton-danger cfe-boton-lg family-poppin-bold"
+      (click)="eliminar()"
+      [disabled]="obtenerContador === 0"
+    >
+      Eliminar
+    </button>
+
+  </div>
+
+</div>

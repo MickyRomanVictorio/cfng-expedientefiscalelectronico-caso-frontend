@@ -1,0 +1,1 @@
+export type TipoEtiqueta = "h3" | 'div';

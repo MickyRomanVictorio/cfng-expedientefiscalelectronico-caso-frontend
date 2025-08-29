@@ -1,0 +1,127 @@
+<div class="previsualizar-container">
+  <div class="grid flex align-items-center justify-content-between pt-5 pr-1 pl-4">
+    <div class="col-6">
+      <div class="cfe-titulo-2">
+        <img class="w-1.5rem mr-2" style="height: 1.5rem;" [src]="iconAsset.obtenerRutaIcono('documento_busqueda')" alt="Icono" />
+        DOCUMENTOS ADJUNTOS - Caso:
+        <span [innerHTML]="obtenerNumeroCaso()"></span>
+      </div>
+    </div>
+
+    <div class="col-1 flex justify-content-end">
+      <p-button (click)="close()" icon="pi pi-times" styleClass="p-button-rounded text-color p-button-text" />
+    </div>
+  </div>
+
+  <div class="grid p-4 mr-0">
+    <div class="col-4" style="height: 770px">
+      <div style="background-color: white; height: 100%">
+        <div class="p-3 flex flex-wrap gap-2 border-bottom-1 border-gray">
+          @if (!visorDocumento) {
+            <p-skeleton height="2rem" styleClass="mb-2" />
+          }
+          @else {
+            <div class="flex flex-row flex-wrap">
+              <span class="font-bold">NÚMERO DEL DOCUMENTO:</span>
+              <span class="ml-3 w-5" style="word-wrap: break-word;"> {{ visorDocumento.numeroDocumento }}</span>
+            </div>
+            <div>
+              <span class="font-bold">TIPO DE TRAMITE:</span>
+              <span class="ml-3"> {{ visorDocumento.tipoTramite.toUpperCase() }} </span>
+            </div>
+            <div>
+              <span class="font-bold">TIPO DE DOCUMENTO:</span>
+              <span class="ml-3"> {{ visorDocumento.tipoDocumento }} </span>
+            </div>
+            <div>
+              <span class="font-bold">FECHA DE INGRESO:</span>
+              <span class="ml-3"> {{ visorDocumento.fechaIngreso }} </span>
+            </div>
+            <div>
+              <span class="font-bold">MEDIO DE PRESENTACIÓN:</span>
+              <span class="ml-3"> {{ visorDocumento.medioPresentacion.toUpperCase() }} </span>
+            </div>
+            <div>
+              <span class="font-bold">REMITENTE:</span>
+              <span class="ml-3"> {{ visorDocumento.remitente.toUpperCase() }} </span>
+            </div>
+            <div>
+              <span class="font-bold">TIPO DE PARTE:</span>
+              <span class="ml-3"> {{ visorDocumento.tipoParte.toUpperCase() }} </span>
+            </div>
+          }
+        </div>
+
+        <div class="p-3 pl-5 border-bottom-1 border-gray"
+             *ngFor="let item of listaDocumentos; index as i"
+             [ngClass]="{'elemento-seleccionado': documentoSeleccionado.id == item.id}">
+          <div class="grid">
+            <div class="col-1 align-content-center">
+              <img src="../../../../../../assets/icons/pdf-color.svg" class="cfe-icon" alt="Icono de advertencia" />
+            </div>
+
+            <div class="col-8 align-content-center text-sm cursor-pointer" (click)="verDocumentopdf(item)" >
+              <label class="font-bold" style="word-wrap: break-word;">{{ item.numeroDocumento }}</label>
+              <br>
+              <label class="text-sm">{{ item.fechaRegistro }}</label>
+            </div>
+
+            <div class="col-2 text-center align-content-center px-0">
+              <button (click)="verDocumentopdf(item)" class="cfe-boton-danger text-base w-12 py-1">
+                pdf
+              </button>
+              <label class="text-xs">{{ item.tamanoArchivo }}MB</label>
+            </div>
+
+            <div class="col-1 flex align-content-center cursor-pointer">
+              <a class="flex align-content-center" (click)="descargarDocumentoPdf(item)">
+                <img class="cfe-icon" src="../../../../../../assets/icons/ico_download.svg"
+                  alt="Icono de descarga" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-8" style="height: 770px; display: flex; flex-direction: column;">
+      <app-tabs-view class="font-bold" [tabs]="tabs" (onChangeIndex)="cambioTab($event)" [indexSeleccionado]="indexActivo"/>
+
+      <p-tabView class="cfe-tabs-view" [(activeIndex)]="indexActivo">
+        <p-tabPanel>
+          <iframe *ngIf="pdfUrl" [src]="pdfUrl" style="width: 100%; height: 100%;" type="application/pdf"
+            title="Pdf reader">
+          </iframe>
+        </p-tabPanel>
+
+        <p-tabPanel>
+          <div class="grid">
+            @if (!asuntosObs) {
+              <p-skeleton height="5rem" styleClass="mb-3" />
+              <p-skeleton height="5rem" styleClass="mb-3" />
+            }
+            @else {
+              <div class="col-12">
+                <label class="etiqueta">Resumen del asunto del documento</label>
+                <textarea rows="5" pInputTextarea class="w-full mt-4" disabled>{{ asuntosObs.asunto }}</textarea>
+              </div>
+
+              <div class="col-12">
+                <label class="etiqueta">Observación adicional</label>
+                <textarea rows="5" pInputTextarea class="w-full mt-4" disabled>{{ asuntosObs.observaciones }}</textarea>
+              </div>
+            }
+          </div>
+        </p-tabPanel>
+
+        <p-tabPanel>
+          <app-fuentes-investigacion [documento]="documento" />
+        </p-tabPanel>
+
+        <p-tabPanel>
+          <app-atender-documento [documento]="documento" />
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+  </div>
+</div>

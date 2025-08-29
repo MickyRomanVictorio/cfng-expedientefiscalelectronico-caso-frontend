@@ -1,0 +1,91 @@
+<div>
+  <form [formGroup]="formResolucionAutoPreparatorio">
+    <div class="col">
+      <div class="field mb-0">
+        <label for="fechaNotificacion" class="font-semibold">
+          Fecha de notificación
+        </label>
+        <div class="grid">
+          <div class="col-4">
+            <p-calendar
+              id="fechaNotificacion"
+              dateMask
+              dateFormat="dd/mm/yy"
+              class="p-inputtext-lg cfe-calendar h-56"
+              [showIcon]="true"
+              icon="cfe-calendar-icon"
+              placeholder="dd/mm/aaaa"
+              formControlName="fechaNotificacion"
+            ></p-calendar>
+          </div>
+          <div class="col-fixed">
+            <div class="field">
+              <label class="font-semibold">Resultado</label>
+              <fn-input-wrapper>
+                <ng-container *ngFor="let item of tipoResultado">
+                  <p-radioButton
+                    [inputId]="item.key"
+                    [value]="item.key"
+                    formControlName="rbTipoResultado"
+                  ></p-radioButton>
+                  <label [for]="item.key" class="mx-2 cursor-pointer">{{
+                    item.name
+                  }}</label>
+                </ng-container>
+              </fn-input-wrapper>
+            </div>
+          </div>
+        </div>
+        <div class="grid">
+          <div class="field col-12 lg:col-12">
+            <label for="txtObservacion" class="font-semibold"
+              >Observaciones</label
+            >
+            <textarea
+              id="txtObservacion"
+              rows="5"
+              formControlName="txtObservacion"
+              class="p-inputtext p-2 w-full"
+              [ngClass]="{ 'ng-invalid ng-dirty': errorMsg('txtObservacion') }"
+            ></textarea>
+            <small
+              error
+              *ngIf="errorMsg('txtObservacion')"
+              class="p-error block"
+            >
+              {{ errorMsg("txtObservacion") }}
+            </small>
+            <small
+              class="block text-right mt-1"
+              [ngClass]="{ 'p-error': counterReportChar() > 200 }"
+            >
+              {{ counterReportChar() }}/200 caracteres
+            </small>
+          </div>
+        </div>
+        <div
+          class="flex justify-content-between"
+          *ngIf="
+            (estadoPedienteCompletar || documentoIngresadoPorMPE) &&
+            !estadoRecibido
+          "
+        >
+          <a class="btn-link" (click)="openModalSelectTramite()"
+            >¿Este documento no pertenece a este trámite?</a
+          >
+          <p-button
+            label="Guardar"
+            (onClick)="guardarTramitePendiente()"
+            [disabled]="!validarForm"
+            [styleClass]="
+              true
+                ? 'p-button-lg cfe-boton-primary text-white font-semibold btn-adjust'
+                : 'p-button-lg cfe-boton-secondary text-primary font-bold btn-adjust'
+            "
+          >
+          </p-button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

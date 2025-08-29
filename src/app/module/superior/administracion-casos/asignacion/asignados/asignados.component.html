@@ -1,0 +1,119 @@
+<div class="cfe-container">
+
+  <!-- Ini - Título  -->
+  <div class="grid py-3">
+    <div class="col-12 md:col-8">
+      <div class="flex align-items-start">
+          <fn-icon [ico]="iconUtil.obtenerIcono('iFolderSearch')" height="1.6rem"></fn-icon>
+          <h3 class="cfe-titulo-1 pl-2">Casos elevados asignados</h3>
+      </div>
+    </div>
+    <div class="col-12 md:col-4 flex justify-content-end">
+      <button
+        class="cfe-boton-secondary cfe-boton-sm w-full sm:w-auto family-poppin-bold justify-content-end"
+        routerLink="../">
+        Ver casos por asignar
+        <fn-icon [ico]="iconUtil.obtenerIcono('iChevronRight')" height="1.5rem"></fn-icon>
+      </button>
+    </div>
+  </div>
+  <!-- Fin - Título  -->
+
+   <!-- Ini - Fiscales por asignar -->
+  <div class="grid">
+    <div class="col pb-1 md:pb-2">
+          <div class="field mb-0">
+              <label for="fiscal" class="font-semibold">Fiscal asignado</label>
+              <p-dropdown [options]="fiscalesPorAsignar"
+                          optionLabel="nombreCompleto"
+                          optionValue="idFiscal" [showClear]="true"
+                          placeholder="Seleccione uno de los fiscales"
+                          styleClass="py-1 p-inputtext-lg"
+                          (onChange)="eventoFiscalAsignadoSeleccionar($event)"
+                          (onClear)="eventoFiscalAsignadoSeleccionar($event)"
+                          [formControl]="fiscalPorAsignar">
+                  <ng-template let-fiscal pTemplate="item">
+                      <div class="grid">
+                          <div class="col text-base">{{ fiscal.nombreCompleto.trim() }}</div>
+                          <div class="col font-semibold text-right text-base">{{ fiscal.casosAsignados }} casos asignados
+                          </div>
+                      </div>
+                  </ng-template>
+              </p-dropdown>
+          </div>
+    </div>
+  </div>
+  <!-- Fin - Fiscales por asignar -->
+
+  <app-filtro #filtroRef (buscar)="eventoBuscar($event)" (buscarPorTexto)="eventoBuscarPorTexto($event)"></app-filtro>
+
+  <app-reasignar [casosSelecionados]="casosSeleccionados()" (respuestaReasignar)="eventoReiniciar($event)"></app-reasignar>
+
+  <div class="mt-5 container-view-list  py-3">
+    <div class="px-3" >
+
+      <div class="grid py-1">
+
+        <div class="col-12">
+          <div class="flex align-items-center">
+            <img [src]="iconAsset.obtenerRutaIcono('exclamationFolder')" alt="Folder Icon" style="width: 22px" />
+            <h4 class="casos_listados_count mt-2 mb-0 font-bold">
+                {{ totalRegistros.total }} {{ totalRegistros.total === 1 ? 'registro listado' : 'registros listados' }} -
+                {{ totalRegistros.casos }} {{ totalRegistros.casos === 1 ? 'caso' : 'casos' }} -
+                {{ totalRegistros.pestanasApelacionPorAsignar }} {{ totalRegistros.pestanasApelacionPorAsignar === 1 ? 'pestaña de apelación asignada' : 'pestañas de apelación asignadas' }}
+            </h4>
+          </div>
+        </div>
+
+        <!--Ini - Botones de acción principal y de exportación -->
+        <div class="col-12">
+            <div class="flex flex-wrap gap-2 justify-content-end">
+              <button class="cfe-boton-primary cfe-boton-m w-full sm:w-auto justify-content-start" (click)="eventoDesasignarCasos()">
+                Desasignar caso
+              </button>
+              <button class="cfe-boton-secondary cfe-boton-m w-full sm:w-auto justify-content-start" (click)="eventoExportar(TipoExportarEnum.Pdf)">
+                <img [src]="iconAsset.obtenerRutaIcono('pdf')" alt="PDF Icon" class="mr-1"/>
+                Exportar PDF
+              </button>
+              <button class="cfe-boton-secondary cfe-boton-m w-full sm:w-auto justify-content-start" (click)="eventoExportar(TipoExportarEnum.Excel)">
+                <img [src]="iconAsset.obtenerRutaIcono('excel')" alt="Excel Icon" class="mr-1"/>
+                Exportar Excel
+              </button>
+            </div>
+        </div>
+        <!--Fin - Botones de Exportación -->
+
+      </div>
+
+
+      <!-- Ini - Leyenda  gap-2  px-2 border-round -->
+      <div class="flex flex-wrap py-2 mb-1 ">
+        @for (ly of leyenda; track $index) {
+          <div
+              class="flex align-items-center surface-200 px-3 py-2 w-full sm:w-auto"
+              [ngClass]="{'leyenda-plazo-inicio': $index===0, 'leyenda-plazo-fin': $index===leyenda.length-1 }"
+            >
+            <span class="plazo-item {{ ly.clasesCss }}"></span> {{ ly.nombre }}
+            <div class="quantity">({{ ly.cantidad }})</div>
+          </div>
+        }
+      </div>
+      <!-- Fin - Leyenda -->
+
+    </div>
+
+    <!-- Ini - Tabla de Casos -->
+    <app-tabla
+      #tableCasosRef
+      [listaCasos]="listaCasos"
+      [paginacionCondicion]="paginacionCondicion"
+      [paginacionConfiguracion]="paginacionConfiguracion"
+      (cambiarPagina)="eventoCambiarPagina($event)"
+    >
+    </app-tabla>
+    <!-- Fin - Tabla de Casos -->
+
+  </div>
+
+
+</div>

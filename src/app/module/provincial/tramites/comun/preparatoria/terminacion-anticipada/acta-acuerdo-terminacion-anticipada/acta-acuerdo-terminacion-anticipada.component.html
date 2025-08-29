@@ -1,0 +1,50 @@
+<div class="acta_acuerdo_terminacion_anticipada__container mt-3">
+    @if ((this.sujetosProcesalesSeleccionadosIds.length == 0)) {
+        <div class="mb-3">
+          <mensaje-completar-informacion
+          [titulo] = "nombreTramite()"
+        />
+        </div>
+      }
+    <form [formGroup]="formRegistro">
+        <div class="col-12">
+            <div class="grid">
+            <div class="col-12 md:col-12 flex">
+                <div>
+                <label for="fechaAcuerdo" class="p-label-bottom font-semibold">Sujeto procesal:</label>
+                <button class="cfe-boton-primary cfe-boton-lg mt-1" (click)="abrirModalAgregarEditarSujeto()">
+                    <span class="font-bold">Seleccionar sujeto procesal</span>
+                </button>
+                </div>
+                @if(sujetosProcesalesSeleccionadosIds.length > 0){
+                <div class="flex align-items-center">
+                    <img [src]="icono('check-circle')" alt="validado" class="mt-5 ml-2 pr-2 h-2rem">
+                </div>
+                }
+            </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="w-full pb-1">
+            <label for="observaciones" class="cfe-semi-bold">Observaciones (opcional)</label>
+            </div>
+            <div class="w-full">
+            <textarea formControlName="observaciones" pInputTextarea id="observaciones"
+                class="w-full p-inputtextarea p-inputtext p-component p-element" rows="4" [maxLength]="200"></textarea>
+            <small class="block text-right mt-1" [ngClass]="{ 'p-error': counterReportChar() > 200 }">
+                {{ counterReportChar() }}/200 caracteres
+            </small>
+            </div>
+        </div>
+    </form>
+    <acta-tramite-generico
+          [idCaso]="idCaso"
+          [tramiteSeleccionado]="tramiteSeleccionado"
+          [idActoTramiteCaso]="idActoTramiteCaso"
+          [validacionFormulario]="formRegistro.valid && sujetosProcesalesSeleccionadosIds.length > 0"
+          [serviceGuardarDatosTramite]="actaAcuerdoTerminacionAnticipadaService.registrarEditarTramite.bind(actaAcuerdoTerminacionAnticipadaService)"
+          [requestGuardarDatosTramite]="requestTramite()"
+          (actaEscaneadaFirmada)="actaEscaneadaFirmada($event)"
+          >
+    </acta-tramite-generico>
+</div>

@@ -1,0 +1,12 @@
+<p-breadcrumb class="max-w-full" [model]="breadCumList" [home]="home">
+  <ng-template pTemplate="item" let-item>
+    <a
+      *ngIf="item.route"
+      class="cursor-pointer"
+      (click)="navigateToDetail(item)">
+      <span style="text-decoration: underline;">{{ item.label }}</span>
+    </a>
+    <span *ngIf="!item.route">{{ item.label }}</span>
+  </ng-template>
+  <ng-template pTemplate="separator"><span class="ml-1 mr-1">/</span></ng-template>
+</p-breadcrumb>

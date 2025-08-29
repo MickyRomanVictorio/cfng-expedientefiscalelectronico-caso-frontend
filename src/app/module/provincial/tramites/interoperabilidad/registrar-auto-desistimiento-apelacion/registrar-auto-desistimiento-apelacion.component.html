@@ -1,0 +1,146 @@
+@if (!tieneActoTramiteCasoDocumento) {
+  <mensaje-interoperabilidad-pj/>
+}
+
+@if (tieneActoTramiteCasoDocumento) {
+  @if (!tramiteEstadoRecibido) {
+    <mensaje-completar-informacion
+      [titulo]="tramiteSeleccionado!.nombreTramite"
+    />
+  }
+
+  <form [formGroup]="formularioAutoResuelve">
+    <div class="formgrid grid mt-3">
+      <div class="field col-12 lg:col-3">
+        <div class="formgrid grid">
+          <div class="field col-10 tour-f-1">
+            <label for="fechaNotificacion" class="font-bold text-sm">Fecha de notificación</label>
+            <p-calendar
+              id="fechaNotificacion"
+              [dateFormat]="'dd/mm/yy'"
+              class="p-inputtext-lg cfe-calendar h-40"
+              [showIcon]="true"
+              dateMask
+              icon="cfe-calendar-icon"
+              placeholder="dd/mm/aaaa"
+              formControlName="fechaNotificacion"
+              appendTo="body"
+              dataType="string"
+              [ngClass]="{'ng-invalid ng-dirty': formularioAutoResuelve.get('fechaNotificacion')?.invalid && formularioAutoResuelve.get('fechaNotificacion')?.touched}"
+            >
+            </p-calendar>
+          </div>
+          @if (formularioAutoResuelve.get('fechaNotificacion')?.value) {
+            <div class="field col-1">
+              <label for="imgGuardado">&nbsp;</label>
+              <div class="mt-1">
+                <img id="imgGuardado" [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+      <div class="field col-12 lg:col-6">
+        <div class="formgrid grid">
+          <div class="field col-12 tour-f-2">
+            <label for="resultado" class="font-bold text-sm">Resultado:</label>
+            <div id="resultado" class="formgrid grid flex flex-wrap">
+              <ng-container *ngFor="let boton of botones">
+                <div *ngIf="boton.mostrar" class="field flex align-items-center mr-2 mb-2">
+                  <button class="cfe-boton-primary cfe-boton-lg" (click)="openModalSujetos(boton.id)">
+                    {{ boton.texto }}
+                  </button>
+                  <div *ngIf="boton.completo" class="ml-1">
+                    <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="h-2rem">
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="field col-11 tour-f-4">
+        <label for="observaciones" class="font-bold text-sm">Observaciones (opcional)</label>
+        <textarea id="observaciones" pInputTextarea class="w-full text-md" rows="6" formControlName="observaciones"
+                  [maxLength]="longitudMaximaObservaciones"></textarea>
+        <small
+          class="block text-right mt-1"
+          [ngClass]="{'p-error': cantidadCaracteresObservacion > longitudMaximaObservaciones }">
+          {{ cantidadCaracteresObservacion }}/{{ longitudMaximaObservaciones }} máximo de caracteres
+        </small>
+      </div>
+      @if (formularioAutoResuelve.get('observaciones')?.value && formularioAutoResuelve.get('observaciones')?.value.length > 0) {
+        <div class="field col-1">
+          <label for="imgGuardadoObs">&nbsp;</label>
+          <div class="mt-1">
+            <img id="imgGuardadoObs" [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+          </div>
+        </div>
+      }
+    </div>
+    @if (idJerarquia === 1 && !ocultarBotones) {
+      <div class="text-right pt-3">
+        @if (!tramiteEstadoRecibido) {
+          <a class="cfe-enlace tour-f-5" (click)="modalActualizarActoYTramite()">
+            ¿Este documento no pertenece a este trámite?</a>
+        } @else {
+          <span></span>
+        }
+        @if (esPosibleEditarFormulario && !mostrarBotonDevolver) {
+          <p-button
+            [disabled]="!formularioValido"
+            (onClick)="confirmarRegistroTramite()"
+            styleClass="p-button-lg cfe-boton-primary text-white family-poppin-bold btn-adjust-filter w-column-full tour-f-6">
+            <span class="ml-4 mr-4">Guardar</span>
+          </p-button>
+        }
+        @if (esPosibleEditarFormulario && mostrarBotonDevolver) {
+          <p-button
+            styleClass="cfe-boton-lg cfe-boton-danger"
+            label="Devolver al Fiscal Provincial"
+            (onClick)="devolverAlFiscalProvincial()">
+          </p-button>
+        }
+      </div>
+    }
+  </form>
+
+  @if(idJerarquia === 1){
+    @if(idJerarquia === 1 && !ocultarBotones){
+      <div class="text-right pt-3">
+        <button
+          type="button"
+          class="cfe-boton-secondary cfe-boton-m inline"
+          (click)="eventoObservarTramite()"
+        >
+          Observar Trámite
+        </button>
+        <button
+          type="button"
+          class="cfe-boton-primary cfe-boton-m inline ml-2"
+          (click)="eventoRecibirTramite()"
+        >
+          Recibir Trámite
+        </button>
+      </div>
+    }
+
+    @if(verFormularioObservar()===true){
+      <hr>
+      <app-observar
+        [esModal]="false"
+        [datosPronunciamiento]="datosPronunciamiento"
+        [esSoloLectura]="false"
+        (cerrar)="eventoObservarCancelar()"
+        (observar)="eventoObservarEnviar($event)"
+      ></app-observar>
+    }
+
+  }
+
+  @if(idJerarquia === 2 && observacionProvincial && observacionProvincial.length > 0){
+    <button type="button" class="cfe-boton-secondary cfe-boton-m inline" (click)="eventoObservarTramite(true)">
+      Ver Observación Provincial
+    </button>
+  }
+}

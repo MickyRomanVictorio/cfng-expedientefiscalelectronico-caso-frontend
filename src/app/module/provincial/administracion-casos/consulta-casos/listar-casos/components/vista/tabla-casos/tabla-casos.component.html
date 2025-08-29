@@ -1,0 +1,167 @@
+<div class="col-12 tableView">
+  <p-table
+    [tableStyle]="{'min-width': '50rem'}"
+    [value]="listaCasos"
+    [rowHover]="true"
+    responsiveLayout="stack"
+    styleClass="p-datatable-striped"
+  >
+
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+
+        <th pSortableColumn="numeroCaso" scope="col">Nro Caso
+          <p-sortIcon field="numeroCaso"></p-sortIcon>
+        </th>
+        <th pSortableColumn="etapa" scope="col">Etapa
+          <p-sortIcon field="etapa"></p-sortIcon>
+        </th>
+        <th pSortableColumn="fiscal" scope="col">Fiscalia Provincial
+          <p-sortIcon field="fiscal"></p-sortIcon>
+        </th>
+        <th pSortableColumn="ultimoTramite" style="min-width: 11rem;" scope="col">Último trámite
+          <p-sortIcon field="ultimoTramite"></p-sortIcon>
+        </th>
+        <th scope="col">Delitos</th>
+        <th pSortableColumn="fechaDenuncia" style="min-width: 11rem;" scope="col">F. Denuncia
+          <p-sortIcon field="horaDenuncia"></p-sortIcon>
+        </th>
+        <th pSortableColumn="fechaIngreso" style="min-width: 11rem;" scope="col">F. Ingreso Despacho
+          <p-sortIcon field="fechaIngreso"></p-sortIcon>
+        </th>
+        <th pSortableColumn="fechaAsignacion" style="min-width: 11rem;" scope="col">F. Asignación
+          <p-sortIcon field="fechaAsignacion"></p-sortIcon>
+        </th>
+        <th pSortableColumn="fechaUltimoTramite" style="min-width: 12rem;" scope="col">F. Último trámite
+          <p-sortIcon field="fechaUltimoTramite"></p-sortIcon>
+        </th>
+        <th scope="col">Plazo de etapa</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-casofiscal let-columns="columns" let-rowIndex="rowIndex">
+      <tr  class="relative cursor-pointer p-selectable-row" (click)="eventoCasoSeleccionado(casofiscal)">
+
+        <td>
+            <div>
+              <div class="p-column-title font-bold hidden">Nro Caso</div>
+              <div  class="font-bold" [innerHTML]="obtenerCasoHtml(casofiscal.numeroCaso)" style="white-space: nowrap"></div>
+            </div>
+        </td>
+        <td>
+          <div>
+              <div class="p-column-title font-bold hidden">Etapa</div>
+              {{ casofiscal.etapa }}
+          </div>
+        </td>
+        <td>
+          <div>
+            <div class="p-column-title font-bold hidden">Fiscalia Provincial</div>
+            <div class="font-semibold">
+              {{ casofiscal.fiscal }}
+            </div>
+            <div class="text-700">
+              {{ casofiscal.fiscalia }}
+            </div>
+          </div>
+        </td>
+        <td>
+          <div>
+            <div class="p-column-title font-bold hidden" >Último trámite</div>
+            {{casofiscal.ultimoTramite?.toLowerCase() || "-"}}
+          </div>
+        </td>
+        <td>
+          <div>
+            <div class="p-column-title font-bold hidden">Delitos</div>
+            <div class="btn-crimes-parts w-7rem px-3 font-bold" (click)="eventoVerDelitosPartes($event, casofiscal)">
+              Ver delitos y partes
+            </div>
+           </div>
+        </td>
+        <td>
+          <div>
+            <div class="p-column-title font-bold hidden">F. Denuncia</div>
+            <div>
+              <div>{{ casofiscal.fechaIngresoDenuncia | dateformat }}</div>
+              <div class="cfe-row-top">
+                {{ casofiscal.horaDenuncia | dateformat : "hour24" }}
+              </div>
+            </div>
+
+          </div>
+        </td>
+        <td>
+          <div>
+            <div class="p-column-title font-bold hidden">F. Ingreso Despacho</div>
+            <div>
+              <div>{{ casofiscal.fechaIngreso | dateformat }}</div>
+              <div class="cfe-row-top">
+                {{ casofiscal.horaIDespacho | dateformat : "hour24" }}
+              </div>
+            </div>
+
+          </div>
+        </td>
+        <td>
+          <div>
+            <div class="p-column-title font-bold hidden">F. Asignación</div>
+            <div>
+              <div>{{ casofiscal.fechaAsignacion | dateformat }}</div>
+              <div class="cfe-row-top">
+                {{ casofiscal.horaAsignacion | dateformat : "hour24" }}
+              </div>
+            </div>
+
+          </div>
+        </td>
+        <td>
+          <div>
+            <div class="p-column-title font-bold hidden">F. Último trámite</div>
+            <div *ngIf="casofiscal?.fechaUltimoTramite">
+              <div>{{ casofiscal.fechaUltimoTramite | dateformat }}</div>
+              <div class="cfe-row-top">
+                {{ casofiscal.horaUTramite | dateformat : "hour24" }}
+              </div>
+            </div>
+
+          </div>
+        </td>
+        <td>
+          <div class="w-full">
+            <div class="p-column-title font-bold hidden">Plazo de etapa</div>
+            <div class="custom-progressbar">
+                <app-barra-progreso-caso   [plazos]="casofiscal.plazos" >
+                </app-barra-progreso-caso>
+            </div>
+            <div *ngIf="casofiscal.flgAcuerdoReparatorio === '1' || casofiscal.flgPrincipioOportunidad==='1'"   class="py-2 mt-2">
+              <a class="cfe-boton-secondary cfe-boton-sm" >Plazos y Pagos</a>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+       <tr>
+        <td colspan="8">
+          @if (listaCasos.length === 0) {
+            <div class="py-5 text-center text-600 border-300 font-semibold">
+              @if (procesadoCriterioBusqueda===false) {
+                En estos momentos no hay casos fiscales por monitorear
+              }@else {
+                No se encontraron registros con los criterios de búsqueda ingresados
+              }
+            </div>
+          }
+        </td>
+       </tr>
+    </ng-template>
+  </p-table>
+  <app-paginator
+    [query]="paginacionCondicion"
+    [items]="paginacionConfiguracion"
+    [rowsPerPageOptions]="[]"
+    [resetPage]="paginacionReiniciar"
+    (paginate)="eventoCambiarPagina($event)"
+  ></app-paginator>
+</div>

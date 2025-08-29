@@ -1,0 +1,248 @@
+<div [formGroup]="form" class="formgrid grid">
+  <div class="col-12">
+    <div class="grid mt-1">
+      <div class="col">
+        <div class="field mb-0">
+          <label for="buscar" class="font-semibold">Buscar</label>
+          <input
+            pInputText
+            type="text"
+            class="p-inputtext-lg py-3 text-lg w-full"
+            placeholder="Ingrese algún texto para buscar, por ejemplo el número de caso, nombre de las partes, etc"
+            formControlName="buscar"
+            (keyup)="buscarSegunTexto()"
+            autocomplete="off"
+          />
+        </div>
+      </div>
+      <div
+        class="col-fixed"
+        style="width: 70px"
+        [ngClass]="{ 'cfe-filtro-boton-fondo': mostrarFiltros }"
+      >
+        <div class="field mb-0 mt-5">
+          <button
+            class="cfe-filtro-boton"
+            (click)="eventoMostrarOcultarFiltros()"
+          >
+            <fn-icon
+              [ico]="iconUtil.obtenerIcono('iFilterShow')"
+              height="2.1rem"
+            ></fn-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+    @if (!mostrarFiltros) {
+    <div class="grid mt-3 mb-4">
+      <div class="col">
+        <div class="flex flex-wrap gap-3">
+          <div class="flex align-items-center">
+            <p-radioButton
+              value="0"
+              formControlName="filtroTiempo"
+              (onClick)="eventoCambiarFiltroTiempo($event.value)"
+              inputId="ultimoSeisMeses"
+              id="ultimoSeisMeses"
+            ></p-radioButton>
+            <label for="ultimoSeisMeses" class="ml-2">Últimos 6 meses</label>
+          </div>
+          <div class="flex align-items-center">
+            <p-radioButton
+              value="1"
+              formControlName="filtroTiempo"
+              (onClick)="eventoCambiarFiltroTiempo($event.value)"
+              inputId="todosLosMeses"
+              id="todosLosMeses"
+            ></p-radioButton>
+            <label for="todosLosMeses" class="ml-2">Todos los meses</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    } @if (mostrarFiltros) {
+    <div class="grid mt-1 cfe-filtros">
+      <div class="cfe-filtros-fondo">
+        <div class="formgrid grid">
+          <div class="field col-12">
+            <div class="flex align-items-center flex-wrap gap-4">
+              <div class="flex align-items-center">
+                <p-radioButton
+                  value="0"
+                  formControlName="tipoFecha"
+                  name="tipoFecha"
+                  inputId="tipoFecha1"
+                ></p-radioButton>
+                <label for="tipoFecha1" class="ml-2 font-bold">
+                  @if (concluido === '1') {
+                  <ng-container> Fecha de concluído </ng-container>
+                  }@else {
+                  <ng-container> Fecha Ingreso </ng-container>
+                  }
+                </label>
+              </div>
+              <div class="flex align-items-center">
+                <p-radioButton
+                  value="1"
+                  formControlName="tipoFecha"
+                  name="tipoFecha"
+                  inputId="tipoFecha2"
+                ></p-radioButton>
+                <label for="tipoFecha2" class="ml-2 font-bold">
+                  @if (concluido === '1') {
+                  <ng-container> Fecha Ingreso </ng-container>
+                  } @else {
+                  <ng-container> Fecha Último trámite </ng-container>
+                  }
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="field col-12">
+            <div class="formgrid grid">
+              <div class="field col-12 lg:col-3">
+                <label class="font-bold mb-0">Fechas</label>
+                <p-calendar
+                  dateMask
+                  class="p-inputtext-lg cfe-calendar h-56"
+                  [showIcon]="true"
+                  icon="cfe-calendar-icon"
+                  placeholder="dd/mm/aaaa"
+                  dateFormat="dd/mm/yy"
+                  formControlName="fechaInicio"
+                ></p-calendar>
+              </div>
+              <div class="field col-12 lg:col-3">
+                <label class="font-bold mb-0">&nbsp;</label>
+                <p-calendar
+                  dateMask
+                  class="p-inputtext-lg cfe-calendar h-56"
+                  [showIcon]="true"
+                  icon="cfe-calendar-icon"
+                  placeholder="dd/mm/aaaa"
+                  dateFormat="dd/mm/yy"
+                  formControlName="fechaFin"
+                ></p-calendar>
+              </div>
+              @if (isModoGrilla && concluido === '1') {
+              <ng-container>
+                <div class="field col-12 lg:col-3">
+                  <label class="mb-0 font-bold">Ordenar por</label>
+                  <p-dropdown
+                    formControlName="ordenarPor"
+                    styleClass="py-1 p-inputtext-lg"
+                    placeholder="Seleccione"
+                    [options]="ordenarPor"
+                    optionLabel="label"
+                    optionValue="value"
+                  ></p-dropdown>
+                </div>
+                <div class="field col-12 lg:col-3">
+                  <label class="mb-0">&nbsp;</label>
+                  <p-dropdown
+                    formControlName="order"
+                    styleClass="py-1 p-inputtext-lg"
+                    placeholder="Seleccione"
+                    [options]="SORT"
+                    optionLabel="label"
+                    optionValue="value"
+                  ></p-dropdown>
+                </div>
+              </ng-container>
+              }
+            </div>
+          </div>
+
+          @if (mostrarProceso) {
+          <div class="field col-12 lg:col-3">
+            <label class="font-bold mb-0">Tipo Proceso</label>
+            <p-dropdown
+              formControlName="proceso"
+              styleClass="py-1 p-inputtext-lg"
+              [options]="tipoProcesos"
+              optionLabel="label"
+              optionValue="value"
+              (onChange)="eventoCambiarTipoProceso($event.value)"
+              emptyMessage="Sin resultados"
+            ></p-dropdown>
+          </div>
+          } @if (mostrarSubtipo) {
+          <div class="field col-12 lg:col-3">
+            <label class="font-bold mb-0">Subtipo Proceso</label>
+            <p-dropdown
+              formControlName="subtipoProceso"
+              styleClass="py-1 p-inputtext-lg"
+              [options]="subtipoProcesos"
+              optionLabel="label"
+              optionValue="value"
+              (onChange)="eventoCambiarSubtipoProceso($event.value)"
+              emptyMessage="Sin resultados"
+              placeholder="Todos"
+              [showClear]="true"
+            ></p-dropdown>
+          </div>
+          } @if (mostrarEtapa) {
+          <div class="field col-12 lg:col-3">
+            <label class="font-bold mb-0">Etapa</label>
+            <p-dropdown
+              formControlName="etapa"
+              styleClass="py-1 p-inputtext-lg"
+              [options]="etapas"
+              optionLabel="label"
+              optionValue="value"
+              (onChange)="eventoCambiarEtapa($event.value)"
+              emptyMessage="Sin resultados"
+              placeholder="Todos"
+              [showClear]="true"
+            ></p-dropdown>
+          </div>
+          }
+
+          <div class="field col-12 lg:col-3">
+            <label class="font-bold mb-0">Acto procesal</label>
+            <p-dropdown
+              formControlName="actoProcesal"
+              styleClass="py-1 p-inputtext-lg"
+              [options]="actoProcesales"
+              optionLabel="label"
+              optionValue="value"
+              (onChange)="eventoCambiarActoProcesal($event.value)"
+              emptyMessage="Sin resultados"
+              placeholder="Todos"
+              [showClear]="true"
+            ></p-dropdown>
+          </div>
+          <div class="field col-12 lg:col-6">
+            <label class="font-bold mb-0">Trámite</label>
+            <p-dropdown
+              formControlName="tramite"
+              styleClass="py-1 p-inputtext-lg"
+              [options]="tramites"
+              optionLabel="label"
+              optionValue="value"
+              emptyMessage="Sin resultados"
+              placeholder="Todos"
+              [showClear]="true"
+            ></p-dropdown>
+          </div>
+        </div>
+      </div>
+      <div class="cfe-filtros-fondo cfe-filtros-opciones">
+        <button
+          class="cfe-boton-secondary cfe-boton-m mr-3 boton-w"
+          (click)="clear()"
+        >
+          Limpiar filtros
+        </button>
+        <button
+          class="cfe-boton-primary cfe-boton-m mr-2 boton-w"
+          (click)="buscar()"
+        >
+          Buscar
+        </button>
+      </div>
+    </div>
+    }
+  </div>
+</div>

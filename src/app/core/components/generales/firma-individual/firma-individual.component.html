@@ -1,0 +1,27 @@
+<div class="flex justify-content-center relative">
+  <button class="cfe-boton-primary cfe-boton-m boton-w cfe-boton-icono-izquierda mr-2"
+    (click)="preValidacionFirma()"
+    [disabled]="!habilitarFirmar"
+  >
+    <fn-icon
+      class="ml-1"
+      [ico]="icono('iFirmaMasiva')"
+      height="1.6rem"
+    ></fn-icon>
+    <span class="ml-3 family-poppin-bold">Firmar trámite</span>
+  </button>
+  @if (!puedeFirmar) {
+    <img alt="" class="w-2rem absolute left-100"
+         [src]="assetIcon('info')"
+         [pTooltip]="tooltipContent"
+         [tooltipOptions]="{'tooltipStyleClass': 'info-tooltip'}"
+         tooltipPosition="top">
+    <ng-template #tooltipContent>
+      <div class="flex info-tooltip">
+        <img alt="" class="w-1rem mr-2" [src]="assetIcon('info')">
+        <span>Usted no cuenta con los permisos para firmar el trámite</span>
+      </div>
+    </ng-template>
+  }
+</div>
+<cfe-lib-firma-digital-cliente></cfe-lib-firma-digital-cliente>

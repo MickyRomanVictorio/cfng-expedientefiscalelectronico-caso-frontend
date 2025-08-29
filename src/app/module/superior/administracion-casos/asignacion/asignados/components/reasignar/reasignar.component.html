@@ -1,0 +1,99 @@
+<hr style="border-width: 3px 0 0 0;">
+<h6 class="cfe-subtitulo-1 mb-3 font-semibold">Opciones de reasignación</h6>
+
+<form [formGroup]="form">
+
+  <div class="grid">
+
+    <div class="col-12 lg:col-3">
+      <label class="mb-0 font-semibold" for="tipoReasignacion">Tipo de reasignación</label>
+      <p-dropdown
+        formControlName="tipoReasignacion"
+        [disabled]="habilitarDesahabilitarControles()"
+        (onChange)="eventoCambiarTipoReasignacion($event)"
+        styleClass="py-1 p-inputtext-lg"
+        placeholder="Seleccione"
+        [options]="tipoReAsignacion"
+        optionLabel="label"
+        optionValue="value">
+      </p-dropdown>
+    </div>
+
+    <div class="col-12 lg:col-5">
+      <label class="mb-0 font-semibold" for="fiscalAReasignar">Fiscal a reasignar</label>
+      <p-dropdown [options]="fiscalesPorAsignar"
+          optionLabel="nombreCompleto"
+          [disabled]="habilitarDesahabilitarControles()"
+          optionValue="idFiscal" [showClear]="true"
+          placeholder="Seleccione uno de los fiscales"
+          styleClass="py-1 p-inputtext-lg"
+          formControlName="fiscalAReasignar"
+        >
+          <ng-template let-fiscal pTemplate="item">
+            <div class="grid">
+              <div class="col text-base pb-0">{{ fiscal.nombreCompleto.trim() }}</div>
+              <div class="col font-semibold pt-1 text-left text-base">{{ fiscal.casosAsignados }} casos asignados</div>
+            </div>
+          </ng-template>
+      </p-dropdown>
+    </div>
+    <div class="col-12 lg:col-4">
+      <label class="mb-0 font-semibold" for="motivo">Motivo (Opcional), <span class="text-xs text-gray-600">máx. 200 caracteres</span> </label>
+      <input
+        [disabled]="habilitarDesahabilitarControles(1)"
+        pInputText type="text" class="p-inputtext-lg text-lg w-full"
+        style="padding: 0.8rem 0.8rem;"
+        placeholder="Ingrese el motivo de la reasignación"
+        formControlName="motivo"
+        maxlength="200"
+        autocomplete="off" />
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <div class="col-12 lg:col-3">
+      <label class="font-semibold mb-0 " for="fechaInicio">Fecha de reasignación temporal</label>
+      <p-calendar dateMask class="p-inputtext-lg cfe-calendar h-56" [showIcon]="true" icon="cfe-calendar-icon"
+        placeholder="dd/mm/aaaa" dateFormat="dd/mm/yy" formControlName="fechaInicio"
+        inputId="fechaInicio"></p-calendar>
+    </div>
+
+    <div class="col-12 lg:col-3 flex align-items-end">
+      <p-calendar dateMask class="p-inputtext-lg cfe-calendar h-56 mb-1 w-full" [showIcon]="true" icon="cfe-calendar-icon"
+        placeholder="dd/mm/aaaa" dateFormat="dd/mm/yy" formControlName="fechaFin" inputId="fechaFin"></p-calendar>
+    </div>
+
+    <div class="col-12 lg:col-3">
+      <label class="mb-0 font-semibold" for="archivoEntrada">Opcional</label>
+      <button class="cfe-boton-secondary cfe-boton-m mr-3 cfe-boton-icono-izquierda my-1"
+        [disabled]="habilitarDesahabilitarControles()"
+        (click)="eventoIniciarSeleccionarArchivo($event, archivoEntrada)">
+        <fn-icon class="ml-1" [ico]="iconUtil.obtenerIcono('iAttach')" height="1.6rem"></fn-icon>
+        Subir Documento
+      </button>
+      <input #archivoEntrada class="hidden" type="file" accept="application/pdf" (change)="eventoSeleccionarArchivo(archivoEntrada)"/>
+      @if (archivoSeleccionado!==null) {
+        <div class="flex align-items-center">
+          <div style="word-break: break-all">
+            {{ archivoSeleccionado.name}}
+          </div>
+          <fn-icon [ico]="iconUtil.obtenerIcono('iClose')" height="1.4em" class="cursor-pointer" (click)="eventoDeseleccionarArchivo(archivoEntrada)"></fn-icon>
+        </div>
+      }
+    </div>
+
+    <div class="col-12 md:col-3" style="padding-top: 0.8rem;">
+      <button
+        class="cfe-boton-primary cfe-boton-lg w-full mt-3"
+        [disabled]="habilitarDesahabilitarControles(2)"
+        (click)="eventoReasignar()"
+      >
+        <fn-icon class="ml-1" [ico]="iconUtil.obtenerIcono('iReAsign')" height="1.6rem"></fn-icon>
+        Reasignar
+      </button>
+    </div>
+
+  </div>
+
+</form>

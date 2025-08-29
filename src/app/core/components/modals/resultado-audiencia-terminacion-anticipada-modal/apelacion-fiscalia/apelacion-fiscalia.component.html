@@ -1,0 +1,25 @@
+<form [formGroup]="formApelacionFiscalia">
+    <div class="grid">
+        <div class="col-4">
+            <div class="grid">
+                <div class="col-8 flex align-items-center">
+                    <label for="apelacion" class="font-bold">¿Apelación de la Fiscalía?</label>
+                </div>
+                <div class="col-4 flex gap-2 align-items-center">
+                    <p-radioButton name="resultadoApelacion" [value]="CONSENTIDO" formControlName="resultadoApelacion"
+                        inputId="apelacionSi" (onClick)="onChangeResultadoApelacionFiscalia()"></p-radioButton>
+                    <label for="apelacionSi">Sí</label>
+
+                    <p-radioButton name="resultadoApelacion" [value]="0" formControlName="resultadoApelacion"
+                        inputId="apelacionNo" (onClick)="onChangeResultadoApelacionFiscalia()"></p-radioButton>
+                    <label for="apelacionNo">No</label>
+                </div>
+            </div>
+        </div>
+        @if (verMensajeApelacion) {
+        <div class="col-8 flex align-items-center">
+            <span class="msg-guardado ml-4">Datos Guardados Correctamente</span>
+        </div>
+        }
+    </div>
+</form>

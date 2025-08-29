@@ -1,0 +1,74 @@
+@if (casoFiscal.flgAcumulado == 1 && casoFiscal.flgLectura == 0) {
+
+<div class="cfe-etiqueta-accion flex align-items-center justify-content-between w-full">
+  <p class="boton-etiqueta boton-etiqueta--primary">Con acumulación</p>
+  <button type="button" class="boton-accion boton-accion--lightblue" (click)="obtenerMetodoCaso()">
+    Ver acumulaciones
+  </button>
+</div>
+
+} @if (casoFiscal.flgAcumulado == 1 && casoFiscal.flgLectura == 1) {
+
+<div class="pt-3">
+  <div class="flex justify-content-between flex-wrap">
+    <div>
+      <div>
+        Acumulado a
+      </div>
+      <div>
+        <strong [innerHTML]="stringUtil.formatearCodigoCaso(casoFiscal.codigoCasoPadreAcumulacion)" style="text-decoration: underline;"></strong>
+      </div>
+    </div>
+  </div>
+  &nbsp;
+  <div class="flex justify-content-between flex-wrap">
+    <p class="boton-etiqueta boton-etiqueta--primary">Acumulado</p>
+    <button type="button" class="cfe-boton-secondary cfe-boton-sm" (click)="abrirDesacumulacion()">
+      Desacumular
+    </button>
+  </div>
+</div>
+
+}
+<div class="cfe-etiqueta-accion flex align-items-center justify-content-between w-full">
+  <p class="boton-etiqueta boton-etiqueta--green-dark">{{ casoFiscal.tipoComplejidad }}</p>
+</div>
+@if (casoFiscal.flgElevacion === '1' && idJerarquia == 2) {
+  <div class="cfe-etiqueta-accion flex align-items-center justify-content-between w-full">
+    <p class="boton-etiqueta boton-etiqueta--black">
+      <!-- Elevado a fiscal superior -->
+      Elevado a {{ casoFiscal.flgElevacionPresidencia === '1' ? 'la presidencia' : 'fiscal superior' }}
+    </p>
+  </div>
+}
+@if (casoFiscal.flgElevacion=== '0' && idJerarquia == 2 && casoFiscal.flgLectura === '1') {
+  <div class="cfe-etiqueta-accion flex align-items-center justify-content-between w-full">
+    <p class="boton-etiqueta boton-etiqueta--black">Devuelto por F. Superior</p>
+  </div>
+}
+@if (casoFiscal.idEtapa === '07') {
+<div class="cfe-etiqueta-accion flex align-items-center justify-content-between w-full">
+  <p class="boton-etiqueta boton-etiqueta--red">Proceso inmediato</p>
+</div>
+}
+@if (casoFiscal.flgElevacionObservado === '1' && idJerarquia==1) {
+<div class="cfe-etiqueta-accion flex align-items-center justify-content-between w-full">
+  <span class="badge badge-rojo cfe-bold">Observado por F. Superior</span>
+</div>
+}
+@if(casoFiscal.flgRespuestaProv === '1' && idJerarquia==2 && casoFiscal.flgElevacion=='1') {
+<div class="pt-3">
+  <span class="py-1 px-2 text-xs border-round-md font-semibold bg-red-100 text-red-800
+                transition-all transition-duration-200 hover:bg-red-200 hover:text-red-900"
+    style="white-space: nowrap">
+    Observado por el F. Provincial
+  </span>
+</div>
+}
+@if (casoFiscal.flgDesagregado === '1') {
+  <div class="cfe-etiqueta-accion flex align-items-center justify-content-between w-full">
+    <button type="button" class="boton-accion boton-accion--orange" (click)="obtenerMetodoDesagregado()">
+      Desagregado
+    </button>
+  </div>
+} 

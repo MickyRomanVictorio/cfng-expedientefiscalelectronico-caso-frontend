@@ -1,0 +1,18 @@
+<div [formGroup]="form" class="mt-2">
+  <div class="formgrid grid">
+    <div class="col-12">
+      <label for="motivo" class="font-semibold">Motivo (*)</label>
+      <input
+        pInputText
+        id="motivo"
+        type="text"
+        class="p-inputtext-lg py-3 text-lg w-full"
+        placeholder="Ingrese el motivo de la desacumulación"
+        formControlName="motivo"
+        [(ngModel)]="txtMotivo"
+        (keyup)="eventoIngresarTexto($event)"
+        [disabled]=true
+      />
+    </div>
+  </div>
+</div>

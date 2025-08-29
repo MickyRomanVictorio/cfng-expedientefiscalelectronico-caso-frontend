@@ -1,0 +1,22 @@
+export enum INGRESO_TRAMITE {
+  POR_EFE = '0',
+  POR_MESAS = '1',
+  MIXTO = '2',
+  POR_EFE_SIN_EDITAR = '4'
+}
+
+export enum TIPO_INICIO_TRAMITE {
+  GENERADO = 'GENERADO',
+  RECIBIDO = 'RECIBIDO',
+  MIXTO = 'MIXTO',
+  GENERADO_SIN_EDITAR = 'GENERADO_SIN_EDITAR',
+  RECIBIDO_SIN_VALIDACION = 'Recibido sin validacion',
+}
+export enum TIPO_ORIGEN {
+  MPE = 1,
+  MUP = 2,
+  DESPACHO = 3,
+  TURNO = 4,
+  EFE = 5,
+  DERIVADO = 6,
+}

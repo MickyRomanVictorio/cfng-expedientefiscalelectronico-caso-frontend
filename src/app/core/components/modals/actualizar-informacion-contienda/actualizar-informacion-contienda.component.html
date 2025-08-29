@@ -1,0 +1,58 @@
+<div class="cfe-dialog__header">
+	<!--<h2>Actualizar información de contienda</h2>-->
+	<h2>Actualizar fiscalía asignada</h2>
+	<fn-icon [ico]="obtenerIcono('iClose')" height="28px" (click)="close()"></fn-icon>
+</div>
+<div class="cfe-dialog__content custom-actualizar-informacion-contienda">
+	<form [formGroup]="formActualizar">
+		<div class="field col-12">
+			<label for="" class="font-semibold">Presidencia</label>
+			<p-dropdown
+				optionLabel="nombre"
+				appendTo="body"
+				optionValue="id"
+				styleClass="p-inputtext-lg py-1"
+				[options]="listaPresidencia"
+				emptyMessage="Sin resultados"
+				formControlName="idPresidencia">
+			</p-dropdown>
+		</div>
+		<div class="field col-12">
+			<label for="" class="font-semibold">Fiscalía superior</label>
+			<p-dropdown
+				optionLabel="nombre"
+				appendTo="body"
+				styleClass="p-inputtext-lg py-1"
+				[options]="listaFiscaliasSuperiores"
+				emptyMessage="Sin resultados"
+				placeholder="Seleccione una fiscalía superior"
+				[showClear]="true"
+				(onChange)="validarFiscalAsignado($event.value)"
+				formControlName="idFiscaliaSuperior">
+			</p-dropdown>
+		</div>
+		<div class="field col-12">
+			<label for="" class="font-semibold">Fiscal Asignado</label>
+			<p-dropdown
+				optionLabel="nombre"
+				appendTo="body"
+				optionValue="id"
+				styleClass="p-inputtext-lg py-1"
+				[options]="listaFiscalesAsignados"
+				emptyMessage="Sin resultados"
+				placeholder="Seleccione el fiscal asignado al caso"
+				[showClear]="true"
+				formControlName="idFiscalAsignado">
+			</p-dropdown>
+		</div>
+	</form>
+  	<div class="flex justify-content-end option-container">
+		<button
+			[disabled]="formActualizar.invalid"
+			class="cfe-boton-primary cfe-boton-m mt-3"
+			(click)="verificarProcedenteImprocedente()"
+		>
+			ACTUALIZAR
+		</button>
+	</div>
+</div>

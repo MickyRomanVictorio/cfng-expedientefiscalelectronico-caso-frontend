@@ -1,0 +1,103 @@
+@if ( !tieneActoTramiteCasoDocumento ) {
+<mensaje-interoperabilidad-pj />
+} @if ( tieneActoTramiteCasoDocumento ) { @if ( !tramiteEstadoFirmado ) {
+<mensaje-completar-informacion [titulo]="tramiteSeleccionado!.nombreTramite" />
+}
+
+<form [formGroup]="formulario">
+ 
+  <div class="p-fluid grid mt-3 " >
+    @if(false) {
+    <div class="formgrid grid">
+      <div class="field col-10">
+        <label for="fechaSolicitud" class="font-bold text-sm"
+          >Fecha de solicitud</label
+        >
+        <p-calendar
+           [disabled]="true" 
+          id="fechaSolicitud"
+          [dateFormat]="'dd/mm/yy'"
+          class="p-inputtext-lg cfe-calendar h-40"
+          [showIcon]="true"
+          dateMask
+          icon="cfe-calendar-icon"
+          placeholder="dd/mm/aaaa"
+          formControlName="fechaSolicitud"
+          appendTo="body"
+          dataType="string"
+          [ngClass]="{
+            'ng-invalid ng-dirty':
+              formulario.get('fechaSolicitud')?.invalid &&
+              formulario.get('fechaSolicitud')?.touched
+          }"
+        >
+        </p-calendar>
+      </div>
+      @if ( formulario.get('fechaSolicitud')?.value ) {
+      <div class="field col-2">
+        <label for="imgGuardado">&nbsp;</label>
+        <div class="mt-1">
+          <img
+            id="imgGuardado"
+            [src]="iconAsset.obtenerRutaIcono('check-circle')"
+            alt="guardado"
+            class="pr-2 h-2rem"
+          />
+        </div>
+      </div>
+      }
+    </div>
+  }
+    <div class="col-12 sm:col-12 md:col-6 lg:col-6">
+      <div class="formgrid grid">
+        <div class="field col-10">
+          <label class="font-bold adjust-origin-label text-left"
+            >Ficalía superior a elevar:</label
+          >
+          <p-dropdown
+            id="fiscalia"
+            formControlName="codFiscaliaSuperior"
+            class="p-inputtext-lg w-full"
+            [options]="fiscalias"
+            placeholder="Seleccione"
+            optionLabel="nombre"
+            optionValue="id"
+            (onChange)="formularioValido"
+          >
+          </p-dropdown>
+        </div>
+        @if ( formulario.get('codFiscaliaSuperior')?.value ) {
+        <div class="field col-2">
+          <label for="imgGuardado">&nbsp;</label>
+          <div class="mt-1">
+            <img
+              id="imgGuardado"
+              [src]="iconAsset.obtenerRutaIcono('check-circle')"
+              alt="guardado"
+              class="pr-2 h-2rem"
+            />
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="p-fluid grid mt-3">
+    @if ( formulario.get('observaciones')?.value &&
+    formulario.get('observaciones')?.value!.length > 0 ) {
+    <div class="field col-1">
+      <label for="imgGuardado3">&nbsp;</label>
+      <div class="mt-1">
+        <img
+          id="imgGuardado3"
+          [src]="iconAsset.obtenerRutaIcono('check-circle')"
+          alt="guardado"
+          class="pr-2 h-2rem"
+        />
+      </div>
+    </div>
+    }
+  </div>
+</form>
+}

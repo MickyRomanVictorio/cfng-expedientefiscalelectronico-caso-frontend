@@ -1,0 +1,16 @@
+.cfe-opciones-botones {
+    display: flex;
+    margin-top: 1em;
+    justify-content: space-between;
+    align-items: center;
+
+
+
+}
+.disabled-icon {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  ::ng-deep p-dropdownitem li {
+  text-wrap: auto;
+}

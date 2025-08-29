@@ -1,0 +1,118 @@
+
+<app-cuaderno-juzgamiento [cuadernosJuzgamiento]="cuadernosPrueba" [titulo]="'CUADERNO DE PRUEBA'" ></app-cuaderno-juzgamiento>
+<app-cuaderno-juzgamiento [cuadernosJuzgamiento]="cuadernosDebate" [titulo]="'CUADERNO DE DEBATE'" ></app-cuaderno-juzgamiento>
+@for (ciPre of etapa.cuadernoIncidental;let indice = $index; track $index) {
+  <div class="sub-accordion-container">
+    <div class="flex align-items-center justify-content-between cursor-pointer">
+      <div>
+        <div class="flex px-2 py-3">
+          <div class="pr-1">
+            <p-checkbox [binary]="true" inputId="binary" />
+          </div>
+          <div>
+            {{ciPre.correlativo}}.
+          </div>
+          <div class="px-1">
+            <img [src]="iconAsset.obtenerRutaIcono('folder')" alt="Icono folder" />
+          </div>
+          <div>
+            <div>
+              <span class="font-semibold">Cuaderno incidental:</span> {{ciPre.codigo}}
+            </div>
+            <div>
+              <span class="font-semibold">Asunto:</span> {{ciPre.asunto}}
+            </div>
+            <div>
+              <span class="font-semibold">Fecha de registro:</span> {{ciPre.fechaRegistro}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pr-3">
+        <i class="pi pi-chevron-{{ciPre.mostrarContenido===true?'up':'down'}} text-xl"></i>
+      </div>
+    </div>
+  
+    <!-- Item de Cuadernos Incidentales - Archivos -->
+    <div class="ml-4 bg-white" [ngClass]="{ 'hidden': !ciPre.mostrarContenido }">
+      <p-table [value]="ciPre.datosArchivo" [rowHover]="true">
+        <ng-template pTemplate="body" let-rowIndex="rowIndex" let-detalleCuadernoIncidental>
+          <tr #filaArchivoRef [id]="'fila-'+detalleCuadernoIncidental.correlativo">
+            <td style="vertical-align: top;" class="pl-2 pr-0">
+              <div class="flex">
+                <p-checkbox binary="true"></p-checkbox>
+                <span class="pl-1">{{ciPre.correlativo}}.{{ rowIndex + 1 }}.</span>
+              </div>
+            </td>
+            <td style="vertical-align: top;" class="pl-2 cursor-pointer">
+              <div>
+                <div class="text-md">
+                  <span class="font-semibold">Acto:</span> {{detalleCuadernoIncidental.nombreActoProcesal}}
+                </div>
+                <div class="text-md">
+                  <span class="font-semibold">Trámite:</span> {{detalleCuadernoIncidental.nombreTramite}}
+                </div>
+                <div class="text-xs text-600">Fecha de emisión: {{detalleCuadernoIncidental.fechaEmision}}</div>
+                <div class="text-xs text-600">Fecha de registro: {{detalleCuadernoIncidental.fechaCreacion}}</div>
+              </div>
+            </td>
+  
+            <td style="vertical-align: top;">
+              <div>
+                <div class="flex align-content-center">
+                  <div class="w-full">
+                    <div
+                      class="bg-red-500 text-white px-2 py-2 text-center border-round cursor-pointer transition-all transition-duration-200 hover:bg-red-700">
+                      pdf</div>
+                    <div class="text-xs flex  justify-content-between">
+                      <div class="text-700 font-semibold">{{ detalleCuadernoIncidental.pesoFormateado }}</div>
+                      <div>{{detalleCuadernoIncidental.folioTotal}}
+                        Folio{{detalleCuadernoIncidental.folioTotal===1?'':'s'}}</div>
+                    </div>
+                  </div>
+                  <div style="width: 50px;" class="text-right pl-3">
+                    <fn-icon class="cursor-pointer" [ico]="obtenerIcono('iDownload')" height="2.1rem"></fn-icon>
+                  </div>
+                </div>
+                <div class="text-xs pt-1 text-600">
+                  Folio inicial:{{detalleCuadernoIncidental.folioInicio}} - Folio final:
+                  {{detalleCuadernoIncidental.folioFin}}
+                </div>
+  
+                @if (detalleCuadernoIncidental.fuenteInvestigacion && detalleCuadernoIncidental.fuenteInvestigacion.length
+                > 0) {
+                <div class="flex align-items-center justify-content-end pt-2">
+                  <div>
+                    <img src="{{ iconAsset.obtenerRutaIcono('documento') }}" style="width: 1.2rem;" alt="Icono"/>
+                    <img src="{{ iconAsset.obtenerRutaIcono('video') }}" style="width: 1.2rem;" alt="Icono" class="mx-1"/>
+                    <img src="{{ iconAsset.obtenerRutaIcono('audio') }}" style="width: 1.2rem;" alt="Icono"/>
+                  </div>
+                  <div class="pl-4 pr-1 cursor-pointer">
+                    <i
+                      class="text-xl pi pi-chevron-{{detalleCuadernoIncidental.mostrarContenido===true?'up':'down'}}"></i>
+                  </div>
+                </div>
+                }
+  
+              </div>
+            </td>
+          </tr>
+  
+          @if (ciPre.mostrarContenido && rowIndex === ciPre.datosArchivo.length -1 &&
+          detalleCuadernoIncidental.fuenteInvestigacion.length>0 ) {
+          <tr>
+            <td colspan="3" class="p-0 py-2" style="border: none !important;"></td>
+          </tr>
+          }
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="3" style="text-align: center;">No se encontraron registros con los criterios de búsqueda
+              ingresados.
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+  }

@@ -1,0 +1,65 @@
+
+
+  <div class="grid">
+    <!-- indicadores-->
+
+
+      <div class="col-12 md:col-6">
+
+        <p-card [style]="{ 'min-width': '200px' }" >
+          <div class="flex align-items-center gap-3">
+            <i class="pi pi-file text-red-500" style="font-size: 1.5rem"></i>
+            <div>
+              <div class="text-500 mb-1">Casos Pendientes</div>
+              <div class="text-900 text-3xl font-medium">{{ pendientes }}</div>
+            </div>
+          </div>
+        </p-card>
+
+      </div>
+
+      <div class="col-12 md:col-6">
+
+        <p-card [style]="{ 'min-width': '200px' }" (click)="onCardClick(3)">
+          <div class="flex align-items-center gap-3">
+            <i class="pi pi-file text-orange-500" style="font-size: 1.5rem"></i>
+            <div>
+              <div class="text-500 mb-1">En trámite</div>
+              <div class="text-900 text-3xl font-medium">{{ tramites }}</div>
+            </div>
+          </div>
+        </p-card>
+
+      </div>
+
+      <div class="col-12 md:col-6">
+
+        <p-card [style]="{ 'min-width': '200px' }" (click)="onCardClick(4)">
+          <div class="flex align-items-center gap-3">
+            <i class="pi pi-file text-blue-500" style="font-size: 1.5rem"></i>
+            <div>
+              <div class="text-500 mb-1">Total de casos</div>
+              <div class="text-900 text-3xl font-medium">{{ totales }}</div>
+            </div>
+          </div>
+        </p-card>
+
+      </div>
+
+    <div class="col-12 md:col-6">
+
+      <p-card [style]="{ 'min-width': '200px' }" (click)="onCardClick(2)">
+        <div class="flex align-items-center gap-3">
+          <i class="pi pi-file text-green-500" style="font-size: 1.5rem"></i>
+          <div>
+            <div class="text-500 mb-1">Resueltos</div>
+            <div class="text-900 text-3xl font-medium">{{ resueltos }}</div>
+          </div>
+        </div>
+      </p-card>
+
+    </div>
+
+    </div>
+
+

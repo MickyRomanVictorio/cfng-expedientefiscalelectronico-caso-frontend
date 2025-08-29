@@ -1,0 +1,20 @@
+<div class="cfe-container">
+
+  <router-outlet name="filtros"></router-outlet>
+
+  <app-tabs-view
+    [tabs]="tabs"
+    (onChangeIndex)="cambiarTab($event)"
+    [indexSeleccionado]="tabActivo"
+    [useRouter]="true"
+  ></app-tabs-view>
+
+  <p-tabView
+    class="cfe-tabs-view"
+    [activeIndex]="tabActivo"
+  >
+    <router-outlet></router-outlet>
+
+  </p-tabView>
+
+</div>

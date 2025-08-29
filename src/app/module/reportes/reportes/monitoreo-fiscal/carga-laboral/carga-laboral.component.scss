@@ -1,0 +1,21 @@
+:host ::ng-deep .p-dropdown,
+:host ::ng-deep .p-calendar {
+  width: 100%;
+}
+
+:host ::ng-deep .field {
+  margin-bottom: 1rem;
+}
+
+:host ::ng-deep .field label {
+  color: var(--text-color);
+  font-size: 0.875rem;
+}
+
+:host ::ng-deep .p-calendar .p-inputtext {
+  width: 100%;
+}
+
+.background-white {
+  background-color: #ffffff;
+}

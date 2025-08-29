@@ -1,0 +1,28 @@
+<br />
+
+<div class="formgrid grid" [formGroup]="formularioDerivacion">
+  <div class="col-11 field">
+    <label for="juzgado" class="font-semibold">Juzgado</label>
+    <p-dropdown
+      [options]="listaJuzgados"
+      [filter]="true"
+      id="juzgado"
+      formControlName="juzgado"
+      filterBy="nombre"
+      optionValue="id"
+      optionLabel="nombre"
+      placeholder="Seleccione el Juzgado"
+      styleClass="py-1 p-inputtext-lg"
+      (onChange)="eventoSeleccionarJuzgado($event.value)"
+      emptyMessage="Resultados no encontrados"
+    >
+      <ng-template let-caso pTemplate="item">
+        <div class="grid">
+          <div class="col text-base">
+            {{ caso.nombre }}
+          </div>
+        </div>
+      </ng-template>
+    </p-dropdown>
+  </div>
+</div>

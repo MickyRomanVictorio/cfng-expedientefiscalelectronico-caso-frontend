@@ -1,0 +1,141 @@
+<div class="container">
+  <div class="floatRigth my-1">
+    <i class="pi pi-times size-cursor" (click)="closeAction()" onkeydown=""></i>
+  </div>
+  <h3 class="cfe-subtitulo-4 cfe-semi-bold mt-3 mb-3">HISTORIAL DE CASO</h3>
+  <span  (copy)="copiarAlPortapapeles(numeroCaso)" [innerHTML]="obtenerNumeroCaso()"></span>
+
+  <div class="separator mt-3"></div>
+
+  <h3 class="cfe-subtitulo-4 cfe-semi-bold mt-3 mb-3">INFORMACIÓN DEL CASO</h3>
+
+  <div class="grid" *ngIf="informacionCaso !== null">
+    <div class="col-6">
+      <div class="col">
+        <label for="" class="labelefe" styleClass="etiqueta">Fiscal a cargo:</label>
+        <br>
+        <label for="" class="font-semibold">{{informacionCaso.nombreFiscal}}</label>
+      </div>
+
+      <div class="col">
+        <label for="" class="labelefe" styleClass="etiqueta">Delitos: (Genérico/ sub genérico/ específico)</label>
+        <br>
+        <div *ngFor="let delito of informacionCaso.delitos">
+          <label for="" class="font-semibold" styleClass="etiqueta">{{ delito }}</label>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-6">
+      <div class="col">
+        <label for="" class="labelefe" styleClass="etiqueta">Último Acto Procesal:</label>
+        <br />
+        <label for="" class="labelefe font-semibold" styleClass="etiqueta">{{informacionCaso.ultimoActo}}</label>
+      </div>
+      <div class="col">
+        <label for="" class="labelefe" styleClass="etiqueta">Solicitud de proceso inmediato:
+        </label>
+        <br />
+        <label for="" class="labelefe font-semibold" styleClass="etiqueta">{{informacionCaso.solicitud}}</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="separator mt-3"></div>
+
+  <h3 class="cfe-subtitulo-4 cfe-semi-bold mt-3 mb-3">DETALLES DEL CASO</h3>
+
+  <p-tabView class="mt-3">
+    <p-tabPanel header="Partes y Delitos">
+      <p-table [value]="listDelitosYPartes" responsiveLayout="scroll" class="mt-3">
+        <ng-template pTemplate="header">
+          <tr>
+            <th scope="">N°</th>
+            <th scope="">Tipo de sujeto procesal</th>
+            <th scope="">Tipo documento</th>
+            <th scope="">N° documento</th>
+            <th scope="">Nombres y apellidos</th>
+            <th scope="">Teléfono</th>
+            <th scope="">Correo</th>
+            <th scope="">Delitos</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+          <tr>
+            <td>{{ rowIndex + 1 }}</td>
+            <td>{{ rowData.tipo }}</td>
+            <td>{{ rowData.tipoDocumento }}</td>
+            <td>{{ rowData.numeroDocumento }}</td>
+            <td>{{ rowData.nombre }}</td>
+            <td>{{ rowData.telefono }}</td>
+            <td>{{ rowData.correo }}</td>
+            <td>{{ rowData.delitos }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-tabPanel>
+    <p-tabPanel header="Hechos de Caso">
+       <app-hechos-caso [tipo]="'V'" [idCaso]="idCaso" [soloLectura]="soloLectura"/>
+    </p-tabPanel>
+    <p-tabPanel header="Historial del Caso">
+      <p-table [value]="listHistorialCaso" responsiveLayout="scroll" class="mt-3">
+        <ng-template pTemplate="header">
+          <tr>
+            <th scope="">N°</th>
+            <th scope="">Acto Procesal</th>
+            <th scope="">Trámite</th>
+            <th scope="">Etapa</th>
+            <th scope="">Fecha emisión</th>
+            <th scope="">Fecha Elaboración</th>
+            <th scope="">Ver trámite</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+          <tr>
+            <td>{{ rowIndex + 1 }}</td>
+            <td>{{ rowData.actoProcesal }}</td>
+            <td>{{ rowData.tramite }}</td>
+            <td>{{ rowData.etapa }}</td>
+            <td>{{ rowData.fechaEmision }}</td>
+            <td>{{ rowData.fechaElaboracion }}</td>
+            <td><p-button class="btn-visor" icon="pi file-search-icon" (onClick)="verDocumento(rowData.idDocumento)"></p-button></td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-tabPanel>
+    <p-tabPanel header="Historial de Derivaciones">
+      <p-table [value]="listHistorialDerivacion" responsiveLayout="scroll" class="mt-3">
+        <ng-template pTemplate="header">
+          <tr>
+            <th scope="">N°</th>
+            <th scope="">Fiscalia origen</th>
+            <th scope="">Fiscalia destino</th>
+            <th scope="">Fecha de derivación</th>
+            <th scope="">Estado de la derivación</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+          <tr>
+            <td>{{ rowIndex + 1 }}</td>
+            <td>{{ rowData.DE_ENTIDAD_ORIGEN }}</td>
+            <td>{{ rowData.DE_ENTIDAD_DESTINO }}</td>
+            <td>{{ rowData.FE_D_DERIVACION }}</td>
+            <td>{{ rowData.estado }}</td>
+            <td> </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-tabPanel>
+  </p-tabView>
+
+  <button *ngIf="bandeja === 'RECIBIDOS_DERIVADO_PORREVISAR'"
+    class="cfe-boton-primary cfe-boton-m mr-2 mt-3 boton-w  ml-auto"
+    (click)="abrirAceptarCaso()">Aceptar Caso
+  </button>
+
+  <button *ngIf="bandeja === 'RECIBIDOS_ACUMULADO_PORREVISAR'"
+    class="cfe-boton-primary cfe-boton-m mr-2 mt-3 boton-w  ml-auto"
+    (click)="abrirAsociarCaso()">Asociar Caso
+  </button>
+</div>

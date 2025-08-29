@@ -1,0 +1,42 @@
+<div class="flex justify-content-center" >
+  <p-table
+    styleClass="p-datatable-sm"
+    [value]="agendasMultiplesActivas"
+    responsiveLayout="stack"
+    [rowHover]="true">
+    <ng-template pTemplate="header">
+        <tr>
+          <th scope="col" class="col-w-2 text-center text-sm">Fecha y hora de audiencia</th>
+          <th scope="col" class="col-w-2 text-center text-sm">Tipo de reunión</th>
+          <th scope="col" class="col-w-2 text-center text-sm">Acciones</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-agenda>
+        <tr>
+          <td>
+            {{ agenda.fechaHoraAudicencia }}
+          </td>
+          <td class="text-center">{{ stringUtil.capitalizedFirstWord(agenda.tipoActividadAgenda) }}</td>
+          <td class="text-center gap-3">
+            <p-button styleClass="btn-clean" (onClick)="visualizarAgendaNotificacion(agenda)">
+              <fn-icon class="cursor-pointer" [ico]="iconUtil.obtenerIcono('iEye')" height="1.5rem" pTooltip="Visualizar agenda" tooltipPosition="bottom"/>
+            </p-button>
+            @if ( !modoLectura ) {
+              <p-button styleClass="btn-clean" (onClick)="eliminarAgendaNotificacion(agenda)">
+                <fn-icon class="cursor-pointer" [ico]="iconUtil.obtenerIcono('iTrashCan')" height="1.5rem" pTooltip="Eliminar agenda" tooltipPosition="bottom"/>
+              </p-button>
+            }
+
+          </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="3" style="text-align: center">
+          Ninguna audiencia agregada
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+

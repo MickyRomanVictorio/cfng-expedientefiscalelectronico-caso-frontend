@@ -1,0 +1,299 @@
+<div class="header__casoFiscal pb-5">
+  <div class="grid mt-2">
+    <div class="col-12 md:col-10 flex align-items-center">
+      @if(caso.idTipoCuaderno === 2 || caso.idTipoCuaderno === 4){
+      <fn-icon (click)="regresarCasoPrincipal()" class="cursor-pointer" [ico]="iconUtil.obtenerIcono('iArrowLeft')"
+        height="1.8rem" onKeyPress=""></fn-icon>
+      }
+      <h3 class="cfe-titulo-1"
+        [ngClass]="{ 'cabecera-incidentales': caso.idTipoCuaderno === 2 || caso.idTipoCuaderno === 4 }">
+        {{caso.idTipoCuaderno == 2 ? 'Información del cuaderno incidental: N° ':caso.idTipoCuaderno == 4 ? 'Información
+        del cuaderno de extremos: N° ':'Información del caso fiscal: N°'}}
+        <span (copy)="copiarAlPortapapeles(caso.numeroCaso)"
+          [innerHTML]="stringUtil.obtenerNumeroCaso(caso.numeroCaso)"></span>
+      </h3>
+      <button class="cfe-boton-secondary cfe-boton-xs" (click)="hideHeaderCasoFiscal()"
+        [ngClass]="{'isHideHeader': isHideHeader}">
+        <fn-icon [ico]="iconUtil.obtenerIcono('iChevronUp')" height="1.5rem"></fn-icon>
+      </button>
+    </div>
+    <div class="col-12 md:col-2 text-right pt-3">
+      <button class="cfe-boton-secondary cfe-boton-sm" (click)="searchCaso()">
+        <fn-icon [ico]="iconUtil.obtenerIcono('iSearchMpe')" height="1.5rem"></fn-icon>
+        Buscar otro caso
+      </button>
+    </div>
+  </div>
+  <div class="grid mt-2 header__casoFiscal--content" [ngClass]="{'isHideHeader': isHideHeader}">
+    <div class="col-12 md:col-4">
+      <label for="x" class="labelefe" styleClass="etiqueta">Fiscal a cargo:</label>
+      <br>
+      <div class="col-12 text-right font-bold flex justify-content-left">
+        <label for="c" class="font-semibold">{{ stringUtil.formatearNombre(caso!.fiscal) }}</label>
+        <fn-icon *ngIf="caso!.idJerarquia === '2'" [ico]="iconUtil.obtenerIcono('iInfoCircle')" height="1.5rem"
+          [pTooltip]="'Fiscalía Provincial: <br><b>' + caso!.nombreEntidad + '</b>'" escape="false"
+          tooltipPosition="top" tooltipEvent="hover" tooltipStyleClass="tooltip-fechas"></fn-icon>
+      </div>
+
+      @if(caso!.fiscalSuperior && caso!.fiscalSuperior.trim().length > 0){
+      <label for="x" class="labelefe" styleClass="etiqueta">Fiscal superior asignado:</label>
+      <br>
+      <div class="col-12 text-right font-bold flex justify-content-left">
+        <label for="c" class="font-semibold">{{ stringUtil.formatearNombre(caso!.fiscalSuperior) }}</label>
+      </div>
+      }
+
+      @if (caso!.plazos && caso!.plazos.length === 1) {
+      <div class="grid mt-4">
+        @if (casoPlazoNivelC.length > 0) {
+        <div class="grid col-12">
+          <div class="col-12 md:col-7">
+            <label for="z">
+              Plazo de etapa: <span class="font-bold">{{ caso.etapa }}</span>
+            </label>
+          </div>
+          <div class="col-12 md:col-5 text-right font-bold">
+            {{ casoPlazoNivelC[0]?.diasTrasncurridos }} / {{ casoPlazoNivelC[0]?.diasPlazo }}
+            días
+          </div>
+          <div class="col-12 progressBarCaso">
+            @if (caso.plazos.length>0) {
+            <p-progressBar [styleClass]="stringUtil.getColor(casoPlazoNivelC[0]?.indSemaforo!)"
+              [value]="mathUtil.calcularPorcentaje(casoPlazoNivelC[0]?.diasTrasncurridos! , casoPlazoNivelC[0]?.diasPlazo!)"
+              [showValue]="false">
+            </p-progressBar>
+            }
+
+            @if (!(caso.plazos.length>0)) {
+            <p-progressBar [styleClass]="stringUtil.getColor(casoPlazoNivelC[0]?.indSemaforo!)" [value]="0"
+              [showValue]="false">
+            </p-progressBar>
+            }
+
+          </div>
+        </div>
+        <!-- <app-etiqueta-acciones-caso [casoFiscal]="caso"></app-etiqueta-acciones-caso> -->
+        <div class="grid col-12">
+          <div class="col-12 md:col-6">
+            <label class="labelefe" styleClass="etiqueta" for="">Fecha de inicio:</label>
+            <br>
+            <label class="labelefe font-semibold" for="" styleClass="etiqueta">{{
+              formatearFecha_DDMMYYYY_HH24MI(casoPlazoNivelC[0]?.fechaEmision) }}</label>
+          </div>
+          <div class="col-12 md:col-6">
+            <label class="labelefe" styleClass="etiqueta" for="">Fecha fin:</label>
+            <br>
+            <label class="labelefe font-semibold" for="" styleClass="etiqueta">{{
+              formatearFecha_DDMMYYYY_HH24MI(casoPlazoNivelC[0]?.fechaFinCalculada) }}</label>
+          </div>
+        </div>
+        } @else if(casoPlazoNivelT.length > 0) {
+        <div class="grid col-12">
+          <div class="col-12 md:col-7">
+            <label for="">
+              {{ casoPlazoNivelT[0].descripcionPlazo }}
+            </label>
+          </div>
+          <div class="col-12 md:col-5 text-right font-bold flex justify-content-end">
+            {{ casoPlazoNivelT[0]?.diasTrasncurridos || '0' }} / {{ casoPlazoNivelT[0]?.diasPlazo || '0' }}
+            días
+            <fn-icon [ico]="iconUtil.obtenerIcono('iInfoCircle')" height="1.5rem"
+              [pTooltip]="'Fecha de inicio:' + formatearFecha_DDMMYYYY_HH24MI(casoPlazoNivelT[0]?.fechaEmision) + ' Fecha fin:' + formatearFecha_DDMMYYYY_HH24MI(casoPlazoNivelT[0]?.fechaFinCalculada)"
+              tooltipPosition="top" tooltipEvent="hover" tooltipStyleClass="tooltip-fechas"></fn-icon>
+          </div>
+          <div class="col-12 progressBarCaso">
+            @if (casoPlazoNivelT[0]) {
+            <p-progressBar [styleClass]="stringUtil.getColor(casoPlazoNivelT[0]?.indSemaforo)"
+              [value]="mathUtil.calcularPorcentaje(casoPlazoNivelT[0]?.diasTrasncurridos , casoPlazoNivelT[0]?.diasPlazo)"
+              [showValue]="false">
+            </p-progressBar>
+            }
+            @if (!(casoPlazoNivelT[0])) {
+            <p-progressBar [styleClass]="stringUtil.getColor(casoPlazoNivelT[0]?.indSemaforo)" [value]="0"
+              [showValue]="false">
+            </p-progressBar>
+            }
+          </div>
+        </div>
+        }
+      </div>
+      }
+      @if (caso.idTipoCuaderno == 4) {
+      <div class="cfe-etiqueta-accion w-full pr-3">
+        <span>Cuaderno</span>
+        <p class="boton-etiqueta boton-etiqueta--primary w-full mt-2">Extremos</p>
+      </div>
+      }
+      @if (caso.idClasificadorExpediente == 2) {
+      <div class="cfe-etiqueta-accion w-full pr-3">
+        <p class="boton-etiqueta boton-etiqueta--primary w-full mt-2">{{ caso.nombreTipoClasificadorExpediente }}</p>
+      </div>
+      @if (caso.flgConcluido === '1') {
+      <div class="cfe-etiqueta-accion w-full pr-3 mt-3">
+        <p class="boton-etiqueta boton-etiqueta--primary caso-concluido w-full mt-2">Concluido</p>
+      </div>
+      }
+      }
+      @if (caso.flgAcuerdoReparatorio === '1' ||caso.flgPrincipioOportunidad === '1') {
+      <div class="cfe-etiqueta-accion flex align-items-center justify-content-between w-full">
+        <p [ngClass]="obtenerColorBadgePrincipioAcuerdo()">
+          {{ caso.flgAcuerdoReparatorio === "1"? "Con acuerdo reparatorio": "Con principio de oportunidad"}}
+        </p>
+      </div>
+      }
+
+      @if (caso.plazos.length > 1 && casoPlazoNivelT[0]) {
+      <div class="grid ">
+        <div class="grid col-12">
+          @if(idJerarquia === 1 && casoPlazoNivelC.length > 0) {
+          <div class="col-12 md:col-7">
+            <label for="">
+              Plazo de etapa: {{ casoPlazoNivelC[0].flgPausado === '1' ? 'en pausa' : '' }}
+            </label>
+          </div>
+
+          <div class="col-12 md:col-5 text-right font-bold flex justify-content-end">
+            {{ casoPlazoNivelC[0]?.diasTrasncurridos || '0' }} / {{ casoPlazoNivelC[0]?.diasPlazo || '0' }}
+            días
+            <fn-icon [ico]="iconUtil.obtenerIcono('iInfoCircle')" height="1.5rem"
+              [pTooltip]="'Fecha de inicio:' + formatearFecha_DDMMYYYY_HH24MI(casoPlazoNivelC[0]?.fechaEmision) + ' Fecha fin:' + formatearFecha_DDMMYYYY_HH24MI(casoPlazoNivelC[0]?.fechaFinCalculada)"
+              tooltipPosition="top" tooltipEvent="hover" tooltipStyleClass="tooltip-fechas"></fn-icon>
+          </div>
+          }
+          <div class="col-12 progressBarCaso">
+            @if (casoPlazoNivelC[0] && idJerarquia === 1) {
+            <p-progressBar [styleClass]="stringUtil.getColor(casoPlazoNivelC[0]?.indSemaforo)"
+              [value]="mathUtil.calcularPorcentaje(casoPlazoNivelC[0]?.diasTrasncurridos , casoPlazoNivelC[0]?.diasPlazo)"
+              [showValue]="false">
+            </p-progressBar>
+            }
+
+            @if (!(casoPlazoNivelC[0])) {
+            <p-progressBar [styleClass]="stringUtil.getColor(casoPlazoNivelC[0]?.indSemaforo)" [value]="0"
+              [showValue]="false">
+            </p-progressBar>
+            }
+
+          </div>
+        </div>
+        <div class="grid col-12">
+          <div class="col-12 md:col-7">
+            <label for="">
+              {{ casoPlazoNivelT[0].descripcionPlazo }}
+            </label>
+          </div>
+          <div class="col-12 md:col-5 text-right font-bold flex justify-content-end">
+            {{ casoPlazoNivelT[0]?.diasTrasncurridos || '0' }} / {{ casoPlazoNivelT[0]?.diasPlazo || '0' }}
+            días
+            <fn-icon [ico]="iconUtil.obtenerIcono('iInfoCircle')" height="1.5rem"
+              [pTooltip]="'Fecha de inicio:' + formatearFecha_DDMMYYYY_HH24MI(casoPlazoNivelT[0]?.fechaEmision) + ' Fecha fin:' + formatearFecha_DDMMYYYY_HH24MI(casoPlazoNivelT[0]?.fechaFinCalculada)"
+              tooltipPosition="top" tooltipEvent="hover" tooltipStyleClass="tooltip-fechas"></fn-icon>
+          </div>
+          <div class="col-12 progressBarCaso">
+            @if (casoPlazoNivelT[0]) {
+            <p-progressBar [styleClass]="stringUtil.getColor(casoPlazoNivelT[0]?.indSemaforo)"
+              [value]="mathUtil.calcularPorcentaje(casoPlazoNivelT[0]?.diasTrasncurridos , casoPlazoNivelT[0]?.diasPlazo)"
+              [showValue]="false">
+            </p-progressBar>
+            }
+
+            @if (!(casoPlazoNivelT[0])) {
+            <p-progressBar [styleClass]="stringUtil.getColor(casoPlazoNivelT[0]?.indSemaforo)" [value]="0"
+              [showValue]="false">
+            </p-progressBar>
+            }
+
+          </div>
+        </div>
+      </div>
+      }
+
+      <!-- @if (this.caso.idEtapa === '07' || !esVisibleEtiqueta ) {
+            <div class="grid col-12 mt-4">
+              <app-etiqueta-acciones-caso [casoFiscal]="caso"></app-etiqueta-acciones-caso>
+            </div>
+          } -->
+
+      @if (this.caso.idEtapa === '07'){
+      <label for="x" class="labelefe" styleClass="etiqueta">Supuestos de aplicación:</label>
+      <br>
+      <label for="c" class="font-semibold">{{ this.caso.supuestos }}</label>
+      }
+      <!-- @if(caso.flgElevacion === '1' ){
+            <app-etiqueta-acciones-caso [casoFiscal]="caso"></app-etiqueta-acciones-caso>
+          } -->
+
+      <app-etiqueta-acciones-caso [casoFiscal]="caso"></app-etiqueta-acciones-caso>
+
+    </div>
+    <div class="col-12 md:col-8 text-left">
+      <div class="col-12">
+        <div class="box-acto-procesal">
+          <label class="labelefe" styleClass="etiqueta" for="">Último Acto Procesal: <span class="font-bold">{{
+              caso.actoProcesal || '-' }}</span></label>
+          <br />
+          <label class="labelefe" styleClass="etiqueta" for="">Último Trámite:
+            <span class="font-bold">{{ caso.ultimoTramite || '-' }}</span>
+            <span class="cfe-subtitulo-estado font-bold"> - {{
+              caso.estadoRegistro || ''}}</span>
+          </label>
+        </div>
+      </div>
+      @if (caso.atoTramiteCasoDocumentoUltimo.length > 0){
+      <div class="col-12">
+        <div class="box-acto-procesal documento">
+          <h2>Atención documento mesa de partes</h2>
+          <label class="labelefe" styleClass="etiqueta" for="">Último Acto Procesal: <span class="font-bold">{{
+              caso.atoTramiteCasoDocumentoUltimo[0].actoProcesal }}</span></label>
+          <br />
+          <label class="labelefe" styleClass="etiqueta" for="">Último Trámite:
+            <span class="font-bold">{{ caso.atoTramiteCasoDocumentoUltimo[0].tramite }}</span>
+            <span class="cfe-subtitulo-estado font-bold"> - {{ caso.atoTramiteCasoDocumentoUltimo[0].estadoRegistro
+              }}</span>
+          </label>
+        </div>
+      </div>
+      }
+
+      <div class="grid">
+        <div class="col-12 md:col-4 mt-3">
+          <label for="z" class="labelefe-delitos" styleClass="etiqueta" [pTooltip]="delitosTooltipTemplate" toolti
+            tooltipEvent="hover" tooltipStyleClass="tooltip-delitos">
+            Ver delitos
+          </label>
+          <ng-template #delitosTooltipTemplate>
+            <div class="tooltip-content">
+              <span class="tooltip-titulo">Delitos:</span>
+              <ul class="tooltip-lista-delitos">
+                <li *ngFor="let delito of delitosArray">{{ delito.nombre }}</li>
+              </ul>
+            </div>
+          </ng-template>
+        </div>
+        @if (caso.numExpediente) {
+        <div class="col-12 md:col-8 mt-3 text-right">
+          <label class="labelefe" styleClass="etiqueta" for="">Nro. de expediente: </label>
+          <label class="font-bold" for="">{{ caso.numExpediente || '-' }}</label>
+        </div>
+        }
+        @if (caso.idCasoPadre) {
+        <div class="col-12 md:col-8 mt-3 text-right">
+          <label class="labelefe" styleClass="etiqueta" for="">Caso padre: </label>
+          <label class="font-bold" for="">{{ caso.codigoCasoPadre || '-' }}</label>
+        </div>
+        }
+      </div>
+      @if(verCronometro){
+      <div class="col-12 flex align-content-center">
+        <app-cronometro [fechaFinalStr]="vencimientoStr" [numeroCaso]="caso.numeroCaso"></app-cronometro>
+      </div>
+      }
+    </div>
+  </div>
+  <app-linea-tiempo [etapas]="etapas" [etapaActual]="etapaActual" [etapaActiva]="etapaActiva"></app-linea-tiempo>
+
+  @if (subetapas.length > 0) {
+  <app-subetapas [etapa]="etapaActual" [nombreEtapa]="nombreEtapaActual" [subetapas]="subetapas"></app-subetapas>
+  }
+
+</div>

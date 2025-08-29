@@ -1,0 +1,14 @@
+<div class="p-3 w-full" [formGroup]="form">
+    <h1 class="cfe-titulo-3 mb-3" [innerHTML]="colorizeCode(Caso,'Desacumular caso - Caso: ')"></h1>
+    <div class="flex flex-column mb-3" [style.color]="'var(--mpfn-gray1)'">
+        <span>Acumulado a:</span>
+        <strong><span [innerHTML]="colorizeCode(Acumulado)"></span></strong>
+    </div>
+    <div class="flex flex-column mb-3">
+        <label for="motivo"><strong [style.fontSize]="'small'">Motivo (*)</strong></label>
+        <input pInputText formControlName="motivo" class="mb-3 p-inputtext-lg" id="motivo"
+            placeholder="Ingrese el motivo de la desacumulación" type="text" />
+
+        <strong [style.fontSize]="'small'">Disposición de desacumulación</strong>
+    </div>
+</div>

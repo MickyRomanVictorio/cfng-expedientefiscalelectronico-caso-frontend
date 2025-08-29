@@ -1,0 +1,119 @@
+<div class="cfe_bandeja__header">
+  <div class="cfe_bandeja_header__content">
+    <fn-icon [ico]="icono('iFolderSearch')" height="1.6rem"></fn-icon>
+    <h3 class="cfe-titulo-1">Bandeja de escritos</h3>
+    <fn-icon [ico]="icono('iTooltip')" height="1.6rem"></fn-icon>
+  </div>
+</div>
+
+<form
+  class="cfe_bandeja__filters"
+  [formGroup]="formularioFiltrarDocIngresadoNuevo"
+>
+  <div class="grid mt-1">
+    <div class="col">
+      <div class="field mb-0">
+        <label for="buscar" class="font-semibold">Buscar:</label>
+        <input
+          pInputText
+          id="buscar"
+          type="text"
+          class="p-inputtext-lg py-3 text-lg w-full"
+          placeholder="Ingrese algún texto para buscar sobre la tabla como número de caso, acto procesal, etc."
+          formControlName="buscar"
+          (input)="buscarSegunTexto()"
+        />
+      </div>
+    </div>
+    <div
+      class="col-fixed"
+      style="width: 70px"
+      [ngClass]="{ 'cfe-filtro-boton-fondo': mostrarFiltros }"
+    >
+      <div class="field mb-0">
+        <label class="font-semibold">&nbsp;</label>
+        <button
+          class="cfe-filtro-boton"
+          (click)="eventoMostrarOcultarFiltros()"
+        >
+          <fn-icon [ico]="icono('iFilterShow')" height="2.1rem"></fn-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  @if(!mostrarFiltros){
+  <div class="grid mt-3 mb-4">
+    <div class="col"></div>
+  </div>
+  } @else {
+  <div class="grid mt-1 cfe-filtros">
+    <div class="cfe-filtros-fondo">
+      <div class="formgrid grid">
+        <div class="col-12 md:col-6 field">
+          <label class="font-semibold mb-3">Fecha de ingreso</label>
+          <div class="grid">
+            <div class="col">
+              <p-calendar
+                id="fechaDesde"
+                dateMask
+                dateFormat="dd/mm/yy"
+                class="p-inputtext-lg cfe-calendar h-56"
+                icon="cfe-calendar-icon"
+                placeholder="dd/mm/aaaa"
+                formControlName="fechaDesde"
+                [showIcon]="true"
+                [minDate]="minFecha"
+                [maxDate]="maxFecha"
+                (onSelect)="onFechaDesdeSelect($event)"
+              ></p-calendar>
+            </div>
+            <div class="col">
+              <p-calendar
+                dateMask
+                dateFormat="dd/mm/yy"
+                class="p-inputtext-lg cfe-calendar h-56"
+                icon="cfe-calendar-icon"
+                placeholder="dd/mm/aaaa"
+                formControlName="fechaHasta"
+                [showIcon]="true"
+                [minDate]="minFecha"
+                (onSelect)="onFechaHastaSelect($event)"
+              ></p-calendar>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-6 field">
+          <label for="etapa" class="font-semibold">Origen</label>
+          <p-dropdown
+            id="etapa"
+            styleClass="p-inputtext-lg py-1"
+            [options]="origenes"
+            optionValue="id"
+            optionLabel="nombre"
+            emptyMessage="Sin resultados"
+            placeholder="Todos"
+            [showClear]="true"
+            formControlName="origen"
+          ></p-dropdown>
+        </div>
+      </div>
+    </div>
+    <div class="cfe-filtros-fondo cfe-filtros-opciones">
+      <button
+        class="cfe-boton-secondary cfe-boton-m mr-3 boton-w"
+        (click)="limpiar()"
+      >
+        Limpiar filtros
+      </button>
+      <button
+        class="cfe-boton-primary cfe-boton-m mr-2 boton-w"
+        (click)="buscar()"
+      >
+        Buscar
+      </button>
+    </div>
+  </div>
+  }
+</form>

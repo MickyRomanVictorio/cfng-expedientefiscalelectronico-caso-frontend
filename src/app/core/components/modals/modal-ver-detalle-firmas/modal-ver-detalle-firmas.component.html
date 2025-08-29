@@ -1,0 +1,48 @@
+<div class="relative p-5">
+  <fn-icon
+    class="encabezado-cerrar absolute top-0 right-0 cursor-pointer mt-2 ml-3"
+    [ico]="iconUtil.obtenerIcono('iClose')"
+    height="2rem"
+    (click)="cerrarModal()"
+  ></fn-icon>
+
+  <h3 class="encabezado-titulo cfe-subtitulo-3 cfe-semi-bold mb-5" [innerHTML]="tituloModal"></h3>
+
+  <div *ngIf="cargandoTabla" class="spinner">Cargando...</div>
+
+  <div *ngIf="!cargandoTabla && detalleFirmas.length > 0">
+    <div *ngFor="let detalle of detalleFirmas; let i = index" class="detalle-item" style="display: flex; flex-direction: column; gap: 0rem; margin-bottom: 2rem;">
+      
+      <div class="detalle-principal" style="display: flex; justify-content: space-between; align-items: center;">
+
+        <button class="btn-expandir" (click)="toggleDetalle(i)"
+          style="background: none; border: none; padding: 0; margin: 0; box-shadow: none;">
+          <fn-icon
+            [ico]="detalle.expandido ? iconUtil.obtenerIcono('iChevronDown') : iconUtil.obtenerIcono('iChevronRight')"
+            height="1.4rem"
+            style="display: inline-block; background: none; border: none; padding: 0; margin: 0; box-shadow: none;">
+          </fn-icon>
+        </button>
+
+        <strong style="flex-grow: 1;">
+          <img [src]="iconAsset.obtenerRutaIcono('signature')" alt="firma"/>
+          Rev.{{ i + 1 }}: Firmado por {{ detalle.nombreCompletoFirmante }}
+          <span class="correo">&lt;{{ detalle.correoFirmante || 'Correo no registrado' }}&gt;</span>
+          - {{ detalle.tipoAccionFirma }} - {{ detalle.tipoUsuario }}
+        </strong>
+        
+      </div>
+      
+      <hr style="margin-top: 0; margin-bottom: 0.2rem; border: 0; border-top: 1px solid #ccc;">
+
+      <div *ngIf="detalle.expandido" class="detalle-extra" style="padding-left: 2rem; margin-top: 0.5rem;">
+        <strong>Detalles de la firma: </strong> Fecha y hora de firmado <strong>{{ detalle.fechaHoraFirma }}</strong>
+      </div>
+
+    </div>
+  </div>
+
+  <div *ngIf="!cargandoTabla && !detalleFirmas" class="no-datos">
+    No se encontró información para el documento.
+  </div>
+</div>

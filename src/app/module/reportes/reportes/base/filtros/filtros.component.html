@@ -1,0 +1,263 @@
+<div class="cfe_bandeja__header">
+  <div class="cfe_bandeja_header__content">
+    <fn-icon [ico]="icono('iFolderSearch')" height="1.6rem"></fn-icon>
+    <h3 class="cfe-titulo-1">Plazos fiscales</h3>
+    <fn-icon [ico]="icono('iTooltip')" height="1.6rem"></fn-icon>
+  </div>
+</div>
+
+<form class="cfe_bandeja__filters" [formGroup]="filterForm">
+  <div class="grid mt-1">
+    <div class="col">
+      <div class="field mb-0">
+        <label for="buscar" class="font-semibold">Buscar:</label>
+        <input
+          pInputText
+          id="buscar"
+          type="text"
+          class="p-inputtext-lg py-3 text-lg w-full"
+          placeholder="Ingrese algún texto para buscar sobre la tabla como fiscal, número de caso, acto procesal, etc."
+          formControlName="buscar"
+          (input)="buscarSegunTexto()"
+        />
+      </div>
+    </div>
+    <div
+      class="col-fixed"
+      style="width: 70px"
+      [ngClass]="{ 'cfe-filtro-boton-fondo': mostrarFiltros }"
+    >
+      <div class="field mb-0">
+        <label class="font-semibold">&nbsp;</label>
+        <button
+          class="cfe-filtro-boton"
+          (click)="eventoMostrarOcultarFiltros()"
+        >
+          <fn-icon [ico]="icono('iFilterShow')" height="2.1rem"></fn-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  @if(!mostrarFiltros){
+  <div class="grid mt-3 mb-4">
+    <div class="col"></div>
+  </div>
+  } @else {
+  <div class="grid mt-1 cfe-filtros">
+    <div class="cfe-filtros-fondo">
+      <div class="formgrid grid">
+        <!-- <div class="col-12 md:col-6 field">
+          <label class="font-semibold mb-3">Fecha de ingreso</label>
+          <div class="grid">
+            <div class="col">
+              <p-calendar
+                id="fechaDesde"
+                dateMask
+                dateFormat="dd/mm/yy"
+                class="p-inputtext-lg cfe-calendar h-56"
+                [showIcon]="true"
+                icon="cfe-calendar-icon"
+                placeholder="dd/mm/aaaa"
+                formControlName="fechaDesde"
+                (onSelect)="onFechaDesdeSelect($event)"
+              ></p-calendar>
+            </div>
+            <div class="col">
+              <p-calendar
+                dateMask
+                dateFormat="dd/mm/yy"
+                class="p-inputtext-lg cfe-calendar h-56"
+                [showIcon]="true"
+                icon="cfe-calendar-icon"
+                placeholder="dd/mm/aaaa"
+                formControlName="fechaHasta"
+                (onSelect)="onFechaHastaSelect($event)"
+              ></p-calendar>
+            </div>
+          </div>
+        </div> -->
+
+        <div class="col-12 md:col-3 field">
+          <label for="delitos" class="font-semibold">Fiscal</label>
+          <p-multiSelect
+            id="delitos"
+            [options]="resultsFiscales"
+            [(ngModel)]="fiscalesSeleccionados"
+            optionLabel="nombreFiscal"
+            optionValue="fiscal"
+            formControlName="fiscales"
+            [ngClass]="{ 'sin-seleccion': sinSeleccionFiscales }"
+            styleClass="w-full lista-ancho-maximo"
+            (onChange)="onChangeFiscalesSeleccionados($event)"
+            emptyMessage="Resultados no encontrados"
+            class="lista-ancho-maximo"
+            [panelStyle]="{ 'max-width': '750px' }"
+            placeholder="Todos"
+          ></p-multiSelect>
+        </div>
+        <div class="col-12 md:col-3 field">
+          <label for="etapa" class="font-semibold">Periodo</label>
+          <p-dropdown
+            formControlName="periodo"
+            [options]="rangeOptions"
+            optionLabel="label"
+            [style]="{ width: '100%' }"
+            placeholder="Seleccione período"
+            (onChange)="onPeriodoChange($event)"
+          ></p-dropdown>
+        </div>
+
+        @if (periodoValue === 'A' || periodoValue === 'M') {
+
+        <div class="col-12 md:col-3">
+          <div class="field">
+            <label class="font-bold block mb-2">Año</label>
+            <p-dropdown
+              formControlName="anio"
+              [options]="yearOptions"
+              optionLabel="label"
+              [style]="{ width: '100%' }"
+              placeholder="Seleccione el año"
+            ></p-dropdown>
+          </div>
+        </div>
+
+        @if (periodoValue === 'M') {
+
+        <div class="col-12 md:col-3">
+          <div class="field">
+            <label class="font-bold block mb-2">Mes</label>
+            <p-dropdown
+              formControlName="mes"
+              [options]="mesOptions"
+              optionLabel="label"
+              [style]="{ width: '100%' }"
+              placeholder="Seleccione el año"
+            ></p-dropdown>
+          </div>
+        </div>
+
+        } } @else {
+
+        <!-- Fecha inicio -->
+        <div class="col-12 md:col-3">
+          <div class="field">
+            <label class="font-bold block mb-2">Fecha inicio</label>
+            <p-calendar
+              formControlName="fechaInicio"
+              [showIcon]="true"
+              dateFormat="dd/mm/yy"
+              [style]="{ width: '100%' }"
+              placeholder="Seleccione fecha"
+            ></p-calendar>
+          </div>
+        </div>
+
+        <!-- Fecha fin -->
+        <div class="col-12 md:col-3">
+          <div class="field">
+            <label class="font-bold block mb-2">Fecha fin</label>
+            <p-calendar
+              formControlName="fechaFin"
+              [showIcon]="true"
+              dateFormat="dd/mm/yy"
+              [style]="{ width: '100%' }"
+              placeholder="Seleccione fecha"
+            ></p-calendar>
+          </div>
+        </div>
+        }
+      </div>
+      <div class="formgrid grid">
+        <div class="col-12 md:col-3">
+          <div class="field">
+            <label class="font-bold block mb-2">Etapa Caso</label>
+            <p-dropdown
+              formControlName="etapaCaso"
+              [options]=""
+              optionLabel="label"
+              [style]="{ width: '100%' }"
+              placeholder="Todas las Etapas"
+            ></p-dropdown>
+          </div>
+        </div>
+        <div class="col-12 md:col-3">
+          <div class="field">
+            <label class="font-bold block mb-2">Acto Procesal</label>
+            <p-dropdown
+              formControlName="actoProcesal"
+              [options]=""
+              optionLabel="label"
+              [style]="{ width: '100%' }"
+              placeholder="Todos los Actos Procesales"
+            ></p-dropdown>
+          </div>
+        </div>
+        <div class="col-12 md:col-3">
+          <div class="field">
+            <label class="font-bold block mb-2">Trámite</label>
+            <p-dropdown
+              formControlName="tramite"
+              [options]=""
+              optionLabel="label"
+              [style]="{ width: '100%' }"
+              placeholder="Todos los Trámites"
+            ></p-dropdown>
+          </div>
+        </div>
+        <div class="col-12 md:col-3">
+          <div class="field">
+            <label class="font-bold block mb-2">Indicador</label>
+            <p-dropdown
+              formControlName="indicador"
+              [options]=""
+              optionLabel="label"
+              [style]="{ width: '100%' }"
+              placeholder="Todas las Etapas"
+            ></p-dropdown>
+          </div>
+        </div>
+        <div class="col-12 md:col-3">
+          <div class="field">
+            <label class="font-bold block mb-2">Fiscalia</label>
+            <p-dropdown
+              formControlName="fiscalia"
+              [options]=""
+              optionLabel="label"
+              [style]="{ width: '100%' }"
+              placeholder="Todas las Etapas"
+            ></p-dropdown>
+          </div>
+        </div>
+        <div class="col-12 md:col-3">
+          <div class="field">
+            <label class="font-bold block mb-2">Despacho</label>
+            <p-dropdown
+              formControlName="despacho"
+              [options]=""
+              optionLabel="label"
+              [style]="{ width: '100%' }"
+              placeholder="Todas las Etapas"
+            ></p-dropdown>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="cfe-filtros-fondo cfe-filtros-opciones">
+      <button
+        class="cfe-boton-secondary cfe-boton-m mr-3 boton-w"
+        (click)="limpiar()"
+      >
+        Limpiar filtros
+      </button>
+      <button
+        class="cfe-boton-primary cfe-boton-m mr-2 boton-w"
+        (click)="buscar()"
+      >
+        Buscar
+      </button>
+    </div>
+  </div>
+  }
+</form>

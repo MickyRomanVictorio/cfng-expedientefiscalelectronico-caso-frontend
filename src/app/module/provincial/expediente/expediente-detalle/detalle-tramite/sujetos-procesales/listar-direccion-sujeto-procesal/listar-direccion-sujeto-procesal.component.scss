@@ -1,0 +1,30 @@
+p{
+    margin: 0;
+}
+
+:host ::ng-deep {
+  .p-inputswitch {
+    .p-inputswitch-slider {
+      border-radius: 14px;
+
+      &:before {
+        border-radius: 10px !important;
+      }
+    }
+
+    &.p-inputswitch-checked {
+      .p-inputswitch-slider {
+        background: #3F9FD6;
+        border-radius: 14px;
+
+        &:before {
+          background: #f9f9f9;
+        }
+      }
+
+      &:hover .p-inputswitch-slider {
+        background: #3F9FD6;
+      }
+    }
+  }
+}

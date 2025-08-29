@@ -1,0 +1,279 @@
+@if ( !tieneActoTramiteCasoDocumento ) {
+<mensaje-interoperabilidad-pj />
+}
+@if ( tieneActoTramiteCasoDocumento ) {
+
+<div class="registrar_resolucion__container mt-3">
+  @if (verFormulario) {
+  <form [formGroup]="formRegistro">
+    @if ( formRegistro.invalid ) {
+    <div class="mb-3">
+      <mensaje-completar-informacion [titulo]="nombreTramite()" />
+    </div>
+    }
+    <div class="formgrid grid py-3">
+      <div class="flex flex-wrap gap-4">
+        <span class="cfe-subtitulo-1 family-poppin-bold mr-2">RESULTADO</span>
+        <div class="flex align-items-center">
+          <p-radioButton value="1463" formControlName="tipoSobreseimiento" inputId="total"></p-radioButton>
+          <label for="total" class="ml-2">Total por pluralidad de acusados</label>
+        </div>
+        <div class="flex align-items-center">
+          <p-radioButton value="1464" formControlName="tipoSobreseimiento" inputId="parcial"></p-radioButton>
+          <label for="parcial" class="ml-2">Parcial por pluralidad de acusados</label>
+        </div>
+      </div>
+    </div>
+    <div class="p-fluid grid mt-3">
+      <div class="formgrid grid">
+        <div class="field col-10">
+          <label for="fechaNotificacion" class="font-bold text-sm">Fechas de notificación</label>
+          <p-calendar [disabled]="true" id="fechaNotificacion" [dateFormat]="'dd/mm/yy'"
+            class="p-inputtext-lg cfe-calendar h-40" [showIcon]="true" dateMask icon="cfe-calendar-icon"
+            placeholder="dd/mm/aaaa" formControlName="fechaNotificacion" appendTo="body" dataType="string" [ngClass]="{
+                'ng-invalid ng-dirty':
+                  formRegistro.get('fechaNotificacion')?.invalid &&
+                  formRegistro.get('fechaNotificacion')?.touched
+              }">
+          </p-calendar>
+        </div>
+        @if ( formRegistro.get('fechaNotificacion')?.value ) {
+        <div class="field col-2">
+          <label for="imgGuardado">&nbsp;</label>
+          <div class="mt-1">
+            <img id="imgGuardado" [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado"
+              class="pr-2 h-2rem" />
+          </div>
+        </div>
+        }
+      </div>
+      <div class="col-12 sm:col-12 md:col-6 lg:col-6">
+        <div class="formgrid grid">
+          <div class="field col-10">
+            <label class="font-bold adjust-origin-label text-left">Fiscalía superior a elevar:</label>
+            <p-dropdown id="fiscalia" formControlName="codFiscaliaSuperior" class="p-inputtext-lg w-full"
+              [options]="fiscalias" placeholder="Seleccione" optionLabel="nombre" optionValue="id">
+            </p-dropdown>
+          </div>
+          @if ( formRegistro.get('codFiscaliaSuperior')?.value ) {
+          <div class="field col-2">
+            <label for="imgGuardado">&nbsp;</label>
+            <div class="mt-1">
+              <img id="imgGuardado" [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado"
+                class="pr-2 h-2rem" />
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+
+    </div>
+    <div class="p-fluid grid">
+      <div class="formgrid grid">
+        <div class="field col-10">
+          <label for="fechaUltimaAudiencia" class="font-bold text-sm">Fechas de ultima audiencia</label>
+          <p-calendar [disabled]="true" id="fechaUltimaAudiencia" [dateFormat]="'dd/mm/yy'"
+            class="p-inputtext-lg cfe-calendar h-40" [showIcon]="true" dateMask icon="cfe-calendar-icon"
+            placeholder="dd/mm/aaaa" formControlName="fechaUltimaAudiencia" appendTo="body" dataType="string" [ngClass]="{
+                'ng-invalid ng-dirty':
+                  formRegistro.get('fechaUltimaAudiencia')?.invalid &&
+                  formRegistro.get('fechaUltimaAudiencia')?.touched
+              }">
+          </p-calendar>
+        </div>
+        @if ( formRegistro.get('fechaUltimaAudiencia')?.value ) {
+        <div class="field col-2">
+          <label for="imgGuardado">&nbsp;</label>
+          <div class="mt-1">
+            <img id="imgGuardado" [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado"
+              class="pr-2 h-2rem" />
+          </div>
+        </div>
+        }
+      </div>
+      <div class="col-12 sm:col-12 md:col-6 lg:col-6">
+   <div class="formgrid grid">
+        <!--     <div class="field col-6">
+                <label for="resultado" class="font-bold text-sm">Siguiente fecha de audiencia</label>
+                <app-agregar-agenda-multiple></app-agregar-agenda-multiple>
+                <button class="cfe-boton-primary cfe-boton-lg w-full"
+                       
+                >Agregar audiencias
+                </button>
+
+            </div>
+            @if ( false ) {
+              <div class="field col-1">
+                <label for="">&nbsp;</label>
+                  <div class="mt-1">
+                    <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+                  </div>
+              </div>
+            } -->
+          </div>
+      </div>
+
+    </div>
+    <div class="grid mb-2">
+      <div class="col">
+        <div class="grid">
+          <div class="field col-6">
+            <label class="font-bold adjust-origin-label text-left">Nombre de los sujetos procesales:</label>
+            <p-dropdown id="sujetoProcesal" formControlName="sujetoProcesal" class="p-inputtext-lg w-full"
+              [options]="sujetosProcesales" placeholder="Seleccione" optionLabel="nombreSujeto"
+              optionValue="idSujetoCaso" (onChange)="onSelectSujetoProcesal($event)">
+            </p-dropdown>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center">
+      <span class="cfe-subtitulo-1 family-poppin-bold mr-2">Resultado</span>
+      <div class="term-item">
+        <div class="tooltipNew" [ngClass]="{ visible: tooltipVisible }">
+          <fn-icon [ico]="iconUtil.obtenerIcono('iInfoCircle')" height="1.3rem" (click)="showTooltip()"></fn-icon>
+          <div class="top" [style]="{'left':'800%'}">
+            <app-encabezado-tooltip [titulo]="tituloTootip" [alCerrarModal]="toggleTooltip"
+              [referenciaModal]="referenciaModal" />
+            <ul>
+              <li>
+                Seleccione el "Delito" del acusado relacionado al retiro de la acusación
+              </li>
+              <li>
+                Seleccione "Reparación civil" si al acusado se le absuelve la reparación civil
+              </li>
+
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="border: 1px solid var(--surface-overlay); border-left: none; border-right: none;">
+      <div class="p-fluid grid mt-3">
+        <div class="col-3 sm:col-3 md:col-3 lg:col-3">
+          <div class="formgrid grid">
+            <div class="field col-10">
+              <label for="sujetoProcesalSelected" class="font-bold adjust-origin-label text-left">Sujeto
+                procesal</label>
+              <input type="text" id="sujetoProcesalSelected" formControlName="sujetoProcesalSelected"
+                class="p-inputtext p-component p-element  text-lg w-full ng-pristine ng-valid ng-touched" readonly
+                placeholder="Seleccione un sujeto" />
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 sm:col-12 md:col-6 lg:col-6">
+          <div class="formgrid grid">
+            <div class="field col-10">
+              <label class="font-bold adjust-origin-label text-left">Delito (Genérico/sub-genérico/específico):</label>
+              <p-dropdown id="listaDelitos" formControlName="listaDelitos" class="p-inputtext-lg w-full"
+                [options]="listaDelitosSelected" placeholder="Seleccione" optionLabel="noDelitoEspecifico"
+                optionValue="idDelitoEspecifico" (onChange)="onSelectSujetoDelito($event)">
+              </p-dropdown>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <p-checkbox [disabled]="true" formControlName="retiroReparacionCivil" class="mb-2 mt-3" [binary]="true"
+        inputId="retiroReparacionCivil" label="Retiro de reparación civil"></p-checkbox>
+
+
+      <div class="col-12 flex justify-content-end mt-2 mb-2">
+        <button  class="ml-3 cfe-boton-primary cfe-boton-lg font-semibold with-button" [disabled]="botonesDisabled || !formRegistro.get('listaDelitos')?.value"
+          type="button" (click)="agregarSujetoProcesalTabla($event)">
+          Agregar
+        </button>
+      </div>
+    </div>
+    <div class="cfe-tabla-white mt-5">
+      <p-table class="cfe-table-primary" [tableStyle]="{ 'min-width': '50rem' }" [sortField]="'nombre'" [sortOrder]="1"
+        [styleClass]="'p-datatable-sm'" [value]="sujetosProcesalesFiltrados" responsiveLayout="stack">
+        <ng-template let-columns pTemplate="header">
+          <tr>
+            <th class="columna-nro" pSortableColumn="nro" *ngIf="false">N°</th>
+            <th class="columna-nombre" pSortableColumn="nombre">Sujetos Procesales(Acusado)</th>
+            <th class="columna-tipo" pSortableColumn="tipo">Delito <br />(Genérico/sub-genérico/específico)</th>
+            <th class="columna-nombre" pSortableColumn="nombre">Retiro de reparación civil </th>
+            <th class="columna-res-repo" pSortableColumn="res-repo">Acciones</th>
+          </tr>
+        </ng-template>
+        <ng-template let-i="rowIndex" let-item pTemplate="body">
+          <tr class="p-selectable-row">
+            <td style="text-align: center; vertical-align: middle;" *ngIf="false">
+              <span class="p-column-title font-semibold">N°</span>
+              {{ i + 1 }}
+            </td>
+            <td style="text-align: left; vertical-align: middle;">
+              {{ item.nombreSujeto }}
+            </td>
+            <td style="text-align: left; vertical-align: middle;">
+
+              {{ item.delito }}
+            </td>
+            <td style="text-align: left; vertical-align: middle;">
+              {{ item.retiroReparacionCivil? 'Sí' : 'No' }}
+            </td>
+            <td class="flex gap-2">
+              <fn-icon class="cursor-pointer" [ico]="iconUtil.obtenerIcono('iTrash')"
+                (click)="!botonesDisabled && eliminarSujetoProcesalDeTabla(item, i)"
+                [ngClass]="{ 'disabled-icon': botonesDisabled }"
+                [style.pointerEvents]="botonesDisabled ? 'none' : 'auto'" height="2.1rem" onKeyPress></fn-icon>
+            </td>
+
+
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="8">Ningún sujeto procesal agregado.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <app-paginator (paginate)="onPaginate($event)" [items]="itemPaginado" [query]="query" [rowsPerPageOptions]="[]">
+      </app-paginator>
+    </div>
+
+
+    <div class="col-12">
+      <div class="w-full pb-2">
+        <label for="observaciones" class="cfe-semi-bold">Resuelve (opcional)</label>
+      </div>
+      <div class="w-full">
+        <textarea formControlName="resuelve" pInputTextarea id="resuelve"
+          class="w-full p-inputtextarea p-inputtext p-component p-element" rows="6" [maxLength]="200"></textarea>
+        <small class="block text-right mt-1" [ngClass]="{ 'p-error': counterReportChar('resuelve') > 200 }">
+          {{ counterReportChar('resuelve') }}/200 caracteres
+        </small>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="w-full pb-2">
+        <label for="observaciones" class="cfe-semi-bold">Observaciones (opcional)</label>
+      </div>
+      <div class="w-full">
+        <textarea formControlName="observacion" pInputTextarea id="observacion"
+          class="w-full p-inputtextarea p-inputtext p-component p-element" rows="6" [maxLength]="200"></textarea>
+        <small class="block text-right mt-1" [ngClass]="{ 'p-error': counterReportChar('observacion') > 200 }">
+          {{ counterReportChar('observacion') }}/200 caracteres
+        </small>
+      </div>
+    </div>
+    <div class="cfe-opciones-botones">
+      @if (true) {
+      <span>
+        <p class="cfe-enlace" onKeyPress (click)="otroTramite()" *ngIf="!estadoRecibido">
+          ¿Este documento no pertenece a este trámite?
+        </p>
+      </span>
+      @if (permitirGuardar) {
+      <button (click)="submit()" [disabled]="formRegistro.invalid && this.sujetosProcesalesFiltrados.length == 0"
+        class="cfe-boton-primary cfe-boton-lg mr-2 boton-w">
+        Guardar
+      </button>
+      } }
+    </div>
+  </form>
+  }
+</div>
+}

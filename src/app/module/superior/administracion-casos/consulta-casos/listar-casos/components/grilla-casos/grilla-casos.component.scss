@@ -1,0 +1,33 @@
+.container-view-list{
+    background-color: #fff;
+}
+
+.custom-progressbar {
+    min-width: 120px;
+}
+
+.etiqueta-padding {
+    td {
+        padding-bottom: 3.2rem;
+    }
+}
+
+    :host ::ng-deep .p-paginator {
+
+            .p-paginator-element{
+
+                border: none;
+            }
+         .p-paginator-pages{
+
+            .p-paginator-page.p-highlight {
+
+                color: var(--mpfn-black);
+            }
+         }
+    }
+
+    .font-family-grilla{
+      font-family: "Inter-Bold", sans-serif;
+    }
+

@@ -1,0 +1,196 @@
+<div class="crear-direcciones">
+  <div class="modal__header">
+    <div class="modal_header__content">
+      <div class="cfe-titulo-1">{{ tipoAccion === "R" ? "NUEVA" : "EDITAR" }} DIRECCION</div>
+    </div>
+    <div class="flex align-items-center justify-content-center">
+      <p-button onKeyPress (click)="close()" icon="pi pi-times" styleClass="p-button-rounded text-color p-button-text"></p-button>
+    </div>
+  </div>
+
+  <form [formGroup]="form">
+    <div class="col-12">
+      <div class="p-fluid p-formgrid grid">
+        <div class="field col-12 md:col-4">
+          <label for="tipoDomicilio" class="font-bold text-sm">Tipo de dirección</label>
+          <p-dropdown id="tipoDomicilio" styleClass="p-inputtext-md" [options]="lstTipoDomicilio" optionValue="id" optionLabel="nombre"
+            emptyMessage="Sin resultados" placeholder="Seleccione el tipo de dirección"
+            formControlName="tipoDomicilio"></p-dropdown>
+        </div>
+
+        <div class="field col-12 md:col-4">
+          <label for="pais" class="font-bold text-sm">País</label>
+          <p-dropdown (onChange)="onchangePais($event.value)" styleClass="p-inputtext-md" [options]="lstPaises"
+            optionValue="id" id="pais"  optionLabel="nombre" emptyMessage="Sin resultados" placeholder="Seleccione el país"
+            formControlName="pais"></p-dropdown>
+        </div>
+
+        <div class="field col-12 md:col-4">
+          <label for="dpto" class="font-bold text-sm">Departamento</label>
+          <p-dropdown id="dpto" (onChange)="actualizarProvincias($event.value)" styleClass="p-inputtext-md" [options]="lstDptos"
+            optionValue="codigo" optionLabel="nombre" emptyMessage="Sin resultados"
+            placeholder="Seleccione el departamento" formControlName="dpto"></p-dropdown>
+        </div>
+      </div>
+
+      <div class="p-fluid p-formgrid grid">
+        <div class="field col-12 md:col-4">
+          <label for="provincia" class="font-bold text-sm">Provincia</label>
+          <p-dropdown id="provincia" (onChange)="actulizarDistritos($event)" styleClass="p-inputtext-md" [options]="lstProvincias"
+            optionValue="codigo" optionLabel="nombre" emptyMessage="Sin resultados"
+            placeholder="Seleccione la provincia" formControlName="provincia"></p-dropdown>
+        </div>
+        <div class="field col-12 md:col-4">
+          <label for="distrito" class="font-bold text-sm">Distrito</label>
+          <p-dropdown id="distrito" (onChange)="actualizarPoblados()" styleClass="p-inputtext-md" [options]="lstDistritos"
+            optionValue="codigo" optionLabel="nombre" emptyMessage="Sin resultados" placeholder="Seleccione el distrito"
+            formControlName="distrito"></p-dropdown>
+        </div>
+        <div class="field col-12 md:col-4">
+          <label for="cpoblado" class="font-bold text-sm">Centro poblado (opcional)</label>
+          <p-dropdown id="cpoblado" styleClass="p-inputtext-md" [options]="lstUbigeoPueblo" [showClear]="true" optionValue="codigo" optionLabel="nombre"
+            emptyMessage="Sin resultados" placeholder="Seleccione el centro poblado"
+            formControlName="cpoblado"></p-dropdown>
+        </div>
+      </div>
+
+      <div class="p-fluid p-formgrid grid">
+        <div class="field col-12 md:col-2">
+          <label for="tipovia" class="font-bold text-sm">Tipo de vía</label>
+          <p-dropdown id="tipovia" styleClass="p-inputtext-md" [options]="lstTipoVia" optionValue="id" optionLabel="nombre"
+            emptyMessage="Sin resultados" placeholder="Seleccione el tipo de vía"
+            formControlName="tipovia"></p-dropdown>
+        </div>
+        <div class="field col-12 md:col-7">
+          <label for="nombreCalle" class="font-bold text-sm">Nombre de la calle</label>
+          <input id="nombreCalle" maxlength="100" placeholder="Ingrese el nombre de la calle" upperCaseInput
+            formControlName="nombreCalle" pInputText class="p-inputtext" type="text" />
+            <small
+            class="block text-right mt-1"
+            [ngClass]="{ 'p-error': counterReportChar('nombreCalle') > 100 }"
+          >
+            {{ counterReportChar('nombreCalle') }}/100 caracteres
+          </small>
+        </div>
+        <div class="field col-12 md:col-3">
+          <label for="nroDireccion" class="font-bold text-sm">Número de la dirección (opcional)</label>
+          <input id="nroDireccion" maxlength="5" digitOnly placeholder="Ingrese el número de la dirección" formControlName="nroDireccion"
+            pInputText class="p-inputtext" type="text" />
+          <small
+            class="block text-right mt-1"
+            [ngClass]="{ 'p-error': counterReportChar('nroDireccion') > 5 }">
+            {{ counterReportChar('nroDireccion') }}/5 dígitos
+          </small> 
+        </div>
+      </div>
+
+      <div class="p-fluid p-formgrid grid">
+        <div class="field col-12 md:col-4">
+          <label for="tipoPrefijo" class="font-bold text-sm">Tipo Urbanización (opcional)</label>
+          <p-dropdown id="tipoPrefijo" styleClass="p-inputtext-md" [options]="lstPrefijos" [showClear]="true" optionValue="id" optionLabel="noDescripcion"
+            emptyMessage="Sin resultados" placeholder="Seleccionar" formControlName="tipoPrefijo"></p-dropdown>
+        </div>
+
+        <div class="field col-12 md:col-4">
+          <label for="nombreUrb" class="font-bold text-sm">Nombre de la Urbanización (opcional)</label>
+          <input id="nombreUrb" upperCaseInput formControlName="nombreUrb" placeholder="Ingrese el nombre de la urbanización"
+            maxlength="100" pInputText class="p-inputtext" type="text" />
+           <small
+            class="block text-right mt-1"
+            [ngClass]="{ 'p-error': counterReportChar('nombreUrb') > 100 }"
+          >
+            {{ counterReportChar('nombreUrb') }}/100 caracteres
+          </small>
+        </div>
+        <div class="field col-12 md:col-2">
+          <label for="block" class="font-bold text-sm">Block (opcional)</label>
+          <input id="block" upperCaseInput formControlName="block" placeholder="Ingrese el block" maxlength="20"
+            [class.disabled-contenct]="false" pInputText class="p-inputtext" type="text" />
+          <small
+            class="block text-right mt-1"
+            [ngClass]="{ 'p-error': counterReportChar('block') > 20  }">
+            {{ counterReportChar('block') }}/20 caracteres
+          </small>   
+        </div>
+
+        <div class="field col-12 md:col-2">
+          <label class="font-bold text-sm">Interior (opcional)</label>
+          <input digitOnly maxlength="20" placeholder="Ingrese el interior" formControlName="interior" pInputText
+            class="p-inputtext" type="text" />
+          <small
+            class="block text-right mt-1"
+            [ngClass]="{ 'p-error': counterReportChar('interior') > 20 }">
+            {{ counterReportChar('interior') }}/20 dígitos
+          </small> 
+        </div>
+      </div>
+
+      <div class="p-fluid p-formgrid grid">
+        <div class="field col-12 md:col-4">
+          <label class="font-bold text-sm">Etapa (opcional)</label>
+          <input maxlength="20" upperCaseInput formControlName="etapa" placeholder="Ingrese la etapa" pInputText
+            class="p-inputtext" type="text" />
+            <small
+            class="block text-right mt-1"
+            [ngClass]="{ 'p-error': counterReportChar('etapa') > 20 }">
+            {{ counterReportChar('etapa') }}/20 caracteres
+          </small> 
+        </div>
+        <div class="field col-12 md:col-4">
+          <label class="font-bold text-sm">Manzana (opcional)</label>
+          <input maxlength="20" upperCaseInput formControlName="manzana" placeholder="Ingrese la manzana" pInputText
+            class="p-inputtext" type="text" />
+          <small
+            class="block text-right mt-1"
+            [ngClass]="{ 'p-error': counterReportChar('manzana') > 20 }">
+            {{ counterReportChar('manzana') }}/20 caracteres
+          </small>            
+        </div>
+        <div class="field col-12 md:col-4">
+          <label class="font-bold text-sm">Lote (opcional)</label>
+          <input maxlength="20" upperCaseInput formControlName="lote" placeholder="Ingrese el lote" pInputText
+            class="p-inputtext" type="text" />
+          <small
+            class="block text-right mt-1"
+            [ngClass]="{ 'p-error': counterReportChar('lote') > 20 }">
+            {{ counterReportChar('lote') }}/20 caracteres
+          </small>                  
+        </div>
+      </div>
+
+      <div class="p-fluid p-formgrid grid">
+        <div class="field col-12 md:col-12">
+          <label id="fecha" class="font-bold text-sm">Referencia (opcional)</label>
+          <input maxlength="2000" formControlName="referencia" upperCaseInput placeholder="Ingrese la referencia"
+            pInputText class="p-inputtext" type="text" id="fecha" />
+          <small
+            class="block text-right mt-1"
+            [ngClass]="{ 'p-error': counterReportChar('referencia') > 2000 }">
+            {{ counterReportChar('referencia') }}/2000 caracteres
+          </small> 
+        </div>
+      </div>
+
+      <div class="p-fluid p-formgrid grid">
+        <div class="field col-12 md:col-4">
+          <div class="field-checkbox mt-3">
+            <p-checkbox (onChange)="checkValue()" formControlName="esMapa" name="group1" value="1" id="la"></p-checkbox>
+            <label class="font-bold text-sm">Usar maps (opcional)</label>
+          </div>
+        </div>
+        <div *ngIf="usarMapas == true" class="field col-12 md:col-8">
+          <label class="font-bold text-sm">Dirección en maps (opcional)</label>
+          <span class="p-input-icon-right">
+            <input formControlName="direccionMapa" class="p-inputtext" type="text" pInputText
+              placeholder="Ingrese la dirección" />
+          </span>
+        </div>
+      </div>
+    </div>
+    <div [ngClass]="usarMapas ? '' : 'ocultar'" id="map"></div>
+    <div class="flex justify-content-end gap-3 mt-4 mb-2">
+      <button [disabled]="estadoBotonGuardar" (click)="validarDireccion()" type="submit"
+        class="cfe-boton-primary cfe-boton-m boton-w">{{ tipoAccion === "R" ? "AGREGAR" : "EDITAR" }} DIRECCIÓN</button>
+    </div>
+  </form>
+</div>

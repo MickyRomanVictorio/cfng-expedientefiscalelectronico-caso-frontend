@@ -1,0 +1,879 @@
+<div>
+  <form [formGroup]="formularioDetalleSujetoProcesal">
+    <div class="grid">
+      <div class="col-12 lg:col-6 field">
+        <label for="puebloIndigena" class="font-semibold"
+          >Pueblo indígena (opcional)</label
+        >
+
+        <p-dropdown
+          (onChange)="eventChangePuebloIndigena($event)"
+          [options]="listaPuebloIndigena"
+          [formControl]="puebloIndigenaSelect"
+          optionLabel="nombre"
+          optionValue="id"
+          [filter]="true"
+          filterBy="nombre"
+          [showClear]="true"
+          emptyMessage="Sin resultados"
+          placeholder="Seleccione un pueblo indígena"
+          styleClass="p-inputtext-md"
+        >
+          <ng-template let-puebloindigena pTemplate="item">
+            <div class="grid">
+              <div class="col text-base">
+                {{ puebloindigena.nombre }}
+              </div>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+
+      <div class="col-12 lg:col-6 field">
+        <label for="lenguaMaterna" class="font-semibold">Lengua materna</label>
+
+        <p-dropdown
+          (onChange)="eventChangeLenguaMaterna($event)"
+          [options]="listaLenguaMaterna"
+          [formControl]="lenguaMaternaSelect"
+          optionLabel="nombre"
+          optionValue="id"
+          [filter]="true"
+          filterBy="nombre"
+          [showClear]="true"
+          emptyMessage="Sin resultados"
+          placeholder="Seleccione la lengua materna"
+          styleClass="p-inputtext-md"
+        >
+          <ng-template let-lenguamaterna pTemplate="item">
+            <div class="grid">
+              <div class="col text-base">
+                {{ lenguamaterna.nombre }}
+              </div>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="col-12 lg:col-6 field">
+        <label for="correoPrincipal" class="font-semibold"
+          >Correo principal (opcional)</label
+        >
+        <div>
+          <input
+            formControlName="correoPrincipal"
+            type="text"
+            class="p-inputtext-md w-full"
+            placeholder="Ingrese un correo principal"
+            pInputText
+            [maxlength]="100"
+          />
+        </div>
+      </div>
+      <div class="col-12 lg:col-6 field">
+        <label for="correoSecundario" class="font-semibold"
+          >Correo secundario (opcional)</label
+        >
+        <div>
+          <input
+            formControlName="correoSecundario"
+            id="correoSecundario"
+            type="text"
+            class="p-inputtext-md w-full"
+            placeholder="Ingrese un correo secundario"
+            pInputText
+            [maxlength]="100"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="col-12 lg:col-6 field">
+        <label for="telefonoPrincipal" class="font-semibold"
+          >Teléfono principal (opcional)</label
+        >
+        <input
+          formControlName="telefonoPrincipal"
+          type="text"
+          class="p-inputtext-md w-full"
+          placeholder="Ingrese un teléfono principal"
+          pInputText
+          [maxlength]="20"
+          (keypress)="validOnlyNumbers($event)"
+          (paste)="validOnlyNumberOnPaste($event)"
+          (drop)="validOnlyNumberDrop($event)"
+        />
+      </div>
+      <div class="col-12 lg:col-6 field">
+        <label for="telefonoSecundario" class="font-semibold"
+          >Teléfono secundario (opcional)</label
+        >
+        <input
+          formControlName="telefonoSecundario"
+          type="text"
+          class="p-inputtext-md w-full"
+          placeholder="Ingrese un teléfono secundario"
+          pInputText
+          [maxlength]="20"
+          (keypress)="validOnlyNumbers($event)"
+          (paste)="validOnlyNumberOnPaste($event)"
+          (drop)="validOnlyNumberDrop($event)"
+        />
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="grid col-6 field">
+        <div class="col-12 lg:col-5 text-left">
+          <label class="font-semibold" for="poblacion afroperuana"
+            >Traductor:</label
+          >
+        </div>
+        <div class="col-12 lg:col-7 text-center mt-2">
+          <label for="Si traductor" class="ml-2">Si</label>
+          <p-radioButton
+            value="siTraductor"
+            formControlName="traductor"
+            inputId="siTraductor"
+            name="traductor"
+            class="ml-3"
+          />
+
+          <label for="No traductor" class="ml-4">No</label>
+          <p-radioButton
+            value="noTraductor"
+            formControlName="traductor"
+            inputId="noTraductor"
+            name="traductor"
+            class="ml-3"
+          />
+        </div>
+      </div>
+      <div class="grid col-6 field"></div>
+    </div>
+
+    <div class="grid">
+      <div class="grid col-6 field">
+        <div class="col-12 lg:col-5 text-left">
+          <label class="font-semibold" for="poblacion afroperuana"
+            >Población afroperuana:</label
+          >
+        </div>
+
+        <div class="col-12 lg:col-7 text-center mt-2">
+          <label for="Si poblacion afroperuana" class="ml-2">Si</label>
+          <p-radioButton
+            formControlName="poblacionAfroperuana"
+            inputId="siPoblacionAfroperuana"
+            name="poblacionAfroperuana"
+            value="siPoblacionAfroperuana"
+            class="ml-3"
+          />
+
+          <label for="No poblacion afroperuana" class="ml-4">No</label>
+          <p-radioButton
+            formControlName="poblacionAfroperuana"
+            inputId="noPoblacionAfroperuana"
+            name="poblacionAfroperuana"
+            value="noPoblacionAfroperuana"
+            class="ml-3"
+          />
+        </div>
+      </div>
+
+      <div class="grid col-6 field">
+        <div class="col-12 lg:col-5 text-left">
+          <label class="font-semibold" for="Defensor de derechos humanos"
+            >Defensor/a de derechos humanos:</label
+          >
+        </div>
+
+        <div class="col-12 lg:col-7 text-center mt-2">
+          <label for="Si defensor de derechos humanos" class="ml-2">Si</label>
+          <p-radioButton
+            value="siDefensorDerechosHumanos"
+            formControlName="defensorDerechosHumanos"
+            inputId="siDefensorDerechosHumanos"
+            class="ml-3"
+          />
+
+          <label for="No defensor de derechos humanos" class="ml-4">No</label>
+          <p-radioButton
+            value="noDefensorDerechosHumanos"
+            formControlName="defensorDerechosHumanos"
+            inputId="noDefensorDerechosHumanos"
+            class="ml-3"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="grid col-6 field">
+        <div class="col-12 lg:col-5 text-left">
+          <label class="font-semibold" for="persona con discapacidad"
+            >Persona con discapacidad:</label
+          >
+        </div>
+
+        <div class="col-12 lg:col-7 text-center mt-2">
+          <label for="Si persona con discapacidad" class="ml-2">Si</label>
+          <p-radioButton
+            formControlName="personaConDiscapacidad"
+            value="siPersonaConDiscapacidad"
+            inputId="siPersonaConDiscapacidad"
+            class="ml-3"
+          />
+
+          <label for="No poblacion afroperuana" class="ml-4">No</label>
+          <p-radioButton
+            formControlName="personaConDiscapacidad"
+            value="noPersonaConDiscapacidad"
+            inputId="noPersonaConDiscapacidad"
+            class="ml-3"
+          />
+        </div>
+      </div>
+
+      <div class="grid col-6 field">
+        <div class="col-12 lg:col-5 text-left">
+          <label class="font-semibold" for="persona migrante"
+            >Persona migrante(interna o externa):</label
+          >
+        </div>
+
+        <div class="col-12 lg:col-7 text-center mt-2">
+          <label for="Si persona migrante" class="ml-2">Si</label>
+          <p-radioButton
+            formControlName="personaMigrante"
+            value="siPersonaMigrante"
+            inputId="siPersonaMigrante"
+            class="ml-3"
+          />
+
+          <label for="No persona migrante" class="ml-4">No</label>
+          <p-radioButton
+            formControlName="personaMigrante"
+            value="noPersonaMigrante"
+            inputId="noPersonaMigrante"
+            class="ml-3"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="grid col-6 field">
+        <div class="col-12 lg:col-5 text-left">
+          <label class="font-semibold" for="persona privada de su libertad">
+            Persona privada de su libertad:
+          </label>
+        </div>
+
+        <div class="col-12 lg:col-7 text-center mt-2">
+          <label for="Si persona privada de su libertad" class="ml-2">Si</label>
+          <p-radioButton
+            formControlName="PersonaPrivadaDeLibertad"
+            value="siPersonaPrivadaDeLibertad"
+            inputId="siPersonaPrivadaDeLibertad"
+            class="ml-3"
+          />
+
+          <label for="No persona privada de su libertad" class="ml-4">No</label>
+          <p-radioButton
+            formControlName="PersonaPrivadaDeLibertad"
+            value="noPersonaPrivadaDeLibertad"
+            inputId="noPersonaPrivadaDeLibertad"
+            class="ml-3"
+          />
+        </div>
+      </div>
+
+      <div class="grid col-6 field">
+        <div class="col-12 lg:col-5 text-left">
+          <label class="font-semibold" for="persona migrante">
+            Persona víctima de la violencia entre los años 1980 - 2000:
+          </label>
+        </div>
+
+        <div class="col-12 lg:col-7 text-center mt-2">
+          <label
+            for="Si persona víctima de la violencia entre los años 1980 - 2000"
+            class="ml-2"
+            >Si</label
+          >
+          <p-radioButton
+            formControlName="personaVictimaViolencia1980a2000"
+            value="siPersonaVictimaViolencia1980a2000"
+            inputId="siPersonaVictimaViolencia1980a2000"
+            class="ml-3"
+          />
+
+          <label for="No persona migrante" class="ml-4">No</label>
+          <p-radioButton
+            formControlName="personaVictimaViolencia1980a2000"
+            value="noPersonaVictimaViolencia1980a2000"
+            inputId="noPersonaVictimaViolencia1980a2000"
+            class="ml-3"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="grid col-6 field">
+        <div class="col-12 lg:col-5 text-left">
+          <label class="font-semibold" for="persona con VIH/SIDA o TBC"
+            >Persona con VIH/SIDA o TBC:</label
+          >
+        </div>
+
+        <div class="col-12 lg:col-7 text-center mt-2">
+          <label for="Si persona con VIH/SIDA o TBC" class="ml-2">Si</label>
+          <p-radioButton
+            formControlName="personaConVIHSIDAoTBC"
+            value="siPersonaConVIHSIDAoTBC"
+            inputId="siPersonaConVIHSIDAoTBC"
+            class="ml-3"
+          />
+
+          <label for="No poblacion afroperuana" class="ml-4">No</label>
+          <p-radioButton
+            formControlName="personaConVIHSIDAoTBC"
+            value="noPersonaConVIHSIDAoTBC"
+            inputId="noPersonaConVIHSIDAoTBC"
+            class="ml-3"
+          />
+        </div>
+      </div>
+
+      <div class="grid col-6 field">
+        <div class="col-12 lg:col-5 text-left">
+          <label class="font-semibold" for="servidor o funcionario publico">
+            Servidor o funcionario público:</label
+          >
+        </div>
+
+        <div class="col-12 lg:col-7 text-center mt-2">
+          <label for="Si servidor o funcionario publico" class="ml-2">Si</label>
+          <p-radioButton
+            formControlName="funcionarioPublico"
+            value="siFuncionarioPublico"
+            inputId="siFuncionarioPublico"
+            class="ml-3"
+          />
+
+          <label for="No servidor o funcionario publico" class="ml-4">No</label>
+          <p-radioButton
+            formControlName="funcionarioPublico"
+            value="noFuncionarioPublico"
+            inputId="noFuncionarioPublico"
+            class="ml-3"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="grid col-6 field">
+        <div class="col-12 lg:col-5 text-left">
+          <label class="font-semibold" for="trabajador del hogar"
+            >Trabajador/a del hogar:</label
+          >
+        </div>
+
+        <div class="col-12 lg:col-7 text-center mt-2">
+          <label for="Si trabajador del hogar" class="ml-2">Si</label>
+          <p-radioButton
+            formControlName="trabajadorDelHogar"
+            value="siTrabajadorDelHogar"
+            inputId="siTrabajadorDelHogar"
+            class="ml-3"
+          />
+
+          <label for="No trabajador del hogar" class="ml-4">No</label>
+          <p-radioButton
+            formControlName="trabajadorDelHogar"
+            value="noTrabajadorDelHogar"
+            inputId="noTrabajadorDelHogar"
+            class="ml-3"
+          />
+        </div>
+      </div>
+
+      <div class="grid col-6 field">
+        <div class="col-12 lg:col-5 text-left">
+          <label class="font-semibold" for="persona lgtbiq"
+            >Persona LGTBIQ+:</label
+          >
+        </div>
+
+        <div class="col-12 lg:col-7 text-center mt-2">
+          <label for="Si persona lgtbiq" class="ml-2">Si</label>
+          <p-radioButton
+            formControlName="personaLgtbiq"
+            value="siPersonaLgtbiq"
+            inputId="siPersonaLgtbiq"
+            class="ml-3"
+          />
+
+          <label for="No persona lgtbiq" class="ml-4">No</label>
+          <p-radioButton
+            formControlName="personaLgtbiq"
+            value="noPersonaLgtbiq"
+            inputId="noPersonaLgtbiq"
+            class="ml-3"
+          />
+        </div>
+      </div>
+    </div>
+
+    @if (!opcionalSujeto) {
+    <div>
+      <div class="grid">
+        <div class="field col-12">
+          <label for="observaciones" class="font-semibold"
+            >Observaciones (opcional)</label
+          >
+          <textarea
+            rows="4"
+            cols="30"
+            pInputTextarea
+            id="observaciones"
+            formControlName="observaciones"
+            class="p-inputtext-md w-full"
+            placeholder="Ingrese observaciones"
+            [maxlength]="500"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="field col-12">
+          <label for="seudonimos">
+            <span class="font-semibold">Alias</span> - Seudónimos del sujeto
+            procesal
+          </label>
+        </div>
+      </div>
+
+      <div class="grid centrar-contenido">
+        <div class="col-8 border-1 border-round border-black-alpha-40 px-3">
+          <div formArrayName="seudonimosSujetoArray">
+            @for (fila of seudonimosSujetoArray.controls; track $index; let i =
+            $index) {
+            <div
+              [formGroupName]="i"
+              class="grid centrar-items border-bottom-1 border-black-alpha-40"
+            >
+              <div class="col-1 pl-4">{{ i + 1 }}.</div>
+
+              <div class="col-10">
+                <label class="font-semibold">
+                  {{ fila.get("aliasAgregado")?.value }}
+                </label>
+              </div>
+
+              <div class="col-1 text-center pr-4">
+                <fn-icon
+                  (click)="removerSeudonimo(i)"
+                  [ico]="obtenerIcono('iTrash')"
+                  height="2rem"
+                  onkeypress=""
+                  style="cursor: pointer"
+                />
+              </div>
+            </div>
+            }
+          </div>
+
+          <div class="grid mt-1 pl-2">
+            <div class="col-8">
+              <input
+                id="seudonimo"
+                pInputText
+                type="text"
+                class="p-inputtext-md w-full"
+                placeholder="Ingrese un nuevo alias"
+                formControlName="seudonimoSujetoProcesal"
+                [class.has-error]="inputAliasError"
+                maxlength="50"
+              />
+            </div>
+
+            <div class="col-4">
+              <button
+                (click)="agregarSeudonimo()"
+                class="cfe-boton-primary cfe-boton-lg w-full"
+              >
+                <fn-icon
+                  [ico]="iconUtil.obtenerIcono('iAdd')"
+                  height="25px"
+                ></fn-icon
+                >Agregar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid mb-1 pt-4">
+        <div class="field col-12">
+          <label>
+            <span class="font-semibold"> Huellas y fotos</span>
+            - Huellas y fotos para identificar al sujeto procesal
+          </label>
+        </div>
+      </div>
+
+      <div class="grid border-1 border-round border-black-alpha-40 px-3">
+        <div formArrayName="huellasyFotosArray" class="col-12">
+          @for (fila of huellasyFotosArray.controls; track i; let i = $index) {
+          <div
+            [formGroupName]="i"
+            class="grid border-bottom-1 border-black-alpha-40 py-3"
+          >
+            <div class="col-12 sm:col-6 md:col-2 align-self-center">
+              <label for="tipoBiometria" class="font-semibold">Tipo</label>
+
+              <p-dropdown
+                (onChange)="eventChangeTipoBiometria($event, i)"
+                [options]="listaTipoBiometria"
+                formControlName="tipoBiometria"
+                optionValue="id"
+                optionLabel="noDescripcion"
+                emptyMessage="Sin resultados"
+                placeholder="Seleccione un tipo"
+                styleClass="p-inputtext-md"
+              >
+                <ng-template let-tipobiometria pTemplate="item">
+                  <div class="grid">
+                    <div class="col text-base">
+                      {{ tipobiometria.noDescripcion }}
+                    </div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div>
+
+            <div class="col-12 sm:col-6 lg:col-6 align-self-center">
+              @if (fila.get('tipoBiometria')?.value === 242) {
+              <label for="posicionBiometria" class="font-semibold"
+                >Descripción</label
+              >
+              <input
+                formControlName="descripcionFoto"
+                id="descripcionFoto"
+                pInputText
+                type="text"
+                class="p-inputtext-md w-full"
+                placeholder="Describa la foto"
+                maxlength="200"
+              />
+              } @if (fila.get('tipoBiometria')?.value === 241) {
+              <div class="grid mt-1">
+                <div
+                  class="col-fixed align-items-center pt-5"
+                  style="width: 130px; margin: 0 auto"
+                >
+                  <div class="text-center pt-1">
+                    <img
+                      [src]="dedoSeleccionadoManoIzquierda[i]"
+                      alt="mano izquierda"
+                    />
+                    <img
+                      [src]="dedoSeleccionadoManoDerecha[i]"
+                      alt="mano derecha"
+                    />
+                  </div>
+                </div>
+
+                <div class="col">
+                  <label for="posicionBiometria" class="font-semibold"
+                    >Descripción</label
+                  >
+
+                  <p-dropdown
+                    (onChange)="eventChangePosicionBiometria($event, i)"
+                    [options]="listaPosicionBiometria"
+                    optionLabel="nombre"
+                    optionValue="idPosicionBiometria"
+                    emptyMessage="Sin resultados"
+                    placeholder="Seleccione el dedo"
+                    styleClass="p-inputtext-md"
+                    formControlName="posicionBiometria"
+                  >
+                    <ng-template let-posicionbiometria pTemplate="item">
+                      <div class="grid">
+                        <div class="col text-base">
+                          {{ posicionbiometria.nombre }}
+                        </div>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </div>
+              </div>
+              }
+            </div>
+
+            <div class="col-11 sm:col-11 md:col-3 align-self-center">
+              <label for="archivoAdjunto" class="font-semibold"
+                >Archivo adjunto</label
+              >
+              <app-arrastrar-soltar-imagenes
+                [archivoAdjuntoControl]="fila.get('archivoAdjunto')?.value"
+                (archivoCargado)="
+                  manejarArchivoSeleccionado($event, i, 'biometria')
+                "
+                [subirArchivo]="subirArchivoTexto"
+                [textoDetallado]="textoDetalladoArchivo"
+                [eliminarArchivo]="eliminarArchivoTexto"
+                [indice]="i"
+                [miniaturaImagen]="fila.get('imagenHuellaFoto')?.value"
+                [mostrarEnlaceEliminar]="
+                  fila.get('mostrarEnlaceEliminar')?.value
+                "
+              />
+            </div>
+            <div class="col-1 sm:col-1 md:col-1 flex flex-row flex-wrap">
+              <div class="flex align-items-center pt-4">
+                <fn-icon
+                  (click)="
+                    removerHuellasFotos(i, fila.get('tipoBiometria')?.value)
+                  "
+                  [ico]="obtenerIcono('iTrash')"
+                  height="2rem"
+                  style="cursor: pointer"
+                  onkeypress=""
+                />
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+
+        <div class="col-12">
+          <div class="grid">
+            <div class="col-9"><!--Espacio vacío--></div>
+            <div class="col-3">
+              <button
+                (click)="agregarHuellasyFotos()"
+                class="cfe-boton-primary cfe-boton-lg w-full"
+              >
+                <fn-icon
+                  [ico]="iconUtil.obtenerIcono('iAdd')"
+                  height="25px"
+                ></fn-icon
+                >Agregar huellas y fotos
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid mb-1 mt-4">
+        <div class="field col-12">
+          <label
+            ><span class="font-semibold">Señas particulares</span> - Señas para
+            identificar al sujeto procesal</label
+          >
+        </div>
+      </div>
+
+      <div class="grid border-1 border-round border-black-alpha-40 px-3">
+        <div formArrayName="seniasParticularesArray" class="col-12">
+          @for (fila of seniasParticularesArray.controls; track i; let i =
+          $index) {
+          <div
+            class="grid border-bottom-1 border-black-alpha-40 py-3"
+            [formGroupName]="i"
+          >
+            <div class="col-12 sm:col-6 md:col-2 align-self-center">
+              <label for="tipoSenia" class="font-semibold">Tipo</label>
+              <input
+                formControlName="tipoSeniaParticular"
+                id="idTipoSenia"
+                class="p-inputtext-md w-full"
+                placeholder="Ej.: Tatuaje"
+                maxlength="50"
+                type="text"
+                pInputText
+              />
+            </div>
+
+            <div class="col-12 sm:col-6 md:col-3 align-self-center">
+              <label for="ubicacionSenia" class="font-semibold"
+                >Ubicación</label
+              >
+              <input
+                formControlName="ubicacionSeniaParticular"
+                id="idUbicacionSenia"
+                class="p-inputtext-md w-full"
+                placeholder="Ej.: Cuello"
+                maxlength="50"
+                type="text"
+                pInputText
+              />
+            </div>
+
+            <div class="col-12 sm:col-6 md:col-3 align-self-center">
+              <label for="descripcionSenia" class="font-semibold"
+                >Descripción</label
+              >
+              <input
+                formControlName="descripcionSeniaParticular"
+                id="idDescripcionSenia"
+                class="p-inputtext-md w-full"
+                placeholder="Ej.: Un ángel"
+                maxlength="100"
+                type="text"
+                pInputText
+              />
+            </div>
+
+            <div class="col-11 sm:col-5 md:col-3 align-self-center">
+              <label for="archivoAdjuntoSeniaParticular" class="font-semibold"
+                >Archivo adjunto</label
+              >
+              <app-arrastrar-soltar-imagenes
+                [archivoAdjuntoControl]="fila.get('archivoAdjunto')?.value"
+                (archivoCargado)="
+                  manejarArchivoSeleccionado($event, i, 'senias')
+                "
+                [subirArchivo]="subirArchivoTexto"
+                [textoDetallado]="textoDetalladoArchivo"
+                [eliminarArchivo]="eliminarArchivoTexto"
+                [indice]="i"
+                [miniaturaImagen]="fila.get('imagenHuellaFoto')?.value"
+                [mostrarEnlaceEliminar]="
+                  fila.get('mostrarEnlaceEliminar')?.value
+                "
+              />
+            </div>
+
+            <div class="col-1 sm:col-1 md:col-1 flex flex-row flex-wrap">
+              <div class="flex align-items-center pt-4">
+                <fn-icon
+                  (click)="removerSeniasParticulares(i)"
+                  [ico]="obtenerIcono('iTrash')"
+                  height="2rem"
+                  onkeypress=""
+                  style="cursor: pointer"
+                />
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+
+        <div class="col-12">
+          <div class="grid">
+            <div class="col-9"><!--Espacio vacío--></div>
+            <div class="col-3">
+              <button
+                (click)="agregarSeniasParticulares()"
+                class="cfe-boton-primary cfe-boton-lg w-full"
+              >
+                <fn-icon
+                  [ico]="iconUtil.obtenerIcono('iAdd')"
+                  height="25px"
+                ></fn-icon
+                >Agregar seña
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid mb-1 mt-4">
+        <div class="field col-12">
+          <label>
+            <span class="font-semibold">Contactos</span> - Medios para
+            contactarse con el sujeto procesal</label
+          >
+        </div>
+      </div>
+
+      <div class="grid border-1 border-round border-black-alpha-40 px-3">
+
+        <div *ngFor="let contacto of contactosParentescos; let i = index">
+          <app-contacto-parentesco
+            [contacto]="contacto"
+            [index]="i"
+            [listaParentesco]="listaParentesco"
+            [listaTiposDocumentosIdentidad]="listaTiposDocumentosIdentidad"
+            [listaContactos]="contactosParentescos"
+            (cambio)="actualizarContacto($event)"
+            (eliminar)="eliminarContacto($event)">
+          </app-contacto-parentesco>
+        </div>
+
+        <div class="col-12">
+          <div class="grid">
+            <div class="col-9"><!--Espacio vacío--></div>
+            <div class="col-3">
+              <button
+                (click)="agregarContacto()"
+                class="cfe-boton-primary cfe-boton-lg w-full"
+              >
+                <fn-icon
+                  [ico]="iconUtil.obtenerIcono('iAdd')"
+                  height="25px"
+                ></fn-icon
+                >Agregar contacto
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+  </form>
+  @if (verMensaje) {
+    <div class="mt-5 mb-2">
+      <mensaje-generico
+        [closable]="true"
+        [tipoAlerta]="'error'"
+        [titulo]="textoValidacion"
+        (cerrado)="verMensaje = false"
+      />
+    </div>
+  }
+  <div class="col-12">
+    @if (!opcionalSujeto) {
+    <div class="grid">
+      <div class="col-9"><!--Espacio vacío--></div>
+      <div class="col-3">
+        <div class="field mb-0 pr-3 pt-4">
+          <button
+            (click)="guardarInformacionDetalladaDelSujeto()"
+            class="cfe-boton-primary cfe-boton-lg w-full"
+          >
+            Guardar
+          </button>
+        </div>
+      </div>
+    </div>
+    } @if (opcionalSujeto) {
+    <div class="mt-4 w-full flex align-items-end justify-content-end">
+      <p-button
+        (click)="cancelarOpcionalSujeto()"
+        label="Cancelar"
+        class="mr-3"
+        onkeypress=""
+        styleClass="p-button cfe-boton-secondary text-primary font-bold px-4 py-1.2"
+      />
+
+      <p-button
+        (click)="enviarInformacionOpcionalDelSujeto()"
+        label="Agregar"
+        onkeypress=""
+        styleClass="p-button cfe-boton-primary text-white font-semiboldpx-4py-1.2"
+      />
+    </div>
+    }
+  </div>
+</div>

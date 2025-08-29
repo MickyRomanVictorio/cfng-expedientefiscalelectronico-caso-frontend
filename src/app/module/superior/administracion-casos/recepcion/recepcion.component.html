@@ -1,0 +1,88 @@
+<div class="cfe-container">
+
+  <!-- Ini - Título  -->
+  <div class="grid py-3">
+    <div class="col-12 md:col-8">
+      <div class="flex align-items-start">
+        <fn-icon [ico]="iconUtil.obtenerIcono('iFolderSearch')" height="1.6rem"></fn-icon>
+        <h3 class="cfe-titulo-1 pl-2">Recepción de casos elevados</h3>
+        <fn-icon
+          [ico]="iconUtil.obtenerIcono('iTooltip')"
+          height="1.6rem"
+          (click)="startTour()"
+        ></fn-icon>
+      </div>
+    </div>
+    <div class="col-12 md:col-4 flex justify-content-end">
+    </div>
+  </div>
+  <!-- Fin - Título  -->
+
+  <app-filtro [esRecepcion]="true" #filtroRef (buscar)="eventoBuscar($event)" (buscarPorTexto)="eventoBuscarPorTexto($event)"></app-filtro>
+
+  <div class="mt-5 container-view-list  py-3">
+    <div class="px-3" >
+
+      <div class="grid py-1">
+
+        <div class="col-12">
+          <div class="flex align-items-center">
+            <img [src]="iconAsset.obtenerRutaIcono('exclamationFolder')" alt="Folder Icon" style="width: 22px" />
+            <h4 class="casos_listados_count mt-2 mb-0 font-bold">
+              {{ totalRegistros.total }} registros listados - {{ totalRegistros.casos }} casos - {{ totalRegistros.pestanasApelacionPorAsignar }} pestañas de apelación por recibir
+            </h4>
+          </div>
+        </div>
+
+        <!--Ini - Botones de acción principal y de exportación -->
+        <div class="col-12">
+            <div class="flex flex-wrap gap-2 justify-content-end">
+              <button class="cfe-boton-primary cfe-boton-m w-full sm:w-auto justify-content-center tour-a-3"
+                (click)="eventoRecibirCasos()" [disabled]="casosSeleccionados().length===0">
+                Recibir
+              </button>
+              <button class="cfe-boton-secondary cfe-boton-m w-full sm:w-auto justify-content-start"
+              [disabled]="listaCasos.length === 0"
+              (click)="eventoExportar(TipoExportarEnum.Pdf)">
+                <img [src]="iconAsset.obtenerRutaIcono('pdf')" alt="PDF Icon" class="mr-1"/>
+                Exportar PDF
+              </button>
+              <button class="cfe-boton-secondary cfe-boton-m w-full sm:w-auto justify-content-start" 
+                  [disabled]="listaCasos.length === 0"
+              (click)="eventoExportar(TipoExportarEnum.Excel)">
+                <img [src]="iconAsset.obtenerRutaIcono('excel')" alt="Excel Icon" class="mr-1"/>
+                Exportar Excel
+              </button>
+            </div>
+        </div>
+        <!--Fin - Botones de Exportación -->
+
+      </div>
+
+      <!-- Ini - Leyenda  gap-2  px-2 border-round -->
+      <div class="flex flex-wrap py-2 mb-1 ">
+      <app-leyenda-listas
+        [leyenda]="leyenda"
+     >  </app-leyenda-listas>
+      </div>
+      <!-- Fin - Leyenda -->
+
+    </div>
+
+    <!-- Ini - Tabla de Casos -->
+    <app-tabla
+    [esCriterioBusquedaValido]="esCriterioBusquedaValido"
+    [asignadosRececpcionados]="'asignados pendientes de recibir'"
+      #tableCasosRef
+      [listaCasos]="listaCasos"
+      [paginacionCondicion]="paginacionCondicion"
+      [paginacionConfiguracion]="paginacionConfiguracion"
+      (cambiarPagina)="eventoCambiarPagina($event)"
+    >
+    </app-tabla>
+    <!-- Fin - Tabla de Casos -->
+
+  </div>
+
+
+</div>

@@ -1,0 +1,97 @@
+@if ( !tieneActoTramiteCasoDocumento ) {
+  <mensaje-interoperabilidad-pj />
+}
+@if ( tieneActoTramiteCasoDocumento ) {
+  @if ( !tramiteEstadoRecibido ) {
+    <mensaje-completar-informacion
+      [titulo]="tramiteSeleccionado?.nombreTramite"
+    />
+  }
+
+  <form [formGroup]="formulario">
+    <div class="grid mt-3">
+      <div class="field col-12 lg:col-6">
+        <div class="formgrid grid">
+          <div class="field col-10">
+            <label for="fechaNotificacion" class="font-bold text-sm">Fecha de notificación</label>
+            <p-calendar
+              [dateFormat]="'dd/mm/yy'"
+              class="p-inputtext-lg cfe-calendar h-40"
+              [showIcon]="true"
+              dateMask
+              icon="cfe-calendar-icon"
+              placeholder="dd/mm/aaaa"
+              formControlName="fechaNotificacion"
+              appendTo="body"
+              dataType="string"
+              [ngClass]="{'ng-invalid ng-dirty': formulario.get('fechaNotificacion')?.invalid && formulario.get('fechaNotificacion')?.touched}"
+            >
+            </p-calendar>
+          </div>
+          @if ( formulario.get('fechaNotificacion')?.value ) {
+            <div class="field col-2">
+                <label for="">&nbsp;</label>
+                <div class="mt-1">
+                  <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+                </div>
+            </div>
+          }
+        </div>
+      </div>
+      <div class="field col-12 lg:col-6">
+        <div class="formgrid grid">
+          <div class="field col-11">
+            <label for="resultado" class="font-bold text-sm">{{ labelConsentido }}</label>
+            <button class="cfe-boton-primary cfe-boton-lg w-full" (click)="openModalSujetos.emit()">
+              {{ labelBtnConsentido }}
+            </button>
+          </div>
+          @if ( flCheckModal ) {
+            <div class="field col-1">
+              <label for="">&nbsp;</label>
+              <div class="mt-1">
+                <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="p-fluid grid mt-3">
+      <div class="field col-11">
+        <label for="observaciones" class="font-bold text-sm">Observaciones (opcional)</label>
+        <textarea pInputTextarea class="w-full text-md" rows="6" formControlName="observaciones" [maxLength]="longitudMaximaObservaciones"></textarea>
+        <small
+          class="block text-right mt-1"
+          [ngClass]="{'p-error': cantidadCaracteresObservacion > longitudMaximaObservaciones }">
+          {{cantidadCaracteresObservacion}}/{{longitudMaximaObservaciones}} máximo de caracteres
+        </small>
+      </div>
+      @if ( formulario.get('observaciones')?.value && formulario.get('observaciones')?.value!.length > 0 ) {
+        <div class="field col-1">
+          <label for="">&nbsp;</label>
+          <div class="mt-1">
+            <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+          </div>
+        </div>
+      }
+    </div>
+    <div class="field col-11 flex flex-column sm:flex-row justify-content-between mt-3">
+      @if ( !tramiteEstadoRecibido ) {
+        <a class="cfe-enlace" (click)="modalActualizarActoYTramite.emit()">
+          ¿Este documento no pertenece a este trámite?</a>
+      } @else {
+        <span></span>
+      }
+      @if (esPosibleEditarFormulario && !tramiteGuardado) {
+        <p-button
+          [disabled]="!formularioValido"
+          (onClick)="confirmarRegistroTramite.emit()"
+          styleClass="p-button-lg cfe-boton-primary text-white family-poppin-bold btn-adjust-filter w-column-full">
+          <span class="ml-4 mr-4">Guardar</span>
+        </p-button>
+      }
+    </div>
+  </form>
+}

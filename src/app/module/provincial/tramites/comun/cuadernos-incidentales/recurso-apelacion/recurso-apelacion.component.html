@@ -1,0 +1,23 @@
+<div>
+  <form [formGroup]="formGroup">
+    @if (verSujetos) {
+      <div>
+        <label class="font-bold adjust-origin-label text-left">{{ tramiteEnModoEdicion ? "Seleccionar" : "Visualizar" }} sujetos procesales para los cuales se aplicará el recurso de apelación</label>
+      </div>
+      <div class="grid mt-3">
+        <div class="col-12 sm:col-12 md:col-6 lg:col-3">
+          <div class="flex align-items-center gap-2 mt-1">
+            <div class="flex-auto flex">
+              <button (click)="openModalSujetos()" class="cfe-boton-primary cfe-boton-lg w-full">
+                {{ tramiteEnModoEdicion ? "Seleccionar" : "Ver" }} sujetos
+              </button>
+              @if (botonValido) {
+                <img id="imgGuardado" [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </form>
+</div>

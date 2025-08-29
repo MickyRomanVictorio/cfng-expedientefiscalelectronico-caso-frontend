@@ -1,0 +1,20 @@
+<div class="w-full" style="width: 1200px !important; height: 500px !important;">
+
+  <div class="cfe-container">
+
+    <div class="encabezado-modal">
+      <fn-icon
+        class="encabezado-cerrar"
+        [ico]="obtenerIcono('iClose')"
+        height="2rem"
+        (click)="cerrarModal()"
+      ></fn-icon>
+    </div>
+
+    <div class="col-12">
+      <iframe *ngIf="pdfUrl" [src]="pdfUrl" style='width: 100%;height: 500px !important;' type='application/pdf'
+              title="Pdf reader"></iframe>
+    </div>
+
+  </div>
+</div>

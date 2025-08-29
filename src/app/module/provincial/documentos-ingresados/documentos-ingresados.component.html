@@ -1,0 +1,26 @@
+<div class="cfe-container">
+  <app-documentos-nuevos-filtro
+    [idBandeja]="idBandeja"
+    (enviarFiltroRequest)="buscarFiltros($event)"
+    (enviarFlitroBuscarRequest)="buscarTexto($event)"
+  ></app-documentos-nuevos-filtro>
+
+  <app-tabs-view
+    [tabs]="tabs"
+    (onChangeIndex)="cambiarTab($event)"
+  ></app-tabs-view> 
+
+  <p-tabView class="cfe-tabs-view" [(activeIndex)]="tabActivo">
+    <p-tabPanel>
+      <app-documentos-bandeja
+        [tabActivo]="tabActivo" 
+        [titleDocumento]="getTitleDocumento(tabActivo)"
+        [documentosBandeja]="listaBandejaActiva"
+        [paginacionCondicion]="paginacionCondicion"
+        [paginacionConfiguracion]="paginacionConfiguracion"
+        [paginacionReiniciar]="paginacionReiniciar"
+        (cambiarPagina)="eventoCambiarPagina($event)"
+      ></app-documentos-bandeja>
+    </p-tabPanel>
+  </p-tabView>
+</div>

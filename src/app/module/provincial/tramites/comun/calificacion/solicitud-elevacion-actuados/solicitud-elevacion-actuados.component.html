@@ -1,0 +1,19 @@
+@if(existeDocumentoRecibido!==null){
+  <div class="col-12 md:col-11">
+    <div class="flex justify-content-center w-full mb-2">
+      <button class="cfe-boton-primary cfe-boton-lg w-full" [disabled]="existeDocumentoRecibido" (click)="eventoDocumentosIngresados()">
+        Ver documentos ingresados
+      </button>
+    </div>
+  </div>
+}
+
+@if(existeDocumentoRecibido===true && pdfUrlTramite) {
+  <iframe
+    title="Documento Trámite"
+    [src]="pdfUrlTramite"
+    width="100%"
+    style="height: 500px"
+  ></iframe>
+}
+

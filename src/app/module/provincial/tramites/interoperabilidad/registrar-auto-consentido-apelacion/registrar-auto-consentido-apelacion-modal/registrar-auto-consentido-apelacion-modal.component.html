@@ -1,0 +1,159 @@
+<div class="">
+  <div class="cfe-encabezado-modal">
+    <h3
+      [innerHTML]="tituloModal"
+      class="cfe-encabezado-titulo cfe-subtitulo-3 cfe-semi-bold">
+    </h3>
+
+    <fn-icon
+      (click)="cerrarModal()"
+      [ico]="obtenerIcono('iClose')"
+      class="cfe-encabezado-cerrar"
+      height="2rem">
+    </fn-icon>
+  </div><br/>
+  <h6
+    class="cfe-encabezado-titulo cfe-subtitulo-3 cfe-semi-bold"
+    [innerHTML]="tituloCaso"
+  ></h6>
+  <h6 *ngIf="nivelApelacion === 'sujeto'">Seleccione los sujetos procesales a los que se les consiente la apelación</h6>
+  <h6 *ngIf="nivelApelacion === 'sujeto'">
+  <div *ngIf="nuApelacionFiscal > 0" class="flex">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 100 100" class="mr-1">
+      <circle cx="50" cy="50" r="40" fill="#3cc85a" />
+    </svg>
+    Recurso de apelación presentado por el fiscal ({{nuApelacionFiscal}})
+  </div>
+  </h6>
+  <h6 *ngIf="nivelApelacion === 'proceso'">Resultado de la apelación presentada por el Fiscal</h6>
+  <div *ngIf="nivelApelacion === 'proceso'">
+    <div>
+      <span *ngIf="esApelacion">Deniega apelacion</span>
+      <span *ngIf="esQueja">Improcedente/ Infundado queja</span>
+      <input
+        (change)="seleccionarTodos($event)"
+        [(ngModel)]="selectAllCheck"
+        [disabled]="soloLectura"
+        type="checkbox"/>
+      Consentida {{nombreTramite}}
+    </div>
+    <div *ngIf="esApelacion">Apelo en audiencia</div>
+    <div *ngIf="esQueja">Se quejo en audiencia</div>
+  </div>
+
+  <div class="cfe-tabla-white">
+    <p-table
+      [sortField]="'nombre'"
+      [sortOrder]="1"
+      [styleClass]="'p-datatable-sm'"
+      [value]="sujetosProcesalesFiltrados"
+      responsiveLayout="stack">
+      <ng-template let-columns pTemplate="header">
+        <tr>
+          <th class="columna-nro" pSortableColumn="nro">N°</th>
+          <th class="columna-nombre" pSortableColumn="nombre">Nombres y apellidos / Razón social</th>
+          <th class="columna-tipo" pSortableColumn="tipo">Tipo de sujeto procesal</th>
+          <th class="columna-resultado-primera-instancia" pSortableColumn="resultado-primera-instancia">
+            Resultado<br/>(1era instancia)
+          </th>
+          <th class="columna-resultado-apelacion" pSortableColumn="resultado-apelacion">
+            Resultado de la apelación
+          </th>
+          <th *ngIf="esQueja" class="columna-respuesta-queja" pSortableColumn="respuesta-queja">
+            Respuesta de queja
+          </th>
+          <th class="columna-consentimiento" pSortableColumn="consentimiento">
+            Consentida {{nombreTramite}}
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template let-i="rowIndex" let-item pTemplate="body">
+        <tr class="p-selectable-row">
+          <td style="text-align: center; vertical-align: middle;">
+            <span class="p-column-title font-semibold">N°</span>
+            {{ i + 1 }}
+          </td>
+          <td style="text-align: left; vertical-align: middle;" class="flex">
+            <div *ngIf="item.flApelacionFiscal === '1'">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 100 100" class="mr-1">
+                <circle cx="50" cy="50" r="40" fill="#3cc85a" />
+              </svg>
+            </div>
+            <span class="p-column-title font-semibold">Nombres y apellidos / Razón social</span>
+            <div>{{ item.nombreCompleto | nombrePropio }}</div>
+          </td>
+          <td style="text-align: left; vertical-align: middle;">
+            <span class="p-column-title font-semibold">Tipo de sujeto procesal</span>
+            {{ item.noTipoParteSujeto }}
+          </td>
+          <td style="text-align: left; vertical-align: middle;">
+            <span class="p-column-title font-semibold">Resultado (1era instancia)</span>
+            @if (!esSujeto) {
+              {{ descripcionResultado | capitalizar }}
+            } @else {
+              {{ item.noTipoRespuestaInstancia1 | capitalizar }}
+            }
+          </td>
+          <td style="text-align: left; vertical-align: middle;">
+            @if(!esSujeto){
+              <span>{{ item.noTipoRespuestaPE | capitalizar }}</span><br/>
+              <span *ngIf="item.flAudienciaApelacion" class="apelacion-audiencia">Apeló en audiencia</span><br/>
+              <span *ngIf="item.flAudienciaQueja" class="queja-audiencia">Se quejo en audiencia</span>
+            } @else if(esSujeto && item.idTipoRespuestaApelacion){
+              <span>{{ item.noTipoRespuestaApelacion | capitalizar }}</span><br/>
+              <span *ngIf="item.flAudienciaApelacion" class="apelacion-audiencia">Apeló en audiencia</span><br/>
+              <span *ngIf="item.flAudienciaQueja" class="queja-audiencia">Se quejo en audiencia</span>
+            }@else{-}
+          </td>
+          <td style="text-align: left; vertical-align: middle;" *ngIf="esQueja">
+            @if(item.idTipoRespuestaQueja){
+              {{ item.noTipoRespuestaQueja | capitalizar }}
+            }@else{-}
+          </td>
+          <td style="text-align: center; vertical-align: middle;">
+            <span class="p-column-title font-semibold">Consentida apelación</span>
+            @if(!esSujeto && item.idTipoRespuestaPE && item.idTipoRespuestaPE === 1024){
+              <label>
+                <input
+                  (change)="onSelectionChange(item, $event)"
+                  [(ngModel)]="item.flConsentidoApelacion"
+                  [disabled]="soloLectura || item.flConsentidoApelacion === '1'"
+                  type="checkbox"/>
+              </label>
+            } @else if(esSujeto && item.idTipoRespuestaApelacion && item.idTipoRespuestaApelacion === 1024){
+              <label>
+                <input
+                  (change)="onSelectionChange(item, $event)"
+                  [(ngModel)]="item.flConsentidoApelacion"
+                  [disabled]="soloLectura || item.flConsentidoApelacion === '1'"
+                  type="checkbox"/>
+              </label>
+            } @else { - }
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8">No se encontró información de sujetos procesales.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <app-paginator
+      (paginate)="onPaginate($event)"
+      [items]="itemPaginado"
+      [query]="query"
+      [rowsPerPageOptions]="[]">
+    </app-paginator>
+  </div>
+</div>
+<div class="col-12 flex align-items-center justify-content-center mt-2 mb-2">
+  <button class="cfe-boton-opcion cfe-boton-secondary cfe-boton-lg font-semibold with-button"
+          (click)="cancelar()">
+    Cancelar
+  </button>
+  <button class="ml-3 cfe-boton-primary cfe-boton-lg font-semibold with-button"
+          [disabled]="!mostrarBtnAceptar || soloLectura"
+          (click)="aceptar()">
+    Aceptar
+  </button>
+</div>

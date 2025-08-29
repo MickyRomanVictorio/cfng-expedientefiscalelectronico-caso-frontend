@@ -1,0 +1,42 @@
+<div class="grid mt-1">
+  <div class="w-full">
+    <app-asociar-sujetos-delitos 
+      [idActoTramiteCaso]="idActoTramiteCaso"
+      [etapa]="etapa"
+      (seHanRegistradoAsociaciones)="establecerSiSeHanRegistradoAsociaciones($event)"
+      [modoLectura]="bloquearFormulario"
+    />
+  </div>
+  <div class="col-12 sm:col-4">
+    <div class="field mb-0 relative">
+      <label for="dias" class="font-semibold"
+        >Tiempo para resolver solicitudes (días)</label
+      >
+      <input
+        pInputText
+        id="dias"
+        (keypress)="validOnlyNumbers($event)"
+        (paste)="validOnlyNumberOnPaste($event)"
+        (drop)="validOnlyNumberDrop($event)"
+        maxlength="4"
+        type="text"
+        autocomplete="off"
+        class="p-inputtext-lg py-3 text-lg w-full"
+        [(ngModel)]="dias"
+        (ngModelChange)="alSeleccionar()"
+        placeholder="0"
+        [class.ng-invalid]="!tiempoValido"
+        [disabled]="bloquearFormulario"
+      />
+      @if ( tiempoValido ) {
+        <div class="icono-guardado">
+            <img 
+                [src]="iconAsset.obtenerRutaIcono('check-circle')"
+                alt="guardado"
+                class="pr-2 h-2rem"
+            >
+        </div>
+      }
+    </div>
+  </div>
+</div>

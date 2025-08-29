@@ -1,0 +1,122 @@
+<div class="card">
+  @if(listaReparacionCivil.length == 0 && !this.modoLectura){
+  <div class="w-full mb-3">
+    <mensaje-generico [titulo]="'Se requiere agregar sujetos con reparación civil'" />
+  </div>
+  }
+
+  @if(modelAlerta){
+  <div class="flex-center border-round-lg p-3 mb-3" [ngClass]="'label-bg-'+modelAlerta?.tipo">
+    <fn-icon [ngClass]="'label-info-'+modelAlerta?.tipo" 
+             [ico]="modelAlerta?.tipo=='success'?
+             iconUtil.obtenerIcono('iCheckCircle'):iconUtil.obtenerIcono('iInfoCircle')" height="1.5rem" />
+    <span class="text-md ml-2" [innerHTML]="modelAlerta?.mensaje"></span>
+    <div class="ml-auto">
+      <fn-icon onKeyPress (click)="modelAlerta = null"
+                          class="cursor-pointer"
+                          [ico]="iconUtil.obtenerIcono('iClose')"
+        height="1.5rem" />
+    </div>
+  </div>
+  }
+  
+  <h3 class="cfe-titulo-1">Agregar reparación civil</h3>
+  @if(salidaAlterna && !tipoAcuerdoActa){
+    <div class="grid mb-1 tipo-reparacion">
+      <div class="col-12 md:col-6 mb-2">
+        <p class="reparacion-civil-titulo"><i
+            class="pi pi-circle-on tipo-colores-reparacion principio-de-oportunidad"></i> Principio
+          de Oportunidad</p>
+      </div>
+      <div class="col-12 md:col-6">
+        <p class="reparacion-civil-titulo"><i class="pi pi-circle-on tipo-colores-reparacion acuerdo-reparatorio"></i>
+          Acuerdo
+          Reparatorio</p>
+      </div>
+    </div>
+  }
+  @if(!modoLectura){
+    <button (click)="modalAgregar()" type="button"
+      class="cfe-boton-secondary cfe-boton-m w-full mb-3" icon="pi pi-upload">
+      <span class="ml-1">Agregar</span>
+    </button>
+  }
+  @if(listaReparacionCivil.length>0){
+  <div class="grid mt-2 mb-2 borde-superior">
+    <div class="col-12 md:col-3 mt-2">
+      <label for="buscar" class="font-semibold">Buscar por:</label>
+    </div>
+    <div class="col-12 md:col-8">
+      <input [formControl]="busquedaText" pInputText type="text" class="p-inputtext w-full text-uppercase"
+        placeholder="Ingrese los datos a buscar" />
+    </div>
+    <div class="col-12 md:col-1 mt-2">
+      <img onKeyPress (click)="ordenarLista()" [src]="ordenar" height="30" alt="Ordenar" style="cursor: pointer;" />
+    </div>
+  </div>
+  }
+  @else {
+  <hr class="linea-delgada">
+  <div class="w-full text-center">
+    <p>Aún no se tiene ninguna reparación civil agregada</p>
+  </div>
+  }
+  <div #scrollContainer class="lista-reparacion-civil">
+    <div *ngIf="listaFiltrada.length === 0 && busquedaText.value?.trim() !== ''" class="text-center mt-3">
+      <p>No se han encontrado resultados</p>
+    </div>
+    <div *ngFor="let reparacion of listaFiltrada">
+      <div onKeyPress class="card" (click)="seleccionarReparacion(reparacion)"
+        [ngClass]="{'creacion-reparacion': modelRegistro?.idReparacionCivil === reparacion.idReparacionCivil, 'reparacion-seleccion':idReparacionCivilSeleccion === reparacion.idReparacionCivil && secuenciaSeleccion === reparacion.secuencia}">
+        <div class="card-header">
+          <div class="grid">
+            <div class="col-12 md:col-4">
+              <span class="badge-estados"
+                [ngClass]="'badge-estados-' + (reparacion.tipoReparacionCivil | lowercase)">{{capitalizedFirstWord(reparacion.tipoReparacionCivil)}}</span>
+            </div>
+            <div class="col-12 md:col-8">
+              <p class="reparacion-civil-titulo"><i *ngIf="salidaAlterna && !tipoAcuerdoActa" class="pi pi-circle-on mr-2 mt-1"
+                  [ngClass]="'tipo-colores-reparacion ' + (convertirMinusculayGuiones(mostrarSalidaAlternaLista(reparacion.lista)))"></i>{{reparacion.codigoReparacionCivil}}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="card-body mt-1">
+          <div class="grid">
+            <div class="col-12 md:col-4"><b>Deudor(es)</b></div>
+            <div class="col-12 md:col-8">
+              <ol class="custom-list">
+                <li *ngFor="let sujetos of filtrarPorTipoParticipante(reparacion.lista,'DEUDOR')">
+                  {{sujetos.nombreSujeto}}</li>
+              </ol>
+            </div>
+          </div>
+          <div class="grid">
+            <div class="col-12 md:col-4"><b>Acreedor(es)</b></div>
+            <div class="col-12 md:col-8">
+              <ol class="custom-list">
+                <li *ngFor="let sujetos of filtrarPorTipoParticipante(reparacion.lista,'ACREEDOR')">
+                  {{sujetos.nombreSujeto}}</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+        @if(reparacion.pendienteRegistrar == true){
+          <div class="flex-center border-round-lg p-2 label-bg-error mb-2">
+            <fn-icon class="label-info-error" [ico]="iconUtil.obtenerIcono('iInfoCircle')" height="1.6rem" />
+            <span class="text-md ml-2">Pendiente de modificar información</span>
+          </div>
+        }
+        <div class="card-footer">
+          <div class="flex justify-content-end align-items-center">
+            <img onKeyPress *ngIf="!modoLectura" (click)="duplicarReparacion(reparacion); $event.stopPropagation()"
+              [src]="duplicado" class="botones-accion agregar mr-2" height="25" alt="Duplicar" />
+            <fn-icon onKeyPress *ngIf="!modoLectura"  (click)="eliminarReparacionCivil(reparacion); $event.stopPropagation()"
+              [ico]="iconUtil.obtenerIcono('iTrash')" height="2.4rem" class="botones-accion eliminar"></fn-icon>
+          </div>
+        </div>
+      </div>
+      <hr class="linea-delgada">
+    </div>
+  </div>
+</div>

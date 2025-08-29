@@ -1,0 +1,191 @@
+<div class="cfe-container cfe-container-background-white">
+  <h4 class="cfe-titulo-2 mb-3">
+    Versión: {{ fechaModificacion | date : "dd MMMM yyyy hh:mm a" : "es" }}
+  </h4>
+  <span class="close" (click)="closeAction()">
+    <img [src]="closeIcon" alt="Close Icon" />
+  </span>
+
+  <form [formGroup]="form">
+    <div class="mt-1 cfe-filtros1">
+      <div class="cfe-filtros-fondo1">
+        <div class="col">
+          <div class="grid">
+            <div class="col-4">
+              <label class="font-semibold">Nombre del hecho</label>
+              <input
+                pInputText
+                type="text"
+                class="p-inputtext-lg py-3 text-lg w-full"
+                placeholder="Ingrese el nombre del hecho"
+                formControlName="nombreHecho"
+              />
+            </div>
+            <div class="col-4">
+              <label class="font-semibold adjust-origin-label"
+                >Fecha del hecho</label
+              >
+              <p-calendar
+                dateMask
+                dateFormat="dd/mm/yy"
+                class="cfe-calendar calendar-height"
+                [showIcon]="true"
+                icon="cfe-calendar-icon"
+                placeholder="dd/mm/aaaa"
+                formControlName="fechaHecho"
+              ></p-calendar>
+            </div>
+            <div class="col-2">
+              <label class="font-semibold">Hora aproximada del Hecho</label>
+              <div class="p-inputgroup">
+                <input
+                  pInputText
+                  type="text"
+                  class="p-inputtext-lg py-3 text-lg"
+                  placeholder="Ingrese Hora"
+                  formControlName="horaHecho"
+                />
+                <p-selectButton
+                  [options]="stateOptions"
+                  formControlName="ampm"
+                  optionLabel="label"
+                  optionValue="value"
+                  class="selector_hora"
+                ></p-selectButton>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cfe-filtros-fondo1">
+      <div class="col">
+        <div class="grid">
+          <div class="col-12">
+            <label class="font-semibold">Descripción de los hechos</label>
+            <textarea
+              rows="2"
+              cols="30"
+              class="textarea-fontsize"
+              pInputTextarea
+              placeholder="Ingrese descripción de los hechos"
+              formControlName="descripcion"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cfe-filtros-fondo1">
+      <div class="col">
+        <div class="grid">
+          <div class="col-6">
+            <label class="font-semibold adjust-origin-label"
+              >Departamento</label
+            >
+            <p-dropdown
+              (onChange)="actualizarProvincias($event.value)"
+              styleClass="p-inputtext-lg py-1"
+              [options]="departamentos"
+              optionValue="codigo"
+              optionLabel="nombre"
+              emptyMessage="Sin resultados"
+              placeholder="Seleccione un departamento"
+              [showClear]="true"
+              formControlName="departamento"
+            ></p-dropdown>
+          </div>
+          <div class="col-6">
+            <label class="font-semibold adjust-origin-label">Provincia</label>
+            <p-dropdown
+              (onChange)="actulizarDistritos($event)"
+              styleClass="p-inputtext-lg py-1"
+              [options]="provincias"
+              optionValue="codigo"
+              optionLabel="nombre"
+              placeholder="Seleccione una provincia"
+              emptyMessage="Sin resultados"
+              [showClear]="true"
+              formControlName="provincia"
+            ></p-dropdown>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cfe-filtros-fondo1">
+      <div class="col">
+        <div class="grid">
+          <div class="col-6">
+            <label class="font-semibold adjust-origin-label">Distrito</label>
+            <p-dropdown
+              [options]="distritos"
+              optionValue="codigo"
+              optionLabel="nombre"
+              styleClass="p-inputtext-lg py-1"
+              placeholder="Seleccione un distrito"
+              emptyMessage="Sin resultados"
+              [showClear]="true"
+              formControlName="distrito"
+            ></p-dropdown>
+          </div>
+          <div class="col-6">
+            <label class="font-semibold">Dirección de los hechos</label>
+            <input
+              pInputText
+              type="text"
+              class="p-inputtext-lg py-3 text-lg w-full input-height"
+              placeholder="Ingrese dirección de los hechos"
+              formControlName="direccion"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cfe-filtros-fondo1">
+      <div class="col">
+        <div class="grid">
+          <div class="col-12">
+            <label class="font-semibold adjust-origin-label"
+              >Referencia de la dirección (Opcional)</label
+            >
+            <input
+              pInputText
+              type="text"
+              class="p-inputtext-lg py-3 text-lg w-full input-height"
+              formControlName="referenciaDireccion"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cfe-filtros-fondo1">
+      <div class="col">
+        <div class="grid">
+          <div class="col-12">
+            <label class="font-semibold adjust-origin-label"
+              >Dirección mapas (Opcional)</label
+            >
+            <input
+              pInputText
+              type="text"
+              class="p-inputtext-lg py-3 text-lg w-full input-height"
+              formControlName="direccionMapa"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cfe-filtros-fondo1">
+      <div class="col-12">
+        <div id="mapa" [ngClass]="{ disabled: isDisabled }"></div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<p-toast></p-toast>

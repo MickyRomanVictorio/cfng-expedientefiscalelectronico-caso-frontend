@@ -1,0 +1,64 @@
+<div class="cfe-modal">
+
+	<app-encabezado-modal
+		titulo="Detalle de notificación"
+		[referenciaModal]="referenciaModal"
+		[numeroCaso]="numeroCaso"
+	></app-encabezado-modal>
+
+		<div class="cfe-tabla-white pt-2">
+		<p-table
+			[loading]="cargandoTabla"
+			[value]="detallesNotificacion"
+			[paginator]="true"
+			[rowHover]="true"
+			[rows]="5"
+			[showCurrentPageReport]="true"
+			[tableStyle]="{ 'min-width': '50rem' }"
+			currentPageReportTemplate="{first} de {last} registros"
+			[rowsPerPageOptions]="[5, 15, 30]"
+		>
+		<ng-template pTemplate="header">
+			<tr>
+				<th class="columna-tipo-sujeto">Tipo de sujeto procesal</th>
+				<th class="columna-tipo-documento">Doc.</th>
+				<th class="columna-numero-documento">N° Documento</th>
+				<th class="columna-nombre">Nombres y Apellidos / Razón Social</th>
+				<th class="columna-direccion">Dirección de notificación</th>
+				<th class="columna-tipo-cedula">Tipo de Cédula</th>
+				<th class="columna-cedula">Cédula</th>
+        <th class="columna-fecha-notificacion">F. Notificación</th>
+        <th class="columna-estado-notificacion">Estado de Notificación</th>
+			</tr>
+		</ng-template>
+		<ng-template pTemplate="body" let-detalle>
+			<tr class="p-selectable-row">
+				<td>{{ detalle.noTipoParteSujeto}}</td>
+				<td>{{ detalle.noTipoDocIdentidad }}</td>
+				<td>{{ detalle.numeroDocumento }}</td>
+				<td>{{ detalle.nombreSujeto | capitalizar }}</td>
+				<td>{{ detalle.direccion }}</td>
+				<td>{{ detalle.tipoCedula }}</td>
+        <td>
+          <span class="badge badge-cedula-{{obtenerClaseDeCedula(detalle.noEstadoCedula)}}">
+            {{ detalle.noEstadoCedula }}
+          </span>
+        </td>
+        <td>{{ detalle.fechaNotificacion }}</td>
+        <td>
+          <span class="badge badge-estado-{{obtenerClaseDeEstado(detalle.noEstadoNotificacion)}}">
+            {{ detalle.noEstadoNotificacion }}
+          </span>
+        </td>
+			</tr>
+		</ng-template>
+			<ng-template pTemplate="emptymessage">
+				<tr>
+					<td colspan="8">No se encontró información de detalles de notificación.</td>
+				</tr>
+			</ng-template>
+		</p-table>
+  	</div>
+
+</div>
+

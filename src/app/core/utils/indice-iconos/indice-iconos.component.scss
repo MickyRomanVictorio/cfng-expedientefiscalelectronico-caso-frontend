@@ -1,0 +1,43 @@
+@use '../../../../assets/styles/scss/abstracts/index' as *;
+
+.indice_iconos__container{
+    background-color: $background;
+    border-radius: 15px;
+    padding: 30px 40px;
+    min-width: 1300px;
+    h3{
+        color: $primary;
+        font-family: $font-semi-bold;
+        font-size: 1.25em;
+    }
+
+    .indice_iconos__filters{
+      width: 50%;
+    }
+}
+
+:host ::ng-deep .text-secondary{
+    color: $secondary;
+    font-family: $font-semi-bold;
+}
+
+.close{
+    cursor: pointer;
+    position: absolute;
+    right: 30px;
+    top: 20px;
+}
+
+.icon-cell {
+  text-align: center;
+  border: 1px solid #ccc;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #f4f4f4;
+}
+
+.icon-cell i {
+  font-size: 36px;
+}
+
+

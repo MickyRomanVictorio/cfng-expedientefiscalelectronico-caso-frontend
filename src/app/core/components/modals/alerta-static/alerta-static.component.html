@@ -1,0 +1,41 @@
+<div *ngIf="listaAletasUrgentes!.length > 0" class="alerta-static flex align-items-center">
+  <p-carousel #carousel [value]="listaAletasUrgentes" [numVisible]="1" [numScroll]="1" [circular]="false"
+    [showIndicators]="false" (onPage)="onPageChange($event)">
+    <ng-template let-alerta pTemplate="item">
+      <div class="alerta-item flex align-items-center p-5">
+        <i class="pi pi-chevron-left custom-icon cursor-pointer text-xs" (click)="prev($event)"
+          style="padding-right: 17px;"></i>
+        <div class="flex-initial px-0 w-4rem">
+          {{ currentPage + 1 }} de {{ listaAletasUrgentes!.length }}
+        </div>
+        <i class="pi pi-chevron-right custom-icon mr-2 cursor-pointer text-xs" (click)="next($event)"></i>
+        <div class="alerta-item__header">
+          <div class="alerta-item__icon ml-3">
+            <i class="pi pi-info-circle"></i>
+          </div>
+        </div>
+        <div class="alerta-item__content flex align-items-center">
+          <div class="alerta-item__info">
+            <h2>{{ alerta.titulo }}</h2>
+            <p [innerHTML]="alerta.texto | textoTiempoSegundos:alerta.fechaCreacion"></p>
+          </div>
+          <div class="alerta-item__actions flex align-items-center">
+            <button class="cfe-boton-danger cfe-boton-lg w-full" (click)="eventoSolucionarAlerta(alerta)">
+              Solucionar
+            </button>
+            <p-menu
+              #menu
+              [model]="items(alerta)"
+              [popup]="true"
+              class="absolute menu-options menu-options2"
+            ></p-menu>
+            <i
+              class="pi pi-ellipsis-v text-xl"
+              (click)="menu.toggle($event)"
+            ></i>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </p-carousel>
+</div>

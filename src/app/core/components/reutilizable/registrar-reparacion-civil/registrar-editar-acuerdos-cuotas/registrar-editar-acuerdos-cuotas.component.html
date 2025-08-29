@@ -1,0 +1,15 @@
+@if ( valid(datosEditarReparacionCivil?.idReparacionCivil) ) {
+    <app-registrar-acuerdo-acta 
+        [data]="data"
+        [enviarDatosAcuerdoActa]="enviarinformacionActoAcuerdo()"
+        [modoLectura]="modoLectura"
+        (enviarEstadoBoton)="enviarEstadoBotonAccion($event)"
+     />
+}
+@else {
+<div class="datos-reparacion-vacio">
+    <div class="flex justify-content-center align-items-center">
+        <strong>Aún no ha agregado y/o seleccionado una reparación civil</strong>
+    </div>
+</div>
+}

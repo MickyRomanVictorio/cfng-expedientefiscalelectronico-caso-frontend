@@ -1,0 +1,95 @@
+<app-filtro-cuaderno-incidental
+  (eventoBuscarCuaderno)="buscarCuadernoIncidental($event); resetPage = true" 
+  (eventoNuevoIncidente)="registrarNuevoIncidente()" 
+></app-filtro-cuaderno-incidental>
+
+<!--  Ini - Opciones Tipo Vista, Opciones para Exportar -->
+<div class="grid">
+  <div class="col-12 md:col-6">
+    <div class="flex align-items-center">
+      <img [src]="iconAsset.obtenerRutaIcono('exclamationFolder')" alt="Folder Icon" style="width: 22px"/>
+      <h4 class="casos_listados_count mt-2 mb-0">
+        {{ cantidadRegistrosTotales }} cuadernos incidentales listados
+      </h4>
+    </div>
+  </div>
+
+  <div class="col-12 md:col-6">
+    <div class="flex flex-column sm:flex-row justify-content-end">
+        @if (listaCuadernos.length > 0 && tipoVista === tipoVistaEnum.Tabla)
+        {
+        <div class="flex align-items-center gap-1 md:gap-3 mr-0 sm:mr-3 flex-column sm:flex-row">
+            <button
+              class="cfe-boton-m cfe-boton-secondary"
+              (click)="eventoExportar(TipoExportarEnum.Pdf)"
+            >
+              <img [src]="iconAsset.obtenerRutaIcono('pdf')" alt="PDF Icon" class="mr-2"/>
+              Exportar PDF
+            </button>
+            <button
+              class="cfe-boton-m cfe-boton-secondary"
+              (click)="eventoExportar(TipoExportarEnum.Excel)"
+            >
+              <img [src]="iconAsset.obtenerRutaIcono('excel')" alt="Excel Icon" class="mr-2"/>
+              Exportar Excel
+            </button>
+        </div>
+        }
+
+      <div class="flex gap-3 align-items-center mt-3 sm:mt-0">
+        <button aria-label="Vista tipo tarjetas" class="list-type border-none bg-transparent cursor-pointer" [ngClass]="{ active: tipoVista === tipoVistaEnum.Grilla }"
+          (click)="eventoTipoVista($event, tipoVistaEnum.Grilla)"
+        >
+          <i class="pi pi-table mt-1"></i>
+        </button>
+        <button aria-label="Vista tipo tabla" class="list-type border-none bg-transparent cursor-pointer" [ngClass]="{ active: tipoVista === tipoVistaEnum.Tabla }"
+          (click)="eventoTipoVista($event, tipoVistaEnum.Tabla)"
+        >
+          <i class="pi pi-bars mt-1"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--  Fin - Opciones Tipo Vista, Opciones para Exportar -->
+
+<!--Ini - Mensajes si no existen datos -->
+@if (listaCuadernos.length === 0 && numeroBusqueda > 1) {
+  <div class="px-4 py-6 text-center font-bold">
+    No se encontraron registros con los criterios de búsqueda ingresados
+  </div>
+}
+@if (listaCuadernos.length === 0 && numeroBusqueda === 1) {
+  <div class="px-4 py-6 text-center font-bold">
+    En estos momentos, no hay cuadernos incidentales creados
+  </div>
+}
+<!--Fin - Mensajes si no existen datos -->
+
+@if (listaCuadernos.length > 0) {
+  @if (tipoVista === tipoVistaEnum.Grilla) {
+    <div class="pt-4">
+      <app-grilla-cuadernos-incidentales
+        [listaCuadernos]="listaCuadernos"
+        (modificarAccionOut)="eventoModificar($event)"
+        (borrarAccionOut)="eventoBorrar($event)"
+        (alertaFechaOut)="eventoAlertaFecha($event)"
+      ></app-grilla-cuadernos-incidentales>
+    </div>
+  }
+  @if (tipoVista === tipoVistaEnum.Tabla) {
+    <app-tabla-cuadernos-incidentales
+      [listaCuadernos]="listaCuadernos"
+      (modificarAccionOut)="eventoModificar($event)"
+      (borrarAccionOut)="eventoBorrar($event)"
+      (alertaFechaOut)="eventoAlertaFecha($event)"
+    ></app-tabla-cuadernos-incidentales>
+  }
+  <app-paginator
+    [query]="query"
+    [items]="itemPaginado"
+    (paginate)="onPaginate($event)"
+    [resetPage]="resetPage"
+  ></app-paginator>
+
+}

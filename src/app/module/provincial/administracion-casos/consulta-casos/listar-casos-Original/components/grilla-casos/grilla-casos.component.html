@@ -1,0 +1,173 @@
+<div class="grid" [ngClass]="{'container-view-list px-2': !isGrid}">
+
+  <div class="col-12">
+
+    <div class="flex justify-content-between flex-column md:flex-row">
+      @if (casosfiscalesFiltrados) {
+        <div class="flex align-items-center">
+          <img style="width: 22px;" [src]="iconAsset.obtenerRutaIcono('exclamationFolder')" alt="Folder Icon">
+          <h4 class="casos_listados_count">{{ totalCasos }} Casos listados</h4>
+        </div>
+      }
+
+
+      <div class="flex flex-column sm:flex-row justify-content-between">
+        @if (!isGrid) {
+          <div class="flex align-items-center gap-1 md:gap-3 mr-0 sm:mr-3 flex-column sm:flex-row">
+            <p-button label="Exportar PDF" class="btn-navigate w-full sm:w-auto" styleClass="font-bold w-full sm:w-auto text-left" (onClick)="exportar('PDF')">
+              <img [src]="iconAsset.obtenerRutaIcono('pdf')" alt="PDF Icon">
+            </p-button>
+            <p-button label="Exportar Excel" class="btn-navigate w-full sm:w-auto" styleClass="font-bold w-full sm:w-auto text-left" (onClick)="exportar('Excel')">
+              <img [src]="iconAsset.obtenerRutaIcono('excel')" alt="Excel Icon">
+            </p-button>
+          </div>
+        }
+
+        <div class="flex gap-3 align-items-center mt-3 sm:mt-0">
+          <a (click)="changeViewType($event, 'grid')" class="list-type" [ngClass]="{'active': isGrid}" href="#"><i class="pi pi-table mt-1"></i></a>
+          <a (click)="changeViewType($event, 'list')" class="list-type" [ngClass]="{'active': !isGrid}" href="#"><i class="pi pi-bars mt-1"></i></a>
+        </div>
+      </div>
+
+    </div>
+
+    @if (!tipoProceso && casosfiscalesFiltrados.length == 0) {
+      <div class="px-4 py-6 text-center bg-white border-1 border-solid border-500 border-round-md">
+        No se encontraron registros con los criterios de búsqueda ingresados, por favor ir a: <a [routerLink]="[rutaConsultarCasos]">Ir a Consultar Casos Fiscales</a>
+      </div>
+    }
+
+    @if (tipoProceso && casosfiscalesFiltrados.length == 0) {
+      <div class="px-4 py-6 text-center bg-white border-1 border-solid border-500 border-round-md">
+        No se encontraron registros con los criterios de búsqueda ingresados, por favor ir a:
+        <div class="cursor-pointer font-bold underline" (click)="consultarCasosFiscalesPath()">Consultar Casos Fiscales</div>
+      </div>
+    }
+
+  </div>
+
+  @if(!isGrid && casosfiscalesFiltrados!.length > 0){
+    <div class="col-12 tableView">
+      <p-table
+               [tableStyle]="{'min-width': '20rem'}"
+               [value]="casosfiscalesFiltrados"
+               [rowHover]="true"
+               responsiveLayout="stack" styleClass="p-datatable-striped"
+      >
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th pSortableColumn="numeroCaso">Nro Caso
+              <p-sortIcon field="numeroCaso"></p-sortIcon>
+            </th>
+            <th pSortableColumn="etapa">Etapa
+              <p-sortIcon field="etapa"></p-sortIcon>
+            </th>
+            <th pSortableColumn="fiscal">Fiscal
+              <p-sortIcon field="fiscal"></p-sortIcon>
+            </th>
+            <th pSortableColumn="ultimoTramite">Último trámite
+              <p-sortIcon field="ultimoTramite"></p-sortIcon>
+            </th>
+            <th>Delitos</th>
+            <th pSortableColumn="fechaIngreso">F. Ingreso
+              <p-sortIcon field="fechaIngreso"></p-sortIcon>
+            </th>
+            <th pSortableColumn="fechaUltimoTramite">F. Último trámite
+              <p-sortIcon field="fechaUltimoTramite"></p-sortIcon>
+            </th>
+            <th>Plazo de etapa</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-casofiscal let-columns="columns">
+          <tr (click)="abrirDetalleCaso(casofiscal)" class="relative cursor-pointer">
+              <td [style.border-left]="'8px solid '+ getFilaEstilo(casofiscal)+' !important' ">
+              <div>
+                <div class="p-column-title font-bold">Nro Caso</div>
+                <div [innerHTML]="obtenerCasoHtml(casofiscal.numeroCaso)"></div>
+              </div>
+            </td>
+            <td>
+              <div>
+                  <div class="p-column-title font-bold">Etapa</div>
+                  {{ casofiscal.etapa }}
+              </div>
+            </td>
+            <td>
+              <div>
+                <div class="p-column-title font-bold">Fiscal</div>
+                {{ casofiscal.fiscal }}
+              </div>
+            </td>
+            <td>
+              <div>
+                <div class="p-column-title font-bold">Último trámite</div>
+                {{ casofiscal.ultimoTramite }}
+              </div>
+            </td>
+            <td>
+              <div>
+                <div class="p-column-title font-bold">Delitos</div>
+                {{ flatDelitos(casofiscal.delitos) }}
+              </div>
+            </td>
+            <td>
+              <div>
+                <div class="p-column-title font-bold">F. Ingreso</div>
+                {{ casofiscal.fechaIngreso }}
+              </div>
+            </td>
+            <td>
+              <div>
+                <div class="p-column-title font-bold">F. Último trámite</div>
+                {{ casofiscal.fechaUltimoTramite }}
+              </div>
+            </td>
+            <td>
+              <div class="w-full">
+                <div class="p-column-title font-bold">Plazo de etapa</div>
+                <div class="custom-progressbar">
+                  @for (plazo of casofiscal.plazos; track $index) {
+                    <app-barra-progreso-caso [titulo]="plazo.nombreActoProcesal" [inicio]="plazo.diasTrasncurridos"
+                      [diasPlazo]="plazo.diasPlazo" [indicadorPlazo]="plazo.indSemaforo">
+                    </app-barra-progreso-caso>
+                  }
+                </div>
+                <div class="py-2 mt-2">
+                  <button class="cfe-boton-secondary cfe-boton-sm" routerLink="../listar-casos-anulados">Plazos y Pagos</button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <app-paginator
+        [query]="query"
+        [items]="itemPaginado"
+        [rowsPerPageOptions]="[]"
+        [resetPage]="resetPage"
+        (paginate)="onPaginate($event)"
+      ></app-paginator>
+    </div>
+  }
+
+</div>
+
+@if (casosfiscalesFiltrados.length > 0 && isGrid) {
+  <div class="col-12">
+    <div class="carpeta-container">
+      @for (caso of casosfiscalesFiltrados; track $index) {
+      <div class="px-2 pb-6">
+          <app-carpeta-caso [casofiscal]="caso"></app-carpeta-caso>
+      </div>
+      }
+    </div>
+    <app-paginator
+      [query]="query"
+      [items]="itemPaginado"
+      [rowsPerPageOptions]="[]"
+      [resetPage]="resetPage"
+      (paginate)="onPaginate($event)"
+    ></app-paginator>
+  </div>
+}
+

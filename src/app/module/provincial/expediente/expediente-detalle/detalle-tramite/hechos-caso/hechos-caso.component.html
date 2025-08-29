@@ -1,0 +1,248 @@
+<div class="cfe-container cfe-container-background-white">
+  <form [formGroup]="form">
+    <div class="mt-1 cfe-filtros1">
+      <div class="cfe-filtros-fondo1">
+        <div class="col">
+          <div class="grid">
+            <div class="col-12 md:col-4">
+              <label for="" class="font-semibold">Nombre del hecho</label>
+              <input
+                pInputText
+                type="text"
+                class="p-inputtext-md text-md w-full"
+                placeholder="Ingrese el nombre del hecho"
+                (input)="countNombre()"
+                maxlength="30"
+                formControlName="nombreHecho"
+              />
+              <div class="py-2 text-right text-600">
+                Quedan {{ nombreCount }} caracteres
+              </div>
+            </div>
+            <div class="col-12 md:col-4">
+              <label for="" class="font-semibold adjust-origin-label">Fecha del hecho</label>
+              <p-calendar
+                dateMask
+                dateFormat="dd/mm/yy"
+                class="p-inputtext-md cfe-calendar h-39"
+                [showIcon]="true"
+                icon="cfe-calendar-icon"
+                placeholder="dd/mm/aaaa"
+                formControlName="fechaHecho"
+                [minDate]="minDate"
+                [maxDate]="maxDate"
+                [disabled]="isCalendarDisabled"
+              ></p-calendar>
+            </div>
+            <div class="col-12 md:col-4">
+              <label for="" class="font-semibold">Hora aproximada del Hecho</label>
+              <div class="p-inputgroup w-full flex">
+                <p-inputMask
+                  mask="99:99"
+                  type="text"
+                  class="p-inputtext-md text-md h-40 flex-1"
+                  placeholder="Hora"
+                  formControlName="horaHecho"
+                  maxlength="5"
+                />
+                <p-selectButton [options]="stateOptions" class="selector_hora flex-1" formControlName="ampm" optionLabel="label" optionValue="value"></p-selectButton>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cfe-filtros-fondo1">
+      <div class="col">
+        <div class="grid">
+          <div class="col-12 md:col-12">
+            <label for="" class="font-semibold">Descripción de los hechos</label>
+            <textarea rows="2" cols="30" class="textarea-fontsize" pInputTextarea
+                      placeholder="Ingrese descripción de los hechos"
+                      (input)="countWords()"
+                      maxlength="4000"
+                      formControlName="descripcion"></textarea>
+                      <div class="py-2 text-right text-600">
+                        {{ wordCount }}/4000 máximo de palabras
+                      </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cfe-filtros-fondo1">
+      <div class="col">
+        <div class="grid">
+          <div class="col-12 md:col-6">
+            <label for="" class="font-semibold adjust-origin-label">Departamento</label>
+            <p-dropdown
+              (onChange)="actualizarProvincias($event.value, true)"
+              styleClass="p-inputtext-md"
+              [options]="departamentos"
+              optionValue="codigo" optionLabel="nombre"
+              emptyMessage="Sin resultados"
+              placeholder="Seleccione un departamento"
+              [showClear]="false"
+              formControlName="departamento"
+            ></p-dropdown>
+          </div>
+          <div class="col-12 md:col-6">
+            <label for="" class="font-semibold adjust-origin-label">Provincia</label>
+            <p-dropdown
+              (onChange)="actulizarDistritos($event, true)"
+              styleClass="p-inputtext-md"
+              [options]="provincias"
+              optionValue="codigo" optionLabel="nombre"
+              placeholder="Seleccione una provincia"
+              emptyMessage="Sin resultados"
+              [showClear]="false"
+              formControlName="provincia"
+            ></p-dropdown>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cfe-filtros-fondo1">
+      <div class="col">
+        <div class="grid">
+          <div class="col-12 md:col-6">
+            <label for="" class="font-semibold adjust-origin-label">Distrito</label>
+            <p-dropdown
+              (onChange)="changeDistrict($event, true)"
+              [options]="distritos"
+              optionValue="codigo"
+              optionLabel="nombre"
+              styleClass="p-inputtext-md"
+              placeholder="Seleccione un distrito"
+              emptyMessage="Sin resultados"
+              [showClear]="false"
+              formControlName="distrito"
+            ></p-dropdown>
+          </div>
+          <div class="col-12 md:col-6">
+            <label for="" class="font-semibold">Dirección de los hechos</label>
+            <input
+              pInputText
+              type="text"
+              class="p-inputtext-md text-md w-full"
+              placeholder="Ingrese dirección de los hechos"
+              formControlName="direccion"
+              maxlength="100"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="cfe-filtros-fondo1">
+      <div class="col">
+        <div class="grid">
+          <div class="col-12 md:col-12">
+            <label for="" class="font-semibold">Referencia de la dirección (Opcional)</label>
+            <input
+              pInputText
+              type="text"
+              class="p-inputtext-md text-md w-full"
+              maxlength="200"
+              formControlName="referenciaDireccion"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cfe-filtros-fondo1">
+      <div class="col">
+        <div class="grid">
+          <div class="col-12 md:col-12">
+            <label for="" class="font-semibold">Dirección mapas (Opcional)</label>
+            <input
+              pInputText
+              type="text"
+              class="p-inputtext-md text-md w-full"
+              formControlName="direccionMapa"/>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="cfe-filtros-fondo1">
+      <div class="col-12 md:col-12">
+        <div id="map"></div>
+      </div>
+    </div>
+    <br>
+    @if (soloLectura===false) {
+    <div class="cfe-filtros-fondo1">
+      <button (click)="actualizarHecho()" 
+      class="cfe-boton-primary cfe-boton-m mr-2 boton-w" 
+      style="margin-left: auto;"
+      [disabled]="!this.form.valid">Actualizar el hecho
+      </button>
+    </div>
+  }
+  </form>
+</div>
+@if (soloLectura===false) {
+  <div class="sujeto_procesal__header">
+    <div class="sujeto_procesal_header__content">
+      <h3 class="cfe-titulo-1">Historial de modificaciones</h3>
+    </div>
+  </div>
+  <br>
+<div class="sujeto_procesal_table__content">
+  <p-table
+    [value]="historialHechoCaso"
+    [rowHover]="true"
+    [showCurrentPageReport]="true"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [breakpoint]="'992px'"
+    responsiveLayout="stack"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th scope="">N°</th>
+        <th scope="">Fecha de modificación</th>
+        <th scope="">Usuario que modifica</th>
+        <th scope="">Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-hechocaso let-rowIndex="rowIndex">
+      <tr class="">
+        <td class="table_td_content_start">
+          <span class="p-column-title">N°</span>
+          {{ rowIndex + 1 }}
+        </td>
+        <td class="table_td_content_start">
+          <span class="p-column-title">Fecha de modificación</span>
+          <div>
+            {{ hechocaso.fechaModificacion | date :'dd MMM yyyy hh:mm a':'es' }}
+          </div>
+        </td>
+        <td class="table_td_content_start">
+          <span class="p-column-title">Usuario que modifica</span>
+          <div>
+            {{ hechocaso.usuarioModificacion }}
+          </div>
+        </td>
+        <td class="table_td_content_start">
+          <span class="p-column-title">Acciones</span>
+          <fn-icon
+            class="ml-1"
+            [ico]="obtenerIcono('iEye')"
+            height="1.9rem"
+            (click)="verHechoCasoAnterior(hechocaso)"
+            onkeydown=""
+          ></fn-icon>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="9" style="text-align: center;">No se encontraron registros ingresados</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+}
+
+<p-toast></p-toast>

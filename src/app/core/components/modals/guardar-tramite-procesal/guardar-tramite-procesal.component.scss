@@ -1,0 +1,26 @@
+.icon-close{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+.modal-guardar-tramite{
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+.modal-guardar-tramite-title{
+    margin-bottom: 20px;
+    h2{
+        font-size: 18px;
+    }
+}
+
+:host ::ng-deep .p-dropdown-panel {
+  min-width: 100% !important;
+}
+
+:host ::ng-deep .p-dropdown-item {
+  white-space: normal !important; 
+  word-wrap: break-word;
+}

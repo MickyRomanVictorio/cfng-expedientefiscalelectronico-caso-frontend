@@ -1,0 +1,105 @@
+<div *ngIf="isRendered">
+  <app-encabezado-modal
+    [referenciaModal]="referenciaModal"
+    [datoComplementario]="datoComplementario"
+  />
+
+  <br />
+
+  <h3 class="cfe-subtitulo-3 cfe-bold mb-4">Lista de cuadernos</h3>
+
+  <div class="cfe-table-green">
+    <p-table
+      [value]="cuadernosFiltrados"
+      [paginator]="false"
+      [rowHover]="true"
+      [rows]="5"
+      [showCurrentPageReport]="true"
+      [tableStyle]="{ 'min-width': '10rem' }"
+      currentPageReportTemplate="{first} de {last} registros"
+      [rowsPerPageOptions]="[5, 15, 30]"
+      [styleClass]="'p-datatable-sm'"
+      responsiveLayout="stack"
+    >
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th id="nro" class="text-center columna-nro">N°</th>
+          <th id="nroCuaderno" class="columna-cuaderno">N° Cuaderno</th>
+          <th id="tipoCuaderno" class="columna-tipo-cuaderno">
+            Tipo de cuaderno
+          </th>
+          <th id="ultimoTramite" class="columna-ultimo-tramite">
+            Último Tramite
+          </th>
+          <th id="cuadernoPadre" class="columna-cuaderno-padre">
+            Cuaderno Padre
+          </th>
+          <th id="fechaCreacion" class="columna-fecha-creacion">
+            Fecha de creación
+          </th>
+          <th id="delitos" class="columna-delitos-vinculados">
+            Delitos vinculados
+          </th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-cuadernos let-index>
+        <tr class="p-selectable-row">
+          <td class="text-center">
+            <span class="p-column-title">N°</span>
+            {{ cuadernos.nro }}
+          </td>
+
+          <td class="">
+            <span class="p-column-title">N° Cuaderno</span>
+            <div [innerHtml]="obtenerCasoHtml(cuadernos.coCaso)"></div>
+          </td>
+
+          <td>
+            <span class="p-column-title">Tipo de cuaderno</span>
+            {{ cuadernos.tipoCuaderno }}
+          </td>
+
+          <td>
+            <span class="p-column-title">Último Tramite</span>
+            {{ cuadernos.ultimoTramite || "-" | capitalizar }}
+          </td>
+
+          <td class="">
+            <span class="p-column-title">Cuaderno Padre </span>
+            <div [innerHtml]="obtenerCasoHtml(cuadernos.coCasoPadre)"></div>
+          </td>
+
+          <td class="">
+            <span class="p-column-title">Fecha de creación</span>
+            {{ cuadernos.fechaCreacion | date : "dd/MMMM/yyyy" }}
+          </td>
+
+          <td class="">
+            <span class="p-column-title">Delitos vinculados</span>
+
+            @for (item of cuadernos.delitos?.split('||'); track item.name) {
+            <ul>
+              <li class="delito-registrado">{{ item }}</li>
+            </ul>
+
+            } @empty { - }
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8">No se encontró información de cuadernos.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <app-paginator
+      [query]="query"
+      [items]="itemPaginado"
+      [rowsPerPageOptions]="[]"
+      (paginate)="onPaginate($event)"
+    />
+  </div>
+</div>

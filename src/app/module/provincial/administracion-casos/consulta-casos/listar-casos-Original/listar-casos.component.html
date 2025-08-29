@@ -1,0 +1,22 @@
+<div class="cfe-container">
+    <div class="flex justify-content-start flex-wrap">
+        <div class="flex align-items-center justify-content-center mt-2 mb-4">
+            <fn-icon [ico]="iconUtil.obtenerIcono('iFolderSearch')" height="1.6rem"></fn-icon>
+            <h3 class="cfe-titulo-1 mx-2">{{ titulo }}</h3>
+        </div>
+    </div>
+    concluido: {{concluido}}
+     <app-filtrar-consulta-caso
+       [generico] = "generico"
+       [tipoProceso] = "tipoProceso"
+       [idEtapa] = "idEtapa"
+       [concluido] = "concluido"
+       (search)="search($event)"
+       (buscarTexto)="buscarTexto($event)"
+     ></app-filtrar-consulta-caso>
+      <app-grilla-casos
+        [tipoProceso] = "tipoProceso"
+        [filterObj]="filter"
+        [textoBuscado]="textoBuscado"
+      ></app-grilla-casos>
+</div>

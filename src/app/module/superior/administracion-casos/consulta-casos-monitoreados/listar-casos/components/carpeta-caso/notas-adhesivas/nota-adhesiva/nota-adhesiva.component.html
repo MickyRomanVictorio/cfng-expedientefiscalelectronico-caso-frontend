@@ -1,0 +1,11 @@
+<div class="bar-footer-section flex align-items-center justify-content-center gap-2">
+    @for (note of caso.notas.slice(0, 3); track $index) {
+      <div [ngStyle]="{'background-color': note.colorNota}" class="sticky-note cursor-pointer" (click)="eventoVerDetalleNota($event, note)">
+        <a class="extracto-nota p-2 block text-xs">
+            {{ note.textoNota | slice:0:15 }}
+        </a>
+        <div class="folded-corner">
+        </div>
+    </div>
+    }
+</div>

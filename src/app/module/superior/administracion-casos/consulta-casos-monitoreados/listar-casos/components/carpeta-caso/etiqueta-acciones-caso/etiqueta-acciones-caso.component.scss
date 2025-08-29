@@ -1,0 +1,16 @@
+/* sonar-ignore */
+.boton-etiqueta{
+    &--red{
+        background-color: #C1292E;
+    }
+}
+
+.boton-accion--orange, .boton-etiqueta--orange {
+  background-color: #f19700 !important;
+  color: black;
+  font-weight: bold;
+}
+
+.boton-accion--purple-dark, .boton-etiqueta--purple-dark {
+  background-color: #A855F7 !important;
+}

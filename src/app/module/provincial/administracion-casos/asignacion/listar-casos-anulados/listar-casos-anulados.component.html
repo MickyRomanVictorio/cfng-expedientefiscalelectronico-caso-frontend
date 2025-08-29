@@ -1,0 +1,338 @@
+<div class="cfe-container">
+  <div class="cfe_bandeja__header grid">
+    <div class="col-12 md:col-9 cfe_bandeja_header__content">
+      <fn-icon [ico]="iconUtil.obtenerIcono('iFolderSearch')" height="1.6rem"></fn-icon>
+      <span class="cfe-titulo-1 family-poppin-bold">Casos anulados</span>
+      <fn-icon [ico]="iconUtil.obtenerIcono('iTooltip')" height="1.6rem"></fn-icon>
+    </div>
+    <div class="col-12 md:col-3 flex flex-column sm:flex-row justify-content-end align-items-center pr-0">
+      <button class="cfe-boton-secondary cfe-boton-sm w-full sm:w-auto mb-2 sm:mb-0 justify-content-start family-poppin-bold"
+              routerLink="../listar-casos-por-asignar">
+              <span class="ml-1">Ver asignación de casos</span>
+              <fn-icon [ico]="iconUtil.obtenerIcono('iChevronRight')" height="1.5rem"></fn-icon>
+      </button>
+    </div>
+  </div>
+
+  <form
+    class="cfe_bandeja__filters"
+    [formGroup]="formularioFiltrarCasosAnulados"
+  >
+    <div class="grid row-magin-top">
+      <div class="col">
+        <div class="field mb-0">
+          <label for="buscar" class="font-semibold">Buscar</label>
+          <input
+            pInputText
+            type="text"
+            class="p-inputtext-lg py-3 text-lg w-full"
+            (keyup)="filtrarCasosAnulados()"
+            placeholder="Ingrese algún texto para buscar, por ejemplo el número de caso, nombre de las partes, etc"
+            formControlName="buscar"
+          />
+        </div>
+      </div>
+      <div
+        class="col-fixed"
+        [ngClass]="{ 'cfe-filtro-boton-fondo': mostrarFiltros }"
+      >
+        <div class="field mb-0">
+          <label for="button" class="font-semibold">&nbsp;</label>
+          <button
+            class="cfe-filtro-boton"
+            (click)="eventoMostrarOcultarFiltros()">
+            <fn-icon
+                [ico]="iconUtil.obtenerIcono('iFilterShow')"
+                height="2.1rem">
+            </fn-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    @if (!mostrarFiltros) {
+    <div class="grid mt-3 mb-4">
+      <div class="col">
+        <div class="flex flex-wrap gap-3">
+          <div class="flex align-items-center">
+            <p-radioButton
+              value="ultimosMeses"
+              formControlName="tiempoAFiltrar"
+              inputId="ultimoSeisMeses"
+              (click)="obtenerCasosAnuladosPorFiltroFecha(0)"
+            ></p-radioButton>
+            <label for="ultimoSeisMeses" class="ml-2">Últimos 6 meses</label>
+          </div>
+          <div class="flex align-items-center">
+            <p-radioButton
+              value="todos"
+              formControlName="tiempoAFiltrar"
+              inputId="todosLosMeses"
+              (click)="obtenerCasosAnuladosPorFiltroFecha(1)"
+            ></p-radioButton>
+            <label for="todosLosMeses" class="ml-2">Todos los meses</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    } @if (mostrarFiltros) {
+    <div class="grid nested-grid mt-1 cfe-filtros">
+      <div class="col-12 cfe-filtros-fondo">
+        <div class="col">
+          <div class="field mb-0">
+            <label for="Fecha de asignacion" class="font-semibold">
+              Fecha de anulación
+            </label>
+            <div class="grid">
+              <div class="col">
+                <p-calendar
+                  dateMask
+                  dateFormat="dd/mm/yy"
+                  class="p-inputtext-lg cfe-calendar h-56"
+                  [showIcon]="true"
+                  icon="cfe-calendar-icon"
+                  placeholder="dd/mm/aaaa"
+                  formControlName="fechaDesde"
+                ></p-calendar>
+              </div>
+              <div class="col">
+                <p-calendar
+                  dateMask
+                  dateFormat="dd/mm/yy"
+                  class="p-inputtext-lg cfe-calendar h-56"
+                  [showIcon]="true"
+                  icon="cfe-calendar-icon"
+                  placeholder="dd/mm/aaaa"
+                  formControlName="fechaHasta"
+                ></p-calendar>
+              </div>
+            </div>
+            @if
+            (formularioFiltrarCasosAnulados.errors?.['rangoFechaInvalidoMax']) {
+            <div class="p-error mt-2">
+              La fecha fin no debe ser posterior a la fecha actual.
+            </div>
+            } @if
+            (formularioFiltrarCasosAnulados.errors?.['rangoFechaInvalido']) {
+            <div class="p-error mt-2">
+              El rango de fechas no debe exceder 6 meses.
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="cfe-filtros-fondo cfe-filtros-opciones">
+        <button
+          class="cfe-boton-secondary cfe-boton-m mr-3 boton-w"
+          (click)="limpiarFiltros()"
+        >
+          Limpiar filtros
+        </button>
+        <button
+          class="cfe-boton-primary cfe-boton-m mr-2 boton-w"
+          (click)="obtenerCasosAnulados(0)"
+        >
+          Buscar
+        </button>
+      </div>
+    </div>
+    }
+  </form>
+
+  <div class="cfe_bandeja__table">
+    <div class="cfe_bandeja_table__title grid">
+      <div class="num_casos_por_asignar_table_title__content col-12 md:col-6">
+        <div class="flex text-xl font-bold text-primary mb-3">
+          <fn-icon [ico]="iconUtil.obtenerIcono('iFolderExclamation')" height="1.8rem"
+                  [style]="{'margin-left': '-12px'}"></fn-icon>
+            {{ totalCasosAnulados }} Casos anulados
+        </div>
+      </div>
+      <div
+        class="col-12 md:col-6 flex flex-column sm:flex-row justify-content-end align-items-center pr-0"
+      >
+        <button
+          class="cfe-boton-secondary cfe-boton-m cfe-boton-m w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start family-poppin-bold"
+                (click)="exportar('PDF')">
+          <fn-icon class="ml-1" [ico]="iconUtil.obtenerIcono('iFileDownload')" height="1.6rem"></fn-icon>
+          Exportar PDF
+        </button>
+        <button
+          class="cfe-boton-secondary cfe-boton-m cfe-boton-m w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start family-poppin-bold"
+          (click)="exportar('Excel')">
+          <fn-icon class="ml-1" [ico]="iconUtil.obtenerIcono('iTable')" height="1.6rem"></fn-icon>
+          Exportar Excel
+        </button>
+      </div>
+    </div>
+    <div class="cfe_bandeja_table__content">
+      <p-table
+        [value]="casosAnuladosFiltrados"
+        [rowHover]="true"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [styleClass]="'p-datatable-sm'"
+        responsiveLayout="stack"
+        [(selection)]="casosAnuladosSeleccionados"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="numeroCaso">
+              Número de caso
+              <p-sortIcon field="numeroCaso"></p-sortIcon>
+            </th>
+            <th pSortableColumn="origen">
+              Origen
+              <p-sortIcon field="origen"></p-sortIcon>
+            </th>
+            <th pSortableColumn="remitente">
+              Remitente
+              <p-sortIcon field="remitente"></p-sortIcon>
+            </th>
+            <th pSortableColumn="contacto">
+              Contacto de remitente
+              <p-sortIcon field="contacto"></p-sortIcon>
+            </th>
+            <th class="col-width-172" pSortableColumn="fechaIngreso">
+              Fecha ingreso
+              <p-sortIcon field="fechaIngreso"></p-sortIcon>
+            </th>
+            <th class="col-width-172" pSortableColumn="fechaAnulacion">
+              Fecha anulación
+              <p-sortIcon field="fechaAnulacion"></p-sortIcon>
+            </th>
+            <th class="col-width-172" pSortableColumn="delitos">
+              Delitos y partes
+              <p-sortIcon field="delitos"></p-sortIcon>
+            </th>
+            <th class="w-col-10"></th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-casoAnulado>
+          <tr
+            class="p-selectable-row"
+            [ngClass]="{ 'cfe-fondo-gris-leido': casoAnulado.leido == 0 }"
+          >
+            <td class="table_td_content_start caso-container">
+              <span class="p-column-title">Número de caso</span>
+              <div class="plazo-item-row">
+                <div>
+                  <span
+                    [innerHTML]="obtenerNumeroCaso(casoAnulado.nroCaso)"
+                  ></span>
+                </div>
+              </div>
+            </td>
+            <td class="table_td_content_start">
+              <span class="p-column-title">Origen</span>
+              <span class="badge badge-{{ obtenerClaseTipoOrigen(casoAnulado.origen) }}">
+                        {{ casoAnulado.origen }}
+                      </span>
+            </td>
+            <td class="table_td_content_start remitente-container">
+              <span class="p-column-title">Remitente</span>
+              <div>
+                <div class="mb-1">
+                  <span class="badge badge-origen">{{
+                    casoAnulado.tipoRemitente
+                  }}</span>
+                </div>
+                <div class="cfe-row-top">
+                  {{ casoAnulado.nombreRemitente }}
+                </div>
+              </div>
+            </td>
+            <td class="table_td_content_start">
+              <span class="p-column-title">Contacto de remitente</span>
+              <div>
+                <div class="contact-item">
+                  <span>Teléfono:</span
+                  >{{ casoAnulado.telefono ? casoAnulado.telefono : "-" }}
+                </div>
+                <div class="contact-item mt-17">
+                  <span>Correo:</span
+                  >{{ casoAnulado.correo ? casoAnulado.correo : "-" }}
+                </div>
+              </div>
+            </td>
+            <td class="table_td_content_start fecha-container">
+              <span class="p-column-title">Fecha ingreso</span>
+              @if (casoAnulado.fechaIngreso) {
+              <div>{{ casoAnulado.fechaIngreso }}</div>
+              <div class="cfe-row-top">
+                {{ casoAnulado.horaIngreso | dateformat : "hour24" }}
+              </div>
+              }
+            </td>
+            <td class="table_td_content_start fecha-container">
+              <span class="p-column-title">Fecha anulación</span>
+              @if (casoAnulado.fechaIngreso) {
+              <div>{{ casoAnulado.fechaAnulacion }}</div>
+              <div class="cfe-row-top">
+                {{ casoAnulado.horaAnulacion | dateformat : "hour24" }}
+              </div>
+              }
+            </td>
+            <td class="table_td_content_start">
+              <span class="p-column-title">Delitos y partes</span>
+              <div
+                class="cfe-btn-crimes-parts family-poppin-bold"
+                (click)="
+                  verDelitosPartes(
+                    casoAnulado.idCaso,
+                    casoAnulado.nroCaso,
+                    casoAnulado.flagAnulado
+                  )
+                "
+              >
+                <strong
+                  >Ver delitos y partes ({{
+                    casoAnulado.cantidadDelitosPartes
+                  }})</strong
+                >
+              </div>
+            </td>
+            <td class="table_td_content_start no-before">
+              <div class="block lg:hidden col-offset-6"></div>
+              <div>
+                <div
+                  class="cfe-btn-more-options"
+                  (click)="menu2.toggle($event)"
+                >
+                  <div class="cfe-btn-more-options-content">
+                    <span></span><span></span><span></span>
+                  </div>
+                </div>
+                <p-menu
+                  #menu2
+                  (onShow)="obtenerOpcionesMenu(casoAnulado)"
+                  [model]="opcionesMenu"
+                  [popup]="true"
+                  class="cfe-menu-options"
+                ></p-menu>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="8" style="text-align: center">
+              No se encontraron registros con los criterios de búsqueda
+              ingresados
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <app-paginator
+        [query]="query"
+        [items]="itemPaginado"
+        [rowsPerPageOptions]="[]"
+        [resetPage]="resetPage"
+        (paginate)="onPaginate($event)"
+      ></app-paginator>
+    </div>
+  </div>
+</div>
+
+<p-toast></p-toast>

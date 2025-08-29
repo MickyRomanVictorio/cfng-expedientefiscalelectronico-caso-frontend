@@ -1,0 +1,155 @@
+<div class="cfe-container">
+  <div class="fuentes_investigacion__filters">
+    <div class="grid mt-1">
+      <div class="col">
+        <div class="field mb-0">
+          <label class="font-semibold" for="buscar">Buscar:</label>
+          <input
+            #buscarInput
+            autocomplete="off"
+            class="p-inputtext-lg py-3 text-lg w-full"
+            id="buscar"
+            pInputText
+            (input)="onInput(buscarInput.value)"
+            type="text"
+            placeholder="Ingrese algún texto para buscar, por ejemplo el nombre de la fuente de investigación, origen, fecha de ingreso, etc">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fuentes_investigacion__table">
+    <div class="fuentes_investigacion_table__header">
+      <p-table
+        responsiveLayout="stack"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width:5%">N°</th>
+            <th style="width:25%">Documentos anexos</th>
+            <th style="width:10%; text-align: center">Formato</th>
+            <th style="width:10%; text-align: center">Origen</th>
+            <th style="width:20%; text-align: center">Fecha ingreso</th>
+            <th style="width:10%; text-align: center">Peso</th>
+            <th style="width:20%; text-align: center">Acción</th>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <div class="fuentes_investigacion_table__content">
+      <div *ngFor="let etapa of this.etapasFiltrados; let indice=index"
+           class="accordion-item">
+        <div class="accordion-header py-3 align-items-center p-2 cursor-pointer text-black">
+          <p-table
+            [showCurrentPageReport]="true"
+            [value]="etapa.archivos"
+            selectionMode="multiple">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width:5%">{{ indice + 1 }}.</th>
+                <th style="width:25%">
+                  {{ etapa.nombreEtapa }}
+                  <div *ngIf=etapa.acto.valueOf()>
+                    <span><b>Acto: </b>{{ etapa.acto }}</span>
+                    <br>
+                    <span><b>Tramite: </b>{{ etapa.tramite }}</span>
+                  </div>
+                </th>
+                <th style="width:10%">&nbsp;</th>
+                <th style="width:10%; text-align: center">
+                  <span [ngClass]="{
+                      'origen-mpe': etapa.origen === 'MPE',
+                      'origen-despacho': etapa.origen === 'DESPACHO',
+                      'origen-efe': etapa.origen === 'EFE'
+                    }">
+                    {{ etapa.origen }}
+                  </span>
+                </th>
+                <th style="width:20%; text-align: center">{{ etapa.fechaIngreso }}</th>
+                <th style="width:10%">&nbsp;</th>
+                <th style="width:20%; text-align: center">
+                  <i (click)="etapa.mostrarEtapa =! etapa.mostrarEtapa"
+                     class="pi pi-chevron-{{ etapa.mostrarEtapa ? 'up' : 'down' }} mr-2"></i>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template let-registro pTemplate="body">
+
+              <tr [ngClass]="{ 'hidden': !etapa.mostrarEtapa }" style="background-color: white; cursor: default;">
+                <td style="width:5%">
+                  &nbsp;
+                </td>
+                <td style="width:25%; align-content: center">
+                  <img [ngSrc]="this.iconAsset.obtenerRutaIcono(registro.imgArchivo)"
+                       alt="{{registro.nombreArchivo}}" fill
+                       style="width: 15px; height: auto; position: relative;">
+                  {{ registro.nombreArchivo }}
+                </td>
+                <td style="width:10%; text-align: center">
+                  <span [ngClass]="{
+                      'formato-imagen': registro.imgArchivo === 'imagen',
+                      'formato-documento': registro.imgArchivo === 'documento',
+                      'formato-audio': registro.imgArchivo === 'audio',
+                      'formato-video': registro.imgArchivo === 'video'
+                    }">
+                   {{ registro.formatoArchivo }}
+                  </span>
+                </td>
+                <td style="width:10%">
+                  &nbsp;
+                </td>
+                <td style="width:20%">
+                  &nbsp;
+                </td>
+                <td style="width:10%; text-align: center">
+                  {{ this.fileUtil.formatoPesoArchivo(registro.pesoArchivo, 2) }}
+                </td>
+                <td
+                  style="width:20%; vertical-align: center; text-align: center; justify-content: space-between; align-items: center; box-sizing: border-box; margin-inline: 20px;">
+                  <img
+                    (click)="descargarDocumento(registro)"
+                    [ngSrc]="this.iconAsset.obtenerRutaIcono('download')" alt="Descargar"
+                    fill style="width: 25px; height: auto; position: relative; margin: 0.5em">
+                  <img
+                    (click)="eliminarDocumento(registro)"
+                    [ngSrc]="this.iconAsset.obtenerRutaIcono('trash')" alt="Eliminar"
+                    fill style="width: 25px; height: auto; position: relative; margin: 0.5em">
+                  <img
+                    (click)="eventoVisualizar(registro)"
+                    [ngSrc]="this.iconAsset.obtenerRutaIcono('eyesIcon')" alt="Mostrar"
+                    fill style="width: 25px; height: auto; position: relative; margin: 0.5em">
+                </td>
+              </tr>
+
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="7" style="text-align:center">No se encontraron resultados</td>
+              </tr>
+            </ng-template>
+          </p-table>
+
+        </div>
+
+      </div>
+      <app-paginator
+        (paginate)="onPaginate($event)"
+        [items]="itemPaginado"
+        [query]="query"
+        [rowsPerPageOptions]="[this.query.limit]">
+      </app-paginator>
+    </div>
+  </div>
+  @if (!esSoloLectura) {
+  <div class="grid mt-2">
+    <div class="col">
+      <div class="mt-4 w-full flex align-items-end justify-content-end">
+        <p-button
+          (click)="eventoSubirArchivo()"
+          label="Agregar"
+          styleClass="p-button-lg w-80 font-semibold cfe-boton-primary">
+        </p-button>
+      </div>
+    </div>
+  </div>
+  }
+</div>

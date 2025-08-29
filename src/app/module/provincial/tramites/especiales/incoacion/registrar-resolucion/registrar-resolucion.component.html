@@ -1,0 +1,237 @@
+<div class="registrar_resolucion__container mt-3">
+  @if (verFormulario) {
+  <form [formGroup]="formRegistro">
+    @if ( formRegistro.invalid ) {
+    <div class="mb-3">
+      <mensaje-completar-informacion
+        [titulo]="nombreTramite()"
+      />
+    </div>
+    }
+
+    <div class="grid mb-2">
+      <div class="col">
+        <div class="grid">
+          <div class="col-3">
+            <div class="field mb-0">
+              <label for="fechaAcuerdo" class="font-semibold"
+                >Fecha de notificación</label
+              >
+              <p-calendar
+                formControlName="fechaNotificacion"
+                dateMask
+                dateFormat="dd/mm/yy"
+                class="p-inputtext-lg cfe-calendar h-56"
+                [showIcon]="true"
+                icon="cfe-calendar-icon"
+                placeholder="dd/mm/aaaa"
+                [minDate]="fechaIngreso"
+                [maxDate]="fechaActual"
+              ></p-calendar>
+            </div>
+          </div>
+          <div class="col-9  ">
+            <label for="fechaAcuerdo" class="font-semibold">Resultado del proceso inmediato:</label>
+            <div class="flex flex-wrap align-items-center gap-4 pt-3">
+              <div class="flex align-items-center">
+                <p-radioButton
+                  (onClick)="validarTerminacionAnticipada()"
+                  class="mr-2"
+                  formControlName="resultado"
+                  value="1"
+                  inputId="fundadoProcedente"
+                  name="resultado"
+                ></p-radioButton>
+                <label for="fundadoProcedente"
+                  >Fundado/Procedente</label
+                >
+              </div>
+              <div class="flex align-items-center">
+                <p-radioButton
+                  (onClick)="validarTerminacionAnticipada()"
+                  class="mr-2"
+                  formControlName="resultado"
+                  value="2"
+                  inputId="infudadoImprocedente"
+                  name="resultado"
+                ></p-radioButton>
+                <label for="infudadoImprocedente">Infudado/Improcedente</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid mb-3">
+      <div class="col-3">
+        <div *ngIf="terminacionAnticipada" class="col">
+          <div class="field-checkbox">
+            <p-checkbox
+              (click)="validarTerminacionAnticipadaRadios()"
+              formControlName="terminacion"
+              [binary]="true"
+              id="terminacion"
+              onKeyPress
+            ></p-checkbox>
+            <label for="terminacion">Con terminación Anticipada (opcional)</label>
+          </div>
+        </div>
+      </div>
+      <div class="col-9">
+        @if (formRegistro.get('terminacion')?.value) {
+          <label for="fechaAcuerdo" class="font-semibold">Resultado de la terminación anticipada:</label>
+          <div class="flex flex-wrap align-items-center gap-4 pt-3">
+            <div class="flex align-items-center">
+              <p-radioButton
+                formControlName="terminacionRadio"
+                value="1"
+                name="terminacionRadio"
+                inputId="terminacionRadio1"
+              ></p-radioButton>
+              <label for="terminacionRadio1" class="ml-2"
+                >Fundado/Procedente</label
+              >
+            </div>
+            <div class="flex align-items-center">
+              <p-radioButton
+                formControlName="terminacionRadio"
+                value="2"
+                name="terminacionRadio"
+                inputId="terminacionRadio2"
+              ></p-radioButton>
+              <label for="terminacionRadio2" class="ml-2"
+                >Fundado en parte/Procedente en parte</label
+              >
+            </div>
+            <div class="flex align-items-center">
+              <p-radioButton
+                formControlName="terminacionRadio"
+                value="3"
+                name="terminacionRadio"
+                inputId="terminacionRadio3"
+              ></p-radioButton>
+              <label for="terminacionRadio3" class="ml-2"
+                >Infudado/Improcedente</label
+              >
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    @if( visibleMensajeError && resultadosAudienciaCorrectos === '2'){
+      <div class="grid mb-1">
+        <div class="col-5">
+          <mensaje-completar-campos 
+          (cerrado)="visibleMensajeError = false" 
+          [titulo]="txtMensajeError"
+          [closable]="true" />
+        </div>
+      </div>
+    }
+   
+    <div class="grid">
+      <div class="col-5">
+        <button
+          [disabled]="validActivoResultadoAudiencia()"
+          (click)="verResultadoAudiencia()"
+          type="button"
+          class="cfe-boton-secondary cfe-boton-lg w-full"
+          icon="pi pi-upload"
+        >
+          <span class="ml-1">Resultado de audiencia</span>
+        </button>
+      </div>
+
+      <div class="col-1 flex align-content-center flex-wrap">
+        @if (resultadosAudienciaCorrectos === '1') {
+        <div class="flex align-items-center justify-content-center">
+          <img
+          [src]="iconAsset.obtenerRutaIcono('check-circle')"
+            alt="completo"
+            class="pr-2 h-2rem"
+          />
+        </div>
+        }
+      </div>
+
+      <div class="col-5">
+        <button
+          type="button"
+          (click)="audiosAudiencia()"
+          class="cfe-boton-secondary cfe-boton-lg w-full"
+          icon="pi pi-upload"
+        >
+          <span class="ml-1">Audios de audiencia</span>
+        </button>
+      </div>
+
+      <div class="col-1 flex align-content-center flex-wrap">
+        @if (audiosAudienciaCorrectos) {
+        <div class="flex align-items-center justify-content-center">
+          <img
+            [src]="icono('check-circle')"
+            alt="guardado"
+            class="pr-2 h-2rem"
+          />
+        </div>
+        }
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="w-full pb-2">
+        <label for="observaciones" class="cfe-semi-bold"
+          >Observaciones (opcional)</label
+        >
+      </div>
+      <div class="w-full">
+        <textarea
+          formControlName="observaciones"
+          pInputTextarea
+          id="observaciones"
+          class="w-full p-inputtextarea p-inputtext p-component p-element"
+          rows="6"
+          [maxLength]="200"
+        ></textarea>
+        <small
+          class="block text-right mt-1"
+          [ngClass]="{ 'p-error': counterReportChar() > 200 }"
+        >
+          {{ counterReportChar() }}/200 caracteres
+        </small>
+      </div>
+    </div>
+    <div class="cfe-opciones-botones">
+
+      @if (!tramiteOriginadoEnEfe) {
+      <span>
+        <p onKeyPress (click)="otroTramite()" *ngIf="!estadoRecibido">
+          ¿Este documento no pertenece a este trámite?
+        </p>
+      </span>
+      @if (permitirGuardar) {
+      <button
+        (click)="submit()"
+        [disabled]="formRegistro.invalid || this.resultadosAudienciaCorrectos === '2'"
+        class="cfe-boton-primary cfe-boton-lg mr-2 boton-w"
+      >
+        Guardar
+      </button>
+      } }
+    </div>     
+  </form>
+  }@else{
+
+  <mensaje-interoperabilidad-pj
+    [tieneActa]="true"
+  ></mensaje-interoperabilidad-pj>
+  <p-checkbox
+    class="mb-2 mt-3"
+    [binary]="true"
+    inputId="motivo1"
+    label="Generaré un acta de la audiencia"
+    (onChange)="activarFormulario($event.checked)"
+  ></p-checkbox>
+  }
+</div>

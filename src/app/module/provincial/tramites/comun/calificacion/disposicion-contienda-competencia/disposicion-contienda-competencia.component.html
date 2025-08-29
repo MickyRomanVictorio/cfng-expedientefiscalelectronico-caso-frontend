@@ -1,0 +1,80 @@
+<div class="container mt-3">
+  <form class="cfe_contienda__filters" [formGroup]="formularioDisposicionContienda">
+    <div class="grid">
+      <div class="col-12 md:col-6">
+        <div class="field mb-0">
+          <label for="tipoContienda" class="font-semibold">Tipo</label>
+          <div class="flex align-items-center gap-2">
+            <div class="flex-grow-1">
+              <p-dropdown [options]="tiposContienda" optionLabel="nombre" optionValue="id"
+                styleClass="py-1 p-inputtext-lg" emptyMessage="Sin resultados" formControlName="tipoContienda">
+                <ng-template let-tipo pTemplate="item">
+                  <div class="grid">
+                    <div class="col text-base">{{ tipo.nombre }}</div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div>
+
+            @if (formularioDisposicionContienda.get('tipoContienda')?.value) {
+            <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem" />
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 md:col-6">
+        <div class="field mb-0">
+          <label for="distritoFiscal" class="font-semibold">
+            ¿Qué distrito fiscal debe evaluar esta contienda?
+          </label>
+          <div class="flex align-items-center gap-2">
+            <div class="flex-grow-1">
+              <p-dropdown id="distritoFiscal" [options]="distritosFiscales" optionLabel="noDistritoFiscal"
+                optionValue="coDistritoFiscal" styleClass="py-1 p-inputtext-lg" [filter]="true"
+                formControlName="distritoFiscal">
+                <ng-template let-distrito pTemplate="item">
+                  <div class="grid">
+                    <div class="col text-base">{{ distrito.noDistritoFiscal }}</div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div>
+
+            @if (formularioDisposicionContienda.get('distritoFiscal')?.value) {
+            <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem" />
+            }
+          </div>
+        </div>
+      </div>
+      <div class="col-12 md:col-8">
+        <div class="field mb-0">
+          <label for="fiscaliaSuperior" class="font-semibold">
+            {{ etiquetaFiscaliaPresidenciaElevar }}:
+          </label>
+          <div class="flex align-items-center gap-2">
+            <div class="flex-grow-1">
+              <p-dropdown id="fiscaliaSuperior" [options]="fiscaliasSuperiores" optionLabel="noEntidad"
+                optionValue="coEntidad" styleClass="py-1 p-inputtext-lg" [filter]="true" emptyMessage="Sin resultados"
+                formControlName="fiscaliaSuperior">
+                <ng-template let-superior pTemplate="item">
+                  <div class="grid">
+                    <div class="col text-base">{{ superior.noEntidad }}</div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div>
+            @if (formularioDisposicionContienda.get('fiscaliaSuperior')?.value) {
+            <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem" />
+            }
+          </div>
+        </div>
+      </div>
+      @if ( mensajeValidacion !== '' ) {
+      <div class="w-full">
+        <mensaje-completar-informacion [personalizado]="true" [titulo]="mensajeValidacion" />
+      </div>
+      }
+    </div>
+  </form>
+</div>

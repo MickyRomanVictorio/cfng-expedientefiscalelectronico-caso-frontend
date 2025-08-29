@@ -1,0 +1,135 @@
+<div class="cfe-container-plantillas">
+    <div style="margin-top: 20px;" class="text-right">
+        <p-button (click)="close()" icon="pi pi-times" styleClass="p-button-rounded text-color p-button-text"></p-button>
+    </div>
+    <div class="encabezado-modal">
+        <h3
+          class="encabezado-titulo cfe-subtitulo-3 cfe-semi-bold"
+          [innerHTML]="tituloModal"
+        ></h3>
+        <br>
+    </div>
+    <br>
+
+    <form [formGroup]="formularioGestorPlantilla">
+      <div class="w-full formgrid ">
+          <h6 class="ml-10">Nombre de Plantilla</h6>
+        <div class="w-full formgrid ">
+          <div class="field col-12 col-sm-12">
+            <input
+              pInputText
+              class="py-2 p-inputtext-lg p-dropdown p-component w-full"
+              type="text"
+              formControlName="nombrePlantilla"
+            />
+            <label class="ml-10">En el formato word se puede automatizar los campos colocando las siguientes etiquetas: <b>[imputado][denunciante][agraviado][num_caso][fecha_actual][delito][plazo]</b></label>
+          </div>
+
+        </div>
+
+
+        <div class="m-10">
+            <app-adjuntar-documento [fileAceptadosMensaje]= fileAceptadosMensaje  (onSelect)="onSelect($event)"></app-adjuntar-documento>
+         </div>
+         <br>
+
+        <div class="w-full formgrid grid mt-12" style="display: flex;" >
+          <button
+            pButton class="cfe-boton-primary cfe-boton-lg"
+            style="margin-left: auto;"
+            (click)="guardarPlantillaManual($event)"
+            [disabled]="isGuardarPlantillaDisabled()"
+          >{{ isEditMode ? 'Actualizar Plantilla' : 'Guardar Plantilla' }}</button>
+        </div>
+      </div>
+
+    </form>
+    <br>
+
+
+  <div class="">
+    <p-table
+      [loading]="cargandoTabla"
+      [value]="listaDocumentos"
+      [rowHover]="true"
+      [showCurrentPageReport]="true"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [breakpoint]="'850px'"
+      responsiveLayout="stack"
+      [rows]="10"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>
+            N°
+          </th>
+          <th>
+            Nombre de Plantilla
+          </th>
+          <th>
+            Formato
+          </th>
+          <th>
+            Tamaño
+          </th>
+          <th>
+            Acciones
+          </th>
+
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-tramite let-rowIndex="rowIndex">
+        <tr class="">
+          <td class="table_td_content_start">
+            <span class="p-column-title">N°</span>
+            {{ rowIndex + 1 }}
+          </td>
+          <td class="table_td_content_start">
+            <span class="p-column-title">Nombre de Plantilla</span>
+            <div>{{ tramite.nombrePlantillaPersonalizada }}</div>
+          </td>
+          <td class="table_td_content_start">
+            <span class="p-column-title">Formato</span>
+            <div>.{{ tramite.extensionArchivo }}</div>
+          </td>
+          <td class="table_td_content_start">
+            <span class="p-column-title">Tamaño</span>
+            <div>{{ tramite.pesoArchivo }} MB</div>
+            <div><span><strong>{{ tramite.usuarioOrigenPerfil }}</strong></span></div>
+          </td>
+
+
+          <td class="">
+            <span class="p-column-title">Acciones</span>
+            <button pButton class="p-button-primary" (click)="descargarPlantilla(tramite)" >
+              <fn-icon
+                [ico]="obtenerIcono('iFileDownload')"
+                height="1.4rem"
+              ></fn-icon>
+            </button>
+            <button *ngIf="tramite.idPlantillaPersonalizada" pButton class="p-button-secondary" (click)="actualizarPlantilla(tramite)" >
+              <fn-icon
+                [ico]="obtenerIcono('iEdit')"
+                height="1.4rem"
+              ></fn-icon>
+            </button>
+            <button *ngIf="tramite.idPlantillaPersonalizada" pButton class="p-button-secondary" (click)="confirmaEliminarPlantilla(tramite)" >
+              <fn-icon
+                [ico]="obtenerIcono('iTrash')"
+                height="1.4rem"
+              ></fn-icon>
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8" style="text-align: center;">No se encontraron registros
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+</div>
+

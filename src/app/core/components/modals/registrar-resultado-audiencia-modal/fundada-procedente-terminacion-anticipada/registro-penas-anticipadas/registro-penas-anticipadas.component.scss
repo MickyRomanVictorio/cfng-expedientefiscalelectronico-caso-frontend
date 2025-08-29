@@ -1,0 +1,61 @@
+@use '../../../../../../../assets/styles/scss/abstracts/index' as *;
+
+.cfe-container-background-white {
+    padding: 0px 30px 0px 30px;
+    .cfe-container-penal {
+        margin-top: 20px;
+        padding: 30px 80px 30px 80px;
+        background-color: white !important;
+    }
+}
+
+:host {
+    ::ng-deep {
+        .custom-dialog {
+            width: 1200px !important;
+            .close-button {
+                position: absolute;
+                top: 33px;
+                right: 20px;
+                background: none;
+                border: none;
+                font-size: 35px;
+                cursor: pointer;
+                color: #333;
+                &:hover {
+                    color: #4b4b4b;
+                }
+            }
+            .ui-dialog-content {
+                overflow: auto;
+            }
+        }
+    }
+}
+
+
+:host ::ng-deep .table-penas {
+    .p-datatable-thead {
+        background: var(--mpfn-jade-background) !important;
+        font-weight: bold;
+
+        tr {
+            th {
+                border: 1px solid rgb(179, 179, 179) !important;
+            }
+        }
+    }
+
+    .p-datatable-tbody {
+        tr {
+            background-color: var(--mpfn-white) !important;
+            margin-bottom: 20px !important;
+            cursor: pointer;
+
+            td {
+                border: 1px solid rgb(179, 179, 179) !important;
+            }
+
+        }
+    }
+}

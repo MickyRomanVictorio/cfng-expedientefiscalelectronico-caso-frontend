@@ -1,0 +1,93 @@
+@use '../../../../../../../../assets/styles/scss/abstracts/template' as *;
+
+.cfe-container {
+  width: 100%;
+  .sujeto_procesal__filters {
+    width: 100%;
+  }
+  .sujeto_procesal__table {
+    width: 100%;
+    background: var(--mpfn-white);
+    border-radius: 6px;
+    border: 1.5px solid var(--mpfn-gray2);
+    margin-top: 10px;
+    .sujeto_procesal_table__title {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px 25px 0 25px;
+      margin-bottom: 20px;
+      margin-top: 20px;
+      .sujeto_procesal_table_title__content {
+        display: flex;
+        align-items: center;
+        img {
+          width: 22px;
+          position: relative;
+          top: -2px;
+        }
+        .cfe-subtitulo-1 {
+          margin-left: 10px;
+          font-weight: bold;
+        }
+      }
+      .sujeto_procesal_table_title__options {
+        display: flex;
+      }
+    }
+    .sujeto_procesal_table__content {
+      width: 100%;
+      .circle-infundado{
+        content: '';
+        display: block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--mpfn-green);
+      }
+      .delitos-item{
+        position: relative;
+        display: block;
+        font-size: 14px;
+        line-height: 20px;
+        &::before{
+          content: '';
+          display: block;
+          width: 2px;
+          height: 2px;
+          background-color: #1B1C1E;
+          position: absolute;
+          top: 10px;
+          left: -12px;
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+}
+:host ::ng-deep .caso-container {
+  align-items: center;
+  position: relative;
+  .cfe-caso {
+    font-family: var(--mpfn-font-regular);
+    white-space: nowrap;
+    span {
+      color: var(--mpfn-secondary);
+    }
+  }
+  .cfe-validacion-sujeto-valido {
+    font-family: var(--mpfn-font-regular);
+    white-space: nowrap;
+    span {
+      color: var(--mpfn-green-dark);
+    }
+  }
+  .cfe-validacion-sujeto-no-valido {
+    font-family: var(--mpfn-font-regular);
+    white-space: nowrap;
+    span {
+      color: var(--mpfn-yellow-light);
+    }
+  }
+}

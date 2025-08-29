@@ -1,0 +1,64 @@
+@if(tramiteNoDespachadoMesa){
+    <mensaje-interoperabilidad-pj
+    ></mensaje-interoperabilidad-pj>
+}
+@else{
+  @if(!this.tramiteEstadoRecibido){
+  @if ((this.formRegistro.invalid)) {
+    <mensaje-completar-informacion
+       [titulo] = "nombreTramite()"
+    />
+  }}
+<div class="resolucion-auto-declara__container mt-3">
+  <form [formGroup]="formRegistro">
+      <div class="grid">
+        <div class="col-12 md:col-4 flex">
+            <div class="field mb-0">
+                <label for="fechaNotificacion"
+                    class="p-label-bottom font-semibold">Fecha de notificación</label>
+                <p-calendar formControlName="fechaNotificacion"
+                            dateMask dateFormat="dd/mm/yy"
+                            class="p-inputtext-lg cfe-calendar h-56"
+                            [showIcon]="true"
+                            icon="cfe-calendar-icon"
+                            placeholder="dd/mm/aaaa"
+                            [minDate]="fechaActual"
+                            >
+                        </p-calendar>
+            </div>
+            @if(!formRegistro.get('fechaNotificacion')?.errors){
+                <div class="flex align-items-center">
+                <img [src]="icono('check-circle')" alt="validado" class="mt-4 ml-2 pr-2 h-2rem">
+                </div>
+            }
+            </div>
+      </div>
+      <div class="w-full mt-3 mb-2">
+        <label for="observaciones" class="cfe-semi-bold">Observaciones (opcional)</label>
+      </div>
+      <div class="w-full">
+        <textarea formControlName="observaciones" pInputTextarea id="observaciones"
+          class="w-full p-inputtextarea p-inputtext p-component p-element" 
+          rows="4"
+          [maxLength]="200"
+          ></textarea>
+         <small class="block text-right mt-1" 
+        [ngClass]="{ 'p-error': counterReportChar() > 200 }">
+          {{ counterReportChar() }}/200 caracteres
+        </small>
+      </div>
+    @if(flagGuardar){
+      <div class="cfe-opciones-botones">
+        <span>
+          <p onKeyPress (click)="otroTramite()">
+            ¿Este documento no pertenece a este trámite?
+          </p>
+        </span>
+      <button (click)="guardarTramite()" [disabled]="formRegistro.invalid" type="submit" class="cfe-boton-primary cfe-boton-lg boton-w">
+        <span class="font-bold">Guardar</span>
+      </button>
+    </div>
+    }
+  </form>
+</div>
+}

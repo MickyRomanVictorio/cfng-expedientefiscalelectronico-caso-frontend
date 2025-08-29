@@ -1,0 +1,74 @@
+
+<div class="flex p-2">
+  <span class="text-xl family-poppin-bold">Si este documento no pertenece a este trámite, indica a cuál pertenece</span>
+  <div class="ml-auto mt-3">
+      <span class="alert-icon cursor-pointer">
+      <fn-icon [ico]="obtenerIcono('iClose')" (click)="ref.close()" height="1.5rem" onkeydown=""/> 
+      </span>
+  </div>
+</div>
+
+<form [formGroup]="formularioActoProcesal">
+  <div class="col-12 mt-1">
+      <div class="formgrid grid">
+          <div class="field col-11">
+              <label for="actoProcesal" class="font-bold text-sm">Acto procesal</label>
+              <p-dropdown
+                styleClass="p-inputtext-md"
+                [options]="actosProcesales"
+                optionValue="id"
+                optionLabel="nombre"
+                emptyMessage="Sin resultados"
+                placeholder="Seleccionar"
+                formControlName="actoProcesal"
+                appendTo="body"
+                (onChange)="alCambiarActoProcesal()"
+                [ngClass]="{'ng-invalid ng-dirty': formularioActoProcesal.get('actoProcesal')?.invalid && formularioActoProcesal.get('actoProcesal')?.touched}"
+              ></p-dropdown>
+          </div>
+          <div class="field col-1" *ngIf="formularioActoProcesal?.get('actoProcesal')?.value">
+              <label for="">&nbsp;</label>
+              <div class="mt-1">
+                  <fn-icon
+                      [ico]="obtenerIcono('iCheckCircle')"
+                      height="1.6rem"
+                      color="#06A77D"
+                  ></fn-icon>
+              </div>
+          </div>
+          <div class="field col-11">
+              <label for="tramite" class="font-bold text-sm">Trámite</label>
+              <p-dropdown
+                styleClass="p-inputtext-md custom-dropdown"
+                [options]="tramites"
+                optionValue="actoTramiteEstado"
+                optionLabel="nombreTramite"
+                emptyMessage="Sin resultados"
+                placeholder="Seleccionar"
+                formControlName="tramite"
+                appendTo="body"
+                [ngClass]="{'ng-invalid ng-dirty': formularioActoProcesal.get('tramite')?.invalid && formularioActoProcesal.get('tramite')?.touched}"
+              ></p-dropdown>
+          </div>
+          <div class="field col-1" *ngIf="formularioActoProcesal?.get('tramite')?.value">
+              <label for="">&nbsp;</label>
+              <div class="mt-1">
+                  <fn-icon
+                      [ico]="obtenerIcono('iCheckCircle')"
+                      height="1.6rem"
+                      color="#06A77D"
+                  ></fn-icon>
+              </div>
+          </div>
+      </div>
+  </div>
+</form>
+
+<div class="flex flex-column sm:flex-row justify-content-end mt-3 mb-3 text-center">
+  <p-button (onClick)="guardarDocumentoActoTramite()"
+      [disabled]="!formularioValido"
+      styleClass="p-button-md cfe-boton-primary text-white family-poppin">
+      <span class="ml-3 mr-3">Guardar</span>
+  </p-button>
+</div>
+

@@ -1,0 +1,18 @@
+/*Diseño de la páginación que viene por defecto en PrimeNg*/
+.paginacion-general .p-paginator .p-paginator-pages button {
+  border: none;
+  color: #767676;
+}
+.paginacion-general .p-paginator .p-paginator-pages button.p-highlight {
+  border: none;
+  background-color: transparent;
+  font-weight: bold;
+}
+.paginacion-general .p-paginator-first, .paginacion-general .p-paginator-last {
+  border: none;
+}
+
+.paginacion-general .p-paginator-prev, .paginacion-general .p-paginator-next{
+  border-radius: 0.5rem;
+  background-color: #e0dfdf;
+}

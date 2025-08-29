@@ -1,0 +1,167 @@
+<div class="cfe-container relative">
+  <div class="encabezado-modal">
+    <h3 class="encabezado-titulo cfe-subtitulo-3 cfe-semi-bold">
+      <span>Seleccionar queja por denegatoria: </span>
+    </h3>
+
+    <fn-icon
+      class="encabezado-cerrar"
+      [ico]="obtenerIcono('iClose')"
+      height="2rem"
+      (click)="cerrarModal()"
+    ></fn-icon>
+  </div>
+
+  <div class="font-semibold mb-2">
+    Incidente:
+    <strong><span [innerHTML]="formatearCodigoCaso(coCaso)"></span></strong>
+  </div>
+
+  <div class="font-semibold mb-2">
+    Seleccione los sujetos procesales a los que registrará la queja por
+    denegatoria.
+  </div>
+
+  <div>
+    <i class="pi pi-circle-fill mr-2" [style.color]="'var(--mpfn-green)'"></i>
+    Recurso de apelación presentado por el fiscal ({{ misApelaciones }})
+  </div>
+
+  <p-table
+    [value]="sujetosQueja"
+    [rowHover]="true"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [breakpoint]="'992px'"
+    [(selection)]="sujetosSeleccionados"
+    responsiveLayout="stack"
+    class="table_td_content_responsive"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>N°</th>
+        <th>Nombres y apellidos / Razón social</th>
+        <th>Tipo de Sujeto procesal</th>
+        <th>Resultado (1era instancia)</th>
+        <th>Respuesta de recurso de apelación</th>
+        <th class="w-col-20">
+          <input
+            [ngModel]="todosSeleccionados"
+            (change)="onCheckboxPadreChange( $event)"
+
+            [disabled]="soloLectura "
+            type="checkbox"/>
+
+          Realizar queja
+        </th>
+        <th>Petitorio</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-sujeto let-i="rowIndex">
+      <tr class="p-selectable-row">
+        <td data-column-name="N °">
+          {{ i + 1 }}
+        </td>
+        <td data-column-name="Nombres y apellidos / Razón social">
+          <div>
+            <i
+              *ngIf="sujeto.flApelacionFiscal "
+              class="pi pi-circle-fill mr-2"
+              [style.color]="'var(--mpfn-green)'"
+            ></i>
+            {{ sujeto.nombreSujeto }}
+          </div>
+        </td>
+        <td data-column-name="Tipo de Sujeto procesal">
+          <div>
+            {{ sujeto.tipoParteSujeto }}
+          </div>
+        </td>
+        <td data-column-name="Resultado (1era instancia)">
+          <div>
+            {{ sujeto.resultadoPrimera }}
+          </div>
+        </td>
+        <td data-column-name="Respuesta de recurso de apelación">
+          <div>
+            {{ sujeto.respuestaInstancia }}
+          </div>
+        </td>
+
+        <td style="text-align: center; vertical-align: middle;">
+          <span class="p-column-title font-semibold">Realizar Queja</span>
+          <label>
+            <input
+            *ngIf="verCheckbox(sujeto)"
+              (change)="onCheckboxChange(i, $event)"
+              [ngModel]="sujeto.estadoQueja === '1'"
+              [disabled]="soloLectura || sujeto.flMismoTramite === '1'"
+              type="checkbox"/>
+          </label>
+        </td>
+        <td style="text-align: center; vertical-align: middle;">
+          @if( verCheckbox(sujeto) ) {
+            <span class="p-column-title font-semibold">Petitorio</span>
+            <p-dropdown
+              styleClass="p-inputtext-md" placeholder="Pendiente de respuesta"
+              [options]="listaRespuesta"
+              optionLabel="nombre"
+              optionValue="id"
+              appendTo="body"
+              (onChange)="onSelectionPetitorio(sujeto, $event)"
+              [(ngModel)]="sujeto.idPetitorioQueja"
+              [showClear]="true"
+              autoDisplayFirst="false"
+              [disabled]=" sujeto.estadoQueja!=='1'|| soloLectura"
+            >
+              <ng-template let-respuesta pTemplate="item">
+                <div>{{ respuesta.nombre }}</div>
+              </ng-template>
+            </p-dropdown>
+          }@else{
+            <span class="p-column-title font-semibold">-</span>
+
+          }
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6" class="no-before" style="text-align: center">
+          No se encontraron registros
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <app-paginator
+    [query]="query"
+    [items]="itemPaginado"
+    [rowsPerPageOptions]="[]"
+    [resetPage]="resetPage"
+    (paginate)="onPaginate($event)"
+  ></app-paginator>
+
+  <div *ngIf="tieneSujetosSeleccionados" class="cfe-mensaje-amarillo">
+    <fn-icon [ico]="obtenerIcono('iAlert')" height="1.4rem"></fn-icon>
+    <div>
+      Solo podrá presentar la queja por denegatoria para los sujetos procesales
+      a los cuales, usted como fiscal, presentó.
+    </div>
+  </div>
+
+  <div class="flex justify-content-center mt-2">
+    <button
+      class="cfe-boton-secondary cfe-boton-lg mr-3"
+      (click)="cerrarModal()"
+    >
+      Cancelar
+    </button>
+
+    <button
+      class="cfe-boton-primary cfe-boton-lg"
+      [disabled]="!mostrarBtnAceptar "
+      (click)="aceptar()"
+    >
+      Aceptar
+    </button>
+  </div>
+</div>

@@ -1,0 +1,26 @@
+ <!-- Ini - Fiscales por asignar -->
+ <div class="grid">
+  <div class="col pb-1 md:pb-2">
+        <div class="field mb-0">
+            <label for="fiscal" class="font-semibold">Fiscal a quién se le asignará el caso</label>
+            <p-dropdown [options]="fiscalesPorAsignar"
+                        optionLabel="nombreCompleto"
+                        optionValue="idFiscal" [showClear]="true"
+                        placeholder="Seleccione uno de los fiscales"
+                        styleClass="py-1 p-inputtext-lg tour-a-3"
+                        [formControl]="fiscalPorAsignar">
+                <ng-template let-fiscal pTemplate="item">
+                    <div class="grid">
+                        <div class="col text-base">{{ fiscal.nombreCompleto.trim() }}</div>
+                        <div class="col font-semibold text-right text-base">{{ fiscal.casosAsignados }} casos asignados
+                        </div>
+                    </div>
+                </ng-template>
+            </p-dropdown>
+        </div>
+  </div>
+  <div class="col-fixed w-full md:w-auto flex align-items-end pt-0 md:pt-2">
+    <button class="cfe-boton-primary cfe-boton-lg w-full mb-1 tour-a-4" (click)="eventoAsignar()">Asignar</button>
+  </div>
+</div>
+<!-- Fin - Fiscales por asignar -->

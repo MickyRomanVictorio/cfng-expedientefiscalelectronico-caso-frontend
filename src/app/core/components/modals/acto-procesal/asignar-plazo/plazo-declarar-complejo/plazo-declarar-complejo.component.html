@@ -1,0 +1,75 @@
+<div class="casos-ampliacion-container">
+    <div class="encabezado-modal">
+        <h3 class="encabezado-titulo cfe-subtitulo-3 cfe-semi-bold" [innerHTML]="tituloModal"></h3>
+
+        <fn-icon class="encabezado-cerrar" [ico]="obtenerIcono('iClose')" height="2rem"
+            (click)="cerrarModal()"></fn-icon>
+    </div>
+    <div class="col-12">
+        <p-messages [(value)]="msgs1" [enableService]="false"></p-messages>
+    </div>
+    <h3 class="encabezado-titulo cfe-subtitulo-3 cfe-semi-bold">
+        Plazos actuales
+    </h3>
+    <div class="formgrid grid" [formGroup]="formRegistro">
+        <div class="field col-12 lg:col-6" >
+            <label for="fechaInicioInvestigacionPreliminar" class="font-semibold">Fecha de inicio de investigación preliminar</label>
+            <input pInputText id="fechaInicioInvestigacionPreliminar" formControlName="fechaInicioInvestigacionPreliminar"
+                type="text" class="p-inputtext py-3 w-full" required>
+        </div>
+        <div class="field col-12 lg:col-6" >
+            <label for="fechaFinInvestigacionPreliminarActual" class="font-semibold">Fecha fin de investigación preliminar actual</label>
+            <input pInputText id="fechaFinInvestigacionPreliminarActual" formControlName="fechaFinInvestigacionPreliminarActual"
+                type="text" class="p-inputtext py-3 w-full" required>
+        </div>
+        <div  class="col-12">
+            <h3 class="encabezado-titulo cfe-subtitulo-3 cfe-semi-bold">
+                Asignar nuevo plazo
+            </h3>
+        </div>
+        <div class="field col-12 lg:col-4" >
+            <label for="plazoNuevo" class="font-semibold">Plazo nuevo</label>
+            <input pInputText id="plazoNuevo" maxlength="3" digitOnly formControlName="plazoNuevo"
+                type="text" class="p-inputtext py-3 w-full" required>
+            <small class="error-message" *ngIf="formRegistro.get('plazoNuevo')!.touched
+                && (formRegistro.get('plazoNuevo')!.hasError('required')
+                        || formRegistro.get('plazoNuevo')!.hasError('minlength'))">
+                Ingrese un número de documento válido (3 caracteres)
+            </small>
+        </div>
+        <div class="field col-12 lg:col-4">
+            <label for="unidadMedida" class="font-semibold">Unidad de medida</label>
+            <p-dropdown id="unidadMedida" formControlName="unidadMedida"
+                styleClass="py-1 p-inputtext-lg" [options]="unidadesMedidas"
+                optionLabel="label" optionValue="value">
+            </p-dropdown>
+            <small class="error-message" *ngIf="formRegistro.get('unidadMedida')!.touched
+                && (formRegistro.get('unidadMedida')!.hasError('required'))">
+                Seleccione Unidad de Medida
+            </small>
+        </div>
+        <div class="field col-12 lg:col-4">
+            <label for="nuevaFechaFinCalculada"  class="font-semibold">Nueva Fecha fin calculada</label>
+            <input pInputText id="nuevaFechaFinCalculada"
+                formControlName="nuevaFechaFinCalculada"
+                type="text" class="p-inputtext py-3 w-full">
+        </div>
+        <div class="field col-12">
+            <label for="descripcion" class="font-semibold">Descripción</label>
+            <textarea rows="5" cols="30" pInputTextarea id="descripcion" formControlName="descripcion" #descripcion class="p-inputtext-lg py-3 text-lg w-full"
+                placeholder="Ingrese descripción" maxlength="200">
+            </textarea>
+            <small class="error-message" *ngIf="formRegistro.get('descripcion')!.touched
+                && (formRegistro.get('descripcion')!.hasError('required'))">
+                Ingrese Descripción
+            </small>
+        </div>
+
+    </div>
+    <div class=" flex justify-content-end  option-container">
+        <p-button
+        styleClass="cfe-boton-primary text-white font-semibold px-4 py-1.2"
+        label="Declarar complejo"
+        (onClick)="declararComplejo()"></p-button>
+    </div>
+</div>

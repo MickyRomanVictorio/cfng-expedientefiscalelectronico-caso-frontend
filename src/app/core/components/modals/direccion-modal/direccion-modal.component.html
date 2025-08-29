@@ -1,0 +1,363 @@
+<div class="w-full">
+  <div class="casos-anulados-container">
+    <div class="header flex justify-content-between flex-wrap">
+      <span
+        class="flex align-items-center justify-content-center font-semibold"
+      >
+        &nbsp;
+      </span>
+      <div class="flex align-items-center justify-content-center">
+        <p-button
+          (click)="close()"
+          icon="pi pi-times"
+          styleClass="p-button-rounded text-color p-button-text"
+        ></p-button>
+      </div>
+    </div>
+
+    <div class="col-12" [formGroup]="form" *ngIf="lectura || lectura == false">
+      <h5>{{ nombreOpcion }} DIRECCION</h5>
+      <div class="p-fluid p-formgrid grid">
+        <div class="field col-12 md:col-4">
+          <label *ngIf="lectura || lectura == false" htmlFor=""
+            >Tipo de dirección</label
+          >
+          <p-dropdown
+            optionLabel="nombre"
+            optionValue="id"
+            *ngIf="lectura == false"
+            styleClass="p-inputtext-lg py-1"
+            [options]="lstTipoDomicilio"
+            emptyMessage="Sin resultados"
+            placeholder="Todos"
+            [showClear]="true"
+            formControlName="tipoDomicilio"
+          ></p-dropdown>
+
+          <input
+            *ngIf="lectura"
+            value="{{ direccion.tipoDireccion }}"
+            [class.disabled-contenct]="this.lectura"
+            pInputText
+            class="p-inputtext"
+            type="text"
+          />
+        </div>
+
+        <div class="field col-12 md:col-4">
+          <label *ngIf="lectura || lectura == false" htmlFor=""
+            >Departamento</label
+          >
+          <p-dropdown
+            *ngIf="lectura == false"
+            (onChange)="actualizarProvincias($event.value)"
+            styleClass="p-inputtext-lg py-1"
+            [options]="lstDptos"
+            emptyMessage="Sin resultados"
+            placeholder="Todos"
+            [showClear]="true"
+            formControlName="dpto"
+          ></p-dropdown>
+          <input
+            *ngIf="lectura"
+            value="{{ direccion.dpto }}"
+            [class.disabled-contenct]="this.lectura"
+            pInputText
+            class="p-inputtext"
+            type="text"
+          />
+        </div>
+
+        <div class="field col-12 md:col-4">
+          <label *ngIf="lectura || lectura == false" htmlFor=""
+            >Provincia</label
+          >
+          <p-dropdown
+            *ngIf="lectura == false"
+            (onChange)="actulizarDistritos($event)"
+            styleClass="p-inputtext-lg py-1"
+            [options]="lstProvincias"
+            emptyMessage="Sin resultados"
+            placeholder="Todos"
+            [showClear]="true"
+            formControlName="provincia"
+          ></p-dropdown>
+          <input
+            *ngIf="lectura"
+            value="{{ direccion.provincia }}"
+            [class.disabled-contenct]="this.lectura"
+            pInputText
+            class="p-inputtext"
+            type="text"
+          />
+        </div>
+      </div>
+
+      <div class="p-fluid p-formgrid grid">
+        <div class="field col-12 md:col-4">
+          <label *ngIf="lectura || lectura == false" htmlFor="city"
+            >Distrito</label
+          >
+          <p-dropdown
+            (onChange)="verMapa()"
+            *ngIf="lectura == false"
+            styleClass="p-inputtext-lg py-1"
+            [options]="lstDistritos"
+            optionValue="codigo"
+            optionLabel="nombre"
+            emptyMessage="Sin resultados"
+            placeholder="Todos"
+            [showClear]="true"
+            formControlName="distrito"
+          ></p-dropdown>
+          <input
+            *ngIf="lectura"
+            value="{{ direccion.distrito }}"
+            [class.disabled-contenct]="this.lectura"
+            pInputText
+            class="p-inputtext"
+            type="text"
+          />
+        </div>
+
+        <div class="field col-12 md:col-4">
+          <label *ngIf="lectura || lectura == false" htmlFor="state"
+            >Centro poblado</label
+          >
+          <p-dropdown *ngIf="lectura == false" optionLabel="name"></p-dropdown>
+          <input
+            *ngIf="lectura"
+            [class.disabled-contenct]="this.lectura"
+            pInputText
+            class="p-inputtext"
+            type="text"
+          />
+        </div>
+
+        <div class="field col-12 md:col-4">
+          <label *ngIf="lectura || lectura == false" htmlFor="zip"
+            >Tipo Via</label
+          >
+          <p-dropdown
+            optionLabel="nombre"
+            optionValue="id"
+            *ngIf="lectura == false"
+            styleClass="p-inputtext-lg py-1"
+            [options]="lstTipoVia"
+            emptyMessage="Sin resultados"
+            placeholder="Todos"
+            [showClear]="true"
+            formControlName="tipovia"
+          ></p-dropdown>
+          <input
+            *ngIf="lectura"
+            value="{{ direccion.tipovia }}"
+            [class.disabled-contenct]="this.lectura"
+            pInputText
+            class="p-inputtext"
+            type="text"
+          />
+        </div>
+      </div>
+
+      <div class="p-fluid p-formgrid grid">
+        <div class="field col-12 md:col-8">
+          <label htmlFor="city">Nombre de la calle/Jr/Av</label>
+          <input
+            onKeyPress="if(this.value.length==99) return false;"
+            style="text-transform: uppercase"
+            formControlName="nombreCalle"
+            value="{{ direccion.nombreCalle | formatoCampo }}"
+            [class.disabled-contenct]="this.lectura"
+            pInputText
+            class="p-inputtext"
+            type="text"
+          />
+        </div>
+        <div class="field col-12 md:col-4">
+          <label htmlFor="state">Número de la direccion</label>
+          <input
+            pattern="/^-?\d+?\d*$/"
+            onKeyPress="if(this.value.length==5) return false;"
+            formControlName="nroDireccion"
+            [class.disabled-contenct]="this.lectura"
+            pInputText
+            class="p-inputtext"
+            type="number"
+          />
+        </div>
+      </div>
+
+      <div class="p-fluid p-formgrid grid">
+        <div class="field col-12 md:col-4">
+          <label *ngIf="lectura || lectura == false" htmlFor="city"
+            >Prefijo Urbanizacion</label
+          >
+          <p-dropdown
+            *ngIf="lectura == false"
+            styleClass="p-inputtext-lg py-1"
+            [options]="lstPrefijos"
+            emptyMessage="Sin resultados"
+            placeholder="Todos"
+            [showClear]="true"
+            formControlName="tipoPrefijo"
+          ></p-dropdown>
+          <input
+            *ngIf="lectura"
+            value="{{ direccion.prefijo }}"
+            [class.disabled-contenct]="this.lectura"
+            pInputText
+            class="p-inputtext"
+            type="text"
+          />
+        </div>
+
+        <div class="field col-12 md:col-4">
+          <label htmlFor="state">Nombre de la Urbanización</label>
+          <input
+            onKeyPress="if(this.value.length==50) return false;"
+            style="text-transform: uppercase"
+            formControlName="nombreUrb"
+            value="{{ direccion.nombreUrb | formatoCampo }}"
+            [class.disabled-contenct]="this.lectura"
+            pInputText
+            class="p-inputtext"
+            type="text"
+          />
+        </div>
+        <div class="field col-12 md:col-2">
+          <label htmlFor="state">Block</label>
+          <input
+            onKeyPress="if(this.value.length==50) return false;"
+            style="text-transform: uppercase"
+            formControlName="block"
+            value="{{ direccion.blokc | formatoCampo }}"
+            [class.disabled-contenct]="this.lectura"
+            pInputText
+            class="p-inputtext"
+            type="text"
+          />
+        </div>
+
+        <div class="field col-12 md:col-2">
+          <label htmlFor="state">Interior</label>
+          <input
+            onKeyPress="if(this.value.length==8) return false;"
+            style="text-transform: uppercase"
+            formControlName="interior"
+            value="{{ direccion.interior | formatoCampo }}"
+            [class.disabled-contenct]="this.lectura"
+            pInputText
+            class="p-inputtext"
+            type="text"
+          />
+        </div>
+      </div>
+
+      <div class="p-fluid p-formgrid grid">
+        <div class="field col-12 md:col-4">
+          <label htmlFor="city">Etapa</label>
+          <input
+            onKeyPress="if(this.value.length==4) return false;"
+            style="text-transform: uppercase"
+            formControlName="etapa"
+            value="{{ direccion.etapa | formatoCampo }}"
+            [class.disabled-contenct]="this.lectura"
+            pInputText
+            class="p-inputtext"
+            type="text"
+          />
+        </div>
+        <div class="field col-12 md:col-4">
+          <label htmlFor="state">Manzana</label>
+          <input
+            onKeyPress="if(this.value.length==4) return false;"
+            style="text-transform: uppercase"
+            formControlName="manzana"
+            value="{{ direccion.manzana | formatoCampo }}"
+            [class.disabled-contenct]="this.lectura"
+            pInputText
+            class="p-inputtext"
+            type="text"
+          />
+        </div>
+        <div class="field col-12 md:col-4">
+          <label htmlFor="state">Lote</label>
+          <input
+            onKeyPress="if(this.value.length==4) return false;"
+            style="text-transform: uppercase"
+            formControlName="lote"
+            value="{{ direccion.lote | formatoCampo }}"
+            [class.disabled-contenct]="lectura"
+            pInputText
+            class="p-inputtext"
+            type="text"
+          />
+        </div>
+      </div>
+
+      <div class="p-fluid p-formgrid grid">
+        <div class="field col-12 md:col-12">
+          <label htmlFor="city">Referencia</label>
+          <input
+            onKeyPress="if(this.value.length==99)  return false;"
+            formControlName="referencia"
+            value="{{ direccion.referencia | formatoCampo }}"
+            style="text-transform: uppercase"
+            [class.disabled-contenct]="lectura"
+            pInputText
+            class="p-inputtext"
+            type="text"
+            id="fecha"
+          />
+        </div>
+      </div>
+
+      <div class="p-fluid p-formgrid grid">
+        <div class="field col-12 md:col-4">
+          <div class="field-checkbox mt-3">
+            <p-checkbox
+              (onChange)="checkValue()"
+              formControlName="esMapa"
+              name="group1"
+              value="1"
+              id="la"
+            ></p-checkbox>
+            <label for="la">Usar maps</label>
+          </div>
+        </div>
+        <div *ngIf="usarMapas == true" class="field col-12 md:col-8">
+          <label htmlFor="">Dirección en maps </label>
+          <span class="p-input-icon-right">
+            <input
+              formControlName="direccionMapa"
+              class="p-inputtext"
+              type="text"
+              pInputText
+              [disabled]="true"
+              readonly
+              placeholder="Ingrese la dirección"
+            />
+            <i class="pi pi-search"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div [ngClass]="usarMapas ? '' : 'ocultar'" id="map"></div>
+    <div
+      *ngIf="this.tipoEjecucion == 1 || this.tipoEjecucion == 3"
+      class="p-fluid p-formgrid grid mt-3"
+    >
+      <div class="field col-12 md:col-12">
+        <div class="flex justify-content-end">
+          <button
+            class="cfe-boton-primary cfe-boton-m mr-2 boton-w"
+            (click)="registrarDireccion()"
+          >
+            {{ nombreOpcion }} DIRECCION
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

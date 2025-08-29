@@ -1,0 +1,109 @@
+<app-encabezado-modal
+  titulo="Observaciones"
+  [referenciaModal]="referenciaModal"
+  [numeroCaso]="numeroCaso"
+>
+</app-encabezado-modal>
+<div class="cfe-modal">
+  <div class="grid">
+    <div class="col">
+      <p class="subtitulo-numero-caso">
+        <strong>Número de caso:</strong>
+        <numero-caso [numeroCaso]="numeroCaso"></numero-caso>
+      </p>
+
+      <p class="subtitulo-numero-caso">
+        <strong>Fiscal del despacho provincial :</strong>
+        {{ elevacionObservado.fiscalAsignado }}
+      </p>
+
+      <p class="subtitulo-numero-caso">
+        <strong>Despacho de procedencia :</strong>
+        {{ dataCaso.nombreDespacho }}
+      </p>
+
+      <p class="subtitulo-numero-caso">
+        <strong>Acto procesal :</strong>
+        {{ elevacionObservado.actoProcesal }}
+      </p>
+
+      <p class="subtitulo-numero-caso">
+        <strong>Trámite :</strong>
+        {{ elevacionObservado.tramite }}
+      </p>
+
+      <p class="subtitulo-numero-caso">
+        <strong>Fecha de elevación :</strong>
+        {{ elevacionObservado.fechaElevacion }}
+      </p>
+
+      <p class="subtitulo-numero-caso">
+        <strong>Fecha de observación :</strong>
+        {{ elevacionObservado.fechaObservacion }}
+      </p>
+
+      <p class="subtitulo-numero-caso">
+        <strong>Motivo de observación :</strong>
+        {{ elevacionObservado.observacion }}
+      </p>
+
+      <div *ngIf="listaDocumentos.length > 0">
+        <strong style="text-align: center !important"
+          >Documentos registrados en el trámite</strong
+        >
+      </div>
+      <p-table
+        [value]="listaDocumentos"
+        [rowHover]="true"
+        [showCurrentPageReport]="true"
+      >
+        <ng-template pTemplate="body" let-rowIndex="rowIndex" let-registro>
+          <tr class="">
+            <td class="">
+              <p-tableCheckbox
+                [value]="registro"
+                (click)="visulizarPDFBase64(registro.idDocumento)"
+              >
+              </p-tableCheckbox>
+              {{ rowIndex + 1 }}.
+            </td>
+            <td class="">
+              <span style="font-size: 12px">
+                <strong> {{ registro.nombreArchivo }} </strong>
+              </span>
+              <br />
+            </td>
+            <td>
+              <span>
+                <p-button
+                  label="pdf"
+                  styleClass="font-bold p-button-sm p-button-danger"
+                ></p-button>
+                &nbsp;&nbsp;
+              </span>
+              <br />
+              <span style="font-size: xx-small"
+                ><strong>{{ registro.pesoArchivo }}</strong></span
+              >
+              <br />
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <div class="col" *ngIf="listaDocumentos.length > 0">
+      <ngx-extended-pdf-viewer
+        [src]="pdfSrcBase64"
+        [showPresentationModeButton]="true"
+        [showDownloadButton]="true"
+        [showSecondaryToolbarButton]="false"
+        [showTextEditor]="false"
+        [showDrawEditor]="false"
+        [showOpenFileButton]="false"
+        [showStampEditor]="false"
+      >
+      </ngx-extended-pdf-viewer>
+    </div>
+  </div>
+</div>

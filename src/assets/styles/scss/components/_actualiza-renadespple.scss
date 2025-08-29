@@ -1,0 +1,36 @@
+.actualiza_renadespple {
+    width: 100%;
+    max-width: 950px;
+
+    .field {
+       > label {
+            font-weight: 500;
+        }
+    }
+
+    .info-sujeto-parte {
+        border: 1px solid #ccc;
+        border-radius: 7px;
+        padding: 13px;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .datos-detenido-cabecera {
+        border-bottom: 1px solid #ccc;
+
+        .numero-caso {
+            strong {
+                color: var(--mpfn-jade);
+            }
+        }
+
+        
+    }
+
+    .seccion-titulo {
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+}

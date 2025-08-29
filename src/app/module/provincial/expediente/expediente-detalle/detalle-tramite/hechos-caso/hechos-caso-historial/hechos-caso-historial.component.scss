@@ -1,0 +1,40 @@
+@use '../../../../../../../../assets/styles/scss/abstracts/index' as *;
+@import url('https://unpkg.com/leaflet@1.9.3/dist/leaflet.css');
+@import url('https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css');
+
+#mapa {
+  height: 450px;
+}
+
+#mapa.disabled {
+  opacity: 0.5; /* Puedes ajustar la opacidad u otros estilos según tus preferencias */
+  pointer-events: none; /* Evita que el div responda a eventos del mouse, como clics */
+}
+
+.input-height {
+  height: 54px;
+}
+
+.calendar-height {
+  display: flex;
+  height: 59px !important;
+}
+
+.textarea-fontsize {
+  font-size: 1.125rem !important;
+  width: 100%;
+}
+
+
+.close {
+  cursor: pointer;
+  position: absolute;
+  right: 30px;
+  top: 20px;
+  img{
+    width: 18px;
+  }
+}
+.selector_hora{
+  line-height: 40px;
+}

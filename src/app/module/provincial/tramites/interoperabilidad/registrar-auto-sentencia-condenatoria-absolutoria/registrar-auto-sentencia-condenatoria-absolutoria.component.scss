@@ -1,0 +1,125 @@
+.checkbox {
+    position: relative;
+    top: 8px;
+}
+
+.registrar-tipo-sentencia {
+    h4 {
+        font-family: var(--mpfn-roboto);
+        font-weight: 600;
+        font-size: 1em;
+        border-bottom: 3px solid var(--mpfn-alerta-generica-pendiente);
+        padding-bottom: 15px;
+    }
+}
+
+.reparacion-civil {
+    border-bottom: 1px solid var(--mpfn-gray2);
+    border-left: 1px solid var(--mpfn-gray2);
+    border-right: 1px solid var(--mpfn-gray2);
+}
+
+:host ::ng-deep .table-penas {
+    .p-datatable-thead {
+        background: var(--mpfn-jade-background) !important;
+        font-weight: bold;
+
+        tr {
+            th {
+                border: 1px solid rgb(179, 179, 179) !important;
+            }
+        }
+    }
+
+    .p-datatable-tbody {
+        tr {
+            background-color: var(--mpfn-white) !important;
+            margin-bottom: 20px !important;
+            cursor: pointer;
+
+            td {
+                border: 1px solid rgb(179, 179, 179) !important;
+            }
+
+        }
+    }
+}
+
+.color-icon-success {
+    color: var(--mpfn-green-dark);
+}
+
+:host {
+    ::ng-deep {
+        .custom-dialog {
+            .close-button {
+                position: absolute;
+                top: 33px;
+                right: 20px;
+                background: none;
+                border: none;
+                font-size: 35px;
+                cursor: pointer;
+                color: #333;
+                &:hover {
+                    color: #4b4b4b;
+                }
+            }
+        }
+    }
+}
+
+.opciones-audiencia {
+    margin-bottom: -16px;
+}
+:host::ng-deep .registrar-pena-dialog {
+    width: 1380px;
+}
+:host::ng-deep .reparacion-civil-dialog {
+    width: 1380px;
+    .p-dialog-content {
+        background: var(--mpfn-background);
+    }
+}
+.cfe-opciones-botones {
+    display: flex !important;
+    margin-top: 1em !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+.botones-grid{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  gap: 1rem;
+  margin-top: 1.6em;
+  margin-left: 2em;
+
+  .acciones {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: nowrap;
+
+    .accion {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      span{
+        font-size: 15px;
+      }
+
+    }
+  }
+}
+.icono-validacion {
+  height: 2rem;
+}
+::ng-deep .p-dropdown-panel {
+    min-width: 100% !important;
+}
+
+::ng-deep .p-dropdown-item {
+    white-space: normal !important; 
+    word-wrap: break-word;
+}

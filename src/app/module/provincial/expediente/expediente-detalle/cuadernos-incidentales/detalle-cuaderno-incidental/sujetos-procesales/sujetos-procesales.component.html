@@ -1,0 +1,188 @@
+<div class="cfe-container">
+  <form class="sujeto_procesal__filters" [formGroup]="formSujetoProcesal">
+    <div class="grid mt-1">
+      <div class="col">
+        <div class="field mb-0">
+          <label class="font-semibold">Buscar:</label>
+          <input pInputText type="text" class="p-inputtext-lg py-3 text-lg w-full"
+                 placeholder="Ingrese nombres, apellidos, número de documento o cualquier campo de los sujetos"
+                 formControlName="buscar" />
+        </div>
+      </div>
+      <div class="col-fixed" style="width: 70px;" [ngClass]="{'cfe-filtro-boton-fondo': mostrarFiltros}">
+        <div class="field mb-0">
+          <label class="font-semibold">&nbsp;</label>
+          <button class="cfe-filtro-boton" (click)="eventoMostrarOcultarFiltros()">
+            <fn-icon [ico]="iconUtil.obtenerIcono('iFilterShow')" height="2.1rem"></fn-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+    @if (mostrarFiltros) {
+      <div class="grid mt-1 cfe-filtros">
+        <div class="cfe-filtros-fondo">
+          <div class="col-8 sm:col-8">
+            <div class="field mb-0">
+              <label class="font-semibold">Tipo de sujeto procesal</label>
+              <p-dropdown styleClass="p-inputtext-lg py-1" [options]="tiposSujetoProcesal" optionValue="id"
+                          optionLabel="nombre" emptyMessage="Sin resultados"
+                          placeholder="Seleccione un tipo de sujeto procesal" [filter]="true" filterBy="nombre"
+                          [showClear]="true" formControlName="tipoSujetoProcesal">
+                <ng-template let-tipoSujetoProcesal pTemplate="item">
+                  <div class="flex align-items-center gap-2">
+                    <div>{{ tipoSujetoProcesal.nombre }}</div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div>
+          </div>
+          <div class="col-4 sm:col-4 flex align-items-end">
+            <button class="cfe-boton-primary cfe-boton-m mr-2 boton-w"
+                    (click)="obtenerSujetoProcesalConFiltro()">Buscar
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  </form>
+  
+  <div class="sujeto_procesal__table">
+    <div class="sujeto_procesal_table__title grid">
+      <div class="sujeto_procesal_table_title__content col-4">
+        <fn-icon [ico]="iconUtil.obtenerIcono('iFolderExclamation')" height="1.8rem"
+                 [style]="{'margin-left': '-12px'}"></fn-icon>
+        <h4 class="cfe-subtitulo-1">{{ totalSujetosProcesales }} Sujetos procesales del cuaderno</h4>
+      </div>
+      <div class="col-12 md:col-8 flex flex-column sm:flex-row justify-content-end align-items-center pr-0">
+        <button
+                class="cfe-boton-primary cfe-boton-m cfe-boton-icono-izquierda w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0"
+                (click)="agregarSujetosProcesales()">Agregar sujetos
+        </button>
+        <button
+                class="cfe-boton-secondary cfe-boton-m cfe-boton-icono-izquierda w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start"
+                (click)="exportar('PDF')">
+          <fn-icon class="ml-1" [ico]="iconUtil.obtenerIcono('iFileDownload')" height="1.6rem"></fn-icon>
+          Exportar PDF
+        </button>
+        <button
+                class="cfe-boton-secondary cfe-boton-m cfe-boton-icono-izquierda w-full sm:w-auto justify-content-start"
+                (click)="exportar('Excel')">
+          <fn-icon class="ml-1" [ico]="iconUtil.obtenerIcono('iTable')" height="1.6rem"></fn-icon>
+          Exportar Excel
+        </button>
+      </div>
+    </div>
+    <div class="sujeto_procesal_table__content">
+      <p-table [value]="sujetosProcesalesFiltrados" [paginator]="true" [rowHover]="true" [rows]="10"
+               [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
+               currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} registros"
+               [rowsPerPageOptions]="[10, 20, 30, 50]" [breakpoint]="'992px'" responsiveLayout="stack"
+               class="table_td_content_responsive">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>
+              N°
+            </th>
+            <th>
+              Tipo de sujeto procesal
+            </th>
+            <th>
+              Número de documento
+            </th>
+            <th>
+              Nombres y apellidos / Razón Social
+            </th>
+            <th>
+              Alias
+            </th>
+            <th>
+              Delitos
+            </th>
+            <th>
+              Resultado <br> (1era instancia)
+            </th>
+            <th>
+              Resultado <br> (2da instancia)
+            </th>
+            <th class="text-center">
+              Acciones
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-sujetoprocesal let-rowIndex="rowIndex">
+          <tr>
+            <td data-column-name="N°">
+              {{ rowIndex + 1 }}
+            </td>
+            <td data-column-name="Tipo de sujeto procesal">
+              <div>
+                <div class="">{{ sujetoprocesal.noTipoParteSujeto }}</div>
+              </div>
+            </td>
+            <td data-column-name="Número de documento">
+              <div>
+                <div class="">{{ sujetoprocesal.nuDocumento }}</div>
+                <span class="badge badge-{{ obtenerClaseDeNumeroDocumento(sujetoprocesal.noTipoDocumento) }}">
+                  {{ sujetoprocesal.noTipoDocumento }}
+                </span>
+              </div>
+            </td>
+            <td data-column-name="Nombres y apellidos / Razón Social">
+              <div>
+                <div class="">{{ sujetoprocesal.nombreSujeto }}</div>
+              </div>
+            </td>
+            <td data-column-name="Alias">
+              {{ sujetoprocesal.noAliasSujeto || '-' }}
+            </td>
+            <td data-column-name="Delitos">
+              @for (delito of sujetoprocesal.delitos; track delito.id) {
+                <span class="delitos-item">{{ mostrarDelitos(delito) }}</span>
+              }
+            </td>
+            <td data-column-name="Resultado (1era instancia)">
+              @for (instancia of sujetoprocesal.resPrimeraInstancia; track instancia.id) {
+                <div class="flex flex-column">
+                  <p class="flex align-items-center">
+                    @if (instancia.idResultadoInstancia === tipoInstaciaInfundado) {
+                      <span class="circle-infundado mr-1"></span>
+                    }
+                    {{ instancia.noDescripcion }}
+                  </p>
+                </div>
+              }
+              {{ sujetoprocesal.alias || '-' }}
+            </td>
+            <td data-column-name="Resultado (2da instancia)">
+              @for (instancia of sujetoprocesal.resSegundaInstancia; track instancia.id) {
+                <div class="flex flex-column">
+                  <p>{{ instancia.noDescripcion }}</p>
+                </div>
+              }
+              {{ sujetoprocesal.alias || '-' }}
+            </td>
+            <td data-column-name="Acciones" class="flex align-items-center gap-2">
+              <div (click)="verTrazabilidad()" class="cfe-btn-clasification">
+                <fn-icon [ico]="iconUtil.obtenerIcono('iTable')" height="1.4rem"></fn-icon>
+              </div>
+              <div class="cfe-btn-clasification">
+                <fn-icon [ico]="iconUtil.obtenerIcono('iEdit')" height="1.4rem"></fn-icon>
+              </div>
+              <div (click)="eliminarSujetoProcesal(sujetoprocesal.idSujetoCaso, sujetoprocesal.idSujetosSubcarpeta)"
+                   class="cfe-btn-clasification cfe-btn-reversion">
+                <fn-icon [ico]="iconUtil.obtenerIcono('iClose')" height="1.6rem"></fn-icon>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="9" class="no-before" style="text-align: center;">
+              No se encontraron registros con los criterios de búsqueda ingresados
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,394 @@
+@if(tramiteNoDespachadoMesa){
+    <mensaje-interoperabilidad-pj />
+    <!-- <p-checkbox
+        class="mb-2 mt-3"
+        [binary]="true"
+        inputId="motivo1"
+        label="Se resolvió en audiencia"
+        (onChange)="activarFormulario($event.checked)"
+    ></p-checkbox> -->
+} 
+@else{
+    <div class="mt-4"></div>
+
+    @if (!flagregistrar && !tramiteEstadoRecibido ) {
+        <mensaje-completar-informacion [titulo]="nombreTramite()" />
+    }
+
+    <form [formGroup]="formularioSetencia" class="mt-4 flex flex-wrap align-items-center">
+
+        <div class="col-12 mt-2 gap-3 flex flex-wrap">
+            <label class="text-sm"><b>Resultado:</b></label>
+            @for (tipo of tiposResultado; track $index) {
+                <div class="field-checkbox">
+                    <p-radioButton 
+                        [inputId]="tipo.codigo+''" 
+                        [value]="tipo.codigo"
+                        formControlName="resultado"
+                    />
+                    <label [for]="tipo.codigo" class="ml-2">
+                        {{ tipo.nombre }}
+                    </label>
+                </div>
+            }
+        </div>
+
+        <div class="col-12 md:col-3 flex">
+            <div class="field mb-0 w-full">
+                <label for="fechaNotificacion" class="p-label-bottom font-bold text-sm">Fecha de notificación</label>
+                <p-calendar 
+                    [dateFormat]="'dd/mm/yy'"
+                    class="p-inputtext-md cfe-calendar h-40"
+                    [showIcon]="true" 
+                    dateMask
+                    icon="cfe-calendar-icon"
+                    placeholder="dd/mm/aaaa" 
+                    formControlName="fechaNotificacion"
+                    appendTo="body"
+                    dataType="string"
+                    [ngClass]="{'ng-invalid ng-dirty': formularioSetencia.get('fechaNotificacion')?.value === null }"
+                >
+                </p-calendar>
+            </div>
+            @if(formularioSetencia.get('fechaNotificacion')?.value){
+            <div class="flex align-items-center">
+                <img
+                    [src]="icono('check-circle')"
+                    alt="validado"
+                    class="mt-4 ml-2 pr-2 h-2rem"
+                />
+            </div>
+            }
+        </div>
+
+        <div class="col-12 md:col-6 flex align-items-center">
+            <!-- <div class="field mb-0">
+                <p-checkbox 
+                    class="checkbox"
+                    formControlName="cuentaConAudio" 
+                    label="Cuenta con audio (opcional)"
+                    [binary]="true"
+                    inputId="binary"
+                />
+                <p-checkbox 
+                    class="checkbox ml-4"
+                    formControlName="cuentaConVideo" 
+                    label="Cuenta con video (opcional)"
+                    [binary]="true"
+                    inputId="binary"
+                />
+            </div>
+            @if(multimediaSeleccionado){
+            <div class="flex align-items-center">
+            <img
+                [src]="icono('check-circle')"
+                alt="validado"
+                class="mt-4 ml-3 pr-2 h-2rem"
+            />
+            </div>
+            } -->
+            <div class="botones-grid">
+                <div>
+                    <label>&nbsp;</label>
+                </div>
+                <div class="acciones">
+                    <div class="accion">
+                        <button
+                            [disabled]="ocultarBotonGestionVideos"
+                            class="cfe-boton-secondary cfe-boton-lg w-full family-poppin-bold btn-adjust-filter"
+                        >
+                            <span class="ml-5 mr-5">Videos de audiencia</span>
+                        </button>
+                        @if(!ocultarBotonGestionVideos){
+                        <img
+                            [src]="icono('check-circle')"
+                            alt="validado"
+                            class="pr-2 h-2rem"
+                        />
+                        }
+                    </div>
+                    <div class="accion">
+                        <button
+                            (click)="abrirModalVideosAudiencia()"
+                            class="cfe-boton-secondary cfe-boton-lg w-full family-poppin-bold btn-adjust-filter"
+                        >
+                            <span class="ml-5 mr-5">Audios de audiencia</span>
+                        </button>
+                        @if(audiosAudienciaCorrectos){
+                        <img
+                            [src]="icono('check-circle')"
+                            alt="validado"
+                            class="pr-2 h-2rem"
+                        />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="field col-12 md:col-4 flex">
+            <div class="field mb-0">
+                <label for="tipoSentencia" class="font-bold text-sm">Tipo de sentencia</label>
+                <p-dropdown
+                id="tipoSentencia"
+                styleClass="p-inputtext-md custom-dropdown"
+                [options]="tiposSentencia"
+                optionValue="id"
+                optionLabel="nombre"
+                emptyMessage="No se encontraron resultados"
+                placeholder="Seleccionar"
+                formControlName="idTipoSentencia"
+                appendTo="body"
+                [ngClass]="{'ng-invalid ng-dirty': formularioSetencia.get('idTipoSentencia')?.invalid && formularioSetencia.get('idTipoSentencia')?.touched}"
+                (ngModelChange)="tipoSentencia = $event"
+                [disabled]="formularioSetencia.get('idTipoSentencia')?.disabled"
+                ></p-dropdown>
+            </div>
+            @if(formularioSetencia.get('idTipoSentencia')?.value){
+            <div class="flex align-items-center">
+            <img
+                [src]="icono('check-circle')"
+                alt="validado"
+                class="mt-4 ml-2 pr-2 h-2rem"
+            />
+            </div>
+            }
+        </div>
+
+        @if ( esSentenciaCondenatoria && esPosibleEditarFormulario ) {
+            <div class="col-12 registrar-pena">
+                <h4>PENA</h4>
+                <app-registrar-penas 
+                    [tipoSentencia]="tipoSentencia"
+                    [conformadaPretension]="true"
+                    [data]="dataPena"
+                    [accion]="ACCION_CREAR"
+                    (respuestaFormulario)="respuestaFormularioPena($event)"
+                />
+            </div>
+        }
+
+        <div class="col-12 mt-6">
+            <p-table 
+                class="table-penas"
+                responsiveLayout="stack"
+                [value]="listaPenas"
+                [tableStyle]="{ 'min-width': '50rem' }"
+                [rowHover]="true"
+                dataKey="nombre"
+                [showCurrentPageReport]="true"
+            >
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th id="Sujetos Procesales">Sujetos procesales (Acusado)</th>
+                        <th id="Delito">Delito</th>
+                        <th id="Tipo de sentencia">Tipo de sentencia</th>
+                        <th id="Tipo Pena">Clase de pena</th>
+                        <th id="Pena">Tipo de pena</th>
+                        <th id="Acciones">Acciones</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-pena let-rowIndex="rowIndex">
+                    <tr>
+                        <td>{{ pena.sujeto }}</td>
+                        <td>{{ pena.delito }}</td>
+                        <td>{{ pena.tipoSentencia }}</td>
+                        <td>{{ pena.pena }}</td>
+                        <td>{{ pena.tipoPena }}</td>
+                        <td>
+                            <div class="flex justify-content-center align-items-center">
+                                <fn-icon
+                                    (click)="abrirVerEditarModal(pena.idActoTramiteDelitoSujeto, pena.idPena, ACCION_VER)"
+                                    [ico]="iconUtil.obtenerIcono('iEye')" 
+                                    height="2rem" 
+                                    style="cursor: pointer;"
+                                    onKeyPress=""
+                                >
+                                </fn-icon>
+                                @if ( esPosibleEditarFormulario ) {
+                                    <fn-icon 
+                                        (click)="abrirVerEditarModal(pena.idActoTramiteDelitoSujeto, pena.idPena, ACCION_EDITAR)"
+                                        [ico]="iconUtil.obtenerIcono('iEdit')"
+                                        height="1.8rem"
+                                        style="cursor: pointer;"
+                                        onKeyPress=""
+                                    >
+                                    </fn-icon>
+                                    <fn-icon 
+                                        (click)="eliminarPena(pena)"
+                                        [ico]="iconUtil.obtenerIcono('iTrash')"
+                                        height="2.5rem"
+                                        style="cursor: pointer;margin-left: -5px;"
+                                        onKeyPress=""
+                                    >
+                                    </fn-icon>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="6">
+                            <div class="text-center">Ninguna pena agregada</div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+
+            <app-paginator
+                [query]="query"
+                [items]="itemPaginado"
+                [rowsPerPageOptions]="[]"
+                (paginate)="eventoOnPaginate($event)"
+            ></app-paginator>
+        </div>
+
+        <div class="col-12 md:col-6 flex align-items-center mb-5">
+            <p-checkbox 
+                class="checkbox cursor-pointer"
+                labelStyleClass="cursor-pointer"
+                formControlName="reparacionCivil" 
+                label="Reparación civil"
+                [binary]="true"
+                inputId="binary"
+                (ngModelChange)="alDarClicEnReparacionCivil($event)"
+            />
+        </div>
+
+        @if ( tieneReparacionCivil ) {
+            
+            <div class="col-12 registrar-pena">
+                <h4 class="mb-0">REPARACIÓN CIVIL</h4>
+                <div class="reparacion-civil flex align-items-center justify-content-center px-5 py-4">
+                    <p-button
+                        styleClass="p-button-lg {{ esPosibleEditarFormulario ? 'cfe-boton-primary text-white' : 'cfe-boton-secondary' }} family-poppin-bold btn-adjust-filter w-column-full"
+                        (click)="registrarReparacionCivil()"
+                        onKeyPress=""
+                    >
+                        <span class="ml-4 mr-4">{{ esPosibleEditarFormulario ? 'Registrar' : 'Ver' }} reparación civil</span>
+                    </p-button>
+                    @if ( this.existenRegistrosReparcionCivil ) {
+                        <div class="field col-1">
+                            <label for="">&nbsp;</label>
+                            <div class="mt-1">
+                                <fn-icon class="color-icon-success"
+                                    [ico]="iconUtil.obtenerIcono('iCheckCircle')"
+                                    height="1.6rem"
+                                ></fn-icon>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <div class="col-12 flex">
+            <div class="field mb-0 w-full">
+                <label for="txtObservacion" class="font-bold text-sm">
+                    Observaciones (opcional)
+                </label>
+                <textarea id="txtObservacion" pInputTextarea formControlName="observaciones" rows="5"
+                    maxlength="{{ longitudMaximaObservaciones }}" class="p-inputtext p-2 w-full">
+                                </textarea>
+                <contador-footer-textarea [textarea]="formularioSetencia.get('observaciones')"
+                    [size]="longitudMaximaObservaciones"></contador-footer-textarea>
+            </div>
+            @if(validarObservacion('observaciones')){
+            <div class="flex align-items-center">
+                <img [src]="icono('check-circle')" alt="validado" class="ml-2 pr-2 h-2rem" />
+            </div>
+            }
+        </div>
+
+        <div class="field col-12 flex flex-column sm:flex-row justify-content-between mt-3">
+
+            @if ( !tramiteEstadoRecibido ) {
+                <a 
+                    class="cfe-enlace"
+                    (click)="abrirModalSeleccionarTramite()"
+                >
+                ¿Este documento no pertenece a este trámite?</a>
+            } @else {
+                <span></span>
+            }
+
+            @if ( mostrarBotonGuardar() ) {
+      
+                <p-button
+                    [disabled]="!esFormularioValido"
+                    (onClick)="preguntarGuardadoSentenciaDeterminaConclusionAnticipada()"
+                    styleClass="p-button-lg cfe-boton-primary text-white family-poppin-bold btn-adjust-filter w-column-full"
+                >
+                    <span class="ml-4 mr-4">Guardar</span>
+                </p-button>
+            }
+            
+        </div>
+
+    </form>
+}
+
+<p-dialog 
+    [(visible)]="mostrarModalVerEditar"
+    [modal]="true"
+    [showHeader]="false"
+    [closable]="false"
+    [dismissableMask]="true" 
+    styleClass="custom-dialog"
+>
+    <button 
+        class="close-button"
+        (click)="mostrarModalVerEditar = false"
+    >×</button>
+    <ng-template pTemplate="content">
+        @if ( mostrarModalVerEditar ) {
+            <ng-container>
+                <div class="dialog-content">
+                    <app-registrar-penas 
+                        [tipoSentencia]="tipoSentencia"
+                        [conformadaPretension]="true"
+                        [idPena]="idPena"
+                        [data]="dataPena"
+                        [accion]="accionPena"
+                        (respuestaFormulario)="respuestaFormularioPena($event)"
+                        [idActoTramiteDelitoSujeto]="idActoTramiteDelitoSujeto"
+                    />
+                </div>
+            </ng-container>
+        }
+    </ng-template>
+</p-dialog>
+
+<p-dialog 
+    [(visible)]="mostrarReparacionCivil"
+    [modal]="true"
+    [showHeader]="false"
+    [closable]="false"
+    [dismissableMask]="true" 
+    styleClass="reparacion-civil-dialog"
+>
+    <app-encabezado-modal
+        titulo="Registro de la repación civil - Incidente: "
+        [numeroCaso]="numeroCaso"
+        [tituloSinEtiquetaCaso]="true"
+        [sinReferencia]="true"
+        [alCerrarModal]="cerrarReparacionCivil"
+        tituloSize="1.3rem"
+    />
+    <ng-template pTemplate="content">
+        @if ( mostrarReparacionCivil ) {
+            <ng-container>
+                <div class="dialog-content">
+                    <app-registrar-reparacion-civil 
+                        [data]="dataPena"
+                        [salidaAlterna]="true" 
+                        [tipoSentencia]="true"
+                        [delitosTramiteSujeto]="true"
+                        [modoLectura]="!esPosibleEditarFormulario"
+                    />
+                </div>
+            </ng-container>
+        }
+    </ng-template>
+</p-dialog>

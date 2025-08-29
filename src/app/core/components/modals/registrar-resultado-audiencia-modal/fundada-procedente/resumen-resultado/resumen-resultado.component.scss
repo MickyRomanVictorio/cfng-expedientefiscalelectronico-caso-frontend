@@ -1,0 +1,48 @@
+
+.resumen-resultado{
+    .cfe-titulo-1{
+        font-size: 15px !important;
+        margin-bottom: 1em;
+    }
+}
+
+:host ::ng-deep .table-delitos {
+    .p-datatable-thead,
+    .p-datatable-tbody {
+       tr{
+        background-color:  #dbd8c9 !important;
+        td{
+            border: 1px solid var(--mpfn-white) !important;
+            border-width: 1px 0 2px 0 !important;
+        }
+       }
+    }
+}
+
+
+.p-button-text.p-button-rounded.p-button-plain {
+    &:hover {
+      background-color: transparent !important;
+      box-shadow: none !important;
+    }
+
+    &:focus {
+      background-color: transparent !important;
+      box-shadow: none !important;
+    }
+  }
+
+:host ::ng-deep .p-rowgroup-footer td {
+    font-weight: 700;
+}
+
+:host ::ng-deep .p-rowgroup-header {
+    span {
+        font-weight: 700;
+    }
+
+    .p-row-toggler {
+        vertical-align: middle;
+        margin-right: .25rem;
+    }
+}

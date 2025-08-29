@@ -1,0 +1,80 @@
+@if ( !tieneActoTramiteCasoDocumento ) {
+  <mensaje-interoperabilidad-pj />
+}
+
+@if ( tieneActoTramiteCasoDocumento ) {
+  @if ( !tramiteEstadoRecibido ) {
+    <mensaje-completar-informacion
+      [titulo] = "tramiteSeleccionado!.nombreTramite"
+    />
+  }
+  <div>
+    <form [formGroup]="formGroup">
+      <div class="col">
+        <div class="field mt-3">
+          <div class="grid mt-3">
+            <div class="col-12 sm:col-12 md:col-6 lg:col-2">
+              <label for="fechaNotificacion" class="font-bold adjust-origin-label text-left">
+                Fecha de notificación
+              </label>
+              <p-calendar id="fechaNotificacion"
+                          dateMask
+                          dateFormat="dd/mm/yy"
+                          class="cfe-calendar calendar-height"
+                          [showIcon]="true"
+                          icon="cfe-calendar-icon"
+                          placeholder="dd/mm/aaaa"
+                          formControlName="fechaNotificacion"
+              ></p-calendar>
+            </div>
+            <div class="col-12 sm:col-12 md:col-6 lg:col-3">
+              <label class="font-bold adjust-origin-label text-left">Consentimiento</label>
+              <div class="flex align-items-center gap-2">
+                <div class="flex-auto flex">
+                  <div class="flex align-items-center gap-2">
+                    <button class="cfe-boton-primary cfe-boton-lg"
+                            (click)="openModalSujetos()"
+                    >Seleccionar consentido
+                    </button>
+                    @if (botonValido) {
+                      <img id="imgGuardado" [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="grid">
+            <div class="field col-12 lg:col-12">
+              <label for="txtObservacion" class="font-semibold">Observaciones (opcional)</label>
+              <textarea
+                id="txtObservacion"
+                maxlength="200"
+                rows="5"
+                (input)="actualizarContadorInputTextArea($event)"
+                formControlName="txtObservacion"
+                class="p-inputtext p-2 w-full"
+                [ngClass]="{ 'ng-invalid ng-dirty': errorMsg('txtObservacion') }"
+              ></textarea>
+              <small
+                class="block text-right mt-1"
+              >
+                Quedan {{ caracteresRestantes }} caracteres
+              </small>
+            </div>
+          </div>
+
+          <div class="flex justify-content-between">
+            <span><a *ngIf="!soloLectura && !estadoRecibido" class="btn-link" (click)="openModalSelectTramite()">¿Este documento no pertenece a este trámite?</a></span>
+            <p-button
+              styleClass="cfe-boton-lg cfe-boton-primary"
+              label="Guardar"
+              (onClick)="guardarFormulario()"
+              [disabled]="!validarForm">
+            </p-button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+}

@@ -1,0 +1,4 @@
+{
+    "sonarQubeUri": "http://172.16.111.130/sonarcfe",
+    "projectKey": "dev:frontend:cfngExpedienteFiscalElectronicoCasoFrontend"
+}

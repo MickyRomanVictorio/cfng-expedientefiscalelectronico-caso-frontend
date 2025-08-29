@@ -1,0 +1,144 @@
+.background-white {
+  background-color: #ffffff;
+}
+.card {
+  &-header {
+    margin-bottom: 20px;
+    p {
+      font-size: 16px;
+      font-weight: 600;
+      color: #0f2c52;
+    }
+  }
+  &-body {
+    .grid-monitoreo {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      .monitoreo-item {
+        border: 1px solid #cccccc;
+        border-radius: 4px;
+        padding: 16px;
+        .monitoreo-status {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          margin-right: 12px;
+          &.red {
+            background-color: #c83c3c;
+          }
+          &.orange {
+            background-color: #d9a927;
+          }
+          &.green {
+            background-color: #3cc85a;
+          }
+        }
+        .monitoreo-content {
+          h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+            line-height: 24px;
+            &.red {
+              color: #c83c3c;
+            }
+            &.orange {
+              color: #d9a927;
+            }
+            &.green {
+              color: #3cc85a;
+            }
+          }
+          h3 {
+            color: #333333;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+          }
+        }
+      }
+    }
+  }
+}
+
+.container-monitoreo {
+  &.superior {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+  }
+}
+
+.term-item {
+  font-size: 14px;
+  font-weight: 600;
+  color: #5f6062;
+}
+.p-dialog.bg-brown .p-dialog-content {
+  background-color: #f5f2e0 !important;
+}
+
+:host ::ng-deep {
+  // Igualar altura del dropdown Indicador con Fiscales
+  #indicador .p-dropdown {
+    height: 40px; // Altura del p-multiSelect
+    align-items: center;
+    display: flex;
+  }
+
+  // Asegurar que el input interno tenga el mismo padding
+  .p-dropdown .p-dropdown-label {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+}
+
+/* Estilos para los círculos del semáforo */
+.semaforo-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+
+  &.green {
+    background-color: #3cc85a;
+  }
+  &.orange {
+    background-color: #d9a927;
+  }
+  &.red {
+    background-color: #c83c3c;
+  }
+}
+
+.bandeja_tramites__table td {
+  vertical-align: middle;
+}
+
+:host ::ng-deep .semaforo-column {
+  background-color: #f8f9fa !important;
+  border-left: 2px solid #dee2e6;
+  border-right: 2px solid #dee2e6;
+}
+
+:host ::ng-deep .total-casos-column {
+  background-color: #fef9e2 !important;
+  border-left: 2px solid #dee2e6;
+  border-right: 2px solid #dee2e6;
+}
+
+:host ::ng-deep .gray-column-1 {
+  background-color: #f0f0f0 !important; /* Gris claro */
+  border-left: 2px solid #dee2e6;
+  border-right: 2px solid #dee2e6;
+}
+
+:host ::ng-deep .gray-column-2 {
+  background-color: #e0e0e0 !important; /* Gris medio */
+  border-left: 2px solid #dee2e6;
+  border-right: 2px solid #dee2e6;
+}

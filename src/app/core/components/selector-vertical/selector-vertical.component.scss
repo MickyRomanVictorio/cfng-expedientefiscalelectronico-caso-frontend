@@ -1,0 +1,78 @@
+.selector_contenedor {
+    width: 100%;
+    border: 1px solid var( --mpfn-gray3);
+    margin-top: 7px;
+    border-radius: 5px;
+    .titulo {
+        font-weight: 700;
+        color: var(--mpfn-gray1);
+        font-size: 0.9em;
+        padding: 8px 20px;
+        border-bottom: 1px solid var( --mpfn-gray3);
+    }
+    .buscador {
+        padding: 12px 16px;
+        border-bottom: 1px solid var( --mpfn-gray3);
+        .input-buscador {
+            outline: none;
+            border-bottom: 1px solid var( --mpfn-gray3);
+            border-radius: 5px;
+            padding: 8px 16px;
+        }
+    }
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        overflow-y: auto;
+        &::-webkit-scrollbar {
+            width: 7px;
+        }
+        &::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: var(--mpfn-gray2);
+            border-radius: 4px;
+        }
+        &::-webkit-scrollbar-thumb:hover {
+            background: var(--mpfn-gray2);
+        }
+        li {
+            padding: 10px 16px;
+            cursor: pointer;
+            .nombre_elemento {
+                width: calc(100% - 35px);
+                display: inline-block;
+                &.destacar {
+                    font-weight: 600;
+                }
+            }
+            fn-icon {
+                position: relative;
+                right: -10px;
+                top: 5px;
+            }
+            &.seleccionado{
+                background-color: #F7EED47A;
+                &:hover {
+                    background-color: #F7EED47A;
+                }
+            }
+            &:hover {
+                background-color: #e0e0e07a;
+            }
+        }
+    }
+    .sin-elementos {
+        max-width: 425px;
+        min-height: 425px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 10px 20px;
+        color: #A4A4A5;
+    }
+}

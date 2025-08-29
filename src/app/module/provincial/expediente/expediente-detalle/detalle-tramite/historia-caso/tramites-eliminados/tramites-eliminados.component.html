@@ -1,0 +1,135 @@
+<div class="opciones-exportacion">
+	<button
+		class="cfe-boton-secondary cfe-boton-m mr-3 cfe-boton-icono-izquierda"
+		(click)="exportar('PDF')"
+	>
+		<fn-icon
+			class="ml-1"
+			[ico]="iconUtil.obtenerIcono('iFileDownload')"
+			height="1.6rem"
+		></fn-icon>
+		Exportar PDF
+	</button>
+	<button
+		class="cfe-boton-secondary cfe-boton-m cfe-boton-icono-izquierda"
+		(click)="exportar('Excel')"
+	>
+		<fn-icon
+			class="ml-1"
+			[ico]="iconUtil.obtenerIcono('iTable')"
+			height="1.6rem"
+		></fn-icon>
+		Exportar Excel
+	</button>
+</div>
+
+<div class="grilla">
+  	<p-table
+		[value]="tramitesEliminados"
+		[paginator]="true"
+		[rowHover]="true"
+		[rows]="10"
+		[showCurrentPageReport]="true"
+		[tableStyle]="{ 'min-width': '50rem' }"
+		currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} registros"
+		[rowsPerPageOptions]="[10, 20, 30, 50, 100]"
+		[breakpoint]="'992px'"
+		responsiveLayout="stack"
+	>
+		<ng-template pTemplate="header">
+			<tr>
+				<th>N°</th>
+				<th>Etapa</th>
+				<th>Acto Procesal</th>
+				<th>Trámite</th>
+				<th>Fecha de creación</th>
+				<th>Fecha de eliminación</th>
+				<th>Acciones</th>
+			</tr>
+		</ng-template>
+		<ng-template pTemplate="body" let-tramite let-rowIndex="rowIndex">
+			@let esTramiteIngresadoMesa = tramite.tipoIngresoTramite === idIngresoPorMesa;
+			<tr>
+				<td class="table_td_content_start caso-container">
+					{{ tramite.nro }}
+				</td>
+				<td class="table_td_content_start caso-container">
+					{{ tramite.descEtapa }}
+				</td>
+				<td class="table_td_content_start caso-container">
+					{{ tramite.descActoProcesal }}
+				</td>
+				<td class="table_td_content_start">
+					{{ tramite.descTramite }}
+				</td>
+				<td class="table_td_content_start remitente-container">
+					<div class="mb-1">{{ capitalized(tramite.usuarioCreacion) }}</div>
+					{{ dateUtil.formatearFechaHoraAbreviada(tramite.fechaCreacion) }}
+				</td>
+				<td class="fecha-container table_td_content_start">
+					<div class="mb-1">{{ capitalized(tramite.usuarioEliminacion) }}</div>
+					{{ dateUtil.formatearFechaHoraAbreviada(tramite.fechaEliminacion) }}
+				</td>
+				<td class="table_td_content_start">
+          <span class="p-column-title">Acciones</span>
+          <div class="flex flex-wrap">
+            <button
+                          class="cfe-boton-secondary cfe-boton-opcion"
+                          title="Ver sujetos procesales del trámite"
+                          (click)="verSujetosProcesalesTramite(tramite)"
+                      >
+                          <img
+                              [src]="icon('usuarios-search')"
+                              alt="Ver sujetos procesales"
+                          >
+                      </button>
+
+            @if ( !esTramiteIngresadoMesa ) {
+                          <button
+                              class="cfe-boton-secondary cfe-boton-opcion"
+                              (click)="verHistorialTramite(tramite)"
+                              title="Ver historial del trámite"
+                          >
+                              <fn-icon
+                                  class="ml-1"
+                                  [ico]="iconUtil.obtenerIcono('iRestaurar')"
+                                  height="1.4rem"
+                              ></fn-icon>
+                          </button>
+                      }
+
+            <button
+              class="cfe-boton-secondary cfe-boton-opcion"
+              title="Previsualizar trámite"
+              (click)="previsualizarTramite(tramite)"
+            >
+              <fn-icon
+                class="ml-1"
+                [ico]="iconUtil.obtenerIcono('iViewFile')"
+                height="1.6rem"
+              ></fn-icon>
+            </button>
+
+            <button
+              pButton
+              class="p-button-danger cfe-boton-opcion"
+              (click)="verDetalleEliminacion(tramite)"
+              title="Ver detalle de la eliminación"
+            >
+              <fn-icon
+                class="ml-1"
+                [ico]="iconUtil.obtenerIcono('iEye')"
+                height="1.7rem"
+              ></fn-icon>
+            </button>
+          </div>
+				</td>
+			</tr>
+		</ng-template>
+		<ng-template pTemplate="emptymessage">
+			<tr>
+				<td colspan="6" style="text-align: center;">No se encontraron registros con los criterios de búsqueda ingresados</td>
+			</tr>
+		</ng-template>
+	</p-table>
+</div>

@@ -1,0 +1,144 @@
+@if (!tieneActoTramiteCasoDocumento) {
+  <mensaje-interoperabilidad-pj/>
+}
+
+@if (tieneActoTramiteCasoDocumento) {
+  @if (!tramiteEstadoRecibido) {
+    <mensaje-completar-informacion
+      [titulo]="tramiteSeleccionado!.nombreTramite"
+    />
+  }
+
+  <form [formGroup]="formularioAutoResuelve">
+    <!-- Fila 1 -->
+    <div class="formgrid grid mt-3">
+      <!-- Fecha de notificación -->
+      <div class="field col-12 md:col-6 lg:col-4">
+        <label for="fechaNotificacion" class="font-bold text-sm">Fecha de notificación</label>
+        <div class="p-inputgroup">
+          <p-calendar
+            id="fechaNotificacion"
+            [dateFormat]="'dd/mm/yy'"
+            class="p-inputtext-lg cfe-calendar"
+            [style]="{'height':'40px'}"
+            [showIcon]="true"
+            dateMask
+            icon="cfe-calendar-icon"
+            placeholder="dd/mm/aaaa"
+            formControlName="fechaNotificacion"
+            appendTo="body"
+            dataType="string"
+            [ngClass]="{'ng-invalid ng-dirty': formularioAutoResuelve.get('fechaNotificacion')?.invalid && formularioAutoResuelve.get('fechaNotificacion')?.touched}"
+          >
+          </p-calendar>
+          @if (formularioAutoResuelve.get('fechaNotificacion')?.valid && formularioAutoResuelve.get('fechaNotificacion')?.value) {
+            <span class="mt-1">
+              <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="h-2rem">
+            </span>
+          }
+        </div>
+      </div>
+
+      <!-- Seleccione resultado -->
+      <div class="field col-12 md:col-6 lg:col-4">
+        <label for="resultado" class="font-bold text-sm">Resultado:</label>
+        <div id="resultado" class="p-inputgroup">
+          <button class="cfe-boton-primary cfe-boton-lg w-full" (click)="abrirModalSujetos()">
+            Seleccionar resultado
+          </button>
+          @if ( flCheckModal || esSoloLectura ) {
+            <span class="mt-1">
+              <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="h-2rem">
+            </span>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Fila 2: Observaciones -->
+    <div class="formgrid grid">
+      <div class="field col-12">
+        <label for="observaciones" class="font-bold text-sm">Observaciones (opcional)</label>
+        <div class="p-inputgroup align-items-start">
+          <textarea id="observaciones" pInputTextarea class="w-full text-md" rows="6" formControlName="observaciones"
+                    [maxLength]="longitudMaximaObservaciones"></textarea>
+          @if (formularioAutoResuelve.get('observaciones')?.value && formularioAutoResuelve.get('observaciones')?.value.length > 0) {
+            <span class="mt-1">
+              <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="h-2rem">
+            </span>
+          }
+        </div>
+        <small
+          class="block text-right mt-1"
+          [ngClass]="{'p-error': cantidadCaracteresObservacion > longitudMaximaObservaciones }">
+          {{ cantidadCaracteresObservacion }}/{{ longitudMaximaObservaciones }} máximo de caracteres
+        </small>
+      </div>
+    </div>
+
+    <!-- Fila 3: Acciones -->
+    <div class="flex flex-column sm:flex-row justify-content-between align-items-center mt-3">
+      @if (!tramiteEstadoRecibido) {
+        <a class="cfe-enlace tour-f-5 mb-2 sm:mb-0" (click)="modalActualizarActoYTramite()">
+          ¿Este documento no pertenece a este trámite?
+        </a>
+      } @else {
+        <!-- Dejar un span vacío para mantener el botón a la derecha con justify-content-between -->
+        <span></span>
+      }
+
+      <!-- Botón Guardar: solo visible si no se ha guardado -->
+      @if (esPosibleEditarFormulario && !tramiteGuardado) {
+        <p-button
+          [disabled]="!formularioValido"
+          (onClick)="confirmarRegistroTramite()"
+          styleClass="p-button-lg cfe-boton-primary text-white family-poppin-bold btn-adjust-filter w-full sm:w-auto tour-f-6">
+          <span class="ml-4 mr-4">Guardar</span>
+        </p-button>
+      }
+
+      @if (mostrarBotonDevolver) {
+        <p-button
+          styleClass="cfe-boton-lg cfe-boton-danger"
+          label="Devolver al Fiscal Provincial"
+          (onClick)="devolverAlFiscalProvincial()">
+        </p-button>
+      }
+
+    </div>
+  </form>
+
+  <!-- ACCIONES PARA PROVINCIAL EN BANDEJA DE RESPUESTAS DEL SUPERIOR -->
+  @if(codJerarquia === 1){
+    @if(codJerarquia === 1 && !ocultarBotones){
+      <div class="text-right pt-3">
+        <button
+          type="button"
+          class="cfe-boton-secondary cfe-boton-m inline"
+          (click)="gestionarObservacion()"
+        >
+          Observar Trámite
+        </button>
+        <button
+          type="button"
+          class="cfe-boton-primary cfe-boton-m inline ml-2"
+          (click)="confirmarRecibirTramite()"
+        >
+          Recibir Trámite
+        </button>
+      </div>
+    }
+
+    @if(verFormularioObservar()){
+      <hr>
+      <app-observar
+        [esModal]="false"
+        [datosPronunciamiento]="datosPronunciamiento"
+        [esSoloLectura]="false"
+        (cerrar)="cancelarObservacion()"
+        (observar)="enviarObservacion($event)"
+      ></app-observar>
+    }
+  }
+
+}

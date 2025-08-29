@@ -1,0 +1,24 @@
+<div class="container">
+  <div class="floatRigth my-1">
+    <i class="pi pi-times size-cursor" (click)="closeAction()"></i>
+  </div>
+
+  <div class="h-full w-full flex flex-col">
+    <div class="flex-grow pb-4">
+      <ng-container *ngIf="documentoRuta; else noDocumento">
+        <iframe
+          [src]="documentoRuta"
+          name="NombreDelDocumento"
+          class="w-full h-full border-none"
+          title="Documento"
+        ></iframe>
+      </ng-container>
+
+      <ng-template #noDocumento>
+        <div class="text-center text-lg text-red-500 py-3">
+          Documento sin contenido
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<div class="grid">
+  <div *ngFor="let resumen of resumenes" class="col-4">
+    <div
+      class="h-15rem p-2 border-round-3xl border-2 hover:border-cyan-700 m-2"
+      [style.borderColor]="resumen.borderColor"
+    >
+      <div class="resumen_caso__container">
+        <div class="resumen_caso__header">
+          <div class="resumen_caso_header__content">
+            <fn-icon
+                [ico]="icono(resumen.iconName)"
+                height="1.6rem"
+                [style.color]="resumen.contentColor"
+                >
+            </fn-icon>
+          </div>
+          <div class="casos_anulados_header__navigate">
+            <fn-icon
+                [ico]="icono('iArrowRight')"
+                height="1.6rem">
+            </fn-icon>
+          </div>
+        </div>
+        <div class="resumen_caso__body">
+          <h3 [style.color]="resumen.contentColor">{{ resumen.valor }}</h3>
+        </div>
+        <div class="resumen_caso__footer1">
+          <h4>{{ resumen.text1 }}</h4>
+        </div>
+        <div class="resumen_caso__footer2">
+          <h4>{{ resumen.text2 }}</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

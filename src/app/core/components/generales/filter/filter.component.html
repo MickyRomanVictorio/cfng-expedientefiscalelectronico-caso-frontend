@@ -1,0 +1,91 @@
+
+  <form [formGroup]="myForm" >
+    <div class="flex flex-wrap align-items-end gap-3 mb-3">
+      <div class="field pl-0 pb-0 col-8 mb-0 w-100rem" *ngIf="showOption('caseCode')">
+        <label for="caseCode" class="block">Buscar : </label>
+        <input id="caseCode" pInputText formControlName="caseCode"
+        placeholder="Ingrese algún texto para buscar referente a la información mostrada en la lista" class="w-full" />
+      </div>
+      <button
+      *ngIf="drillDownButtonIsVisible"
+      pButton
+      pRipple
+      pInputText
+      type="button"
+      class="p-button-secondary"
+      tooltipPosition="top"
+      [icon]="getIcon()"
+      [pTooltip]=" isSubFilterShowed ? 'Mostrar menos filtros' : 'Mostrar  mas filtros' "
+      (click)="showSubFilter()"
+    ></button>
+
+    <button
+      pButton
+      pRipple
+      type="submit"
+      label="Buscar"
+      (click)="submit()"
+    ></button>
+    <button
+      pButton
+      pRipple
+      type="button"
+      label="Limpiar"
+      (click)="submit()"
+    ></button>
+    </div>
+    <div class="flex flex-wrap align-items-end gap-3" *ngIf="isSubFilterShowed">
+
+
+    <div class="field mb-0 w-12rem" *ngIf="showOption('fasignacion')">
+      <label for="fasignacioni" class="block">Fecha de Asignación al fiscal</label>
+      <p-calendar  formControlName="fasignacioni"
+
+      dateFormat="dd/mm/yy" [showIcon]="true"></p-calendar>
+
+    </div>
+    <div class="field mb-0 w-12rem" *ngIf="showOption('fasignacion')">
+      <p-calendar  formControlName="fasignacionf"
+
+       dateFormat="dd/mm/yy" [showIcon]="true"></p-calendar>
+      </div>
+
+
+    <div class="field mb-0 w-12rem" *ngIf="showOption('plazos')">
+      <label for="plazos" class="block">Plazos</label>
+      <p-dropdown
+        formControlName="plazos"
+        optionLabel="nombre"
+        optionValue="id"
+        placeholder="Seleccionar"
+        appendTo="body"
+        [autoDisplayFirst]="false"
+        [options]="plazos.data"
+        [placeholder]="getPlaceholder(plazos)"
+        [readonly]="getIsDisabled(plazos)"
+      ></p-dropdown>
+    </div>
+
+
+
+    <div class="field mb-0 w-12rem" *ngIf="showOption('origen')">
+      <label for="origen" class="block">Origen</label>
+      <p-dropdown
+        formControlName="origen"
+        optionLabel="nombre"
+        optionValue="id"
+        placeholder="Seleccionar"
+        appendTo="body"
+        [autoDisplayFirst]="false"
+        [options]="origen.data"
+        [placeholder]="getPlaceholder(origen)"
+        [readonly]="getIsDisabled(origen)"
+      ></p-dropdown>
+    </div>
+
+
+  </div>
+  </form>
+
+
+

@@ -1,0 +1,46 @@
+<div class="alert-container">
+
+	<div class="field col-12">
+		<app-encabezado-modal
+			[titulo]="titulo"
+			[referenciaModal]="ref"
+			[numeroCaso]="numeroCaso"
+		></app-encabezado-modal>
+		<h4 class="cfe-subtitulo-1 mt-4">Elevado a: </h4>
+		<h2 class="cfe-subtitulo-2 mb-2">{{ noEntidad }}</h2>
+		<label class="cfe-label mb-2">{{ descripcion }}</label>
+		<textarea
+			class="w-full"
+			rows="5"
+			cols="30"
+			(input)="countWords()"
+			maxlength="1000"
+			pInputTextarea
+			[formControl]="detalle"
+		></textarea>
+		<div class="py-2 text-right text-600">Quedan {{ wordCount }} caracteres</div>
+	</div>
+	<small
+		*ngIf="detalle.invalid && detalle.touched && detalle.dirty"
+		error
+		class="p-error block"
+	>
+		Campo obligatorio*
+	</small>
+	<div class="flex justify-content-end option-container">
+		<button
+			class="cfe-boton-secondary cfe-boton-m mt-3 mr-2"
+			(click)="cerrar()"
+		>
+			Cancelar
+		</button>
+		<button
+			class="cfe-boton-primary cfe-boton-m mt-3"
+			[ngClass]="{'btn-invalid': !isValidForm}"
+			(click)="verificarFiscalAsignado()"
+			[disabled]="!isValidForm"
+		>
+			Revertir
+		</button>
+	</div>
+</div>

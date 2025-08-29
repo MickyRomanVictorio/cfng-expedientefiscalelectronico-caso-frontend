@@ -1,0 +1,29 @@
+.nuevo-label-old {
+  display: block;
+  color: black;
+  padding: 2px 4px;
+  background-color: yellow;
+  width: fit-content;
+  font-size: 0.8rem;
+
+  position: absolute;
+  top: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.nuevo-label {
+  display: block;
+  width: 15px;
+  height: 15px;
+  background-color: #06A77D;
+  border-radius: 50%;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  transform: translate(50%, -50%);
+}
+
+.apelacion {
+  color: #06A77D !important;
+}

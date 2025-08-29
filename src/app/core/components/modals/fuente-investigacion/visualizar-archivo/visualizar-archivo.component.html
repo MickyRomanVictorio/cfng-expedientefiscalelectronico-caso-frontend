@@ -1,0 +1,14 @@
+<div class="relative">
+  <div class="flex align-items-center ">
+    <fn-icon
+      (click)="cerrarModal()"
+      [ico]="iconUtil.obtenerIcono('iClose')"
+      height="2rem">
+    </fn-icon>
+      <span><b>Archivo</b>:  {{ this.archivo?.nombreArchivo }} </span>
+  </div>
+  <app-visor-archivo
+    [archivo]=getUrlArchivoVisualizar()
+    [tipoArchivo]=getTipoArchivo(this.archivo?.imgArchivo)>
+  </app-visor-archivo>
+</div>

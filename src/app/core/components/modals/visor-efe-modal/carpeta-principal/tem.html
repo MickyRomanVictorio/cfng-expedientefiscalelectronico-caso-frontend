@@ -1,0 +1,1319 @@
+<!-- REGISTRO -->
+<ng-container *ngIf="titulo.id === TituloEtapaId.Registro">
+  <p-table
+    [value]="titulo.datos.dataEtapaRegistro"
+    [rowHover]="true"
+    [showCurrentPageReport]="true"
+    responsiveLayout="stack"
+    (onRowSelect)="eventoSeleccionarFila($event, TipoRegistro.Principal, titulo.id, true)"
+    (onRowUnselect)="eventoSeleccionarFila($event, TipoRegistro.Principal, titulo.id, false)"
+    selectionMode="multiple"
+    [(selection)]="seleccionadosModel.Registro"
+  >
+    <ng-template pTemplate="body" let-rowIndex="rowIndex" let-registro>
+      <tr
+        #filaDocumentoRef
+        [id]="'fila-'+registro.correlativo"
+        [style.backgroundColor]="colorFondoFilaArchivo(archivoSeleccionado, registro.correlativo+'', TituloEtapaId.Registro, TipoRegistro.Principal)"
+      >
+        <td style="vertical-align: top" class="pl-2 pr-0">
+          <div class="flex">
+            <p-tableCheckbox [value]="registro"></p-tableCheckbox>
+            <span class="pl-1">{{ registro.correlativo }}.</span>
+          </div>
+        </td>
+        <td
+          style="vertical-align: top"
+          class="pl-2 cursor-pointer"
+          (click)="eventoSeleccionarArchivo(registro.correlativo+'', titulo.id, TipoRegistro.Principal)"
+        >
+          <div>
+            <div class="text-md font-semibold">
+              {{registro.nombTipoDocumento}}
+            </div>
+            <div class="text-xs text-600">
+              Fecha de registro: {{registro.feRegistro}}
+            </div>
+          </div>
+        </td>
+        <td>
+          <div style="min-width: 150px">
+            <div class="flex align-content-center">
+              <div class="w-full">
+                <div
+                  (click)="eventoSeleccionarArchivo(registro.correlativo+'', titulo.id, TipoRegistro.Principal)"
+                  class="bg-red-500 text-white px-2 py-2 text-center border-round cursor-pointer transition-all transition-duration-200 hover:bg-red-700"
+                >
+                  pdf
+                </div>
+                <div class="text-xs flex justify-content-between">
+                  <div>
+                    {{formatoPesoArchivo(convertirMBaBytes(registro.nuPeso))}}
+                  </div>
+                  <div>
+                    {{registro.nuFolios}} Folio{{registro.nuFolios===1?'':'s'}}
+                  </div>
+                </div>
+              </div>
+              <div style="width: 50px" class="text-right pl-3">
+                <fn-icon
+                  class="cursor-pointer"
+                  (click)="descargarArchivo(registro.idDocumentoCaso, registro.nombTipoDocumento)"
+                  [ico]="obtenerIcono('iDownload')"
+                  height="2.1rem"
+                ></fn-icon>
+              </div>
+            </div>
+            <div class="text-xs text-600 pt-1">
+              Folio inicial:{{registro.nuFolioIni}} - Folio final:
+              {{registro.nuFolioFin}}
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="3" class="text-center">
+          No se encontraron registros con los criterios de búsqueda ingresados.
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</ng-container>
+
+<!-- Calificación -->
+<ng-container *ngIf="titulo.id === TituloEtapaId.Calificacion">
+  <p-table
+    [value]="titulo.datos.dataEtapa"
+    [rowHover]="true"
+    [showCurrentPageReport]="true"
+    responsiveLayout="stack"
+    (onRowSelect)="eventoSeleccionarFila($event, TipoRegistro.Principal, titulo.id, true)"
+    (onRowUnselect)="eventoSeleccionarFila($event, TipoRegistro.Principal, titulo.id, false)"
+    selectionMode="multiple"
+    [(selection)]="seleccionadosModel.Calificacion"
+  >
+    <ng-template pTemplate="body" let-rowIndex="rowIndex" let-calificacion>
+      <tr
+        #filaDocumentoRef
+        [id]="'fila-'+calificacion.correlativo"
+        [style.backgroundColor]="colorFondoFilaArchivo(archivoSeleccionado, calificacion.correlativo+'', TituloEtapaId.Calificacion, TipoRegistro.Principal)"
+      >
+        <td style="vertical-align: top" class="pl-2 pr-0">
+          <div class="flex">
+            <p-tableCheckbox [value]="calificacion"></p-tableCheckbox>
+            <span class="pl-1">{{ calificacion.correlativo }}.</span>
+          </div>
+        </td>
+        <td
+          style="vertical-align: top"
+          class="pl-2 cursor-pointer"
+          (click)="eventoSeleccionarArchivo(calificacion.correlativo+'', titulo.id, TipoRegistro.Principal)"
+        >
+          <div>
+            <div class="text-md">
+              <span class="font-semibold">Acto:</span> {{calificacion.noActo}}
+            </div>
+            <div class="text-md">
+              <span class="font-semibold">Trámite:</span>
+              {{calificacion.noTramite}}
+            </div>
+            <div class="text-xs text-600">
+              Fecha de emisión: {{calificacion.feEmision}}
+            </div>
+            <div class="text-xs text-600">
+              Fecha de registro: {{calificacion.feRegistro}}
+            </div>
+          </div>
+        </td>
+        <td>
+          <div style="min-width: 150px">
+            <div class="flex align-content-center">
+              <div class="w-full">
+                <div
+                  (click)="eventoSeleccionarArchivo(calificacion.correlativo+'', titulo.id, TipoRegistro.Principal)"
+                  class="bg-red-500 text-white px-2 py-2 text-center border-round cursor-pointer transition-all transition-duration-200 hover:bg-red-700"
+                >
+                  pdf
+                </div>
+                <div class="text-xs flex justify-content-between">
+                  <div>
+                    {{formatoPesoArchivo(convertirMBaBytes(calificacion.nuPeso))}}
+                  </div>
+                  <div>
+                    {{calificacion.nuFolios}}
+                    Folio{{calificacion.nuFolios===1?'':'s'}}
+                  </div>
+                </div>
+              </div>
+              <div style="width: 50px" class="text-right pl-3">
+                <fn-icon
+                  class="cursor-pointer"
+                  (click)="descargarArchivo(calificacion.idDocumentoCaso, calificacion.noTramite)"
+                  [ico]="obtenerIcono('iDownload')"
+                  height="2.1rem"
+                ></fn-icon>
+              </div>
+            </div>
+            <div class="text-sm pt-1 text-600">
+              Folio inicial:{{calificacion.nuFolioIni}} - Folio final:
+              {{calificacion.nuFolioFin}}
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="3" class="text-center">
+          No se encontraron registros con los criterios de búsqueda ingresados.
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</ng-container>
+
+<!-- Preliminar -->
+<ng-container *ngIf="titulo.id === TituloEtapaId.Preliminar">
+  <p-table
+    [value]="titulo.datos.dataEtapa"
+    [rowHover]="true"
+    [showCurrentPageReport]="true"
+    responsiveLayout="stack"
+    (onRowSelect)="eventoSeleccionarFila($event, TipoRegistro.Principal, titulo.id, true)"
+    (onRowUnselect)="eventoSeleccionarFila($event, TipoRegistro.Principal, titulo.id, false)"
+    selectionMode="multiple"
+    [(selection)]="seleccionadosModel.Preliminar"
+  >
+    <ng-template pTemplate="body" let-rowIndex="rowIndex" let-preliminar>
+      <tr
+        #filaDocumentoRef
+        [id]="'fila-'+preliminar.correlativo"
+        [style.backgroundColor]="colorFondoFilaArchivo(archivoSeleccionado, preliminar.correlativo+'', TituloEtapaId.Preliminar, TipoRegistro.Principal)"
+      >
+        <td style="vertical-align: top" class="pl-2 pr-0">
+          <div class="flex">
+            <p-tableCheckbox [value]="preliminar"></p-tableCheckbox>
+            <span class="pl-1">{{ preliminar.correlativo }}.</span>
+          </div>
+        </td>
+        <td
+          style="vertical-align: top"
+          class="pl-2 cursor-pointer"
+          (click)="eventoSeleccionarArchivo(preliminar.correlativo+'', titulo.id, TipoRegistro.Principal)"
+        >
+          <div>
+            <div class="text-md">
+              <span class="font-semibold">Acto:</span> {{preliminar.noActo}}
+            </div>
+            <div class="text-md">
+              <span class="font-semibold">Trámite:</span>
+              {{preliminar.noTramite}}
+            </div>
+            <div class="text-xs text-600">
+              Fecha de emisión: {{preliminar.feEmision}}
+            </div>
+            <div class="text-xs text-600">
+              Fecha de registro: {{preliminar.feRegistro}}
+            </div>
+          </div>
+        </td>
+        <td>
+          <div style="min-width: 150px">
+            <div class="flex align-content-center">
+              <div class="w-full">
+                <div
+                  (click)="eventoSeleccionarArchivo(preliminar.correlativo+'', titulo.id, TipoRegistro.Principal)"
+                  class="bg-red-500 text-white px-2 py-2 text-center border-round cursor-pointer transition-all transition-duration-200 hover:bg-red-700"
+                >
+                  pdf
+                </div>
+                <div class="text-xs flex justify-content-between">
+                  <div>
+                    {{formatoPesoArchivo( convertirMBaBytes(preliminar.nuPeso)
+                    )}}
+                  </div>
+                  <div>
+                    {{preliminar.nuFolios}}
+                    Folio{{preliminar.nuFolios===1?'':'s'}}
+                  </div>
+                </div>
+              </div>
+              <div style="width: 50px" class="text-right pl-3">
+                <fn-icon
+                  class="cursor-pointer"
+                  (click)="descargarArchivo(preliminar.idDocumentoCaso, preliminar.noTramite)"
+                  [ico]="obtenerIcono('iDownload')"
+                  height="2.1rem"
+                ></fn-icon>
+              </div>
+            </div>
+            <div class="text-xs text-600 pt-1">
+              Folio inicial:{{preliminar.nuFolioIni}} - Folio final:
+              {{preliminar.nuFolioFin}}
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="3" class="text-center">
+          No se encontraron registros con los criterios de búsqueda ingresados.
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!--Anidado: Cuaderno Incidental-->
+  <div
+    *ngFor="let ciPre of titulo.datos.cuadernoIncidental; let indice=index"
+    class="sub-accordion-container"
+  >
+    <div
+      class="flex align-items-center justify-content-between cursor-pointer"
+      (click)="ciPre.mostrarContenido=!ciPre.mostrarContenido"
+    >
+      <div>
+        <div class="flex px-2 py-3">
+          <div>{{ciPre.correlativo}}.</div>
+          <div class="px-1">
+            <fn-icon
+              [ico]="obtenerIcono('iFolderSolid')"
+              height="2.1rem"
+            ></fn-icon>
+          </div>
+          <div>
+            <div>
+              <span class="font-semibold">Cuaderno incidental:</span>
+              {{ciPre.noCuadernoIncidental}}
+            </div>
+            <div>
+              <span class="font-semibold">Asunto:</span> {{ciPre.noAsunto}}
+            </div>
+            <div>
+              <span class="font-semibold">Fecha de registro:</span>
+              {{ciPre.feRegistro}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pr-3">
+        <i
+          class="pi pi-chevron-{{ciPre.mostrarContenido===true?'up':'down'}} text-xl"
+        ></i>
+      </div>
+    </div>
+
+    <!-- Item de Cuadernos Incidentales-->
+    <div
+      class="ml-4 bg-white"
+      [ngClass]="{ 'hidden': !ciPre.mostrarContenido }"
+    >
+      <p-table
+        [value]="ciPre.detalleCuadernoIncidental"
+        [rowHover]="true"
+        [showCurrentPageReport]="true"
+        responsiveLayout="stack"
+        (onRowSelect)="eventoSeleccionarFila($event, TipoRegistro.CuadernoIncidental, titulo.id, true)"
+        (onRowUnselect)="eventoSeleccionarFila($event, TipoRegistro.CuadernoIncidental, titulo.id, false)"
+      >
+        <ng-template
+          pTemplate="body"
+          let-rowIndex="rowIndex"
+          let-detalleCuadernoIncidental
+        >
+          <tr
+            #filaDocumentoRef
+            [id]="'fila-'+detalleCuadernoIncidental.correlativo+'_'+rowIndex"
+            [style.backgroundColor]="colorFondoFilaArchivo(archivoSeleccionado, detalleCuadernoIncidental.correlativo+'_'+rowIndex, TituloEtapaId.Preliminar, TipoRegistro.CuadernoIncidental)"
+          >
+            <td style="vertical-align: top" class="pl-2 pr-0">
+              <div class="flex">
+                <p-tableCheckbox
+                  [value]="detalleCuadernoIncidental"
+                ></p-tableCheckbox>
+                <span class="pl-1"
+                  >{{ciPre.correlativo}}.{{ rowIndex + 1 }}.</span
+                >
+              </div>
+            </td>
+            <td
+              style="vertical-align: top"
+              class="pl-2 cursor-pointer"
+              (click)="eventoSeleccionarArchivo(detalleCuadernoIncidental.correlativo +'_'+ rowIndex, titulo.id, TipoRegistro.CuadernoIncidental)"
+            >
+              <div>
+                <div class="text-md">
+                  <span class="font-semibold">Acto:</span>
+                  {{detalleCuadernoIncidental.noActo}}
+                </div>
+                <div class="text-md">
+                  <span class="font-semibold">Trámite:</span>
+                  {{detalleCuadernoIncidental.noTramite}}
+                </div>
+                <div class="text-xs text-600">
+                  Fecha de emisión: {{detalleCuadernoIncidental.feEmision}}
+                </div>
+                <div class="text-xs text-600">
+                  Fecha de registro: {{detalleCuadernoIncidental.feRegistro}}
+                </div>
+              </div>
+            </td>
+
+            <td>
+              <div>
+                <div class="flex align-content-center">
+                  <div class="w-full">
+                    <div
+                      (click)="eventoSeleccionarArchivo(detalleCuadernoIncidental.correlativo +'_'+ rowIndex, titulo.id, TipoRegistro.CuadernoIncidental)"
+                      class="bg-red-500 text-white px-2 py-2 text-center border-round cursor-pointer transition-all transition-duration-200 hover:bg-red-700"
+                    >
+                      pdf
+                    </div>
+                    <div class="text-xs flex justify-content-between">
+                      <div class="text-700 font-semibold">
+                        {{formatoPesoArchivo(
+                        convertirMBaBytes(detalleCuadernoIncidental.nuPeso) )}}
+                      </div>
+                      <div>
+                        {{detalleCuadernoIncidental.nuFolios}}
+                        Folio{{detalleCuadernoIncidental.nuFolios===1?'':'s'}}
+                      </div>
+                    </div>
+                  </div>
+                  <div style="width: 50px" class="text-right pl-3">
+                    <fn-icon
+                      class="cursor-pointer"
+                      (click)="descargarArchivo(detalleCuadernoIncidental.idDocumentoCaso, detalleCuadernoIncidental.noTramite)"
+                      [ico]="obtenerIcono('iDownload')"
+                      height="2.1rem"
+                    ></fn-icon>
+                  </div>
+                </div>
+                <div class="text-xs pt-1 text-600">
+                  Folio inicial:{{detalleCuadernoIncidental.nuFolioIni}} - Folio
+                  final: {{detalleCuadernoIncidental.nuFolioFin}}
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="3" style="text-align: center">
+              No se encontraron registros con los criterios de búsqueda
+              ingresados.
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</ng-container>
+
+<!-- Preparatoria -->
+<ng-container *ngIf="titulo.id === TituloEtapaId.Preparatoria">
+  <p-table
+    [value]="titulo.datos.dataEtapa"
+    [rowHover]="true"
+    [showCurrentPageReport]="true"
+    responsiveLayout="stack"
+    (onRowSelect)="eventoSeleccionarFila($event, TipoRegistro.Principal, titulo.id, true)"
+    (onRowUnselect)="eventoSeleccionarFila($event, TipoRegistro.Principal, titulo.id, false)"
+    selectionMode="multiple"
+    [(selection)]="seleccionadosModel.Preparatoria"
+  >
+    <ng-template pTemplate="body" let-rowIndex="rowIndex" let-preparatoria>
+      <tr
+        #filaDocumentoRef
+        [id]="'fila-'+preparatoria.correlativo"
+        [style.backgroundColor]="colorFondoFilaArchivo(archivoSeleccionado, preparatoria.correlativo+'', TituloEtapaId.Preparatoria, TipoRegistro.Principal)"
+      >
+        <td style="vertical-align: top" class="pl-2 pr-0">
+          <div class="flex">
+            <p-tableCheckbox [value]="preparatoria"></p-tableCheckbox>
+            <span class="pl-1">{{ preparatoria.correlativo }}.</span>
+          </div>
+        </td>
+        <td
+          style="vertical-align: top"
+          class="pl-2 cursor-pointer"
+          (click)="eventoSeleccionarArchivo(preparatoria.correlativo+'', titulo.id, TipoRegistro.Principal)"
+        >
+          <div>
+            <div class="text-md">
+              <span class="font-semibold">Acto:</span> {{preparatoria.noActo}}
+            </div>
+            <div class="text-md">
+              <span class="font-semibold">Trámite:</span>
+              {{preparatoria.noTramite}}
+            </div>
+            <div class="text-xs text-600">
+              Fecha de emisión: {{preparatoria.feEmision}}
+            </div>
+            <div class="text-xs text-600">
+              Fecha de registro: {{preparatoria.feRegistro}}
+            </div>
+          </div>
+        </td>
+        <td>
+          <div style="min-width: 150px">
+            <div class="flex align-content-center">
+              <div class="w-full">
+                <div
+                  (click)="eventoSeleccionarArchivo(preparatoria.correlativo+'', titulo.id, TipoRegistro.Principal)"
+                  class="bg-red-500 text-white px-2 py-2 text-center border-round cursor-pointer transition-all transition-duration-200 hover:bg-red-700"
+                >
+                  pdf
+                </div>
+                <div class="text-xs flex justify-content-between">
+                  <div>
+                    {{formatoPesoArchivo( convertirMBaBytes(preparatoria.nuPeso)
+                    )}}
+                  </div>
+                  <div>
+                    {{preparatoria.nuFolios}}
+                    Folio{{preparatoria.nuFolios===1?'':'s'}}
+                  </div>
+                </div>
+              </div>
+              <div style="width: 50px" class="text-right pl-3">
+                <fn-icon
+                  class="cursor-pointer"
+                  (click)="descargarArchivo(preparatoria.idDocumentoCaso, preparatoria.noTramite)"
+                  [ico]="obtenerIcono('iDownload')"
+                  height="2.1rem"
+                ></fn-icon>
+              </div>
+            </div>
+            <div class="text-xs text-600 pt-1">
+              Folio inicial:{{preparatoria.nuFolioIni}} - Folio final:
+              {{preparatoria.nuFolioFin}}
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="2" style="text-align: center">
+          No se encontraron registros con los criterios de búsqueda ingresados.
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!-- Anidado: Cuaderno Incidental-->
+  <div
+    *ngFor="let ciPrepara of titulo.datos.cuadernoIncidental;let indice=index"
+    class="accordion-item"
+  >
+    <div class="sub-accordion-header">
+      <div class="accordion-title">
+        {{ciPrepara.correlativo}}.
+        <span>
+          <fn-icon
+            [ico]="obtenerIcono('iFolderSolid')"
+            height="2.1rem"
+          ></fn-icon>
+        </span>
+        <span style="font-size: 12px"
+          ><strong>Cuaderno incidental: </strong>
+          {{ciPrepara.noCuadernoIncidental}}
+        </span>
+        <br />
+        <span style="font-size: 12px; margin-left: 42px"
+          ><strong>Asunto: </strong> {{ciPrepara.noAsunto}}
+        </span>
+        <br />
+        <span style="margin-left: 70px; font-size: xx-small"
+          >Fecha de registro: {{ciPrepara.feRegistro}}
+        </span>
+      </div>
+    </div>
+
+    <!--                    INICIO: Item de Cuadernos Incidentales-->
+    <p-table
+      [value]="ciPrepara.detalleCuadernoIncidental"
+      [rowHover]="true"
+      [showCurrentPageReport]="true"
+    >
+      <ng-template
+        pTemplate="body"
+        let-rowIndex="rowIndex"
+        let-detalleCuadernoIncidental
+      >
+        <tr class="">
+          <td class="">
+            <p-tableCheckbox [value]="detalleCuadernoIncidental">
+            </p-tableCheckbox>
+            {{ciPrepara.correlativo}}.{{ rowIndex + 1 }}.
+            <span style="font-size: 12px"
+              ><strong>Acto: </strong>{{detalleCuadernoIncidental.noActo}}</span
+            >
+            <br />
+            <span style="font-size: 12px; margin-left: 42px"
+              ><strong>Tramite: </strong
+              >{{detalleCuadernoIncidental.noTramite}}</span
+            >
+            <br />
+            <span style="margin-left: 70px; font-size: xx-small"
+              >Fecha de emisión: {{detalleCuadernoIncidental.feEmision}}
+            </span>
+            <br />
+            <span style="margin-left: 70px; font-size: xx-small"
+              >Fecha de registro: {{detalleCuadernoIncidental.feRegistro}}
+            </span>
+          </td>
+          <td>
+            <p-button
+              label="pdf"
+              styleClass="font-bold p-button-sm p-button-danger"
+            >
+            </p-button>
+            &nbsp;&nbsp;
+            <fn-icon
+              [ico]="obtenerIcono('iDownload')"
+              height="2.1rem"
+            ></fn-icon>
+
+            <br />
+            <span style="font-size: xx-small"
+              ><strong>{{detalleCuadernoIncidental.nuPeso}}</strong> 4
+              Folios</span
+            >
+            <br />
+            <span style="font-size: xx-small">
+              Folio inicial:{{detalleCuadernoIncidental.nuFolioIni}} - Folio
+              final: {{detalleCuadernoIncidental.nuFolioFin}}
+            </span>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" style="text-align: center">
+            No se encontraron registros con los criterios de búsqueda
+            ingresados.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</ng-container>
+
+<!-- Intermedia -->
+<ng-container *ngIf="titulo.id === TituloEtapaId.Intermedia">
+  <p-table
+    [value]="titulo.datos.dataEtapa"
+    [rowHover]="true"
+    [showCurrentPageReport]="true"
+    responsiveLayout="stack"
+    (onRowSelect)="eventoSeleccionarFila($event, TipoRegistro.Principal, titulo.id, true)"
+    (onRowUnselect)="eventoSeleccionarFila($event, TipoRegistro.Principal, titulo.id, false)"
+    selectionMode="multiple"
+    [(selection)]="seleccionadosModel.Intermedia"
+  >
+    <ng-template pTemplate="body" let-rowIndex="rowIndex" let-intermedia>
+      <tr
+        #filaDocumentoRef
+        [id]="'fila-'+intermedia.correlativo"
+        [style.backgroundColor]="colorFondoFilaArchivo(archivoSeleccionado, intermedia.correlativo+'', TituloEtapaId.Intermedia, TipoRegistro.Principal)"
+      >
+        <td style="vertical-align: top" class="pl-2 pr-0">
+          <div class="flex">
+            <p-tableCheckbox [value]="intermedia"></p-tableCheckbox>
+            <span class="pl-1">{{ intermedia.correlativo }}.</span>
+          </div>
+        </td>
+        <td
+          style="vertical-align: top"
+          class="pl-2 cursor-pointer"
+          (click)="eventoSeleccionarArchivo(intermedia.correlativo+'', titulo.id, TipoRegistro.Principal)"
+        >
+          <div>
+            <div class="text-md">
+              <span class="font-semibold">Acto:</span> {{intermedia.noActo}}
+            </div>
+            <div class="text-md">
+              <span class="font-semibold">Trámite:</span>
+              {{intermedia.noTramite}}
+            </div>
+            <div class="text-xs text-600">
+              Fecha de emisión: {{intermedia.feEmision}}
+            </div>
+            <div class="text-xs text-600">
+              Fecha de registro: {{intermedia.feRegistro}}
+            </div>
+          </div>
+        </td>
+        <td>
+          <div style="min-width: 150px">
+            <div class="flex align-content-center">
+              <div class="w-full">
+                <div
+                  (click)="eventoSeleccionarArchivo(intermedia.correlativo+'', titulo.id, TipoRegistro.Principal)"
+                  class="bg-red-500 text-white px-2 py-2 text-center border-round cursor-pointer transition-all transition-duration-200 hover:bg-red-700"
+                >
+                  pdf
+                </div>
+                <div class="text-xs flex justify-content-between">
+                  <div>
+                    {{formatoPesoArchivo( convertirMBaBytes(intermedia.nuPeso)
+                    )}}
+                  </div>
+                  <div>
+                    {{intermedia.nuFolios}}
+                    Folio{{intermedia.nuFolios===1?'':'s'}}
+                  </div>
+                </div>
+              </div>
+              <div style="width: 50px" class="text-right pl-3">
+                <fn-icon
+                  class="cursor-pointer"
+                  (click)="descargarArchivo(intermedia.idDocumentoCaso, intermedia.noTramite)"
+                  [ico]="obtenerIcono('iDownload')"
+                  height="2.1rem"
+                ></fn-icon>
+              </div>
+            </div>
+            <div class="text-xs text-600 pt-1">
+              Folio inicial:{{intermedia.nuFolioIni}} - Folio final:
+              {{intermedia.nuFolioFin}}
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="2" style="text-align: center">
+          No se encontraron registros con los criterios de búsqueda ingresados.
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!-- Anidado: Cuaderno Incidental-->
+  <div
+    *ngFor="let ciInter of titulo.datos.cuadernoIncidental;let indice=index"
+    class="accordion-item"
+  >
+    <div class="sub-accordion-header">
+      <div class="accordion-title">
+        {{ciInter.correlativo}}.
+        <span>
+          <fn-icon
+            [ico]="obtenerIcono('iFolderSolid')"
+            height="2.1rem"
+          ></fn-icon>
+        </span>
+        <span style="font-size: 12px"
+          ><strong>Cuaderno incidental: </strong>
+          {{ciInter.noCuadernoIncidental}}
+        </span>
+        <br />
+        <span style="font-size: 12px; margin-left: 42px"
+          ><strong>Asunto: </strong> {{ciInter.noAsunto}}
+        </span>
+        <br />
+        <span style="margin-left: 70px; font-size: xx-small"
+          >Fecha de registro: {{ciInter.feRegistro}}
+        </span>
+      </div>
+    </div>
+
+    <p-table
+      [value]="ciInter.detalleCuadernoIncidental"
+      [rowHover]="true"
+      [showCurrentPageReport]="true"
+    >
+      <ng-template
+        pTemplate="body"
+        let-rowIndex="rowIndex"
+        let-detalleCuadernoIncidental
+      >
+        <tr class="">
+          <td class="">
+            <p-tableCheckbox [value]="detalleCuadernoIncidental">
+            </p-tableCheckbox>
+            {{ciInter.correlativo}}.{{ rowIndex + 1 }}.
+            <span style="font-size: 12px"
+              ><strong>Acto: </strong>{{detalleCuadernoIncidental.noActo}}</span
+            >
+            <br />
+            <span style="font-size: 12px; margin-left: 42px"
+              ><strong>Tramite: </strong
+              >{{detalleCuadernoIncidental.noTramite}}</span
+            >
+            <br />
+            <span style="margin-left: 70px; font-size: xx-small"
+              >Fecha de emisión: {{detalleCuadernoIncidental.feEmision}}
+            </span>
+            <br />
+            <span style="margin-left: 70px; font-size: xx-small"
+              >Fecha de registro: {{detalleCuadernoIncidental.feRegistro}}
+            </span>
+          </td>
+          <td>
+            <p-button
+              label="pdf"
+              styleClass="font-bold p-button-sm p-button-danger"
+            >
+            </p-button>
+            &nbsp;&nbsp;
+            <fn-icon
+              [ico]="obtenerIcono('iDownload')"
+              height="2.1rem"
+            ></fn-icon>
+
+            <br />
+            <span style="font-size: xx-small"
+              ><strong>{{detalleCuadernoIncidental.nuPeso}}</strong> 4
+              Folios</span
+            >
+            <br />
+            <span style="font-size: xx-small">
+              Folio inicial:{{detalleCuadernoIncidental.nuFolioIni}} - Folio
+              final: {{detalleCuadernoIncidental.nuFolioFin}}
+            </span>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" style="text-align: center">
+            No se encontraron registros con los criterios de búsqueda
+            ingresados.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</ng-container>
+
+<!-- Juzgamiento -->
+<ng-container *ngIf="titulo.id === TituloEtapaId.Juzgamiento">
+  <p-table
+    [value]="titulo.datos.dataEtapa"
+    [rowHover]="true"
+    [showCurrentPageReport]="true"
+    responsiveLayout="stack"
+    (onRowSelect)="eventoSeleccionarFila($event, TipoRegistro.Principal, titulo.id, true)"
+    (onRowUnselect)="eventoSeleccionarFila($event, TipoRegistro.Principal, titulo.id, false)"
+    selectionMode="multiple"
+    [(selection)]="seleccionadosModel.Juzgamiento"
+  >
+    <ng-template pTemplate="body" let-rowIndex="rowIndex" let-juzgamiento>
+      <tr
+        #filaDocumentoRef
+        [id]="'fila-'+juzgamiento.correlativo"
+        [style.backgroundColor]="colorFondoFilaArchivo(archivoSeleccionado, juzgamiento.correlativo+'', TituloEtapaId.Juzgamiento, TipoRegistro.Principal)"
+      >
+        <td style="vertical-align: top" class="pl-2 pr-0">
+          <div class="flex">
+            <p-tableCheckbox [value]="juzgamiento"></p-tableCheckbox>
+            <span class="pl-1">{{ juzgamiento.correlativo }}.</span>
+          </div>
+        </td>
+        <td
+          style="vertical-align: top"
+          class="pl-2 cursor-pointer"
+          (click)="eventoSeleccionarArchivo(juzgamiento.correlativo+'', titulo.id, TipoRegistro.Principal)"
+        >
+          <div>
+            <div class="text-md">
+              <span class="font-semibold">Acto:</span> {{juzgamiento.noActo}}
+            </div>
+            <div class="text-md">
+              <span class="font-semibold">Trámite:</span>
+              {{juzgamiento.noTramite}}
+            </div>
+            <div class="text-xs text-600">
+              Fecha de emisión: {{juzgamiento.feEmision}}
+            </div>
+            <div class="text-xs text-600">
+              Fecha de registro: {{juzgamiento.feRegistro}}
+            </div>
+          </div>
+        </td>
+        <td>
+          <div style="min-width: 150px">
+            <div class="flex align-content-center">
+              <div class="w-full">
+                <div
+                  (click)="eventoSeleccionarArchivo(juzgamiento.correlativo+'', titulo.id, TipoRegistro.Principal)"
+                  class="bg-red-500 text-white px-2 py-2 text-center border-round cursor-pointer transition-all transition-duration-200 hover:bg-red-700"
+                >
+                  pdf
+                </div>
+                <div class="text-xs flex justify-content-between">
+                  <div>
+                    {{formatoPesoArchivo( convertirMBaBytes(juzgamiento.nuPeso)
+                    )}}
+                  </div>
+                  <div>
+                    {{juzgamiento.nuFolios}}
+                    Folio{{juzgamiento.nuFolios===1?'':'s'}}
+                  </div>
+                </div>
+              </div>
+              <div style="width: 50px" class="text-right pl-3">
+                <fn-icon
+                  class="cursor-pointer"
+                  (click)="descargarArchivo(juzgamiento.idDocumentoCaso, juzgamiento.noTramite)"
+                  [ico]="obtenerIcono('iDownload')"
+                  height="2.1rem"
+                ></fn-icon>
+              </div>
+            </div>
+            <div class="text-xs text-600 pt-1">
+              Folio inicial:{{juzgamiento.nuFolioIni}} - Folio final:
+              {{juzgamiento.nuFolioFin}}
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="7" style="text-align: center">
+          No se encontraron registros con los criterios de búsqueda ingresados.
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!-- Anidado: Cuaderno Incidental-->
+  <div
+    *ngFor="let ciJuzga of titulo.datos.cuadernoIncidental;let indice=index"
+    class="accordion-item"
+  >
+    <div class="sub-accordion-header">
+      <div class="accordion-title">
+        {{ciJuzga.correlativo}}.
+        <span>
+          <fn-icon
+            [ico]="obtenerIcono('iFolderSolid')"
+            height="2.1rem"
+          ></fn-icon>
+        </span>
+        <span style="font-size: 12px"
+          ><strong>Cuaderno incidental: </strong>
+          {{ciJuzga.noCuadernoIncidental}}
+        </span>
+        <br />
+        <span style="font-size: 12px; margin-left: 42px"
+          ><strong>Asunto: </strong> {{ciJuzga.noAsunto}}
+        </span>
+        <br />
+        <span style="margin-left: 70px; font-size: xx-small"
+          >Fecha de registro: {{ciJuzga.feRegistro}}
+        </span>
+      </div>
+    </div>
+
+    <!--Item de Cuadernos Incidentales-->
+    <p-table
+      [value]="ciJuzga.detalleCuadernoIncidental"
+      [rowHover]="true"
+      [showCurrentPageReport]="true"
+    >
+      <ng-template
+        pTemplate="body"
+        let-rowIndex="rowIndex"
+        let-detalleCuadernoIncidental
+      >
+        <tr class="">
+          <td class="">
+            <p-tableCheckbox [value]="detalleCuadernoIncidental">
+            </p-tableCheckbox>
+            {{ciJuzga.correlativo}}.{{ rowIndex + 1 }}.
+            <span style="font-size: 12px"
+              ><strong>Acto: </strong>{{detalleCuadernoIncidental.noActo}}</span
+            >
+            <br />
+            <span style="font-size: 12px; margin-left: 42px"
+              ><strong>Tramite: </strong
+              >{{detalleCuadernoIncidental.noTramite}}</span
+            >
+            <br />
+            <span style="margin-left: 70px; font-size: xx-small"
+              >Fecha de emisión: {{detalleCuadernoIncidental.feEmision}}
+            </span>
+            <br />
+            <span style="margin-left: 70px; font-size: xx-small"
+              >Fecha de registro: {{detalleCuadernoIncidental.feRegistro}}
+            </span>
+          </td>
+          <td>
+            <p-button
+              label="pdf"
+              styleClass="font-bold p-button-sm p-button-danger"
+            >
+            </p-button>
+            &nbsp;&nbsp;
+            <fn-icon
+              [ico]="obtenerIcono('iDownload')"
+              height="2.1rem"
+            ></fn-icon>
+            <br />
+            <span style="font-size: xx-small"
+              ><strong>{{detalleCuadernoIncidental.nuPeso}}</strong> 4
+              Folios</span
+            >
+            <br />
+            <span style="font-size: xx-small">
+              Folio inicial:{{detalleCuadernoIncidental.nuFolioIni}} - Folio
+              final: {{detalleCuadernoIncidental.nuFolioFin}}
+            </span>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" style="text-align: center">
+            No se encontraron registros con los criterios de búsqueda
+            ingresados.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</ng-container>
+
+<!-- Ejecución -->
+<ng-container *ngIf="titulo.id === TituloEtapaId.Ejecucion">
+  <p-table
+    [value]="titulo.datos.sujetoProcesal"
+    [rowHover]="true"
+    [showCurrentPageReport]="true"
+  >
+    <ng-template pTemplate="body" let-rowIndex="rowIndex" let-intermedia>
+      <tr>
+        <td>
+          <p-tableCheckbox [value]="intermedia">
+          </p-tableCheckbox>
+          12.
+          <span style="font-size: 12px"
+            ><strong>Acto: </strong>{{intermedia.noActo}}</span
+          >
+          <br />
+          <span style="font-size: 12px; margin-left: 42px"
+            ><strong>Tramite: </strong>{{intermedia.noTramite}}</span
+          >
+          <br />
+          <span style="margin-left: 70px; font-size: xx-small"
+            >Fecha de emisión: {{intermedia.feEmision}}
+          </span>
+          <br />
+          <span style="margin-left: 70px; font-size: xx-small"
+            >Fecha de registro: {{intermedia.feRegistro}}
+          </span>
+        </td>
+        <td>
+          <p-button
+            label="pdf"
+            styleClass="font-bold p-button-sm p-button-danger"
+          >
+          </p-button>
+          &nbsp;&nbsp;
+          <fn-icon [ico]="obtenerIcono('iDownload')" height="2.1rem"></fn-icon>
+          <br />
+          <span style="font-size: xx-small"
+            ><strong>{{intermedia.nuPeso}}</strong> 4 Folios</span
+          >
+          <br />
+          <span style="font-size: xx-small">
+            Folio inicial:{{intermedia.nuFolioIni}} - Folio final:
+            {{intermedia.nuFolioFin}}
+          </span>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="2" style="text-align: center">
+          No se encontraron registros con los criterios de búsqueda ingresados.
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+            </ng-container>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <ng-template #etapaCalifPrelPrepInteRef let-etapa="etapa">
+              <!-- datos principales -->
+              <p-table
+                  [value]="etapa.datosArchivo"
+                  [rowHover]="true"
+                  responsiveLayout="stack"
+              >
+                <ng-template pTemplate="body" let-rowIndex="rowIndex" let-califPrelPrepInte>
+                  <tr #filaArchivoRef [id]="'fila-'+califPrelPrepInte.correlativo" [style.backgroundColor]="colorFondoFilaArchivo(califPrelPrepInte)">
+                    <td style="vertical-align: top;" class="pl-2 pr-0">
+                      <div class="flex">
+                        <p-checkbox [(ngModel)]="califPrelPrepInte.seleccionado" binary="true" (onChange)="eventoSeleccionarFila(califPrelPrepInte, $event)"></p-checkbox>
+                        <span class="pl-1">{{ califPrelPrepInte.correlativo }}.</span>
+                      </div>
+                    </td>
+                    <td style="vertical-align: top;" class="pl-2 cursor-pointer" (click)="eventoSeleccionarArchivo(califPrelPrepInte)">
+                      <div>
+                          <div class="text-md">
+                            <span class="font-semibold">Acto:</span> {{califPrelPrepInte.noActo}}
+                          </div>
+                          <div class="text-md">
+                            <span class="font-semibold">Trámite:</span> {{califPrelPrepInte.noTramite}}
+                          </div>
+                          <div class="text-xs text-600">Fecha de emisión: {{califPrelPrepInte.feEmision}}</div>
+                          <div class="text-xs text-600">Fecha de registro: {{califPrelPrepInte.feRegistro}}</div>
+                      </div>
+                    </td>
+                    <td>
+                      <div style="min-width: 150px;">
+                        <div class="flex align-content-center">
+                          <div class="w-full">
+                            <div (click)="eventoSeleccionarArchivo(califPrelPrepInte)" class="bg-red-500 text-white px-2 py-2 text-center border-round cursor-pointer transition-all transition-duration-200 hover:bg-red-700">pdf</div>
+                            <div class="text-xs flex  justify-content-between">
+                              <div>{{formatoPesoArchivo(convertirMBaBytes(califPrelPrepInte.nuPeso))}}</div>
+                              <div>{{califPrelPrepInte.nuFolios}} Folio{{califPrelPrepInte.nuFolios===1?'':'s'}}</div>
+                            </div>
+                          </div>
+                          <div style="width: 50px;" class="text-right pl-3">
+                            <fn-icon class="cursor-pointer" (click)="eventoDescargarArchivo(califPrelPrepInte)" [ico]="obtenerIcono('iDownload')" height="2.1rem"></fn-icon>
+                          </div>
+                        </div>
+                        <div class="text-sm pt-1 text-600">
+                          Folio inicial:{{califPrelPrepInte.nuFolioIni}} - Folio final: {{califPrelPrepInte.nuFolioFin}}
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="3"  class="text-center">
+                      No se encontraron registros con los criterios de búsqueda ingresados.
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+
+              <!-- datos cuaderno incidental-->
+              @for (ciPre of etapa.cuadernoIncidental;let indice = $index; track $index) {
+
+                <div class="sub-accordion-container">
+
+                  <div class="flex align-items-center justify-content-between cursor-pointer" (click)="ciPre.mostrarContenido=!ciPre.mostrarContenido">
+                    <div>
+                      <div class="flex px-2 py-3">
+                        <div class="pr-1">
+                          <p-checkbox [binary]="true" [(ngModel)]="ciPre.seleccionado"  inputId="binary" (onChange)="eventoSeleccionarGrupo(ciPre, $event)" />
+                        </div>
+                        <div>
+                          {{ciPre.correlativo}}.
+                        </div>
+                        <div class="px-1">
+                          <img [src]="iconAsset.obtenerRutaIcono('folder')" alt=""/>
+                        </div>
+                        <div>
+                          <div>
+                            <span class="font-semibold">Cuaderno incidental:</span> {{ciPre.noCuadernoIncidental}}
+                          </div>
+                          <div>
+                            <span class="font-semibold">Asunto:</span> {{ciPre.noAsunto}}
+                          </div>
+                          <div>
+                            <span class="font-semibold">Fecha de registro:</span> {{ciPre.feRegistro}}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="pr-3">
+                      <i class="pi pi-chevron-{{ciPre.mostrarContenido===true?'up':'down'}} text-xl"></i>
+                    </div>
+                  </div>
+
+                  <!-- Item de Cuadernos Incidentales-->
+                  <div class="ml-4 bg-white" [ngClass]="{ 'hidden': !ciPre.mostrarContenido }">
+                    <p-table
+                    [value]="ciPre.datosArchivo"
+                    [rowHover]="true"
+                    [showCurrentPageReport]="true"
+                    responsiveLayout="stack"
+                  >
+                    <ng-template pTemplate="body" let-rowIndex="rowIndex" let-detalleCuadernoIncidental>
+                      <tr #filaArchivoRef [id]="'fila-'+detalleCuadernoIncidental.correlativo" [style.backgroundColor]="colorFondoFilaArchivo(detalleCuadernoIncidental)">
+                        <td style="vertical-align: top;" class="pl-2 pr-0">
+                          <div class="flex">
+                            <p-checkbox [(ngModel)]="detalleCuadernoIncidental.seleccionado" binary="true" (onChange)="eventoSeleccionarFila(detalleCuadernoIncidental, $event)"></p-checkbox>
+                            <span class="pl-1">{{ciPre.correlativo}}.{{ rowIndex + 1 }}.</span>
+                          </div>
+                        </td>
+                        <td style="vertical-align: top;" class="pl-2 cursor-pointer" (click)="eventoSeleccionarArchivo(detalleCuadernoIncidental)">
+                          <div>
+                              <div class="text-md">
+                                <span class="font-semibold">Acto:</span> {{detalleCuadernoIncidental.noActo}}
+                              </div>
+                              <div class="text-md">
+                                <span class="font-semibold">Trámite:</span> {{detalleCuadernoIncidental.noTramite}}
+                              </div>
+                              <div class="text-xs text-600">Fecha de emisión: {{detalleCuadernoIncidental.feEmision}}</div>
+                              <div class="text-xs text-600">Fecha de registro: {{detalleCuadernoIncidental.feRegistro}}</div>
+                          </div>
+                        </td>
+
+                        <td>
+                          <div>
+                            <div class="flex align-content-center">
+                              <div class="w-full">
+                                <div (click)="eventoSeleccionarArchivo(detalleCuadernoIncidental)" class="bg-red-500 text-white px-2 py-2 text-center border-round cursor-pointer transition-all transition-duration-200 hover:bg-red-700">pdf</div>
+                                <div class="text-xs flex  justify-content-between">
+                                  <div class="text-700 font-semibold">{{formatoPesoArchivo( convertirMBaBytes(detalleCuadernoIncidental.nuPeso) )}}</div>
+                                  <div>{{detalleCuadernoIncidental.nuFolios}} Folio{{detalleCuadernoIncidental.nuFolios===1?'':'s'}}</div>
+                                </div>
+                              </div>
+                              <div style="width: 50px;" class="text-right pl-3">
+                                <fn-icon class="cursor-pointer" (click)="eventoDescargarArchivo(detalleCuadernoIncidental)" [ico]="obtenerIcono('iDownload')" height="2.1rem"></fn-icon>
+                              </div>
+                            </div>
+                            <div class="text-xs pt-1 text-600">
+                              Folio inicial:{{detalleCuadernoIncidental.nuFolioIni}} - Folio final: {{detalleCuadernoIncidental.nuFolioFin}}
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                      <tr>
+                        <td colspan="3" style="text-align: center;">No se encontraron registros con los criterios de búsqueda ingresados.
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                  </div>
+
+                </div>
+              }
+
+              <!-- datos fuentes de investigación-->
+              @if (etapa.fuenteInvestigacion && etapa.fuenteInvestigacion!==null) {
+
+                <div class="sub-accordion-container">
+
+                  <div class="flex align-items-center justify-content-between cursor-pointer" (click)="etapa.fuenteInvestigacion.mostrarContenido=!etapa.fuenteInvestigacion.mostrarContenido">
+                      <div class="flex px-2 py-3">
+                        <div class="pr-1">
+                          <p-checkbox [binary]="true" [(ngModel)]="etapa.fuenteInvestigacion.seleccionado"  inputId="binary" (onChange)="eventoSeleccionarGrupo(etapa.fuenteInvestigacion, $event)" />
+                        </div>
+                        <div>
+                          {{etapa.fuenteInvestigacion.correlativo}}.
+                        </div>
+                        <div class="px-1" >
+                          <img [src]="iconAsset.obtenerRutaIcono('folder')" alt=""/>
+                        </div>
+                        <div>
+                          <div class="text-lg font-semibold">Fuente Investigación</div>
+                          <div>
+                            <span class="font-semibold">Asunto:</span> {{etapa.fuenteInvestigacion.noActo}}
+                          </div>
+                          <div>
+                            <span class="font-semibold">Trámite:</span> {{etapa.fuenteInvestigacion.noTramite}}
+                          </div>
+                        </div>
+                    </div>
+                    <div class="pr-3">
+                      <i class="pi pi-chevron-{{etapa.fuenteInvestigacion.mostrarContenido===true?'up':'down'}} text-xl"></i>
+                    </div>
+                  </div>
+
+                  <!-- Item de Cuadernos Incidentales-->
+                  <div class="ml-4 bg-white" [ngClass]="{ 'hidden': !etapa.fuenteInvestigacion.mostrarContenido }">
+                    <p-table
+                    [value]="etapa.fuenteInvestigacion.datosArchivo"
+                    [rowHover]="true"
+                    responsiveLayout="stack"
+                  >
+                    <ng-template pTemplate="body" let-rowIndex="rowIndex" let-fuenteInvestigacion>
+                      <tr #filaArchivoRef [id]="'fila-'+fuenteInvestigacion.correlativo" [style.backgroundColor]="colorFondoFilaArchivo(fuenteInvestigacion)">
+                        <td style="vertical-align: top; width: 4rem;" class="pl-2 pr-0">
+                          <div class="flex">
+                            <p-checkbox [(ngModel)]="fuenteInvestigacion.seleccionado" binary="true" (onChange)="eventoSeleccionarFila(fuenteInvestigacion, $event)"></p-checkbox>
+                            <span class="pl-1">{{etapa.fuenteInvestigacion.correlativo}}.{{ rowIndex + 1 }}.</span>
+                          </div>
+                        </td>
+                        <td style="vertical-align: top;" class="pl-2 cursor-pointer" (click)="eventoSeleccionarArchivo(fuenteInvestigacion)">
+                          <div>
+                            <div class="flex align-items-center">
+                              <div class="pr-1">
+                                <img src="{{fuenteInvestigacionIcono(fuenteInvestigacion.tipoArchivo)}}" style="width: 1.5rem;" alt=""/>
+                              </div>
+                              <div>
+                                  <div>{{fuenteInvestigacion.nombre}}</div>
+                                  <div>40 kb</div>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+
+                        <td>
+                          <div>
+                            <div class="flex align-content-center">
+                              <div class="w-full">
+                                <div (click)="eventoSeleccionarArchivo(fuenteInvestigacion)" class="text-white text-xs px-2 py-1 text-center border-round cursor-pointer {{fuenteInvestigacionColor(fuenteInvestigacion.tipoArchivo)}}">{{fuenteInvestigacion.tipoArchivo}}</div>
+                              </div>
+                              <div style="width: 50px;" class="text-right pl-3">
+                                <fn-icon class="cursor-pointer" (click)="eventoDescargarArchivo(fuenteInvestigacion)" [ico]="obtenerIcono('iDownload')" height="2.1rem"></fn-icon>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                      <tr>
+                        <td colspan="3" style="text-align: center;">No se encontraron registros con los criterios de búsqueda ingresados.
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                  </div>
+
+                </div>
+              }
+
+
+             </ng-template>

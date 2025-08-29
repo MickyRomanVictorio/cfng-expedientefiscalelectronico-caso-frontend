@@ -1,0 +1,63 @@
+<div class="header flex justify-content-between flex-wrap">
+  <span class="flex align-items-center justify-content-center font-semibold">
+    &nbsp;
+  </span>
+  <div class="flex align-items-center justify-content-center">
+    <p-button
+      (click)="close()"
+      icon="pi pi-times"
+      styleClass="p-button-rounded text-color p-button-text"
+    ></p-button>
+  </div>
+</div>
+<div class="px-6">
+  <div class="text-center confirm-title font-semibold mb-5">
+    <div class="text-orange-400 mb-3">
+      <i class="pi pi-exclamation-triangle text-8xl"></i>
+    </div>
+    ADVERTENCIA
+  </div>
+  <div class="my-2">Esta desacumulación generará 1 caso nuevo</div>
+
+  <div>
+    El caso actual <strong>506014501-2021-590-0</strong> mantandrá como partes y
+    delitos los siguiente:
+  </div>
+  <div>
+    <ul class="list-disc">
+      <li>
+        <strong>María Suarez (72126442)</strong> con los delitos:
+        <strong> Robo, extorsión</strong>
+      </li>
+      <li>
+        <strong>Juan Perez (09400702)</strong> con los delitos:
+        <strong>Robo, extorsión</strong>
+      </li>
+      <li>
+        <strong>Luis Lopez (06830140)</strong> con los delitos:
+        <strong>Robo, extorsión</strong>
+      </li>
+    </ul>
+  </div>
+  <div>El nuevo caso tendrá las siguientes partes y delitos</div>
+  <div>
+    <ul class="list-disc">
+      <li>
+        <strong>Luis Lopez (72126442)</strong> con los delitos:
+        <strong>Violación</strong>
+      </li>
+    </ul>
+  </div>
+  <div>Confirme por favor la acción</div>
+  <div class="text-center mb-5 mt-6">
+    <p-button
+      (click)="close()"
+      styleClass="cfe-boton-m cfe-boton-secondary mr-3"
+      label="Cancelar"
+    ></p-button>
+    <p-button
+      styleClass="cfe-boton-m font-semibold cfe-boton-primary "
+      label="Aceptar"
+    ></p-button>
+  </div>
+</div>

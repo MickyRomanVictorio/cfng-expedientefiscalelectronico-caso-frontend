@@ -1,0 +1,139 @@
+.tramites_nuevos__table {
+  width: 100%;
+  background: var(--mpfn-white);
+  border-radius: 6px;
+  border: 1.5px solid var(--mpfn-gray2);
+  margin-top: 10px;
+
+  .tramites_nuevos_table__title {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 25px 0 25px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+
+    .tramites_nuevos_table_title__content {
+      display: flex;
+      align-items: center;
+
+      img {
+        width: 22px;
+        position: relative;
+        top: -2px;
+      }
+
+      .cfe-subtitulo-1 {
+        margin-left: 10px;
+      }
+    }
+
+    .tramites_nuevos_table_title__options {
+      display: flex;
+    }
+  }
+
+  .tramites_nuevos__legend {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 10px 20px 25px 20px;
+
+    .term-item {
+      font-size: 0.9em;
+      display: flex;
+      font-family: var(--mpfn-font-regular);
+      align-items: center;
+      margin-right: 12px;
+
+      span {
+        display: inline-block;
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        background: var(--mpfn-gray2);
+        margin-right: 5px;
+      }
+
+      .quantity {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9em;
+        margin-left: 4px;
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+
+  .tramites_nuevos_table__content {
+    width: 100%;
+  }
+}
+:host ::ng-deep .p-selectable-row {
+  &:hover {
+    cursor: default;
+  }
+
+  td {
+    vertical-align: top;
+    font-family: var(--mpfn-font-regular);
+  }
+
+  .fecha-container {
+    font-family: var(--mpfn-font-regular);
+    font-size: 0.95em;
+  }
+
+  .btn-accion {
+    cursor: pointer;
+    width: 55px;
+    height: 55px;
+    background: var(--mpfn-gray7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    transition: 300ms all ease;
+    border: 1.5px solid var(--mpfn-gray6);
+
+    &:hover {
+      background: var(--mpfn-gray11);
+    }
+
+    img {
+      width: 25px;
+    }
+  }
+
+  .btn-accion-rojo {
+    color: var(--mpfn-white);
+    cursor: pointer;
+    width: 55px;
+    height: 55px;
+    background: var(--mpfn-red);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    transition: 300ms all ease;
+    border: 1.5px solid var(--mpfn-red);
+
+    &:hover {
+      background: var(--mpfn-red-wine);
+    }
+
+    img {
+      width: 25px;
+    }
+  }
+
+  .td-justify-center {
+    display: flex;
+    justify-content: center;
+  }
+}

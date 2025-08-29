@@ -1,0 +1,83 @@
+@if (casoFiscal.flgAcumulado == 1 && casoFiscal.flgLectura == 0) {
+<div
+  class="cfe-etiqueta-accion flex align-items-center justify-content-between w-full"
+>
+  <p class="boton-etiqueta boton-etiqueta--primary">Con acumulación</p>
+  <button
+    type="button"
+    class="boton-accion boton-accion--lightblue"
+    (click)="obtenerMetodoCaso()"
+  >
+    Ver acumulaciones
+  </button>
+</div>
+} @if (casoFiscal.flgAcumulado == 1 && casoFiscal.flgLectura == 1) {
+<div class="pt-3">
+  <div class="flex justify-content-between flex-wrap">
+    <div class="align-items-center">
+      Acumulado a
+      <div>
+        <u
+          ><strong
+            [innerHTML]="
+              stringUtil.formatearCodigoCaso(
+                casoFiscal.codigoCasoPadreAcumulacion
+              )
+            "
+          ></strong
+        ></u>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cfe-etiqueta-accion flex align-items-center justify-content-between w-full"
+>
+  <p class="boton-etiqueta boton-etiqueta--primary">Acumulado</p>
+  <button
+    type="button"
+    class="boton-accion boton-accion--lightblue"
+    (click)="abrirDesacumulacion()"
+  >
+    Desacumular
+  </button>
+</div>
+} @if (casoFiscal.flgAcuerdoReparatorio === '1' ||
+casoFiscal.flgPrincipioOportunidad === '1') {
+<div
+  class="cfe-etiqueta-accion flex align-items-center justify-content-between w-full"
+>
+  <p [ngClass]="getBotonClase()">
+    {{
+      casoFiscal.flgAcuerdoReparatorio === "1"
+        ? "Con acuerdo reparatorio"
+        : "Con principio de oportunidad"
+    }}
+  </p>
+  <button
+    type="button"
+    class="boton-accion boton-accion--lightblue"
+    (click)="abrirPlazosYPagos()"
+  >
+    Plazos y Pagos
+  </button>
+</div>
+} @if (casoFiscal.idTipoComplejidad === 1) {
+<div
+  class="cfe-etiqueta-accion flex align-items-center justify-content-between w-full"
+>
+  <p class="boton-etiqueta boton-etiqueta--green-dark">Caso Complejo</p>
+</div>
+} @if (casoFiscal.flgElevacion === '1') {
+<div
+  class="cfe-etiqueta-accion flex align-items-center justify-content-between w-full"
+>
+  <p class="boton-etiqueta boton-etiqueta--black">Elevado a fiscal superior</p>
+</div>
+} @if (casoFiscal.idEtapa === '07') {
+  <div
+    class="cfe-etiqueta-accion flex align-items-center justify-content-between w-full"
+  >
+    <p class="boton-etiqueta boton-etiqueta--red">Proceso inmediato</p>
+  </div>
+  }

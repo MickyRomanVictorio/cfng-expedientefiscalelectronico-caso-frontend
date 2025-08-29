@@ -1,0 +1,225 @@
+<div class="cuadernos-incidentales">
+    <div class="modal__header">
+        <div class="modal_header__content">
+            <div [innerHTML]="titulo" class="cfe-titulo-1"></div>
+        </div>
+        <div class="flex align-items-center justify-content-center ml-2">
+            <p-button
+                (click)="dialogRef.close()"
+                icon="pi pi-times"
+                styleClass="p-button-rounded text-color p-button-text"
+                onKeyPress=""
+            ></p-button>
+        </div>
+    </div>
+    <div class="p-grid">
+        <div class="flex flex-column md:flex-row justify-content-between mt-3">
+            <div class="w-full md:w-4 mb-0 md:mb-2">
+                <div class="pb-1 font-semibold">Dependencia fiscal</div>
+                <div class="bg-gray-200 py-3 px-3 font-semibold border-round-md">
+                    {{ cuadernoCodigo ? cuadernoCodigo[0] : '' }}
+                </div>
+            </div>
+
+            <div class="w-full md:w-3 md:ml-2 mb-0 md:mb-2">
+                <div class="pb-1 font-semibold">Año</div>
+                <div class="bg-gray-200 py-3 px-3 font-semibold border-round-md">
+                    {{ cuadernoCodigo ? cuadernoCodigo[1] : '' }}
+                </div>
+            </div>
+
+            <div class="w-full md:w-3 md:ml-2 mb-0 md:mb-2">
+                <div class="pb-1 font-semibold">Correlativo</div>
+                <div class="bg-gray-200 py-3 px-3 font-semibold border-round-md">
+                    {{ cuadernoCodigo ? cuadernoCodigo[2] : '' }}
+                </div>
+            </div>
+
+            <div class="w-full md:w-2 md:ml-2">
+                <div class="pb-1 font-semibold relative">
+                    <div class="flex">
+                        Cuaderno
+                        @if (cuaderno?.casoId === null) {
+                        <div class="relative w-2rem">
+                            <div class="absolute bg-primary-100 border-round p-2 text-sm font-normal nota hidden" #nota>
+                                <div class="flex align-items-center">
+                                    <fn-icon [ico]="iconUtil.obtenerIcono('iAlert')" height="1.8rem"
+                                        class="mr-1 text-primary-400"></fn-icon>
+                                    <div>
+                                        <span class="font-bold">Nota:</span> El número de cuaderno incidental se
+                                        generará al crear el incidente.
+                                    </div>
+                                </div>
+                            </div>
+                            <fn-icon [ico]="iconUtil.obtenerIcono('iAlert')"
+                                (mouseenter)="mostrarTooltipCuaderno(nota, true)"
+                                (mouseleave)="mostrarTooltipCuaderno(nota, false)" height="1.4rem"
+                                class="ml-1 text-primary-400 absolute cursor-pointer"></fn-icon>
+                        </div>
+                        }
+                    </div>
+                </div>
+                <div class="bg-gray-200 py-3 px-3 font-bold border-round-md">
+                    @if (cuaderno?.casoId !== null) {
+                    {{ cuadernoCodigo ? cuadernoCodigo[3] : '' }}
+                    }
+                    @if (cuaderno?.casoId === null) {
+                    #
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="pt-3 mb-2 font-semibold">Cuaderno Incidental</div>
+        <p-dropdown [(ngModel)]="cuadernoIndicentalIdSelecciondo" (onChange)="cambiarCuadernoIncidental($event)"
+            [filter]="false" styleClass="p-inputtext-lg mb-2" placeholder="Seleccione" [filter]="true"
+            emptyFilterMessage="No se encontraron resultados"
+            [options]="listaCuadernoIncidental" optionLabel="tipoClasificadorExpediente"
+            emptyMessage="No se encontraron resultados" optionValue="idTipoClasificadorExpediente"></p-dropdown>
+
+        @if(cuadernoIndicentalIdSelecciondo == CUADERNO_INCIDENTAL.MULTIPLE){
+            <div class="pt-2 mb-2 font-semibold">Cuadernos múltiples</div>
+            <p-multiSelect #multiSelectMultiple appendTo="body" [(ngModel)]="listaCuadernosMultiples" [options]="listarCuadernosIncidentalesMultiple(listaCuadernoIncidental)" styleClass="py-1 p-inputtext-lg w-full"
+                placeholder="Seleccione Delito" panelClass="custom-multiselect-panel"
+                filterPlaceholder="Seleccione el(los) delito(s)" optionLabel="tipoClasificadorExpediente"
+                optionValue="idTipoClasificadorExpediente" emptyFilterMessage="No se encontraron resultados"
+                emptyMessage="No se encontraron resultados" [maxSelectedLabels]="4">
+                <ng-template pTemplate="selectedItems" let-items>
+                    <div class="custom-cuadernos-multiples-items">
+                        <ng-container *ngIf="items?.length; else noItems">
+                            <span *ngFor="let item of items" class="multiple-item">
+                                {{ item.tipoClasificadorExpediente }}
+                                <i class="pi pi-times" (click)="removerMultipleSeleccionado(item, $event, multiSelectMultiple)" onKeyPress=""></i>
+                            </span>
+                        </ng-container>
+                        <ng-template #noItems>
+                            <span class="no-seleccionado">Seleccione el(los) incidentes(s)</span>
+                        </ng-template>
+                    </div>
+                </ng-template>
+            </p-multiSelect>
+        }
+        <div class="pt-3 mb-3 font-semibold">Seleccione los sujetos procesales</div>
+        <div class="legend-container mb-3">
+            <div class="legend-item">
+                <span class="legend-circle fallecido"></span>
+                <span>Fallecido</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-circle no-habido"></span>
+                <span>No habido</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-circle detenido"></span>
+                <span>Detenido</span>
+            </div>
+        </div>
+        <p-table
+            class="table-sujetos"
+            [value]="listaSujetosProcesales"
+            responsiveLayout="stack"
+            [paginator]="true"
+            dataKey="idSujetoCaso"
+            [paginator]="true"
+            [rows]="10"
+            [tableStyle]="{ 'min-width': '50rem' }"
+            [(selection)]="sujetosSeleccionados"
+            (onRowUnselect)="quitarSeleccionSujeto($event)"
+            (onHeaderCheckboxToggle)="quitarSeleccionSujetoTabla($event)"
+            styleClass="paginacion-general"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th id="Seleccione" class="w-col-20">
+                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th>
+                    <th id="Nº">Nº</th>
+                    <th id="Nombres">Nombres y apellidos/Razón Social</th>
+                    <th id="Delitos">Delitos (opcional)</th>
+                    <th id="Mismo">Mismo tipo de incidente</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-sujeto let-rowIndex="rowIndex">
+                <tr>
+                    <td>
+                        <p-tableCheckbox [value]="sujeto"></p-tableCheckbox>
+                    </td>
+                    <td>{{ rowIndex + 1 }}</td>
+                    <td>
+                        <div class="flex">
+                            @if( sujeto.idSujetoCondicion !== 0 ){
+                                <div class="legend-container mr-3">
+                                    <div class="legend-item">
+                                        <span
+                                            class="legend-circle"
+                                            [class.fallecido]="sujeto.idSujetoCondicion === FALLECIDO"
+                                            [class.no-habido]="sujeto.idSujetoCondicion === NO_HABIDO"
+                                            [class.detenido]="sujeto.idSujetoCondicion === DETENIDO"
+                                        ></span>
+                                    </div>
+                                </div>
+                            }
+                            <div>
+                                <p>{{sujeto.nombreSujetoProcesal}}</p>
+                                <p>({{sujeto.noTipoParteSujeto}})</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="width: 500px;">
+                        <p-multiSelect [disabled]="!sujetoSeleccionado(sujeto.idSujetoCaso)" #multiSelectDelito
+                            appendTo="body" styleClass="py-1 p-inputtext-lg w-full " [options]="sujeto.delitos"
+                            placeholder="Seleccione Delito" filterPlaceholder="Seleccione el(los) delito(s)"
+                            optionLabel="delitoCompleto" emptyFilterMessage="No se encontraron resultados"
+                            emptyMessage="No se encontraron resultados" [(ngModel)]="sujeto.delitosSeleccionados"
+                            [showToggleAll]="false" [maxSelectedLabels]="sujeto.delitos?.length">
+                            <ng-template pTemplate="selectedItems" let-items>
+                                <div class="custom-delitos-items" [class.scroll-delitos]="items?.length > 4">
+                                    <ng-container *ngIf="items?.length; else noItems">
+                                        @for (item of items; track $index) {
+                                            <span class="delito-item">
+                                                {{ item.delitoCompleto }}
+                                                <i
+                                                    class="pi pi-times"
+                                                    (click)="quitarDelito(sujeto, item, $event, multiSelectDelito)"
+                                                    onKeyPress=""
+                                                ></i>
+                                            </span>
+                                        }
+                                    </ng-container>
+                                    <ng-template #noItems>
+                                        <span class="no-seleccionado">Seleccione el(los) delito(s)</span>
+                                    </ng-template>
+                                </div>
+                            </ng-template>
+                        </p-multiSelect>
+                    </td>
+                    <td>
+                        <div>
+                            @if (sujeto.incidenteCasoComun === null) {
+                            <div class="text-red-500 font-bold">Ninguno</div>
+                            }
+                            @if (sujeto.incidenteCasoComun !== null) {
+                            <div [innerHTML]="codigosCuaderno(sujeto.incidenteCasoComun)"></div>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7">
+                        <div class="text-center">No se han listando sujetos procesales</div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="paginatorleft" let-state>
+                <div class="text-gray-700">{{(state.first + state.rows) > state.totalRecords ? state.totalRecords : (state.first + state.rows)}} de {{state.totalRecords}} registros</div>
+            </ng-template>
+        </p-table>
+    </div>
+    <div class="text-right pt-3">
+        <button type="button" class="cfe-boton-primary cfe-boton-m inline text-sm"
+            (click)="confirmarCreacionEdicionIncidental()" [disabled]="sujetosSeleccionados.length == 0">
+            {{cuaderno?.casoId ? 'MODIFICAR' : 'CREAR'}} CUADERNO INCIDENTAL
+        </button>
+    </div>
+</div>

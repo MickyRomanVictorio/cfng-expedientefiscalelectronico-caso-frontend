@@ -1,0 +1,20 @@
+<div >
+  <div class="col-12 mt-5">
+    <div
+      class="col-12 flex justify-content-center ng-star-inserted"
+    >
+      <div class="col">
+        <label for="button" class="font-semibold">&nbsp;</label>
+        <p-button styleClass="p-button-lg cfe-boton-primary w-70" label="Ver documentos ingresados"
+            (click)="openModal()"></p-button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<p-dialog
+  [showHeader]="false" [modal]="true" [draggable]="true"
+  [resizable]="false" [(visible)]="isShowModal" [style]="{ width: '50vw'}">
+  <app-ampliar-plazo></app-ampliar-plazo>
+</p-dialog>

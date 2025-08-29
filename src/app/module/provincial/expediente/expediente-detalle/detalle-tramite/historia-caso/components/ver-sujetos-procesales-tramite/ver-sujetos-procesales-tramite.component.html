@@ -1,0 +1,77 @@
+<div class="cfe-modal p-5">
+  <div class="encabezado-modal">
+    <h3
+      class="encabezado-titulo cfe-subtitulo-3 cfe-semi-bold family-poppin-bold"
+    >
+      Sujetos y delitos
+    </h3>
+
+    <fn-icon
+      (click)="cerrarModal()"
+      [ico]="iconUtil.obtenerIcono('iClose')"
+      class="encabezado-cerrar"
+      height="2rem"
+      onKeyPress=""
+    />
+  </div>
+
+  <div class="cfe-table-green mt-5">
+    <p-table
+      [value]="sujetosDelitosTramiteFiltrado"
+      [rowHover]="true"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [breakpoint]="'992px'"
+      responsiveLayout="stack "
+      class="table_td_content_responsive"
+    >
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th id="N°">N°</th>
+          <th id="Tipo">Tipo documento</th>
+          <th id="Núm">Núm. Doc.</th>
+          <th id="Nombres">Nombres / Razón Social</th>
+          <th id="Tipo">Tipo de Sujeto</th>
+          <th id="Delitos" style="width: 600px">Delitos vinculados</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-sujetos let-index="rowIndex">
+        <tr class="p-selectable-row">
+          <td class="py-4">{{ index + 1 }}</td>
+          <td class="py-4">{{ sujetos.tipoDocumento }}</td>
+          <td class="py-4">{{ sujetos.numeroDocumento }}</td>
+          <td class="py-4">
+            {{ sujetos.nombreSujeto }}
+            @if ( sujetos.idTipoPersona === TIPO_PERSONA_LQRR ) {
+            <span class="badge badge-lqrr">LQRR</span>
+            }
+          </td>
+          <td class="py-4">{{ sujetos.tipoParteSujeto }}</td>
+          <td class="py-4">
+            <ul class="delitos-vinculados">
+              @for (item of sujetos.delitos; track item.delito) {
+              <li>{{ item.delito }}</li>
+              }
+            </ul>
+            @if ( !sujetos.delitos ) { - }
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6">
+            <span class="flex justify-content-center">
+              Este trámite no tiene sujetos asociados.
+            </span>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <app-paginator
+      [query]="query"
+      [items]="itemPaginado"
+      [rowsPerPageOptions]="[]"
+      [resetPage]="resetPage"
+      (paginate)="onPaginate($event)"
+    ></app-paginator>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+<div class="container">
+  <div class="grid pr-4 pl-2 mt-4">
+    <div class="col-12 md:col-6 lg:col-4 px-5 my-3 flex align-items-center justify-content-center">
+      <indicador-dash style="width: 550px" (redireccionarBandeja)="navigate('retiro-acusacion')"
+        *ngIf="listaIndicadoresTexto.length>0" [listaIndicadores]="listaIndicadoresTexto" [index]="0" />
+    </div>
+
+    <div class="col-12 md:col-6 lg:col-4 px-5 my-3 flex align-items-center justify-content-center">
+      <indicador-dash style="width: 550px" (redireccionarBandeja)="navigate('elevacion-actuados')"
+        *ngIf="listaIndicadoresTexto.length>0" [listaIndicadores]="listaIndicadoresTexto" [index]="1" />
+    </div>
+
+    <div class="col-12 md:col-6 lg:col-4 px-5 my-3 flex align-items-center justify-content-center">
+      <indicador-dash style="width: 550px" (redireccionarBandeja)="navigate('')" *ngIf="listaIndicadoresTexto.length>0"
+        [listaIndicadores]="listaIndicadoresTexto" [index]="2" />
+    </div>
+
+    <div class="col-12 md:col-6 lg:col-4 px-5 my-3 flex align-items-center justify-content-center">
+      <indicador-dash style="width: 550px" (redireccionarBandeja)="navigate('')" *ngIf="listaIndicadoresTexto.length>0"
+        [listaIndicadores]="listaIndicadoresTexto" [index]="3" />
+    </div>
+
+    <div class="col-12 md:col-6 lg:col-4 px-5 my-3 flex align-items-center justify-content-center">
+      <indicador-dash style="width: 550px" (redireccionarBandeja)="navigate('')" *ngIf="listaIndicadoresTexto.length>0"
+        [listaIndicadores]="listaIndicadoresTexto" [index]="4" />
+    </div>
+
+    <div class="col-12 md:col-6 lg:col-4 px-5 my-3 flex align-items-center justify-content-center">
+      <indicador-dash style="width: 550px" (redireccionarBandeja)="navigate('')" *ngIf="listaIndicadoresTexto.length>0"
+        [listaIndicadores]="listaIndicadoresTexto" [index]="5" />
+    </div>
+  </div>
+</div>

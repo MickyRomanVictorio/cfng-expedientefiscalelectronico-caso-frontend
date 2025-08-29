@@ -1,0 +1,148 @@
+:host { 
+  width: 100%;
+  display: block;
+  padding-block: 20px 0;
+}
+
+.cfe-subtitulo-1 {
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+fn-icon {
+  display: block;
+  margin-left: 0 !important;
+  width: auto !important;
+}
+
+.cfe-boton-secondary {
+  font-weight: 600;
+  gap: 0.3rem;
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .header__titulo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    h4 {
+      font-weight: 700;
+      font-size: 17px;
+      line-height: 0;
+      font-family: var(--mpfn-font-bold);
+      color: var(--mpfn-primary);
+    }
+  }
+
+  .header__botones {
+    display: flex;
+    gap: 1rem;
+  }
+}
+
+.circulo {
+  display: block;
+  width: 15px;
+  height: 15px;
+  background-color: #b9b9b9;
+  border-radius: 15px;
+}
+
+.circulo--verde {
+  background-color: #3cc75b;
+}
+
+.circulo--amarillo {
+  background-color: #f19701;
+}
+
+.circulo--rojo {
+  background-color: #c53c40;
+}
+
+.cell-num-caso {
+  padding: 0.5rem 0;
+  display: flex;
+  gap: 5px;
+}
+
+.btn-derivacion {
+  cursor: pointer;
+  padding: 5px 10px;
+  background-color: #e7ebed;
+  border: none;
+  border-radius: 5px;
+  color: #4c6478;
+  font-weight: 600;
+  //margin-inline-start: 1.2rem;
+  &:is(:hover, :active) {
+    background-color: #c4ccd3;
+  }
+}
+
+.opciones {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-devolver ::ng-deep button {
+  background-color: var(--red-500);
+  color: var(--surface-0);
+  border-color: var(--red-500);
+  &:hover {
+    background-color: var(--red-700);
+    color: var(--surface-0);
+    border-color: var(--red-500);
+  }
+  &:active {
+    background-color: var(--red-700);
+    color: var(--surface-0);
+    border-color: var(--red-500);
+  }
+  &:focus {
+    outline: 0 none;
+    outline-offset: 0;
+    box-shadow: 0 0 0 0.2rem var(--red-100);
+  }
+}
+
+:is(.btn-detalle, .btn-visor) ::ng-deep button {
+  background-color: var(--bluegray-100);
+  color: var(--surface-900);
+  border-color: var(--bluegray-100);
+
+  &:hover {
+    color: var(--surface-900);
+    background-color: var(--bluegray-100);
+  }
+
+  &:active {
+    color: var(--surface-900);
+    background-color: var(--bluegray-100);
+  }
+
+  &:focus {
+    outline: 0 none;
+    outline-offset: 0;
+    box-shadow: 0 0 0 0.2rem var(--bluegray-50);
+  }
+}
+
+.cell-text {
+  p {
+    color: #666666;
+    font-size: 14px;
+  }
+}
+
+:host::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  background: var(--mpfn-white) !important;
+}

@@ -1,0 +1,357 @@
+@if(tramiteNoDespachadoMesa){
+<mensaje-interoperabilidad-pj />
+
+} @else{ @if(!tramiteEstadoRecibido && !habilitarBotonGuardarTramite &&
+!tramiteEnModoVisor){
+<mensaje-completar-informacion [titulo]="nombreTramite()" />
+}
+
+<div class="resolucion-auto-enjuiciamiento__container mt-3">
+  <form [formGroup]="formRegistro">
+    <div class="grid">
+      <div class="col-12 md:col-4 flex">
+        <div class="field mb-0 w-full">
+          <label for="fechaNotificacion" class="p-label-bottom font-semibold"
+            >Fecha de notificación</label
+          >
+          <p-calendar
+            formControlName="fechaNotificacion"
+            dateMask
+            dateFormat="dd/mm/yy"
+            class="p-inputtext-lg cfe-calendar h-56"
+            [showIcon]="true"
+            [minDate]="fechaHecho"
+            [maxDate]="fechaActual"
+            icon="cfe-calendar-icon"
+            placeholder="dd/mm/aaaa"
+          >
+          </p-calendar>
+        </div>
+        @if(formRegistro.get('fechaNotificacion')?.value){
+        <div class="flex align-items-center">
+          <img
+            [src]="icono('check-circle')"
+            alt="validado"
+            class="mt-4 ml-2 pr-2 h-2rem"
+          />
+        </div>
+        }
+      </div>
+      <div class="col-12 md:col-8 flex">
+        <div class="field mb-0">
+          <label for="fechaNotificacion" class="p-label-bottom font-semibold"
+            >Recurso multimedia (opcional)</label
+          >
+          <div class="checkbox-multimedia gap-3">
+            <p-checkbox
+              formControlName="conAudio"
+              [binary]="true"
+              inputId="multAudio"
+              label="Cuenta con audio"
+            ></p-checkbox>
+            <p-checkbox
+              formControlName="conVideo"
+              [binary]="true"
+              inputId="multVideo"
+              label="Cuenta con video"
+            ></p-checkbox>
+          </div>
+        </div>
+        @if(multimediaSeleccionado){
+        <div class="flex align-items-center">
+          <img
+            [src]="icono('check-circle')"
+            alt="validado"
+            class="mt-4 ml-3 pr-2 h-2rem"
+          />
+        </div>
+        }
+      </div>
+    </div>
+    @if(!tramiteModoLectura){
+    <div class="grid mt-2">
+      <div class="col-12 md:col-12 flex">
+        <div class="field mb-0 w-full">
+          <label for="sujetoProcesal" class="p-label-bottom font-semibold"
+            >Nombre de los sujetos procesales</label
+          >
+          <p-dropdown
+            optionLabel="nombre"
+            (onChange)="seleccionarSujetoProcesal($event)"
+            [filter]="true"
+            filterBy="nombre"
+            [options]="listasujetosProcesale$ | async"
+            emptyMessage="No se encontraron sujetos"
+            emptyFilterMessage="No se encontraron resultados"
+            styleClass="p-inputtext-lg"
+            resetFilterOnHide
+            formControlName="sujetoProcesal"
+            placeholder="Seleccione"
+          ></p-dropdown>
+        </div>
+        @if(formRegistro.get('sujetoProcesal')?.valid){
+        <div class="flex align-items-center">
+          <img
+            [src]="icono('check-circle')"
+            alt="validado"
+            class="mt-4 ml-2 pr-2 h-2rem"
+          />
+        </div>
+        }
+      </div>
+    </div>
+    }
+
+    <div class="informacion-resolucion">
+      <p-tabView class="cfe-tabs-view-anidado">
+        <p-tabPanel>
+          <ng-template pTemplate="header"
+            >Informacion de la resolución</ng-template
+          >
+          @if(!tramiteModoLectura){
+          <div class="grid">
+            <div class="col-12 md:col-4 flex">
+              <div class="field mb-0 w-full">
+                <label
+                  for="fechaNotificacion"
+                  class="p-label-bottom font-semibold"
+                  >Sujeto procesal</label
+                >
+                <input
+                  pInputText
+                  formControlName="sujetoProcesalDescripcion"
+                  class="w-full"
+                />
+              </div>
+              @if(formRegistro.get('sujetoProcesalDescripcion')?.valid){
+              <div class="flex align-items-center">
+                <img
+                  [src]="icono('check-circle')"
+                  alt="validado"
+                  class="mt-5 ml-2 pr-2 h-2rem"
+                />
+              </div>
+              }
+            </div>
+            <div class="col-12 md:col-4 flex">
+              <div class="field mb-0" style="width: 90%">
+                <label
+                  for="fechaNotificacion"
+                  class="p-label-bottom font-semibold"
+                  >Delito (Genérico/sub-genérico/específico)</label
+                >
+                <p-dropdown
+                  (onChange)="seleccionarDelito($event)"
+                  [options]="listadelito$ | async"
+                  optionLabel="delito"
+                  emptyMessage="No hay delitos disponibles"
+                  formControlName="delito"
+                  placeholder="Seleccione"
+                ></p-dropdown>
+              </div>
+              @if(formRegistro.get('delito')?.valid){
+              <div class="flex align-items-center">
+                <img
+                  [src]="icono('check-circle')"
+                  alt="validado"
+                  class="mt-5 ml-2 pr-2 h-2rem"
+                />
+              </div>
+              }
+            </div>
+            <div class="col-12 md:col-4 flex">
+              <div class="field mb-0 w-full">
+                <label
+                  for="fechaNotificacion"
+                  class="p-label-bottom font-semibold"
+                  >Resultado</label
+                >
+                <p-dropdown
+                  (onChange)="seleccionarResultado($event)"
+                  [options]="listaTipoResultado$ | async"
+                  optionLabel="noDescripcion"
+                  formControlName="resultado"
+                  placeholder="Seleccione"
+                ></p-dropdown>
+              </div>
+              @if(formRegistro.get('resultado')?.valid){
+              <div class="flex align-items-center">
+                <img
+                  [src]="icono('check-circle')"
+                  alt="validado"
+                  class="mt-5 ml-2 pr-2 h-2rem"
+                />
+              </div>
+              }
+            </div>
+          </div>
+          <div class="grid form-grid">
+            <div class="field col">
+              <label for="" class="p-label-bottom font-semibold"
+                >Observaciones del resultado (opcional)</label
+              >
+              <textarea
+                pInputTextarea
+                formControlName="observacionesResultado"
+                class="w-full text-md"
+                rows="5"
+              ></textarea>
+              <contador-footer-textarea
+                [textarea]="formRegistro.get('observacionesResultado')"
+                [size]="observacionesMaxLength"
+              ></contador-footer-textarea>
+            </div>
+            @if(validarObservacion('observacionesResultado')){
+            <div class="flex align-items-center">
+              <img
+                [src]="icono('check-circle')"
+                alt="validado"
+                class="ml-2 pr-2 h-2rem"
+              />
+            </div>
+            }
+            <div
+              class="field col-12 flex flex-column sm:flex-row justify-content-end"
+            >
+              <button
+                (click)="agregarSujetoProcesal()"
+                pButton
+                [disabled]="validarAgregarSujetoDelito"
+                class="p-button-lg cfe-boton-primary text-white family-poppin-bold btn-adjust-filter w-column-full"
+              >
+                <span class="ml-4 mr-4">Agregar</span>
+              </button>
+            </div>
+          </div>
+          }
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+    <div class="grid form-grid">
+      <div class="field col-12">
+        <h6 class="font-semibold">Sujetos procesales con resultado</h6>
+        <p-table
+          class="cfe-table-primary"
+          [value]="listaSujetosSeleccionados"
+          [rowHover]="true"
+          [rows]="10"
+          [tableStyle]="{ 'min-width': '50rem' }"
+          responsiveLayout="stack"
+          [scrollable]="true"
+          [breakpoint]="'992px'"
+          [scrollHeight]="'20rem'"
+        >
+          <ng-template pTemplate="header">
+            <tr class="without-border">
+              <th id>Sujetos procesales</th>
+              <th id>Delito (Genérico/sub-genérico/específico)</th>
+              <th id>Resultado</th>
+              @if(!tramiteModoLectura){
+              <th id>Acción</th>
+              }
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-data let-i="rowIndex">
+            <tr class="p-selectable-row without-border">
+              <td>{{ data.sujetoProcesal.nombre }}</td>
+              <td>{{ data.delito.delito }}</td>
+              <td>
+                {{ data.requerimiento.noDescripcion }}
+              </td>
+              @if(!tramiteModoLectura){
+              <td>
+                <fn-icon
+                  onKeyPress
+                  (click)="eliminarSujeto(i)"
+                  [ico]="iconUtil.obtenerIcono('iTrash')"
+                  height="2.4rem"
+                  style="cursor: pointer"
+                >
+                </fn-icon>
+              </td>
+              }
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td class="no-before" colspan="8">
+                <div class="flex justify-content-center flex-wrap">
+                  <div class="flex align-items-center justify-content-center">
+                    Ningún sujeto procesal agregado.
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+
+    <div class="col-4 flex">
+      <button
+        type="button"
+        class="cfe-boton-secondary cfe-boton-lg w-full"
+        (click)="agregarMediosProbatorios()"
+      >
+        <span class="ml-1">Agregar medios probatorios admitidos</span>
+      </button>
+      @if(mediosProbatoriosRegistrados){
+      <div class="flex align-items-center">
+        <img
+          [src]="icono('check-circle')"
+          alt="validado"
+          class="ml-2 pr-2 h-2rem"
+        />
+      </div>
+      }
+    </div>
+
+    <div class="grid form-grid mt-3">
+      <div class="field col">
+        <label for="" class="p-label-bottom font-semibold"
+          >Observaciones (opcional)</label
+        >
+        <textarea
+          pInputTextarea
+          formControlName="observaciones"
+          class="w-full text-md"
+          rows="5"
+        ></textarea>
+        <contador-footer-textarea
+          [textarea]="formRegistro.get('observaciones')"
+          [size]="observacionesMaxLength"
+        ></contador-footer-textarea>
+      </div>
+      @if(validarObservacion('observaciones')){
+      <div class="flex align-items-center">
+        <img
+          [src]="icono('check-circle')"
+          alt="validado"
+          class="ml-2 pr-2 h-2rem"
+        />
+      </div>
+      }
+    </div>
+  </form>
+
+  @if(!tramiteEnModoVisor){
+  <div class="cfe-opciones-botones mt-4">
+    <span>
+      @if(!tramiteEstadoRecibido){
+      <p onKeyPress (click)="otroTramite()">
+        ¿Este documento no pertenece a este trámite?
+      </p>
+      }
+    </span>
+    <button
+      (click)="guardarTramite()"
+      [disabled]="tramiteEstadoRecibido || !habilitarBotonGuardarTramite"
+      type="submit"
+      class="cfe-boton-primary cfe-boton-lg boton-w"
+    >
+      <span class="font-bold">Guardar</span>
+    </button>
+  </div>
+  }
+</div>
+}

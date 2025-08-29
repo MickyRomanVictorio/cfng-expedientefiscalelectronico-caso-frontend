@@ -1,0 +1,35 @@
+<div class="modal-alert-container" [ngClass]="containerClass">
+  <span class="modal-alert-close" (click)="closeAction()">
+    <img [src]="closeIcon" alt="Close Icon" />
+  </span>
+
+  <div *ngIf="icon" class="modal-alert-icon">
+    <img [src]="alertIcon" alt="Alert Icon" />
+  </div>
+
+  <h3 class="modal-alert-title text-2xl font-semibold text-primary mb-4">{{ title }}</h3>
+
+  <p *ngIf="showDescription" class="modal-alert-description" [innerHTML]="getDescription()"></p>
+
+  <div *ngIf="accion === 'notificar'" class="modal-alert-options mt-5">
+    <button class="cfe-boton-secondary cfe-boton-lg mr-3"
+            (click)="ordenCitacion()">
+      {{ tituloSegundoBoton }}
+    </button>
+    <button class="cfe-boton-primary cfe-boton-lg mr-3"
+            (click)="ordenNotificacion()">
+      {{ tituloPrimerBoton }}
+    </button>
+  </div>
+
+  <div *ngIf="accion === 'editar'" class="modal-alert-options mt-5">
+    <button class="cfe-boton-secondary cfe-boton-lg mr-3"
+            (click)="editarTramite()">
+      {{ tituloSegundoBoton }}
+    </button>
+    <button class="cfe-boton-primary cfe-boton-lg mr-3"
+            (click)="cancelar()">
+      {{ tituloPrimerBoton }}
+    </button>
+  </div>
+</div>

@@ -1,0 +1,208 @@
+<div class="w-full">
+
+
+
+
+
+    <div class="cfe-container">
+
+        <div class="header flex justify-content-between flex-wrap ">
+            <span class="flex align-items-center justify-content-center font-semibold">
+                &nbsp;
+            </span>
+            <div class="flex align-items-center justify-content-center">
+                <p-button (click)="close()" icon="pi pi-times"
+                    styleClass="p-button-rounded text-color p-button-text"></p-button>
+            </div>
+        </div>
+
+        <div class="col-12">
+
+            <form class="casos_por_asignar__filters">
+
+                <div class="casos_por_asignar_header__content">
+
+                    <h3 class="cfe-titulo-1">Seleccionar los documentos a adjuntar</h3>
+
+                </div>
+                <div class="grid mt-1">
+                    <div class="col">
+                        <div class="field mb-0">
+                            <label for="buscar" class="font-semibold">Buscar:</label>
+                            <input (input)="onInput(input.value)" #input pInputText type="text"
+                                class="p-inputtext-lg py-3 text-lg w-full"
+                                placeholder="Ingrese algún texto para buscar, por ejemplo el nombre del documento, etapa, acto procesal o trámite" />
+                        </div>
+                    </div>
+                    <div class="col-fixed" style="width: 70px;" [ngClass]="{'cfe-filtro-boton-fondo2': verBuscar}">
+                        <div class="field mb-0">
+                            <label for="button" class="font-semibold">&nbsp;</label>
+                            <button class="cfe-filtro-boton" (click)="eventoMostrarOcultarFiltros()">
+                                <fn-icon [ico]="icono('iFilterShow')" height="2.1rem"></fn-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="verBuscar" class="grid row-magin-top mt-2">
+                    <div class="col-5">
+                        <div class="field mb-0">
+                            <label for="fiscal" class="font-semibold">Tipo de documento</label>
+                            <p-dropdown (onChange)="ngOnChanges($event)" [options]="listaTipoDocumentos"
+                                optionLabel="nombre" optionValue="id" [showClear]="true" placeholder="Todos"
+                                styleClass="py-1 p-inputtext-lg">
+
+                            </p-dropdown>
+                        </div>
+                    </div>
+                    <div class="col-fixed" style="width: 200px;">
+                        <div class="field mb-0">
+                            <label for="button" class="font-semibold">&nbsp;</label>
+                            <button (click)="buscarPorTipoDoc()"
+                                class="cfe-boton-primary cfe-boton-lg w-full">BUSCAR</button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+            <div class="seleccion_actos_tramites__container mt-3">
+                <app-tabs-view [tabs]="tabs" (onChangeIndex)="indexActivo = $event"></app-tabs-view>
+
+
+                <p-tabView class="cfe-tabs-view" [(activeIndex)]="indexActivo">
+                    <p-tabPanel>
+
+                        <div class="casos_por_asignar__table">
+
+
+                            <div class="casos_por_asignar_table__content">
+
+
+
+
+                                <p-table [value]="listaDocumentos" [paginator]="true" [rowHover]="true" [rows]="10"
+                                    [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
+                                    currentPageReportTemplate="{first} de {last} registros"
+                                    [rowsPerPageOptions]="[5, 10, 20, 30, 50, 100]" [breakpoint]="'992px'"
+                                    responsiveLayout="stack" [(selection)]="documentosSeleccionados">
+                                    <ng-template pTemplate="header">
+                                        <tr>
+
+                                            <th pSortableColumn="item">N°
+                                                <p-sortIcon field="item"></p-sortIcon>
+                                            </th>
+                                            <th pSortableColumn="nombreDocumento">Nombre del documento
+                                                <p-sortIcon field="nombreDocumento"></p-sortIcon>
+                                            </th>
+                                            <th pSortableColumn="etapa">Etapa
+                                                <p-sortIcon field="etapa"></p-sortIcon>
+                                            </th>
+                                            <th pSortableColumn="actoProcesal">Acto Procesal
+                                                <p-sortIcon field="actoProcesal"></p-sortIcon>
+                                            </th>
+                                            <th pSortableColumn="tramite">Trámite
+                                                <p-sortIcon field="tramite"></p-sortIcon>
+                                            </th>
+                                            <th style="width: 20px">
+                                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+
+                                            </th>
+
+                                            <th> <label for="">Seleccionar</label></th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template let-index="rowIndex" pTemplate="body" let-documento>
+                                        <tr class="">
+
+                                            <td class="table_td_content_start caso-container ">
+                                                <span class="p-column-title ">Nro</span>
+                                                <span class=" ">
+                                                    {{ index + 1 }}
+                                                </span>
+                                            </td>
+                                            <td class="table_td_content_start ">
+                                                <span class="p-column-title ">Nombre del Documento</span>
+                                                <span class=" ">
+                                                    {{ documento.nombreDocumento }}
+                                                </span>
+                                            </td>
+                                            <td class="table_td_content_start remitente-container ">
+                                                <span class="p-column-title ">Etapa</span>
+                                                <div>
+                                                    {{ documento.etapa }}
+                                                </div>
+                                            </td>
+                                            <td class="table_td_content_start ">
+                                                <span class="p-column-title ">Acto Procesal</span>
+                                                <div>
+                                                    {{ documento.actoProcesal }}
+                                                </div>
+                                            </td>
+                                            <td class="fecha-container table_td_content_start ">
+                                                <span class="p-column-title ">Trámite</span>
+                                                <div>
+                                                    {{ documento.tramite }}
+                                                </div>
+                                            </td>
+                                            <td class="table_td_content_start ">
+                                                <p-tableCheckbox [value]="documento"></p-tableCheckbox>
+
+                                            </td>
+                                            <td class="td-justify-center table_td_content_start"
+                                                style="text-align: center;">
+                                                <span class="p-column-title ">Seleccionar</span>
+                                                <div class="btn-clasification">
+                                                    <img (click)="verDocumentoPdf(documento)"
+                                                        [src]="icon('searchFolder')" alt="Ver Documento " />
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="emptymessage ">
+                                        <tr>
+                                            <td colspan="9 " style="text-align: center; ">No se encontraron registros
+                                                con los criterios de búsqueda ingresados
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+
+
+                                <div class="casos_por_asignar_table__title">
+
+                                    <div class="casos_por_asignar_table_title__options">
+
+                                        <button class="cfe-boton-primary cfe-boton-m cfe-boton-icono-izquierda"
+                                            (click)="exportarDocumentos()">
+
+                                            ADJUNTAR
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </p-tabPanel>
+
+                    <p-tabPanel>
+
+                    </p-tabPanel>
+
+                    <p-tabPanel>
+
+                    </p-tabPanel>
+
+                    <p-tabPanel>
+                    </p-tabPanel>
+
+                </p-tabView>
+            </div>
+
+        </div>
+
+
+
+
+    </div>
+</div>

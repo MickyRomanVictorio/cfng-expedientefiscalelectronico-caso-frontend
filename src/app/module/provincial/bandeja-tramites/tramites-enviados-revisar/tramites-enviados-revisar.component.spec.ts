@@ -1,0 +1,38 @@
+import { provideHttpClient } from '@angular/common/http';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { Constants } from 'ngx-cfng-core-lib';
+import TramitesEnviadosRevisarComponent from './tramites-enviados-revisar.component';
+
+describe('TramitesEnviadosRevisarComponent', () => {
+  let component: TramitesEnviadosRevisarComponent;
+  let fixture: ComponentFixture<TramitesEnviadosRevisarComponent>;
+
+  beforeEach(async () => {
+    const mockToken = JSON.stringify({
+      token:
+        'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzMjkyMDU4OSIsImlzcyI6Imh0dHA6Ly9jZm1zLXNhZC1hZG1pbmlzdHJhY2lvbi1nZXN0aW9uLWFwaS1kZXZlbG9wbWVudC5hcHBzLmRldi5vY3A0LmNmZS5tcGZuLmdvYi5wZS9jZmUvc2FkL2FkbWluaXN0cmFjaW9uL3YxL2Uvc2VzaW9uL3Rva2VuU2VzaW9uLW5ldyIsImlwIjoiMTkyLjE2OC4xMzAuMSIsInVzdWFyaW8iOnsiZXN0YWRvIjoiMSIsImlwIjoiMTkyLjE2OC4xMzAuMSIsInVzdWFyaW8iOiIzMjkyMDU4OSIsImluZm8iOnsiYXBlbGxpZG9QYXRlcm5vIjoiUElOSUxMT1MiLCJlc1ByaW1lckxvZ2luIjp0cnVlLCJjb2RpZ29UaXBvRG9jdW1lbnRvIjoiMDAxIiwidGlwb0RvY3VtZW50byI6IkROSSIsImRuaSI6IjMyOTIwNTg5Iiwibm9tYnJlcyI6IkdJTEJFUlRPIE9TQ0FSIiwiYXBlbGxpZG9NYXRlcm5vIjoiQ0FESUxMTyJ9LCJjb2REZXBlbmRlbmNpYSI6IjQwMDYwMTQ1MDEiLCJkZXBlbmRlbmNpYSI6IjHCsCBGSVNDQUxJQSBQUk9WSU5DSUFMIFBFTkFMIENPUlBPUkFUSVZBIERFIFZFTlRBTklMTEEiLCJjb2REZXNwYWNobyI6IjQwMDYwMTQ1MDEtNCIsInNlZGUiOiIxwrAgRmlzY2FsaWEgUHJvdmluY2lhbCBNaXh0YSBkZSBWZW50YW5pbGxhIiwiZGVzcGFjaG8iOiI0ICBERVNQQUNITyIsImNvZENhcmdvIjoiMDAwMDAwMDgiLCJjb2RTZWRlIjoiMTYwIiwiY2FyZ28iOiJGSVNDQUwgUFJPVklOQ0lBTCIsImNvZERpc3RyaXRvRmlzY2FsIjoiNDciLCJkaXN0cml0b0Zpc2NhbCI6IkxJTUEgTk9ST0VTVEUiLCJkbmlGaXNjYWwiOiIzMjkyMDU4OSIsImRpcmVjY2lvbiI6IiAiLCJmaXNjYWwiOiJHSUxCRVJUTyBPU0NBUiBQSU5JTExPUyBDQURJTExPIiwiY29ycmVvRmlzY2FsIjpudWxsLCJjb2RKZXJhcnF1aWEiOiIwMSIsImNvZENhdGVnb3JpYSI6IjAxIiwiY29kRXNwZWNpYWxpZGFkIjoiMDAxIiwidWJpZ2VvIjoiICIsImRpc3RyaXRvIjoiTElNQSBOT1JPRVNURSIsImNvcnJlbyI6ImwuYWxjb24uY29kZUBnbWFpbC5jb218bC5hbGNvbi5jb2RlQGdtYWlsLmNvbSIsInRlbGVmb25vIjoiICIsInNpc3RlbWFzIjpbeyJjb2RpZ28iOiIxNTUiLCJvcGNpb25lcyI6WyIwMiIsIjA0IiwiMDUiLCIwNiIsIjA3IiwiMDgiLCIwOSIsIjAxIiwiOTk5OSJdLCJwZXJmaWxlcyI6W251bGwsIjIxIl19LHsiY29kaWdvIjoiMTQ1Iiwib3BjaW9uZXMiOlsiMjUiLCIyNiIsIjI4IiwiMzEiLCI1MCIsIjIyIiwiMjMiLCIyNCIsIjUyIiwiNDAiLCIxMjMiLCIyIiwiNDgzOTgzNDk4NDMiLCI0NiIsIjM5ODM4Nzk0ODciLCIwMDEiLCIyOSIsIjMwIiwiMjkwMjAxIiwiMDAxMTEiLCIwMDExMTEiLCIxMjM0NSIsIjI1NCIsIjAxMDEwMSIsIjEyMzQ1NiIsIjY2NjYiLCIwOTk4ODk3Il0sInBlcmZpbGVzIjpbbnVsbCwiMDMiLCIwNCJdfSx7ImNvZGlnbyI6IjIwMCIsIm9wY2lvbmVzIjpbIjIwMC0wMSIsIjIwMC0wMyIsIjIwMC0wNCIsIjIwMC0wNiIsIjIwMC0wOSIsIjAwMSIsIjAwMiJdLCJwZXJmaWxlcyI6WyIyOSJdfSx7ImNvZGlnbyI6ImFwcDAxOCIsIm9wY2lvbmVzIjpbIjA5OTIxIl0sInBlcmZpbGVzIjpbbnVsbF19LHsiY29kaWdvIjoiMTQ3Iiwib3BjaW9uZXMiOlsiMDAxIiwiQVBQLVNHRDAzIiwiMDAyIl0sInBlcmZpbGVzIjpbIjExIl19LHsiY29kaWdvIjoiMDAwOCIsIm9wY2lvbmVzIjpbImFwMDEiLCJhcDAxMSIsIkRFTU8xIiwiREVNTzIiLCJERU1PNCIsIjAwMyIsIjAxMyIsIjQyMjQiLCIwMDEiLCI4ODU1NTQ3NSIsIjM0NTUiLCIwMDIiLCIwMDQiLCIwMDUiLCIwMDYiLCIwMDciLCIwMDgiLCJDT0QyMyIsIkNPREUxIiwiUFJPRDEiLCIwMDEyIiwiMDAwNCIsIjAwMDkiLCI1NTU1NTUiLCJSRVAwMDEiLCJBQjAwMSIsIjEyMzMyMSIsIjU2NyIsIjAwMDExIiwiMTIzNDUiLCJOT0RPMDAxIiwiMDAwNSIsIjU2NTciXSwicGVyZmlsZXMiOlsiMDAyIiwiMDAzIiwiMDA1IiwiMDA2IixudWxsXX1dfSwiaWF0IjoxNzM5OTc1ODYyLCJleHAiOjE3NDAwMzQ4MDB9.grABF6qgf514IFFQ0wyCki8PgRjkh6y5T2a04AOvwFGV6q2UCt1BrB7WHaTJamTH0GyAGg34_pa-_qEINId5WA',
+    });
+    spyOn(sessionStorage, 'getItem').and.callFake((key: string) => {
+      if (key === Constants.TOKEN_NAME) {
+        return mockToken;
+      }
+      return null;
+    });
+
+    await TestBed.configureTestingModule({
+      imports: [TramitesEnviadosRevisarComponent],
+      providers: [JwtHelperService, provideHttpClient()],
+    }).compileComponents();
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(TramitesEnviadosRevisarComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('Crear componente', () => {
+    expect(component).toBeTruthy();
+  });
+});

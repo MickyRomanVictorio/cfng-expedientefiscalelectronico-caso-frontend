@@ -1,0 +1,117 @@
+<div class="presentacion-requerimiento-container">
+
+  <div class="grid h-full w-full m-0 border-round-sm mt-17">
+    <div class="col-12">
+        <div class="col-12 mt-1 pl-0 flex">
+          <div class="col-6 grid">
+            <form [formGroup]="form" class="w-11">
+              <div class="field col-12">
+                <label for="observaciones" class="font-semibold">Observaciones (opcional)</label>
+                <textarea
+                  pInputTextarea
+                  id="observaciones"
+                  (input)="countWords()"
+                  [maxlength]="maxLength"
+                  rows="5"
+                  class="p-inputtext-lg py-3 text-lg w-full"
+                  placeholder="Observaciones"
+                  formControlName="observaciones"
+                ></textarea>
+                <div class="py-2 text-right text-600	">
+                  <!-- Quedan {{ maxLength - wordCount }}/200 caracteres -->
+                   Quedan {{ maxLength - wordCount }}/{{ maxLength }}
+                    caracteres
+                </div>
+              </div>
+
+              <div *ngIf="!documentoCargado" class="col-12 md:col-12">
+                <label class="font-semibold text-sm">Subir documento</label>
+                <fn-file-upload class="fz-14" [(files)]="files" (processSignDocument)="processSignDocument($event)"
+                [fileLimit]="1" [isInMemory]="true" type="pdf" [isSignDigital]="true"
+                [maxFileSize]="1024 * 1024 * 30" [perFileLabel]="'en total'"></fn-file-upload>
+              </div>
+
+              <div *ngIf="documentoCargado" class="col-12 md:col-12">
+                <label class="font-semibold text-sm">Documento presentado</label>
+                <p-table
+                [value]="files"
+                [rowHover]="true"
+                styleClass="p-datatable-sm mt-1">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th class="text-sm">Documento</th>
+                            <th class="col-w-1 text-center text-sm">Tamaño</th>
+                            <th class="col-w-1-6 text-center text-sm">Tipo de copia</th>
+                            <th class="col-w-1 text-center text-sm">Acciones</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-file>
+                        <tr>
+                            <td class="text-sm">
+                                <fn-icon class="cursor-pointer" [ico]="obtenerIcono('iFileFull')" height="1.2rem" />
+                               {{file.nombreOrigen}}
+                            </td>
+                            <td class="text-center text-sm">
+                              <fn-icon *ngIf="formularioDeshabilitado" [ico]="obtenerIcono('iCheck')" height="1.6rem" color="#06A77D"></fn-icon>
+                              {{ formatoPesoArchivo(file.tamanyo || filesPeso*1024*1024) }}
+                            </td>
+                            <td>
+                                <div class="flex flex-wrap gap-3">
+                                    <div *ngFor="let dataRadio of tipoCopia; index as i;">
+                                        <div class="flex align-items-center">
+                                            <p-radioButton name="idTipoCopia" value="{{dataRadio.id}}"
+                                                formControlName="idTipoCopia" inputId="or{{dataRadio.id}}"
+                                                (onClick)= "file.nombreRadio = dataRadio.noDescripcion"></p-radioButton>
+                                            <label for="or{{dataRadio.id}}" class="ml-2 text-sm cursor-pointer">{{dataRadio.noDescripcion}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                          <td class="text-center">
+                            <fn-icon
+                              *ngIf="!formularioDeshabilitado"
+                              class="cursor-pointer"
+                              [ico]="obtenerIcono('iTrashCan')"
+                              height="1.5rem"
+                              (click)="ejecutaEliminarDocumento(file)"
+                              onKeyPress="">
+                            </fn-icon>
+                            <fn-icon
+                              *ngIf="formularioDeshabilitado"
+                              class="cursor-pointer"
+                              [ico]="obtenerIcono('iDownload')"
+                              height="2.1rem"
+                              (click)="descargarArchivo(file.archivo, file.nombre)"
+                            ></fn-icon>
+                          </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+              <div class="field col-12">
+                <div class="flex justify-content-between flex-wrap">
+                    <p-button
+                      (click)="eliminarDocumento(files[0])"
+                      styleClass="p-button-lg cfe-boton-secondary text-primary font-bold btn-adjust"
+                      label="Cancelar"
+                      [disabled]="files.length == 0 || formularioDeshabilitado">
+                    </p-button>
+                    <p-button
+                        (click)="confirmarGuardarDigitalizado()"
+                        [disabled]="formularioValido || formularioDeshabilitado"
+                        styleClass="p-button-lg cfe-boton-primary text-white font-semibold btn-adjust"
+                        label="Firmar y guardar">
+                    </p-button>
+                </div>
+              </div>
+          </form>
+          </div>
+
+          <div class="col-6 pr-0 mt-7">
+            <app-visor-pdf-frame [documentoAdjunto]="documentoAdjunto"></app-visor-pdf-frame>
+          </div>
+    </div>
+  </div>
+</div>
+
+<cfe-lib-firma-digital-cliente></cfe-lib-firma-digital-cliente>

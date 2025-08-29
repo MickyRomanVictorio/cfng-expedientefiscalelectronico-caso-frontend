@@ -1,0 +1,25 @@
+@use '../../../../../../../assets/styles/scss/abstracts/index' as *;
+@import url('https://unpkg.com/leaflet@1.9.3/dist/leaflet.css');
+@import url('https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css');
+
+#map {
+  height: 450px;
+}
+
+.input-height {
+  height: 54px;
+}
+
+.calendar-height {
+  display: flex;
+  height: 59px !important;
+}
+
+.textarea-fontsize {
+  font-size: 1.125rem !important;
+  width: 100%;
+}
+
+.selector_hora{
+  line-height: 20px;
+}

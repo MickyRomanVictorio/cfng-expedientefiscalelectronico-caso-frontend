@@ -1,0 +1,123 @@
+<div class="cfe-container p-5 relative">
+
+  <fn-icon class="absolute top-0 right-0 cursor-pointer mt-2 ml-3"  [ico]="obtenerIcono('iClose')"  height="2rem"  (click)="ref.close()"></fn-icon>
+
+  @if(datosDetalle(); as detalle){
+
+    <div class="cfe-titulo-1">
+      <div>
+        @if(detalle.esPestana===1 || detalle.esCuaderno===1){
+          Detalle de cuaderno incidental
+        }@else {
+          Detalle del caso
+        }
+        <span [innerHTML]="stringUtil.obtenerNumeroCaso(detalle.codCaso)"></span>
+      </div>
+      @if (esSuperior) {
+        <button
+          class="cfe-boton-secondary cfe-boton-xs btn-icono ml-2"
+          (click)="eventoMostrarDetalle()"
+          [ngClass]="{'btn-icono-abierto': mostrarDetalle() }">
+          <fn-icon [ico]="iconUtil.obtenerIcono('iChevronUp')" height="1.5rem"></fn-icon>
+        </button>
+      }
+    </div>
+
+    @if (esSuperior) {
+      <div class="pt-2">
+        @let et = etiqueta({
+          descTipoElevacion:detalle.descTipoElevacion,
+          idTipoElevacion:detalle.idTipoElevacion
+        });
+        @let et2 = etiqueta2({
+          idTipoElevacion:detalle.idTipoElevacion,
+          idTipoContienda:detalle.idTipoContienda,
+          nuPestana:detalle.nuPestana,
+          nuCuaderno:detalle.nuCuaderno
+        });
+        <app-etiqueta-caso
+         [etiqueta]="{
+          etiquetaRgb:et.color,
+          etiqueta:et.valor,
+          etiquetaRgb2:et2.color,
+          etiqueta2:et2.valor,
+         }"
+        ></app-etiqueta-caso>
+
+        @if (detalle.idTipoElevacion.toString() === TipoElevacionCodigo.ApelacionesAutoIncidental) {
+          <div class="pt-2">
+            <app-etiqueta-caso
+              [etiqueta]="{
+              etiquetaColorNro:9,
+              etiqueta: detalle.noTipoCuadernoIncidental??''
+            }"
+            ></app-etiqueta-caso>
+          </div>
+        }
+      </div>
+    }
+
+  @if(mostrarDetalle()===true){
+    <div class="grid pt-2">
+       <div class="col-12 md:col-4">
+            <div>
+              <span class="text-600">Etapa:</span>
+              <div class="font-semibold pt-1">
+                {{ detalle.descEtapa}}
+              </div>
+            </div>
+
+            <div class="pt-3">
+              <span class="text-600">Delitos:</span>
+              <div class="font-semibold pt-1">
+                {{ detalle.delitos}}
+              </div>
+            </div>
+
+       </div>
+
+       <div class="col-12 md:col-4">
+
+          <div>
+            <span class="text-600">Fiscal Superior:</span>
+            <div class="font-semibold pt-1">
+              {{ detalle.fiscal }}
+            </div>
+          </div>
+
+          <div class="pt-3">
+            <span class="text-600">F. Elevación:</span>
+            <div class="font-semibold pt-1">
+              {{ detalle.fechaElevacion}}
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-12 md:col-4">
+
+          <div>
+            <span class="text-600">Último trámite:</span>
+            <div class="font-semibold pt-1">
+              {{ detalle.descTramite }}
+            </div>
+          </div>
+
+          <div class="pt-3">
+            <span class="text-600">F. Respuesta:</span>
+            <div class="font-semibold pt-1">
+              {{ detalle.fechaResultado}}
+            </div>
+          </div>
+
+        </div>
+
+    </div>
+  }
+}
+  <hr>
+  @if(idActoTramiteCasoTramite()!==''){
+    <app-acto-procesal [idActoTramiteCasoIn]="idActoTramiteCasoTramite()"></app-acto-procesal>
+  }
+
+</div>

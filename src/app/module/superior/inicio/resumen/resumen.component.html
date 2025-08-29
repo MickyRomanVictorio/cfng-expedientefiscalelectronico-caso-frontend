@@ -1,0 +1,34 @@
+<div class="grid">
+  <div class="col-12 md:col-8 lg:col-10 resumen-cuerpo">
+    <div class="col-12 md:col-2 lg:col-10 px-5 my-3 flex align-items-center">
+      <span class="titulo-dashboard">Resumen del Despacho Superior</span>
+       <div class="term-item">
+        <div class="tooltipNew"    [ngClass]="{ visible: tooltipVisible }" >
+          <fn-icon [ico]="iconUtil.obtenerIcono('iInfoCircle')" height="1.3rem"  (click)="showTooltip()"></fn-icon>
+          <div class="top" [style]="{'left':'800%'}" >
+            <app-encabezado-tooltip [titulo]="tituloTootip" [alCerrarModal]="toggleTooltip"
+              [referenciaModal]="referenciaModal" />
+             Puedes ver cuántos están dentro del plazo, por vencer o vencidos.
+              También se indican asignaciones, estado procesal y distribución.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="grid">
+      @for (item of listaIndicadores(); track $index) {
+      <div
+        class="col-12 md:col-6 lg:col-4 px-5 my-3 flex align-items-center justify-content-center"
+      >
+        <app-indicador
+          style="width: 550px"
+          (redireccionarBandeja)="navigate('')"
+          [listaIndicadores]="listaIndicadores()"
+          [index]="$index"
+        />
+      </div>
+      }
+    </div>
+  </div>
+
+  <div class="col-12 md:col-2 lg:col-1"></div>
+</div>

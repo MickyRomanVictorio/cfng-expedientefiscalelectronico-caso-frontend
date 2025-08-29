@@ -1,0 +1,13 @@
+.cfe-dialog__header{
+    h2{
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--mpfn-primary);
+    }
+    fn-icon{
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        cursor: pointer;
+    }
+}

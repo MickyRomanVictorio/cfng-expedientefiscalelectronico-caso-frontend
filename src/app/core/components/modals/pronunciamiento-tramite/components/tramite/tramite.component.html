@@ -1,0 +1,12 @@
+@defer {
+  @if (esSuperior || idActoTramiteCaso() !== '') {
+    <app-acto-procesal
+      [idActoTramiteCasoIn]="idActoTramiteCaso()"
+      [isTramiteEnModoEdicion]="isTramiteEnModoEdicion()"
+    ></app-acto-procesal>
+  } @else {
+    <div class="py-4 text-center">
+      Esta pestaña de apelación está en modo <b>VISTA</b>, por lo que no puede realizar ninguna acción sobre el mismo.
+    </div>
+  }
+}

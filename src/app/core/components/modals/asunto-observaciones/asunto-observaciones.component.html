@@ -1,0 +1,41 @@
+<div class="p-5 relative" style="max-width: 100%; margin: 0 auto;">
+  <app-encabezado-modal titulo="Hechos" [referenciaModal]="referenciaModal"
+    [numeroCaso]="numeroCaso"></app-encabezado-modal>
+  <div class="cfe-container cfe-container-background-blanco">
+    <form [formGroup]="formulario" class="grid gap-4">
+      <div class="col-12 sm:col-6 md:col-4 lg:col-3 xl:col-2">
+        <label for="fecha" class="font-semibold">Fecha del hecho</label>
+        <input pInputText class="p-inputtext py-3 w-full" type="text"
+          formControlName="fecha" id="fecha" />
+      </div>
+      <div class="col-12 sm:col-6 md:col-8 lg:col-6 xl:col-3">
+        <label class="font-semibold">Hora aproximada del hecho</label>
+        <div class="p-inputgroup">
+          <input pInputText type="text"
+            class="p-inputtext py-3 border-round-left border-noround-right border-right-none" [readOnly]="true"
+                 formControlName="hora" />
+          <p-selectButton [options]="stateOptions"
+            styleClass="border-noround h-full border-1 border-solid border-left-none border-400 border-round-right custom-mpfe-p-select-button-item"
+             formControlName="indicadorHora" optionLabel="label"
+            optionValue="value">
+            <ng-template let-item pTemplate>
+              {{ item.value }}
+            </ng-template>
+          </p-selectButton>
+        </div>
+      </div>
+      <div class="col-12">
+        <label for="asunto" class="font-semibold">Descripción de los hechos</label>
+        <textarea pInputTextarea id="asunto"
+          placeholder="Aquí se visualiza la descripción de los hechos" class="w-full" rows="5"
+          formControlName="asunto" readonly></textarea>
+      </div>
+      <div class="col-12">
+        <label for="observacion" class="font-semibold">Observación de los anexos</label>
+        <textarea pInputTextarea id="observacion"
+          placeholder="Aquí se visualizan todas las observaciones de los anexos" class="w-full" rows="5"
+          formControlName="observacion" readonly></textarea>
+      </div>
+    </form>
+  </div>
+</div>

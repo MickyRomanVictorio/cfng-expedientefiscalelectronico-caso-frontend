@@ -1,0 +1,225 @@
+<div class="cfe-modal p-5">
+
+    <div class="encabezado-modal">
+        <h3
+            class="encabezado-titulo cfe-subtitulo-3 cfe-semi-bold family-poppin-bold"
+        >{{ titulo }}</h3>
+
+        <fn-icon
+            (click)="confirmarCancelacion()"
+            [ico]="iconUtil.obtenerIcono('iClose')"
+            class="encabezado-cerrar"
+            height="2rem"
+            onKeyPress=""
+        />
+    </div>
+
+    <p>{{ descripcion }}</p>
+
+    @if ( terminoCargaSujetos && !modoLectura ) {
+
+        @if ( sinSujetosRegistrados ) {
+            <div
+                class="flex-center border-round-lg px-3 py-2 gap-2 mb-2 label-bg-warning"
+            >
+                <fn-icon
+                    class="label-info-secondary"
+                    [ico]="iconUtil.obtenerIcono('iInfoCircle')"
+                    height="1.5rem"
+                />
+                <span class="text-md">
+                    Este caso no cuenta con los sujetos procesales debidamente registrados. <a
+                        class="cfe-enlace-general"
+                        routerLink="{{ obtenerUrlSujetos() }}"
+                        (click)="cerrarVentana()"
+                    >
+                        Ir a sujetos procesales</a
+                    >
+                </span>
+            </div>
+        }
+
+        @if ( mostrarMensajeAlerta ) {
+            <div
+                class="flex-center border-round-lg px-3 py-2 gap-2 mb-4 label-bg-warning"
+            >
+                <fn-icon
+                    class="label-info-secondary"
+                    [ico]="iconUtil.obtenerIcono('iInfoCircle')"
+                    height="1.5rem"
+                />
+                <span class="text-md">
+                    Se debe registrar al menos 1 sujeto procesal con denominación: denunciado, investigado, imputado o acusado, más su(s) delito(s).
+                </span>
+            </div>
+        }
+
+        @if ( !sinSujetosRegistrados && !mostrarMensajeAlerta ) {
+            <div
+                class="flex-center border-round-lg px-3 py-2 gap-2 mb-4 label-bg-warning"
+            >
+                <fn-icon
+                    class="label-info-secondary"
+                    [ico]="iconUtil.obtenerIcono('iInfoCircle')"
+                    height="1.5rem"
+                />
+                <span class="text-md">
+                    Si desea seleccionar sujetos procesales, que no se encuentran listados; estos podrán ser agregados desde la pestaña "Sujetos procesales". <a
+                        class="cfe-enlace-general"
+                        routerLink="{{ obtenerUrlSujetos() }}"
+                        (click)="cerrarVentana()"
+                    >
+                        Ir a sujetos procesales</a
+                    >
+                </span>
+            </div>
+        }
+
+    }
+
+    <p-table
+        class="table-apelaciones"
+        [value]="listaSujetosProcesales"
+        responsiveLayout="stack"
+        [paginator]="true"
+        dataKey="idSujetoCaso"
+        [paginator]="true"
+        [rows]="10"
+        [showCurrentPageReport]="true"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        currentPageReportTemplate="{first} de {last} registros"
+        [(selection)]="sujetosProcesalesSeleccionados"
+        (onRowUnselect)="quitarSeleccionSujeto($event)"
+        (onHeaderCheckboxToggle)="quitarSeleccionSujetoTabla($event)"
+    >
+        <ng-template pTemplate="header">
+            <tr>
+                <th id="Select" class="w-col-20">
+                    <p-tableHeaderCheckbox
+                        [disabled]="modoLectura"
+                    ></p-tableHeaderCheckbox>
+                </th>
+                <th id="Nº">Nº</th>
+                <th id="Tipo">Tipo Doc.</th>
+                <th id="Núm">Núm. Doc.</th>
+                <th id="Nombres">Nombres / Razón Social</th>
+                <th id="Tipo">Tipo de sujeto</th>
+                <th id="Delitos">Delitos vinculados</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-sujeto let-rowIndex="rowIndex">
+            <tr>
+                <td>
+                    <p-tableCheckbox
+                        [value]="sujeto"
+                        [disabled]="modoLectura"
+                    ></p-tableCheckbox>
+                </td>
+                <td>{{ sujeto.numero }}</td>
+                <td>{{ sujeto.tipoDocumento }}</td>
+                <td>{{ sujeto.numeroDocumento }}</td>
+                <td>
+                    {{ sujeto.nombreSujeto }}
+                    @if ( sujeto.idTipoPersona === TIPO_PERSONA_LQRR ) {
+                        <span class="badge badge-lqrr">LQRR</span>
+                    }
+                    @if ( sujeto.idTipoPersona === TIPO_PERSONA_ESTADO ) {
+                        <span class="badge badge-lqrr">Estado</span>
+                    }
+                    @if ( sujeto.idTipoPersona === TIPO_PERSONA_SOCIEDAD ) {
+                        <span class="badge badge-lqrr">Sociedad</span>
+                    }
+                </td>
+                <td>{{ sujeto.tipoParteSujeto }}</td>
+                <td style="width: 500px;">
+                    <p-multiSelect
+                        [disabled]="!sujetoSeleccionado(sujeto.idSujetoCaso) || modoLectura"
+                        #multiSelect
+                        appendTo="body"
+                        styleClass="py-1 p-inputtext-lg w-full"
+                        [options]="sujeto.delitos"
+                        placeholder="Seleccione Delito"
+                        filterPlaceholder="Seleccione el(los) delito(s)"
+                        optionLabel="delito"
+                        display="chip"
+                        emptyFilterMessage="No se encontraron resultados."
+                        emptyMessage="No se encontraron resultados."
+                        [(ngModel)]="sujeto.delitosSeleccionados"
+                        [showToggleAll]="false"
+                        [maxSelectedLabels]="sujeto.delitos?.length"
+                        (onChange)="seleccionarDelito(sujeto, $event)"
+                    >
+                        <ng-template pTemplate="selectedItems" let-items>
+                            <div class="custom-delitos-items" [class.scroll-delitos]="items?.length > 4">
+                                @if (items?.length) {
+                                    @for (item of items; track $index) {
+                                        <span
+                                            [pTooltip]="mostrarcTooltipDelito(item)"
+                                            tooltipStyleClass="tooltip-cuadernos-extremos"
+                                            tooltipEvent="hover"
+                                            [escape]="false"
+                                            class="delito-item"
+                                            [class.existe-extremo]="item.existeExtremo"
+                                        >
+                                            {{ item.delito }}
+                                            <i
+                                                class="pi pi-times"
+                                                onKeyPress=""
+                                                (click)="quitarDelito(sujeto, item, $event, multiSelect)"
+                                            ></i>
+                                        </span>
+                                    }
+
+                                } @else {
+                                    <span class="no-seleccionado">Seleccione delitos</span>
+                                }
+                            </div>
+                        </ng-template>
+                    </p-multiSelect>
+                    @if ( !modoLectura ) {
+                        <div class="text-right mt-2">
+                            <span
+                                class="tipificar-nuevo-delitos"
+                                onKeyPress=""
+                                (click)="tipificarNuevosDelitos(sujeto.idSujetoCaso)"
+                            >Tipificar nuevos delitos</span>
+                        </div>
+                    }
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7">
+                    <div class="text-center">No se encontraron registros de sujetos procesales</div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <div
+        class="flex justify-content-between align-items-center gap-3 mt-4"
+        [class.justify-content-between]="!modoLectura"
+        [class.justify-content-center]="modoLectura"
+    >
+        @if ( !modoLectura ) {
+            <button
+                (click)="confirmarCancelacion()"
+                type="button"
+                class="cfe-boton-secondary cfe-boton-lg"
+            >Cancelar</button>
+            <button
+                type="button"
+                (click)="guardarAsociacion()"
+                class="cfe-boton-primary cfe-boton-lg boton-w"
+                [disabled]="!asociacionCompletada"
+            >Guardar</button>
+        }
+        @if ( modoLectura ) {
+            <button
+                type="button"
+                (click)="cerrarVentana()"
+                class="cfe-boton-primary cfe-boton-lg boton-w"
+            >Aceptar</button>
+        }
+    </div>
+</div>

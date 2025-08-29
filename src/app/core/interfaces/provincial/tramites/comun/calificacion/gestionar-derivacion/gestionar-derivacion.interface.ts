@@ -1,0 +1,17 @@
+export interface GestionarDerivacion {
+    etapa?: string,
+    idCasoPadre?: string,
+    idDistritoFiscalOrigen?: number,
+    codigoDespachoOrigen?: string,
+    codigoEntidadOrigen?: string,
+    idDistritoFiscalDestino?: number,
+    idTipoEspecialidad?: number,
+    idEspecialidad?: string,
+    idUbigeo?: number,
+    codigoEntidad?: string,
+    codigoDespacho?: string,
+    numeroPorAcumular?: string,
+    idTipoDerivacion?: number,
+    idActoTramiteCaso?: string,
+    flagDirecto?: string,
+}

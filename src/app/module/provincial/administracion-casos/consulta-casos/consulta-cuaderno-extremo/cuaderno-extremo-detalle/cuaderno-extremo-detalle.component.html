@@ -1,0 +1,17 @@
+<div class="seleccion_actos_tramites__container">
+
+    <app-tabs-view
+      [tabs]="tabs"
+      (onChangeIndex)="changeIndex($event)"
+      [indexSeleccionado]="indexActivo"
+      [useRouter]="true"
+    ></app-tabs-view>
+
+    <p-tabView
+      class="cfe-tabs-view"
+      [(activeIndex)]="indexActivo"
+    >
+      <router-outlet />
+    </p-tabView>
+
+</div>

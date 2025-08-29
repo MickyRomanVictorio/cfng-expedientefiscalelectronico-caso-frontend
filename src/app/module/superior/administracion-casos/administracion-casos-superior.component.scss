@@ -1,0 +1,118 @@
+:host ::ng-deep .p-selectable-row {
+  &:hover {
+    cursor: default;
+  }
+
+  td {
+    vertical-align: top;
+    font-family: var(--mpfn-font-regular);
+  }
+
+  .remitente-container {
+    font-family: var(--mpfn-font-regular);
+    font-size: 0.95em;
+  }
+
+  .contact-item {
+    font-family: var(--mpfn-font-regular);
+    font-size: 0.95em;
+
+    span {
+      display: inline-block;
+      margin-right: 5px;
+      font-family: var(--mpfn-font-semi-bold);
+    }
+  }
+
+  .fecha-container {
+    font-family: var(--mpfn-font-regular);
+    font-size: 0.95em;
+  }
+
+  .btn-crimes-parts {
+    cursor: pointer;
+    background: var(--mpfn-white);
+    color: var(--mpfn-black);
+    text-align: center;
+    font-family: var(--mpfn-font-semi-bold);
+    font-size: 0.9em;
+    padding: 6px 5px;
+    border-radius: 5px;
+    transition: 300ms all ease;
+    border: 1.5px solid var(--mpfn-gray2);
+
+    &:hover {
+      background: var(--mpfn-gray3);
+      border-color: var(--mpfn-gray2);
+    }
+  }
+
+  .btn-clasification {
+    cursor: pointer;
+    width: 55px;
+    height: 55px;
+    background: var(--mpfn-gray7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    transition: 300ms all ease;
+    border: 1.5px solid var(--mpfn-gray6);
+
+    &:hover {
+      background: var(--mpfn-gray11);
+    }
+
+    img {
+      width: 25px;
+    }
+  }
+
+  .td-justify-center {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.cfe-btn-more-options {
+  padding: 6px 6px;
+  cursor: pointer;
+  margin-top: 8px;
+
+  .cfe-btn-more-options-content {
+    width: 6px;
+    display: flex;
+    flex-wrap: wrap;
+
+    span {
+      width: 6px;
+      height: 6px;
+      display: inline-block;
+      background-color: var(--mpfn-gray5);
+      border-radius: 50%;
+      margin-bottom: 4.5px;
+      transition: 300ms background-color ease;
+    }
+  }
+
+  &:hover {
+    .btn-more-options-content {
+      span {
+        background-color: var(--mpfn-primary);
+      }
+    }
+  }
+}
+
+:host ::ng-deep .cfe-menu-options {
+  position: absolute;
+
+  .p-menu {
+    &.p-menu-overlay {
+      min-width: 265px;
+      top: -30px !important;
+      right: 0 !important;
+      left: auto !important;
+    }
+  }
+}

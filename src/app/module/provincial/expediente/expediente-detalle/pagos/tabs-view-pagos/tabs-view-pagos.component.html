@@ -1,0 +1,41 @@
+<div class="tabs-wrapper">
+  @if (paginaActual > 0) {
+  <a (click)="seleccionarPaginaAnterior()" class="tab-element button-action">
+    <span class="icon-previous">
+      <fn-icon
+      class="label-info"
+      [ico]="iconUtil.obtenerIcono('iChevronLeft')"
+      height="1.6rem"
+      />
+    </span>
+  </a>
+  }
+  @for (tab of tabsVisibles(); let index = $index; track tab.id) {
+    <a (click)="seleccionarTab(tab.id!)" class="tab-element" [ngStyle]="{
+          'min-width': tab.atrasado ?'250px' : '180px',
+          'white-space': 'nowrap'
+        }" 
+        [class.tab-focused]="tab.id === indexSeleccionado"  
+        [class.atrasado]="tab.atrasado"
+        [class.atrasado-seleccionado]="tab.atrasado && tab.id === indexSeleccionado"
+         >
+        <span>{{ tab.titulo }}
+          @if(tab.atrasado){
+            <p class="p-badge p-badge-danger">Vencido</p>
+          }
+        </span>
+    </a>
+  }
+  @if (!esUltimaPagina()) {
+    <a (click)="seleccionarPaginaSiguiente()" class="tab-element button-action">
+      <span class="icon-next">
+        <fn-icon
+        class="label-info"
+        [ico]="iconUtil.obtenerIcono('iChevronRight')"
+        height="1.6rem"
+         />
+      </span>
+    </a>
+  }
+</div>
+

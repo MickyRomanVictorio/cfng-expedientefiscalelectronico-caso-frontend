@@ -1,0 +1,249 @@
+<div class="pl-1 md:pl-1 grid mb-0 md:mb-3">
+  <div class="col-12 md:col-6 flex align-items-center">
+    <fn-icon
+      [ico]="iconUtil.obtenerIcono('iFolderExclamation')"
+      height="1.8rem"
+    ></fn-icon>
+    <span class="family-poppin-bold">
+      Trámites que tengo pendientes para revisar ({{ totalRegistros }})
+    </span>
+  </div>
+  <div
+    class="col-12 md:col-6 flex flex-column sm:flex-row justify-content-end align-items-center pr-0"
+  >
+    <button
+      class="cfe-boton-secondary cfe-boton-m cfe-boton-icono-izquierda font-normal w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 flex justify-content-start"
+      (click)="exportarPdfExcel('PDF')"
+    >
+      <fn-icon
+        class="ml-1"
+        [ico]="iconUtil.obtenerIcono('iFileDownload')"
+        height="1.6rem"
+      ></fn-icon>
+      <span class="family-poppin-bold">Exportar PDF</span>
+    </button>
+    <button
+      class="cfe-boton-secondary cfe-boton-m cfe-boton-icono-izquierda font-normal w-full sm:w-auto flex justify-content-start"
+      (click)="exportarPdfExcel('Excel')"
+    >
+      <fn-icon
+        class="ml-1"
+        [ico]="iconUtil.obtenerIcono('iTable')"
+        height="1.6rem"
+      ></fn-icon>
+      <span class="family-poppin-bold">Exportar Excel</span>
+    </button>
+  </div>
+
+
+
+  <div class="flex flex-wrap flex-column sm:flex-row px-0 mt-1 pb-4">
+    @for (filtro of filtrosTramite; track $index) {
+    <p-button
+      [label]="filtro.descripcion"
+      (onClick)="filtrar(filtro.codigo); filtrosTramiteSelec = filtro.codigo"
+      styleClass="cfe-boton-outline cfe-boton-secondary p-button-rounded p-button-sm mt-2 mr-2 w-auto font-normal text-left {{
+        filtro.codigo === filtrosTramiteSelec ? 'active' : ''
+      }}"
+    >
+      @if (filtro.color!=='') {
+      <i
+        class="pi pi-circle-fill mr-2 opacity-60"
+        [style.color]="filtro.color"
+      ></i>
+      }
+    </p-button>
+    }
+  </div>
+
+  <div class="w-full">
+    <p-table
+      [value]="bandejaTramites"
+      [rows]="10"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [breakpoint]="'992px'"
+      responsiveLayout="stack"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th scope="" pSortableColumn="orden">
+            N°
+            <p-sortIcon field="orden"></p-sortIcon>
+          </th>
+          <th scope="" pSortableColumn="tramiteEnviadoPor.nombreCompleto">
+            Enviado por
+            <p-sortIcon field="tramiteEnviadoPor.nombreCompleto"></p-sortIcon>
+          </th>
+          <th scope="" pSortableColumn="numeroCaso">
+            Número de caso
+            <p-sortIcon field="numeroCaso"></p-sortIcon>
+          </th>
+          <th scope="" pSortableColumn="origen">
+            Acto Procesal
+            <p-sortIcon field="origen"></p-sortIcon>
+          </th>
+          <th scope="" pSortableColumn="noTramite">
+            Trámite
+            <p-sortIcon field="noTramite"></p-sortIcon>
+          </th>
+          <th scope="" style="width: 135px" pSortableColumn="feCreacion">
+            F. creación
+            <p-sortIcon field="feCreacion"></p-sortIcon>
+          </th>
+          <th scope="" style="width: 120px" pSortableColumn="feEnvio">
+            F. envío
+            <p-sortIcon field="feEnvio"></p-sortIcon>
+          </th>
+          <th scope="" style="width: 125px">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-tramite let-rowIndex="rowIndex">
+        <tr class="p-selectable-row">
+          <td class="table_td_content_start">
+            <span class="p-column-title">N°</span>
+              {{ (( query.page -1 ) * query.limit) + (rowIndex + 1) }}
+          </td>
+          <td class="table_td_content_start caso-container">
+            <span class="p-column-title">Enviado por</span>
+            <div>
+              <span>
+                {{ tramite.tramiteEnviadoPor?.nombreCompleto }} </span
+              ><br />
+              <span>
+                <strong>{{
+                  tramite.tramiteEnviadoPor?.dePerfil | capitalizar
+                }}</strong>
+              </span>
+            </div>
+          </td>
+          <td class="table_td_content_start caso-container">
+            <span class="p-column-title">Número de caso</span>
+            <div>
+              <div class="flex">
+                @if (filtroColorTipoCuaderno(tramite); as color) { @if
+                (color!=='') {
+                <i
+                  class="pi pi-circle-fill mr-2 opacity-60"
+                  [style.color]="color"
+                ></i>
+                } }
+                <div>
+                  <div
+                    [innerHTML]="stringUtil.formatearCodigoCaso(tramite.coCaso)"
+                    style="white-space: nowrap"
+                  ></div>
+                  <div class="font-bold pt-1">
+                    {{ tramite.noEtapa | capitalizar }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="table_td_content_start">
+            <span class="p-column-title">Acto Procesal</span>
+              {{ tramite.noActoProcesal | capitalizar }}
+          </td>
+          <td class="table_td_content_start remitente-container">
+            <span class="p-column-title">Trámite</span>
+                {{ tramite.noTramite | capitalizar}}
+          </td>
+          <td class="table_td_content_start fecha-container">
+            <span class="p-column-title">F. creación</span>
+            <div>
+              {{ tramite.feCreacion | date : "dd MMM yyyy h:mm a" : "es" }}
+            </div>
+          </td>
+          <td class="table_td_content_start fecha-container">
+            <span class="p-column-title">F. envío</span>
+            <div>
+              {{ tramite.feEnvio | date : "dd MMM yyyy h:mm a" : "es" }}
+            </div>
+          </td>
+          <td class="table_td_content_start">
+            <span class="p-column-title">Acciones</span>
+
+            <div
+              class="flex flex-wrap"
+              [style.min-width]="'132px'"
+            >
+            <button
+              class="cfe-boton-secondary cfe-boton-opcion"
+              (click)="previewTramite(tramite)"
+              pTooltip="Previsualizar trámite"
+              tooltipEvent="hover"
+              tooltipPosition="left"
+            >
+              <fn-icon
+                [ico]="iconUtil.obtenerIcono('iEye')"
+                height="1.6rem"
+              ></fn-icon>
+            </button>
+
+            <button
+              class="cfe-boton-secondary cfe-boton-opcion"
+              (click)="enviarTramite(tramite)"
+              pTooltip="Enviar trámite"
+              tooltipEvent="hover"
+              tooltipPosition="left"
+            >
+              <fn-icon
+                [ico]="iconUtil.obtenerIcono('iEnviar')"
+                height="1.6rem"
+              ></fn-icon>
+            </button>
+
+            <button
+              class="cfe-boton-secondary cfe-boton-opcion"
+              (click)="verHistorialTramite(tramite)"
+              pTooltip="Historial del trámite"
+              tooltipEvent="hover"
+              tooltipPosition="left"
+            >
+              <fn-icon
+                [ico]="iconUtil.obtenerIcono('iRestaurar')"
+                height="1.6rem"
+              ></fn-icon>
+            </button>
+
+            @if (mostrarEditar(tramite)) {
+              <opcion-editar-tramite
+                [idCaso]="tramite.idCaso"
+                [idEtapa]="tramite.idEtapa"
+                [flgConcluido]="tramite.flgConcluido"
+                [idActoTramiteCaso]="tramite.idActoTramiteCaso"
+                [idTipoIngresoTramite]="tramite.idTipoIngresaTramite"
+                [idEstadoTramite]="tramite.idEstadoTramite"
+                [idTipoCuaderno]="tramite.idTipoCuaderno"
+              />
+            }
+
+              @if (tramite.esMiTramite) {
+                <opcion-eliminar-tramite
+                  [idActoTramiteCaso]="tramite.idActoTramiteCaso"
+                  [idTipoIngresoTramite]="tramite.idTipoIngresoTramite"
+                  [idEstadoTramite]="tramite.idEstadoTramite"
+                  (actualizarBandeja)="actualizarBandeja()"
+                />
+              }
+
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="9" style="text-align: center">
+            En estos momentos, no hay trámites pendientes para revisar.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <app-paginator
+      [query]="query"
+      [items]="itemPaginado"
+      (paginate)="onPaginate($event)"
+      [resetPage]="resetPage"
+    ></app-paginator>
+  </div>
+</div>
+<p-toast></p-toast>

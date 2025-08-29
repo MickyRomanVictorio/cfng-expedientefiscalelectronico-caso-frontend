@@ -1,0 +1,72 @@
+<div>
+  <fn-icon class="absolute top-0 right-0 cursor-pointer mt-2 mr-2" [ico]="iconUtil.obtenerIcono('iClose')" height="2rem" (click)="dynamicDialogRef.close()"></fn-icon>
+  <!--Artificio para ubicar el focus-->
+  <input type="text" style="width: 0; height: 0; overflow: hidden; visibility: hidden;" class="absolute top-0 right-0">
+  
+  <div class="cfe-titulo-1 text-xl">
+    Ver fechas apelar el resultado del requerimiento
+  </div>
+  
+  <div class="flex align-content-center mt-2">
+    <div class="border-circle bg-red-500 w-1rem h-1rem mt-1"></div>
+    <div class="pl-2 text-600">Plazo para apelar está próximo a vencer</div>
+  </div>
+  
+  <div class="tableView pt-3">
+    <p-table
+            [loading]="false"
+            [paginator]="true"
+            [rows]="5"
+            [first]="0"
+            [value]="listaImputados"
+            [rowHover]="true"
+            responsiveLayout="stack"
+    >
+      
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th>Imputados</th>
+          <th>Fecha de notificaion</th>
+          <th>Conteo regresivo</th>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="body" let-imputado let-columns="columns">
+        <tr>
+          <td>
+            <div>
+              <div class="p-column-title font-bold block lg:hidden">Imputado</div>
+              <div class="flex align-content-center">
+                @if (imputado.plazoVerncer) {
+                  <div class="border-circle bg-red-500 w-1rem h-1rem mr-1 mt-1"></div>
+                }
+                {{imputado.imputado}}
+              </div>
+            </div>
+          </td>
+          <td>
+            <div>
+              <div class="p-column-title font-bold block lg:hidden">Fecha de notificacion</div>
+              {{imputado.fechaNotificacion}}
+            </div>
+          </td>
+          <td>
+            <div>
+              <div class="p-column-title font-bold block lg:hidden">Conteo regresivo</div>
+              <div class="flex align-content-center color-conteo-regresivo">
+                <div [innerHTML]="iconoRelojSvg" class="pr-2"></div>
+                <div>{{imputado.conteoRegersivo}}</div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    
+    </p-table>
+  </div>
+  
+  <div class="text-center pt-3">
+    <button type="button" class="cfe-boton-primary cfe-boton-m inline" (click)="dynamicDialogRef.close()">Cerrar</button>
+  </div>
+
+</div>

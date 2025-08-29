@@ -1,0 +1,230 @@
+@if(tramiteNoDespachadoMesa){
+    <mensaje-interoperabilidad-pj />
+    <!-- <p-checkbox
+        class="mb-2 mt-3"
+        [binary]="true"
+        inputId="motivo1"
+        label="Se resolvió en audiencia"
+        (onChange)="activarFormulario($event.checked)"
+    ></p-checkbox> -->
+} 
+@else{
+    <div class="mt-4"></div>
+
+    @if (!flagregistrar &&  !tramiteEstadoRecibido ) {
+        <mensaje-completar-informacion [titulo]="nombreTramite()" />
+    }
+
+    <form [formGroup]="formularioConsentido" class="mt-4 align-items-center">
+
+        <div class="grid w-full">
+            <div class="col-12 md:col-3 flex">
+                <div class="field mb-0 w-full">
+                    <label for="fechaNotificacion" class="p-label-bottom font-bold text-sm">Fecha de notificación</label>
+                    <p-calendar 
+                        [dateFormat]="'dd/mm/yy'"
+                        class="p-inputtext-md cfe-calendar h-40"
+                        [showIcon]="true" 
+                        dateMask
+                        icon="cfe-calendar-icon"
+                        placeholder="dd/mm/aaaa" 
+                        formControlName="fechaNotificacion"
+                        appendTo="body"
+                        dataType="string"
+                        [ngClass]="{'ng-invalid ng-dirty': formularioConsentido.get('fechaNotificacion')?.value === null }"
+                    >
+                    </p-calendar>
+                </div>
+                @if(formularioConsentido.get('fechaNotificacion')?.value){
+                <div class="flex align-items-center">
+                    <img
+                        [src]="icono('check-circle')"
+                        alt="validado"
+                        class="mt-4 ml-2 pr-2 h-2rem"
+                    />
+                </div>
+                }
+            </div>
+        </div>
+
+            <div class="grid mt-1 flex">
+                <div class="col-12 md:col-4">
+                <label for="sujetoProcesal" class="p-label-bottom font-bold text-sm">Sujetos procesales</label>
+                <p-dropdown
+                    id="sujetoProcesal"
+                    styleClass="p-inputtext-md custom-dropdown"
+                    [options]="imputados"
+                    optionValue="idSujetoCaso"
+                    optionLabel="nombre"
+                    emptyMessage="No se encontraron resultados"
+                    placeholder="Seleccione"
+                    formControlName="sujetoProcesal"
+                    appendTo="body"
+                    (onChange)="listarDelitos($event.value)"
+                ></p-dropdown>
+                <!-- <p-dropdown
+                    id="sujetoProcesal"
+                    styleClass="p-inputtext-md custom-dropdown"
+                    [options]="imputados"
+                    optionValue="idSujetoCaso"
+                    optionLabel="nombre"
+                    emptyMessage="No se encontraron resultados"
+                    placeholder="Seleccione"
+                    formControlName="sujetoProcesal"
+                    appendTo="body"
+                    (onChange)="listarDelitos($event.value)"
+                ></p-dropdown> -->
+</div>
+    <div class="col-12 md:col-4">
+                <label for="delito" class="p-label-bottom font-bold text-sm">Delitos</label>
+                <p-dropdown
+                    id="delito"
+                    styleClass="p-inputtext-md custom-dropdown"
+                    [options]="delitos"
+                    optionValue="idDelitoSujeto"
+                    optionLabel="delito"
+                    emptyMessage="No se encontraron resultados"
+                    placeholder="Seleccione"
+                    formControlName="delito"
+                    appendTo="body"
+                ></p-dropdown>
+                <!-- <p-dropdown
+                    id="delito"
+                    styleClass="p-inputtext-md custom-dropdown"
+                    [options]="delitos"
+                    optionValue="idDelitoSujeto"
+                    optionLabel="delito"
+                    emptyMessage="No se encontraron resultados"
+                    placeholder="Seleccione"
+                    formControlName="delito"
+                    appendTo="body"
+                ></p-dropdown> -->
+                </div>
+
+                <div class="col-12 md:col-4">
+                    <label class="p-label-bottom font-bold text-sm">&nbsp;</label>
+                    <button 
+                        [disabled]="!formularioValido()"
+                        class="cfe-boton-primary cfe-boton-m boton-w"
+                        (click)="eventoAgregarPenaConsentido()">
+                        Agregar
+                    </button>
+                </div>
+
+            </div>
+
+        <div class="grid w-full">
+            <div class="col-12 mt-1">
+                <p-table 
+                    class="table-penas"
+                    responsiveLayout="stack"
+                    [value]="listaPenasFiltrado"
+                    [tableStyle]="{ 'min-width': '50rem' }"
+                    [rowHover]="true"
+                    dataKey="nombre"
+                    [showCurrentPageReport]="true"
+                >
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th id="Sujetos Procesales">Sujetos procesales (Acusado)</th>
+                            <th id="Delito">Delito</th>
+                            <th id="Tipo de sentencia">Tipo de sentencia</th>
+                            <th id="Tipo Pena">Clase de pena</th>
+                            <th id="Pena">Tipo de pena</th>
+                            <th id="Pena">Reparacion Civil</th>
+                            @if(!flagregistrar){
+                            <th id="Acciones">Accion</th>
+                            }
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-pena let-rowIndex="rowIndex">
+                        <tr>
+                            <td>{{ pena.sujeto }}</td>
+                            <td>{{ pena.delito }}</td>
+                            <td>{{ pena.tipoSentencia }}</td>
+                            <td>{{ pena.pena }}</td>
+                            <td>{{ pena.tipoPena }}</td>
+                            <td>{{ pena.tieneReparacionCivil === 1 ? 'SI' : 'NO' }}</td>
+                            @if(!flagregistrar){
+                            <td>
+                                <div class="flex justify-content-center align-items-center">
+                                    
+                                        <fn-icon 
+                                            (click)="eliminarPenaConsentido(pena)"
+                                            [ico]="iconUtil.obtenerIcono('iTrash')"
+                                            height="2.5rem"
+                                            style="cursor: pointer;margin-left: -5px;"
+                                            onKeyPress=""
+                                        >
+                                        </fn-icon>
+                                    
+                                </div>
+                            </td>
+                            }
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="6">
+                                <div class="text-center">Ningún sujeto procesal agregado.</div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+
+                <app-paginator
+                    [query]="query"
+                    [items]="itemPaginado"
+                    [rowsPerPageOptions]="[]"
+                    (paginate)="eventoOnPaginate($event)"
+                ></app-paginator>
+            </div>
+        </div>
+
+        <div class="grid w-full">
+            <div class="col-12 flex">
+                <div class="field mb-0 w-full">
+                    <label for="txtObservacion" class="font-bold text-sm">
+                        Observaciones (opcional)
+                    </label>
+                    <textarea id="txtObservacion" pInputTextarea formControlName="observaciones" rows="5"
+                        maxlength="{{ longitudMaximaObservaciones }}" class="p-inputtext p-2 w-full">
+                                    </textarea>
+                    <contador-footer-textarea [textarea]="formularioConsentido.get('observaciones')"
+                        [size]="longitudMaximaObservaciones"></contador-footer-textarea>
+                </div>
+                @if(validarObservacion('observaciones')){
+                <div class="flex align-items-center">
+                    <img [src]="icono('check-circle')" alt="validado" class="ml-2 pr-2 h-2rem" />
+                </div>
+                }
+            </div>
+        </div>
+
+        <div class="field col-12 flex flex-column sm:flex-row justify-content-between mt-3">
+
+            @if ( !tramiteEstadoRecibido ) {
+                <a 
+                    class="cfe-enlace"
+                    (click)="abrirModalSeleccionarTramite()"
+                >
+                ¿Este documento no pertenece a este trámite?</a>
+            } @else {
+                <span></span>
+            }
+
+            @if ( !flagregistrar ) {
+      
+                <p-button
+                    [disabled]="!esFormularioValido"
+                    (onClick)="preguntarGuardadoAutoDeclaraConsentidoConclusionAnticipada()"
+                    styleClass="p-button-lg cfe-boton-primary text-white family-poppin-bold btn-adjust-filter w-column-full"
+                >
+                    <span class="ml-4 mr-4">Guardar</span>
+                </p-button>
+            }
+            
+        </div>
+
+    </form>
+}

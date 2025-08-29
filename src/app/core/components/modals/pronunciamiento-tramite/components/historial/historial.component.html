@@ -1,0 +1,120 @@
+<p-table #table [value]="datos()" dataKey="num">
+  <ng-template pTemplate='header'>
+    <tr>
+      <th scope="col">N°</th>
+      <th scope="col">Etapa</th>
+      <th scope="col">Acto Procesal</th>
+      <th scope="col">Trámite</th>
+      <th scope="col">Estado</th>
+      <th scope="col">Fecha de emisión</th>
+      <th scope="col">Acciones</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate='body' let-tramite let-i="rowIndex">
+    @let esTramiteIngresadoMesa = tramite.tipoIngresoTramite === idIngresoPorMesa;
+    <tr>
+      <td>{{ i + 1 }}</td>
+      <td>{{ tramite.descEtapa }}</td>
+      <td>{{ tramite.descActoProcesal }}</td>
+      <td>
+        {{ tramite.descTramite }}
+        @if (tramite.flgConActasAudiencia === '1') {
+          <div class="mt-2">
+            <span class="badge badge-gris cfe-bold">Acta de audiencia</span>
+          </div>
+        }
+      </td>
+      <td>{{ tramite.estadoTramite }}</td>
+      <td>
+        @if (!esTramiteIngresadoMesa) {
+          @if (tramite.nombreFirmante) {
+            <div class="mb-1">{{ capitalized(tramite.nombreFirmante) }}</div>
+          }
+          <div>{{ formatoFechaF(tramite.fechaEmision) }}</div>
+        } @else {
+          -
+        }
+      </td>
+      <td class="table_td_content_start">
+        <span class="p-column-title">Acciones</span>
+        <div class="flex flex-wrap">
+          <button
+            class="cfe-boton-secondary cfe-boton-opcion"
+            title="Ver sujetos procesales del trámite"
+            (click)="verSujetosProcesalesTramite(tramite)"
+          >
+            <img
+              [src]="icon('usuarios-search')"
+              alt="Ver sujetos procesales"
+            >
+          </button>
+          @if (!esTramiteIngresadoMesa) {
+            <button
+              class="cfe-boton-secondary cfe-boton-opcion"
+              (click)="verHistorialTramite(tramite)"
+              title="Ver historial del trámite"
+            >
+              <fn-icon
+                class="ml-1"
+                [ico]="iconUtil.obtenerIcono('iRestaurar')"
+                height="1.4rem"
+              ></fn-icon>
+            </button>
+          }
+          <button
+            class="cfe-boton-secondary cfe-boton-opcion"
+            title="Previsualizar trámite"
+            (click)="previsualizarTramite(tramite)"
+          >
+            <fn-icon
+              class="ml-1"
+              [ico]="iconUtil.obtenerIcono('iViewFile')"
+              height="1.6rem"
+            ></fn-icon>
+          </button>
+          @if (tramite.flEditar === '1') {
+            <button
+              class="cfe-boton-secondary cfe-boton-opcion"
+              (click)="editarTramite(tramite)"
+              title="Editar trámite"
+            >
+              <fn-icon
+                class="ml-1"
+                [ico]="iconUtil.obtenerIcono('iEdit')"
+                height="1.6rem"
+              ></fn-icon>
+            </button>
+          }
+          @if (tramite.flEliminar === '1') {
+            <button
+              pButton
+              class="p-button-danger cfe-boton-opcion"
+              (click)="eliminarTramite(tramite)"
+              title="Eliminar trámite"
+            >
+              <fn-icon
+                class="ml-1"
+                [ico]="iconUtil.obtenerIcono('iTrash')"
+                height="2.2rem"
+              ></fn-icon>
+            </button>
+          }
+          @if (tramite.flgConActasAudiencia === '1') {
+            <button
+              class="cfe-boton-secondary cfe-boton-opcion"
+              title="Ver documentos adjuntos"
+              (click)="verDocumentosAdjuntos(tramite)"
+            >
+              <fn-icon
+                class="ml-1"
+                [ico]="iconUtil.obtenerIcono('iAttach')"
+                height="1.6rem"
+              ></fn-icon>
+            </button>
+          }
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+<hr>

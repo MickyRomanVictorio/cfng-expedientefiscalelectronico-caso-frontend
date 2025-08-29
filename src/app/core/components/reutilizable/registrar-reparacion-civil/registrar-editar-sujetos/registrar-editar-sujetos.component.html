@@ -1,0 +1,396 @@
+@if((valid(datosEditarReparacionCivil?.idReparacionCivil) && editar) ||
+(!editar)){
+<div class="cfe-container-registro" [ngClass]="{ 'contenedor-crear': !editar }">
+  @if(visibleMensajeError){
+  <div class="w-full p-1">
+    <mensaje-completar-campos
+      (cerrado)="visibleMensajeError = false"
+      [titulo]="txtMensajeError"
+      [closable]="true"
+    />
+  </div>
+  } @if(salidaAlterna && !tipoAcuerdoActa){
+  <div class="col">
+    <div class="grid">
+      <div class="col-12 md:col-12">
+        <label for="salidaAlternaInput" class="p-label-bottom font-bold text-sm"
+          >Salida alterna</label
+        >
+        <p-dropdown
+          (onChange)="calcularEstadoBoton()"
+          [formControl]="salidaAlternaInput"
+          [options]="listaSalidaAlterna"
+          styleClass="p-inputtext-md"
+          optionValue="id"
+          optionLabel="nombre"
+          emptyMessage="Sin resultados"
+          placeholder="Seleccione la salida alterna"
+          emptyFilterMessage="No se encontraron resultados"
+        ></p-dropdown>
+      </div>
+    </div>
+  </div>
+  } @if(!editar){
+  <div class="col">
+    <div class="grid">
+      <div class="col-12 md:col-4">
+        <h4 class="cfe-titulo-3">Tipo de reparación civil</h4>
+      </div>
+      <div class="col-12 md:col-8">
+        <div class="field mb-0">
+          <div class="text-left pt-1">
+            <p-radioButton
+              class="mr-2"
+              [formControl]="tipoReparacionCivil"
+              [value]="REPARACION_CIVIL.SOLIDARIA"
+              inputId="solidariaId"
+              name="tipoReparacionCivil"
+            ></p-radioButton>
+            <label class="mr-4" for="solidariaId">Solidaria</label>
+            <p-radioButton
+              class="mr-2"
+              [formControl]="tipoReparacionCivil"
+              [value]="REPARACION_CIVIL.MANCOMUNADA"
+              inputId="mancomunadaId"
+              name="tipoReparacionCivil"
+            ></p-radioButton>
+            <label for="mancomunadaId">Mancomunada</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+  <div class="mt-1">
+    <div *ngIf="tipoReparacionCivil.value == REPARACION_CIVIL.SOLIDARIA">
+      <h4 class="cfe-titulo-3 ml-2">
+        {{
+          editar
+            ? "Deudor(es)"
+            : "Seleccione el(los) deudor(es) junto con el(los) delito(s):"
+        }}
+      </h4>
+      <div class="p-col-12 mt-3">
+        <p-table
+          class="table-deudores-agraviados"
+          [value]="listaDeudores"
+          [rowHover]="true"
+          responsiveLayout="stack"
+          [paginator]="true"
+          [rows]="5"
+          [showCurrentPageReport]="true"
+          [tableStyle]="{ width: '100%' }"
+          currentPageReportTemplate="{first} de {last} registros"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th id class="w-col-20">
+                <div style="margin-left: 7px">
+                  <p-checkbox
+                    [disabled]="listaDeudores.length == 0 || modoLectura"
+                    [(ngModel)]="checkboxPrincipalDeudores"
+                    (onChange)="seleccionandoTodosDeudores($event.checked)"
+                    [binary]="true"
+                  ></p-checkbox>
+                </div>
+              </th>
+              <th id class="text-center">Nombres y apellidos / Razón social</th>
+              <th id class="text-center">Delito(s)</th>
+              @if(tipoSentencia){
+              <th id class="text-center">Tipo de sentencia</th>
+              }
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-deudor>
+            <tr class="p-selectable-row">
+              <td class="table_td_content_start full-middle">
+                <div class="col-offset-3">
+                  <p-checkbox
+                    [disabled]="modoLectura"
+                    (onChange)="seleccionarDeudor($event.checked, deudor)"
+                    [(ngModel)]="deudor.seleccionado"
+                    [binary]="true"
+                  ></p-checkbox>
+                </div>
+              </td>
+              <td class="table_td_content_start full-middle">
+                {{ deudor.nombreSujeto }}
+              </td>
+              <td [attr.colspan]="tipoSentencia ? 2 : 1">
+                <div
+                  *ngFor="let delito of deudor.lstDelitosSujeto"
+                  class="delito-sentencia-row"
+                  [ngClass]="{
+                    'delito-sentencia-grid-row': tipoSentencia,
+                    'delito-sentencia-row-bottom':
+                      deudor.lstDelitosSujeto.length > 1
+                  }"
+                >
+                  <div class="delito-checkbox">
+                    <p-checkbox
+                      [disabled]="modoLectura"
+                      (onChange)="seleccionandoDelito($event.checked, deudor, delito)"
+                      [(ngModel)]="delito.seleccionado"
+                      [binary]="true"
+                    ></p-checkbox>
+                    <label for="" class="delito-label">{{
+                      delito.delito
+                    }}</label>
+                  </div>
+                  @if(tipoSentencia){
+                  <div class="delito-dropdown">
+                    <p-dropdown
+                      [(ngModel)]="delito.idTipoSentencia"
+                      appendTo="body"
+                      [options]="listaSentencias"
+                      styleClass="p-inputtext-sm dropdown-sentencia"
+                      optionValue="id"
+                      optionLabel="noDescripcion"
+                      emptyMessage="Sin resultados"
+                      placeholder="Seleccione"
+                      [disabled]="!delito.seleccionado || modoLectura"
+                      emptyFilterMessage="No se encontraron resultados"
+                      (onChange)="verificarSeleccionSolidariaGeneral()"
+                    ></p-dropdown>
+                  </div>
+                  }
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="4" style="text-align: center">
+                No se encontraron registros
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+    <div *ngIf="tipoReparacionCivil.value == REPARACION_CIVIL.MANCOMUNADA">
+      <h4 class="cfe-titulo-3 ml-2">
+        {{
+          editar
+            ? "Deudor"
+            : "Seleccione al deudor junto con el(los) delito(s):"
+        }}
+      </h4>
+      <div class="inputs-mancomunados">
+        <div class="col">
+          @if(editar && tipoSentencia){
+          <div class="grid">
+            <div class="col-12 md:col-12 mb-3">
+              <label for="" class="p-label-bottom font-bold text-sm"
+                >Sujeto procesal</label
+              >
+              <p-dropdown
+                [options]="listaSujetosMancomunados"
+                [formControl]="sujetoMancomunado"
+                styleClass="p-inputtext-md"
+                optionValue="idSujetoCaso"
+                optionLabel="nombreSujeto"
+                (onChange)="
+                  listarDelitosMancomunados($event.value); calcularEstadoBoton()
+                "
+                emptyMessage="Sin resultados"
+                placeholder="Seleccione el sujeto"
+                emptyFilterMessage="No se encontraron resultados"
+              ></p-dropdown>
+            </div>
+          </div>
+          }
+
+          <div class="grid inputs-mancomunados">
+            @if((!tipoSentencia && editar) || !editar){
+            <div
+              [ngClass]="tipoSentencia ? 'col-12 md:col-4' : 'col-12 md:col-6'"
+              class="pr-3"
+            >
+              <label for="" class="p-label-bottom font-bold text-sm"
+                >Sujeto procesal</label
+              >
+              <p-dropdown
+                [options]="listaSujetosMancomunados"
+                [formControl]="sujetoMancomunado"
+                styleClass="p-inputtext-md"
+                optionValue="idSujetoCaso"
+                optionLabel="nombreSujeto"
+                (onChange)="
+                  listarDelitosMancomunados($event.value); calcularEstadoBoton()
+                "
+                emptyMessage="Sin resultados"
+                placeholder="Seleccione el sujeto"
+                emptyFilterMessage="No se encontraron resultados"
+              ></p-dropdown>
+            </div>
+            }
+            <div
+              [ngClass]="
+                !editar && tipoSentencia
+                  ? 'col-12 md:col-8'
+                  : editar && tipoSentencia
+                  ? 'col-12 md:col-12'
+                  : 'col-12 md:col-6'
+              "
+            >
+              <div class="w-full label-titulo">
+                <label for="" class="p-label-bottom font-bold text-sm"
+                  >Delito(s)</label
+                >
+                @if(tipoSentencia && listaDelitosMancomunados.length > 0){
+                <label
+                  for=""
+                  style="padding-left: 60px"
+                  class="p-label-bottom font-bold text-sm"
+                  >Tipo de sentencia</label
+                >
+                }
+              </div>
+              @if(listaDelitosMancomunados.length == 0){
+              <div class="w-full text-center">
+                <p>No se tiene ningún delito a mostrar</p>
+              </div>
+              }
+              <div
+                *ngFor="let delito of listaDelitosMancomunados"
+                class="delito-sentencia-row mb-3"
+                [ngClass]="{
+                  'delito-sentencia-grid-row': tipoSentencia,
+                  'delito-sentencia-row-bottom':
+                    listaDelitosMancomunados.length > 1
+                }"
+              >
+                <div class="delito-checkbox pl-2 pr-3">
+                  <p-checkbox
+                    (onChange)="validarDelitoMancomunado($event.checked,delito)"
+                    [disabled]="modoLectura"
+                    [(ngModel)]="delito.seleccionado"
+                    [binary]="true"
+                  ></p-checkbox>
+                  <label for="" class="delito-label">{{ delito.delito }}</label>
+                </div>
+                @if(tipoSentencia){
+                <div class="delito-dropdown">
+                  <p-dropdown
+                    [(ngModel)]="delito.idTipoSentencia"
+                    appendTo="body"
+                    (onChange)="calcularEstadoBoton()"
+                    [options]="listaSentencias"
+                    styleClass="p-inputtext-sm dropdown-sentencia"
+                    optionValue="id"
+                    optionLabel="noDescripcion"
+                    emptyMessage="Sin resultados"
+                    placeholder="Seleccione"
+                    [disabled]="!delito.seleccionado || modoLectura"
+                    emptyFilterMessage="No se encontraron resultados"
+                  ></p-dropdown>
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <h4 class="cfe-titulo-3 ml-2">
+      {{
+        editar
+          ? "Acreedor(es)"
+          : "Seleccione el(los) acreedor(es) a los cuales se les pagará la reparación civil"
+      }}
+    </h4>
+    <div class="p-col-12 mt-3">
+      <p-table
+        class="table-deudores-agraviados"
+        [value]="listaAgraviados"
+        [rowHover]="true"
+        responsiveLayout="stack"
+        [paginator]="true"
+        [rows]="5"
+        [showCurrentPageReport]="true"
+        [tableStyle]="{ width: '100%' }"
+        currentPageReportTemplate="{first} de {last} registros"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th scope class="w-col-20">
+              <div style="margin-left: 7px">
+                <p-checkbox
+                  [disabled]="listaAgraviados.length == 0 || modoLectura"
+                  [(ngModel)]="checkboxPrincipalAcreedores"
+                  (onChange)="seleccionandoTodosAcreedores($event.checked)"
+                  [binary]="true"
+                ></p-checkbox>
+              </div>
+            </th>
+            <th scope class="text-center">Tipo de sujeto procesal</th>
+            <th scope class="text-center">Número de documento</th>
+            <th scope class="text-center">Nombre y apellidos/ Razón social</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-agraviado>
+          <tr class="p-selectable-row">
+            <td class="table_td_content_start">
+              <div class="col-offset-3">
+                <p-checkbox
+                  [disabled]="modoLectura"
+                  (onChange)="verificarSeleccionAcreedores()"
+                  [(ngModel)]="agraviado.seleccionado"
+                  [binary]="true"
+                ></p-checkbox>
+              </div>
+            </td>
+            <td class="text-center">{{ agraviado.nomTipoParteSujeto }}</td>
+            <td class="table_td_content_start text-center">
+              <div>
+                <div class="cfe-row-top mb-1" style="margin-top: -5px">
+                  {{ agraviado.numDocumentoIdentidad }}
+                </div>
+                <div class="mb-1">
+                  <span
+                    class="badge"
+                    [ngClass]="
+                      'badge-' +
+                      transformarEstiloDocumento(agraviado.nomTipoDocIdentidad)
+                    "
+                    >{{ agraviado.nomTipoDocIdentidad }}</span
+                  >
+                </div>
+              </div>
+            </td>
+            <td class="text-center">{{ agraviado.nombreSujeto }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="4" style="text-align: center">
+              No se encontraron registros
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+  <div class="flex justify-content-end align-items-center gap-3 mt-4">
+    @if(!modoLectura && !editar){
+    <button
+      [disabled]="guardarDesactivado"
+      (click)="guardar()"
+      type="button"
+      class="cfe-boton-primary cfe-boton-lg ml-2 boton-w"
+    >
+      Guardar
+    </button>
+    }
+  </div>
+</div>
+} @else {
+<div class="datos-reparacion-vacio">
+  <div class="flex justify-content-center align-items-center">
+    <strong>Aún no ha agregado y/o seleccionado una reparación civil</strong>
+  </div>
+</div>
+}

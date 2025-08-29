@@ -1,0 +1,216 @@
+@if ( servicioActivo ) {
+  <mensaje-interoperabilidad-pj />
+} 
+@else { 
+  <div class="mt-4"></div>
+
+  @if(!flagregistrar && !tramiteEstadoRecibido){
+    <mensaje-completar-informacion titulo="{{ obtenerTitulo() }}" />
+  }
+
+  <form [formGroup]="formRegistro" class="mt-4 align-items-center">
+    
+    <div class="grid w-full">
+      <div class="col-12 mt-2 gap-3 flex flex-wrap">
+          <label class="text-sm"><b>Resultado:</b></label>
+          @for (item of listaSentencias; track $index) {
+          <div class="field-checkbox">
+            <p-radioButton
+              name="tipoSentencia"
+              [value]="item.idCatalogo"
+              inputId="or{{ false }}{{ item.idCatalogo }}"
+              formControlName="tipoSentencia"
+            ></p-radioButton>
+            <label for="ingredient1" class="ml-2">
+              {{ item.descripcion }}
+            </label>
+          </div>
+          }
+      </div>
+    </div>
+
+    <div class="grid w-full">
+      <div class="col-12 md:col-3 flex">
+        <div class="field mb-0 w-full">
+          <label for="fechaNotificacion" class="p-label-bottom font-bold text-sm">Fecha de notificación</label>
+          <p-calendar
+            [dateFormat]="'dd/mm/yy'"
+            class="p-inputtext-md cfe-calendar h-40"
+            [showIcon]="true" 
+            dateMask
+            icon="cfe-calendar-icon"
+            placeholder="dd/mm/aaaa" 
+            formControlName="fechaNotificacion"
+            appendTo="body"
+            dataType="string"
+            [ngClass]="{'ng-invalid ng-dirty': formRegistro.get('fechaNotificacion')?.value === null }"
+          ></p-calendar>
+        </div>
+        @if(formRegistro.get('fechaNotificacion')?.value){
+        <div class="flex align-items-center">
+          <img 
+            [src]="icono('check-circle')" 
+            alt="validado" 
+            class="mt-4 ml-2 pr-2 h-2rem" />
+        </div>
+        }
+      </div>
+
+      <div class="col-12 md:col-6 flex align-items-center">
+        <div class="botones-grid">
+          <div>
+            <label>&nbsp;</label>
+          </div>
+          <div class="acciones">
+            <div class="accion">
+              <button [disabled]="ocultarBotonGestionVideos"
+                class="cfe-boton-secondary cfe-boton-lg w-full family-poppin-bold btn-adjust-filter">
+                <span class="ml-5 mr-5">Videos de audiencia</span>
+              </button>
+              @if(!ocultarBotonGestionVideos){
+              <img [src]="icono('check-circle')" alt="validado" class="pr-2 h-2rem" />
+              }
+            </div>
+            <div class="accion">
+              <button (click)="abrirModalVideosAudiencia()"
+                class="cfe-boton-secondary cfe-boton-lg w-full family-poppin-bold btn-adjust-filter">
+                <span class="ml-5 mr-5">Audios de audiencia</span>
+              </button>
+              @if(audiosAudienciaCorrectos){
+              <img [src]="icono('check-circle')" alt="validado" class="pr-2 h-2rem" />
+              }
+            </div>
+          </div>
+          </div>
+      </div>
+  </div>
+
+    @if(!flagregistrar){
+     <div class="grid w-full">
+      <div class="col-12 md:col-3 flex">
+        <div class="field mb-0 w-full">
+          <label for="sujetoProcesal" class="font-bold text-sm">Sujeto procesal</label>
+          <p-dropdown
+            id="sujetoProcesal"
+            styleClass="p-inputtext-md custom-dropdown"
+            [options]="imputados"
+            optionValue="idSujetoCaso"
+            optionLabel="nombre"
+            emptyMessage="No se encontraron resultados"
+            placeholder="Seleccione"
+            formControlName="sujetoProcesal"
+            appendTo="body"
+          >
+          </p-dropdown>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid w-full">
+      <div class="col-12 flex justify-content-center">
+        <button
+          [disabled]="!formRegistro.get('sujetoProcesal')?.value"
+          class="flex align-items-center justify-content-center cfe-boton-primary cfe-boton-m boton-w"
+          (click)="eventoAgregarSujetoProcesal()">
+          Agregar
+        </button>
+      </div>
+    </div>
+    }
+
+    <p-table
+      styleClass="p-datatable-sm"
+      responsiveLayout="stack"
+      [value]="listaImputadosFiltrado"
+      [tableStyle]="{ 'min-width': '50rem' }"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th
+            scope="col"
+            class="col-w-2 text-sm"
+            [ngClass]="flagregistrar ? 'text-center' : 'text-center'"
+          >
+            Sujetos procesales
+          </th>
+          @if(!flagregistrar){
+          <th scope="col" class="col-w-2 text-center text-sm">Acciones</th>
+          }
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-item>
+        <tr>
+          <td [ngClass]="flagregistrar ? 'text-center' : 'text-center'">
+            {{ item.nombre }}
+          </td>
+          @if(!flagregistrar){
+          <td class="text-center gap-3">
+            <i
+              class="pi pi-trash cursor-pointer"
+              (click)="eventoEliminarImputado(item)"
+            ></i>
+          </td>
+          }
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="3" style="text-align: center">
+            Ningun sujeto procesal agregado
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <app-paginator
+      [query]="query"
+      [items]="itemPaginado"
+      [rowsPerPageOptions]="[]"
+      (paginate)="eventoOnPaginate($event)"
+    ></app-paginator>
+
+    <div class="grid w-full">
+      <div class="col-12 flex">
+        <div class="field mb-0 w-full">
+          <label for="txtObservacion" class="font-bold text-sm">
+            Observaciónes (Opcional)
+          </label>
+          <textarea id="txtObservacion" pInputTextarea formControlName="txtObservacion" rows="5"
+                      maxlength="{{ longitudMaximaObservaciones }}" class="p-inputtext p-2 w-full">
+                          </textarea>
+          <small error *ngIf="errorMsg('txtObservacion')" class="p-error block">
+            {{ errorMsg("txtObservacion") }}
+          </small>
+          <contador-footer-textarea [textarea]="formRegistro.get('txtObservacion')"
+                      [size]="longitudMaximaObservaciones"></contador-footer-textarea>
+        </div>
+        @if(validarObservacion('txtObservacion')){
+        <div class="flex align-items-center">
+          <img [src]="icono('check-circle')" alt="validado" class="ml-2 pr-2 h-2rem" />
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="field col-12 flex flex-column sm:flex-row justify-content-between mt-3">
+      @if ( !tramiteEstadoRecibido ) {
+      <a class="cfe-enlace" 
+        (click)="modalActualizarActoYTramite()">
+        ¿Este documento no pertenece a este trámite?</a
+      >
+      } @else {
+      <span></span>
+      } 
+      
+      @if(!flagregistrar){
+      <button
+        class="cfe-boton-primary cfe-boton-m mr-2 boton-w"
+        [disabled]="!esFormValid"
+        (click)="eventoGuardar()"
+      >
+        Guardar
+      </button>
+      }
+    </div>
+  </form>
+}

@@ -1,0 +1,20 @@
+<div class="w-full">
+    <div class="col-12 md:col-4 relative">
+        @let textoBoton = modoLectura() ? 'Ver sujetos y delitos' : 'Sujetos y delitos';
+        <button
+            class="cfe-boton-secondary cfe-boton-lg w-full"
+            (click)="abrirModalAsociarSujetosDelitos()"
+        >
+            <span class="family-poppin-bold">{{ textoBoton }}</span>
+        </button>
+        @if ( existenRegistrosDeAsociacion ) {
+            <div class="icono-guardado">
+                <img
+                    [src]="iconAsset.obtenerRutaIcono('check-circle')"
+                    alt="guardado"
+                    class="pr-2 h-2rem"
+                >
+            </div>
+        }
+    </div>
+</div>

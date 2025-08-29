@@ -1,0 +1,239 @@
+<div class="">
+  <div class="cfe-encabezado-modal">
+    <h3
+      [innerHTML]="tituloModal"
+      class="cfe-encabezado-titulo cfe-subtitulo-3 cfe-semi-bold">
+    </h3>
+    <fn-icon
+      (click)="cancelar()"
+      [ico]="obtenerIcono('iClose')"
+      class="cfe-encabezado-cerrar"
+      height="2rem">
+    </fn-icon>
+  </div>
+  <h6 class="cfe-encabezado-titulo cfe-subtitulo-3 cfe-semi-bold mt-4"  [innerHTML]="tituloCaso"></h6>
+
+  @if(!esSujeto){
+    <h6 class="mt-3 mb-0">Seleccione y/o agregue los sujetos procesales a los que se les ha concedido o denegado el recurso de apelación. Si alguno de ellos no apeló debera seleccionar el consentido.</h6>
+  }
+  @if(esSujeto){
+    <div class="flex align-content-center mt-3">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="40" fill="#3cc85a"/>
+      </svg>
+      <span class="ml-1">Recurso de la apelación presentada por el fiscal provincial ({{nuApelacionFiscal}})</span>
+    </div>
+  }
+  @if (!esSujeto) {
+    <form [formGroup]="formApelacionFiscalia">
+      <div class="grid mt-3">
+        <div class="formgrid grid col-12 lg:col-4">
+          <div class="field col-12">
+            <label for="apelacion" class="font-bold">Resultado de la apelación presentada por el Fiscal</label>
+            <p-dropdown
+              (onChange)="onChangeResultadoApelacionFiscalia()"
+              [options]="listaApelacionFiscalia"
+              formControlName="resultadoApelacion"
+              styleClass="p-inputtext-lg"
+              placeholder="Seleccione"
+              appendTo="body"
+              optionLabel="nombre"
+              optionValue="id">
+            </p-dropdown>
+          </div>
+        </div>
+      </div>
+    </form>
+    <form [formGroup]="formApelacionProceso">
+      <span class="font-bold">Resultado de la apelación presentada por las partes</span>
+      <div class="grid mt-3">
+        <div class="formgrid grid col-12 lg:col-4">
+          <div class="field col-12">
+            <label for="quienApelo" class="">¿Quién Apeló?</label>
+            <p-dropdown
+              formControlName="sujetoApelo"
+              [options]="listaSujetosApelantes"
+              (onChange)="seleccionarApelante()"
+              [filter]="true"
+              styleClass="p-inputtext-lg"
+              appendTo="body"
+              placeholder="Seleccione un sujeto"
+              optionLabel="nombreSujeto"
+              optionValue="idSujetoCaso"
+              emptyMessage="Sin resultados"
+              emptyFilterMessage="No se encontraron resultados">
+            </p-dropdown>
+          </div>
+        </div>
+        <div class="formgrid grid col-12 lg:col-4">
+          <div class="field col-12">
+            <label for="resultadoApelacion" class="">Resultado de la apelación</label>
+            <p-dropdown
+              formControlName="resultadoApelacion"
+              [options]="listaResultadoApelaciones"
+              [filter]="true"
+              styleClass="p-inputtext-lg"
+              appendTo="body"
+              placeholder="Pendiente de respuesta"
+              optionLabel="nombre"
+              optionValue="id"
+              emptyMessage="Sin resultados"
+              emptyFilterMessage="No se encontraron resultados">
+            </p-dropdown>
+          </div>
+        </div>
+        <div class="formgrid grid col-12 lg:col-4 flex justify-content-end align-items-center">
+          @if(!modoLectura) {
+            <button (click)="guardarApelacionProcesoInmediato()"
+                    [disabled]="apelacionInvalida"
+                    type="button"
+                    class="cfe-boton-primary cfe-boton-m">
+              Agregar
+            </button>
+          }
+        </div>
+      </div>
+    </form>
+  }
+
+  <div class="cfe-tabla-white mt-3">
+    <p-table
+      class="cfe-table-primary"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [sortField]="'nombre'"
+      [sortOrder]="1"
+      [styleClass]="'p-datatable-sm'"
+      [value]="sujetosProcesalesFiltrados"
+      responsiveLayout="stack">
+      <ng-template let-columns pTemplate="header">
+        <tr>
+          <th scope="col" class="columna-nro" pSortableColumn="nro">N°</th>
+          <th scope="col" class="columna-nombre" pSortableColumn="nombre">Nombres y apellidos /<br/>Razón social</th>
+          <th scope="col" class="columna-tipo" pSortableColumn="tipo">Tipo de sujeto<br/>procesal</th>
+          <th scope="col" class="columna-resultado-primera-instancia" pSortableColumn="resultado-primera-instancia">Resultado<br/>(1era instancia)</th>
+          <th scope="col" class="columna-resultado-apelacion" pSortableColumn="resultado-apelacion">Resultado de la <br/>apelación</th>
+          @if (!esSujeto) {
+            <th scope="col" class="columna-quitar">Quitar</th>
+          }
+        </tr>
+      </ng-template>
+      <ng-template let-i="rowIndex" let-item pTemplate="body">
+        <tr class="p-selectable-row">
+          <td style="text-align: center; vertical-align: middle;">
+            <span class="p-column-title font-semibold">N°</span>
+            {{ i + 1 }}
+          </td>
+          <td style="text-align: left; vertical-align: middle;">
+            <span class="p-column-title font-semibold">Nombres y apellidos / Razón social</span>
+            @if(item.flApelacionFiscal === '1'){
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="40" fill="#3cc85a"/>
+              </svg>
+            }
+            {{ item.nombreCompleto | nombrePropio }}
+          </td>
+          <td style="text-align: left; vertical-align: middle;">
+            <span class="p-column-title font-semibold">Tipo de sujeto procesal</span>
+            {{ item.noTipoParteSujeto }}
+          </td>
+          <td style="text-align: left; vertical-align: middle;">
+            <span class="p-column-title font-semibold">Resultado (1era instancia)</span>
+            @if (!esSujeto) {
+              {{ descripcionResultado | capitalizar }}
+            } @else {
+              {{ item.noTipoRespuestaInstancia1 | capitalizar }}
+            }
+          </td>
+          <td style="text-align: center; vertical-align: middle;">
+            @if(esSujeto && item.idTipoRespuestaInstancia1>0) {
+                <span class="p-column-title font-semibold">Resultado de la apelación</span>
+                <p-dropdown styleClass="py-1 p-inputtext-lg" placeholder="Seleccione..."
+                            [options]="listaRespuesta"
+                            optionLabel="nombre"
+                            optionValue="id"
+                            appendTo="body"
+                            (onChange)="onSelectionChange(item, $event)"
+                            [(ngModel)]="item.idTipoRespuestaApelacion"
+                            [showClear]="true"
+                            [disabled]="soloLectura || (item.idTipoRespuestaApelacion !== 0 && item.idActoTramiteCasoGuardado !== null && item.idActoTramiteCasoGuardado !== idActoTramiteCaso)"
+                >
+                  <ng-template let-respuesta pTemplate="item">
+                    <div>{{ respuesta.nombre }}</div>
+                  </ng-template>
+                </p-dropdown>
+            }
+            @if(!esSujeto){
+              <span class="p-column-title font-semibold">Resultado de la apelación</span>
+              <p-dropdown styleClass="py-1 p-inputtext-lg" placeholder="Seleccione..."
+                          [options]="listaRespuesta"
+                          optionLabel="nombre"
+                          optionValue="id"
+                          appendTo="body"
+                          (onChange)="onSelectionChange(item, $event)"
+                          [(ngModel)]="item.idTipoRespuestaPE"
+                          [showClear]="true"
+                          [disabled]="apeloAudiencia(item.idActoTramiteCasoResultado) || soloLectura || (item.idTipoRespuestaApelacion !== 0 && item.idActoTramiteCasoGuardado !== null && item.idActoTramiteCasoGuardado !== idActoTramiteCaso)"
+              >
+                <ng-template let-respuesta pTemplate="item">
+                  <div>{{ respuesta.nombre }}</div>
+                </ng-template>
+              </p-dropdown>
+              @if (apeloAudiencia(item.idActoTramiteCasoResultado)) {
+                <div class="flex justify-content-start">
+                  <span class="pt-2 text-red-500 font-semibold text-sm">Apeló en audiencia</span>
+                </div>
+              }
+            }
+          </td>
+          @if (!esSujeto) {
+            <td>
+              <fn-icon (click)="confirmarEliminarResultado(item.idApelacionResultado, item.idActoTramiteCasoResultado)"
+                       [ico]="obtenerIcono('iTrash')"
+                       [class]="{'opacity-40': apeloAudiencia(item.idActoTramiteCasoResultado) || soloLectura}"
+                       height="2.4rem" style="cursor: pointer">
+              </fn-icon>
+            </td>
+          }
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8">
+            @if(esSujeto) {
+              No se encontró información de sujetos procesales.
+            } @else {
+              En estos momentos, no hay resultado de la calificación de la apelación
+            }
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <app-paginator
+      (paginate)="onPaginate($event)"
+      [items]="itemPaginado"
+      [query]="query"
+      [rowsPerPageOptions]="[]">
+    </app-paginator>
+  </div>
+</div>
+@if (sujetosProcesalesFiltrados.length > 0) {
+  <div class="col-12">
+    <p-messages
+      [(value)]="msgs1"
+      [enableService]="false"
+      [closable]="false"
+      [escape]="false">
+    </p-messages>
+  </div>
+}
+<div class="col-12 flex align-items-center justify-content-center mt-2 mb-2">
+  <button class="cfe-boton-opcion cfe-boton-secondary cfe-boton-lg font-semibold with-button"
+          (click)="cancelar()">
+    Cancelar
+  </button>
+  <button class="ml-3 cfe-boton-primary cfe-boton-lg font-semibold with-button"
+          [disabled]="!mostrarBtnAceptar || modoLectura"
+          (click)="aceptar()">
+    Aceptar
+  </button>
+</div>

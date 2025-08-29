@@ -1,0 +1,39 @@
+textarea {
+    resize: none;
+}
+
+.botonera {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.tr-active {
+    background: #e9a6314a !important;
+    font-weight: bold;
+}
+
+.p-datatable .p-datatable-tbody>.tr-active>td:first-child {
+    border-left: 10px solid #e89a41 !important;
+}
+
+.icono-mensaje {
+    width: 20px !important;
+}
+
+.efe-paginator,
+.efe-paginator-info,
+.option-dinamic-button.active,
+.efe-paginator-control .option-dinamic-button {
+    font-size: 1rem !important;
+}
+
+.no-data-container {
+  text-align: center;
+  margin-top: 2rem;
+  color: #666;
+}
+.no-data-container p {
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+}

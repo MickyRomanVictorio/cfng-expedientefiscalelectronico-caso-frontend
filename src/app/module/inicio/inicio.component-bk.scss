@@ -1,0 +1,42 @@
+.grid {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    // justify-content: center !important;
+    // gap: 2rem !important;
+}
+
+
+
+.container {
+    width: 100%;
+    max-width: 1140px;  /* Ancho máximo para pantallas grandes (puede cambiar según el tamaño de la pantalla) */
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 15px;  /* Espaciado en los lados derecho */
+    padding-left: 15px;   /* Espaciado en los lados izquierdo */
+  }
+  
+  @media (min-width: 576px) {
+    .container {
+      max-width: 95%;  /* Ancho máximo para pantallas pequeñas */
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .container {
+      max-width: 90%;  /* Ancho máximo para pantallas medianas */
+    }
+  }
+  
+  @media (min-width: 992px) {
+    .container {
+      max-width: 85%;  /* Ancho máximo para pantallas grandes */
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .container {
+      max-width: 80%;  /* Ancho máximo para pantallas extra grandes */
+    }
+  }
+  

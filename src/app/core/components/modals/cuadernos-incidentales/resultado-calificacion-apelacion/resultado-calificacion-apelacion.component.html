@@ -1,0 +1,94 @@
+<div class="">
+  <div class="cfe-encabezado-modal">
+    <h3
+      class="cfe-encabezado-titulo cfe-subtitulo-3 cfe-semi-bold"
+      [innerHTML]="tituloModal"
+    ></h3>
+
+<!--    <fn-icon-->
+  </div>
+  <h5>Incidente: {{numeroCaso}}</h5>
+  <h6>Seleccione los sujetos procesales a los que se les ha concedido o denegado el recurso de apelación. Si alguno de
+    ellos no apeló deberá seleccionar el consentido.</h6>
+  <div class="flex align-items-center gap-1">
+    <div class="flex border-circle"
+         style="width: 15px; height: 15px; background-color: #3CC85A;"></div>
+    <div class="flex align-items-center text-color-secondary">Recurso de apelación presentado por el fiscal (2)</div>
+  </div>
+  <div class="cfe-tabla-white">
+    <p-table
+      [value]="sujetosProcesalesFiltrados"
+      [styleClass]="'p-datatable-sm'"
+      responsiveLayout="stack">
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th class="columna-nro">N°</th>
+          <th class="columna-nombre">Nombres y apellidos / Razón social</th>
+          <th class="columna-numero-documento">Tipo de sujeto procesal</th>
+          <th class="columna-nombre">Resultado (1era instancia)</th>
+          <th class="columna-consentimiento">Respuesta de recurso de apelación</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+        <tr class="p-selectable-row">
+          <td>
+            <span class="p-column-title font-semibold">N°</span>
+            {{ rowIndex + 1 }}
+          </td>
+          <td>
+            <span class="p-column-title font-semibold">Nombres y apellidos / Razón social</span>
+            <div class="flex align-items-center gap-1">
+              <div class="flex border-circle" style="width: 15px; height: 15px; background-color: #3CC85A;"
+                   *ngIf="item.flagRecursoApelacion"></div>
+              <div class="flex align-items-center">{{ item.nombre | capitalizar }}</div>
+            </div>
+          </td>
+          <td>
+            <span class="p-column-title font-semibold">Tipo de sujeto procesal</span>
+            {{ item.tipo }}
+          </td>
+          <td>
+            <span class="p-column-title font-semibold">Resultado (1era instancia)</span>
+            {{ item.resultado }}
+          </td>
+          <td>
+            <span class="p-column-title font-semibold">Respuesta de recurso de apelación</span>
+            <p-dropdown
+              appendTo="body"
+              [options]="respuestasApelacion"
+              optionLabel="nombre"
+              optionValue="id"
+              placeholder="Pendiente de respuesta"
+              [(ngModel)]="item.idRespuesta"
+              (onChange)="eventoCambiarRespuesta(rowIndex, item.idRespuesta)"/>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8">No se encontró información de sujetos procesales.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <app-paginator [query]="query" [items]="itemPaginado" [rowsPerPageOptions]="[]"
+                   (paginate)="onPaginate($event)"></app-paginator>
+  </div>
+  <div class="flex-center border-round-lg p-3 gap-2" style="background-color: #F8EED3;">
+    <i class="pi pi-exclamation-circle" style="color: #F19700; font-size: 25px;"></i>
+    <span class="text-md">Los sujetos procesales a quienes se registra con respuesta de recurso de apelación “Concede apelación”, serán gestionados en una nueva pestaña en la sección de “Apelaciones”.</span>
+  </div>
+</div>
+<div class="flex justify-content-center flex-wrap mt-3 gap-3">
+  <button
+    class="cfe-boton-secondary cfe-boton-m mb-1 mt-1"
+    (click)="eventoCancelarModalSujetoProcesal()">
+    Cancelar
+  </button>
+  <button
+    class="cfe-boton-primary cfe-boton-m mb-1 mt-1"
+    [disabled]="disableButtonAceptarModalSujetoProcesal"
+    (click)="eventoAceptarModalSujetoProcesal()">
+    Aceptar
+    <!--      Actualizar delitos-->
+  </button>
+</div>

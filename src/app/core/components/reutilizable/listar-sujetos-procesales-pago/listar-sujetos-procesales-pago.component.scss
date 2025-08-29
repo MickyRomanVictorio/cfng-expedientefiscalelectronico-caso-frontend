@@ -1,0 +1,23 @@
+.listar-sujetos-pago{
+    background: var(--mpfn-white);
+    padding: 20px 30px;
+    min-width: 900px;
+}
+:host::ng-deep .modal__header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px 0 0 0;
+    .modal_header__content {
+        display: flex;
+        align-items: center;
+        .cfe-titulo-1 {
+            padding-left: 5px;
+            margin-top: -5px;
+            font-size: 1.20em;
+            font-weight: bold;
+        }
+    }
+}
+

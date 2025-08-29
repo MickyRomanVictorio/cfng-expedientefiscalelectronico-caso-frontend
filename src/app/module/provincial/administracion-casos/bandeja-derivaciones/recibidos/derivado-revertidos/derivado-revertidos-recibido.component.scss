@@ -1,0 +1,96 @@
+/* sonar-ignore */
+:host {
+    width: 100%;
+    display: block;
+    padding-block: 20px 0;
+  }
+  
+  .cfe-subtitulo-1 {
+      margin-left: 10px;
+      font-weight: bold;
+    }
+  
+  fn-icon {
+    display: block;
+    margin-left: 0 !important;
+    width: auto !important;
+  }
+  
+  .cfe-boton-secondary {
+    font-weight: 600;
+    gap: 0.3rem;
+  }
+  
+  .header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  
+    .header__titulo {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+  
+      h4 {
+        font-weight: 700;
+        font-size: 17px;
+        line-height: 0;
+        font-family: var(--mpfn-font-bold);
+        color: var(--mpfn-primary);
+      }
+    }
+  
+    .header__botones {
+      display: flex;
+      gap: 1rem;
+    }
+  }
+  
+  .opciones {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  :is(.btn-detalle) ::ng-deep button {
+    background-color: var(--bluegray-100);
+    color: var(--surface-900);
+    border-color: var(--bluegray-100);
+  
+    &:hover {
+      color: var(--surface-900);
+      background-color: var(--bluegray-100);
+    }
+  
+    &:active {
+      color: var(--surface-900);
+      background-color: var(--bluegray-100);
+    }
+  
+    &:focus {
+      outline: 0 none;
+      outline-offset: 0;
+      box-shadow: 0 0 0 0.2rem var(--bluegray-50);
+    }
+  }
+  
+  .btn-derivacion {
+    cursor: pointer;
+    padding: 5px 10px;
+    background-color: #E7EBED;
+    border: none;
+    border-radius: 5px;
+    color: #4C6478;
+    font-weight: 600;
+    //margin-inline-start: 1.2rem;
+    &:is(:hover,:active) {
+      background-color: #C4CCD3;
+    }
+  }
+
+  :host::ng-deep .p-datatable .p-datatable-thead > tr > th {
+    background: var(--mpfn-white) !important;
+  }
+  

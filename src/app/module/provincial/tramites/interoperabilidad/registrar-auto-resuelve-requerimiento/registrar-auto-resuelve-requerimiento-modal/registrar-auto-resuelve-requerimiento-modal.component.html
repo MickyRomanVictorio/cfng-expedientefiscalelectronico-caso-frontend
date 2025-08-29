@@ -1,0 +1,144 @@
+<div class="p-5 relative modal-width">
+
+  <div class="cfe-encabezado-modal mb-2">
+    <span class="cfe-subtitulo-3 family-poppin-bold">
+      Seleccionar el resultado de la resolución
+    </span>
+    <fn-icon
+      onkeypress=""
+      class="cfe-encabezado-cerrar"
+      [ico]="iconUtil.obtenerIcono('iClose')"
+      height="2rem"
+      (click)="cerrarModal()"
+    ></fn-icon>
+  </div>
+
+
+  <div class="cfe-subtitulo-3 family-poppin-bold mt-4">
+    Incidente:<span [innerHTML]="stringUtil.obtenerNumeroCaso(getNumeroCaso)"></span>
+  </div>
+
+  <div class="mt-4">
+    <span><strong>Seleccione la resolución para cada sujeto procesal</strong></span>
+  </div>
+  <div class="cfe_bandeja__table  mt-2">
+      <p-table
+          class="table-apelaciones"
+          [value]="sujetosProcesalesFiltrados"
+          [rowHover]="true"
+          [tableStyle]="{ 'min-width': '50rem' }"
+          [breakpoint]="'992px'"
+          responsiveLayout="stack"
+          [(selection)]="selectedSujetos">
+        <ng-template pTemplate="header">
+          <tr>
+            <th scope="" >N°
+            </th>
+            <th scope="" >Nombres y apellidos/Razón social
+            </th>
+            <th scope="" >Tipo de sujeto procesal
+            </th>
+            <th scope="" >
+              <input
+                type="checkbox"
+                [checked]="checkFundado"
+                [disabled]="soloLectura"
+                class="cursor-pointer"
+                (change)="seleccionarTodosFundado('fundado', $event)"
+              />
+              Fundado / Procedente
+            </th>
+            <th scope="" >
+              <input
+                type="checkbox"
+                [checked]="checkFundadoParte"
+                [disabled]="soloLectura"
+                class="cursor-pointer"
+                (change)="seleccionarTodosFundado('fundadoparte', $event)"
+              />
+              Fundado en parte / Procedente en parte
+            </th>
+            <th scope="" >
+              <input
+                type="checkbox"
+                [checked]="checkInfundado"
+                [disabled]="soloLectura"
+                class="cursor-pointer"
+                (change)="seleccionarTodosFundado('infundado', $event)"
+              />
+              Infundado / Improcedente
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-sujeto let-rowIndex="rowIndex">
+          <tr class="p-selectable-row">
+            <td class="table_td_content_start caso-container">
+              {{ (( query.page -1 ) * query.limit) + (rowIndex + 1) }}
+            </td>
+            <td class="table_td_content_start">
+              {{ sujeto.nombreCompleto }}
+            </td>
+            <td class="table_td_content_start">
+              {{ sujeto.noTipoParteSujeto }}
+            </td>
+            <td class="table_td_content_start text-center">
+              <input name="selection{{rowIndex + 1}}" onkeypress=""
+                     id="fundado{{rowIndex + 1}}"
+                     [checked]="verificaSeleccionado(sujeto, 'fundado')"
+                     [disabled]="sujeto.idTipoRespuestaInstancia1 == 1047 || sujeto.idTipoRespuestaInstancia1 == 1048 || sujeto.idTipoRespuestaInstancia1 == 1492 || soloLectura"
+                     (click)="onSelectionChange(sujeto, 'fundado')"
+                     class="cursor-pointer"
+                     type="radio"/>
+
+            </td>
+            <td class="table_td_content_start text-center">
+              <input name="selection{{rowIndex + 1}}" onkeypress=""
+                     id="fundadoparte{{rowIndex + 1}}"
+                     [checked]="verificaSeleccionado(sujeto, 'fundadoparte')"
+                     [disabled]="sujeto.idTipoRespuestaInstancia1 == 1047 || sujeto.idTipoRespuestaInstancia1 == 1048 || sujeto.idTipoRespuestaInstancia1 == 1492 || soloLectura"
+                     (click)="onSelectionChange(sujeto, 'fundadoparte')"
+                     class="cursor-pointer"
+                     type="radio"/>
+
+            </td>
+            <td class="table_td_content_start text-center">
+              <input name="selection{{rowIndex + 1}}" onkeypress=""
+                     id="infundado{{rowIndex + 1}}"
+                     [checked]="verificaSeleccionado(sujeto, 'infundado')"
+                     [disabled]="sujeto.idTipoRespuestaInstancia1 == 1047 || sujeto.idTipoRespuestaInstancia1 == 1048 || sujeto.idTipoRespuestaInstancia1 == 1492 || soloLectura"
+                     (click)="onSelectionChange(sujeto, 'infundado')"
+                     class="cursor-pointer"
+                     type="radio"/>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <app-paginator [query]="query" [items]="itemPaginado" [rowsPerPageOptions]="[]"
+                     (paginate)="onPaginate($event)"></app-paginator>
+
+  </div>
+  <div class="col-12">
+    @if (mostrarMensaje) {
+      <p-messages
+        [(value)]="msgs1"
+        [enableService]="false"
+        [closable]="false"
+        [escape]="false">
+      </p-messages>
+    }
+  </div>
+  <div class="col-12 flex align-items-center justify-content-center mt-2 mb-2">
+    <button class="cfe-boton-opcion cfe-boton-secondary cfe-boton-lg family-poppin-bold"
+            (click)="cerrarModal()">
+      Cancelar
+    </button>
+    @if (!soloLectura) {
+      <button class="ml-3 cfe-boton-primary cfe-boton-lg family-poppin-bold"
+          [disabled]="!habilitarBotonAceptar"
+          (click)="aceptar()">
+        Aceptar
+      </button>
+    }
+
+  </div>
+</div>

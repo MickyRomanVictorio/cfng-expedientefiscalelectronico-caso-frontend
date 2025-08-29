@@ -1,0 +1,10 @@
+export const enviroment = {
+    production: true,
+    cdn: {
+        jquey: 'https://code.jquery.com/jquery-3.6.0.min.js',
+        firma_peru: 'https://apps.firmaperu.gob.pe/web/clienteweb/firmaperu.min.js',
+        integrador: 'http://172.16.111.112:8085/assets/js/integrador.firma.js'
+    },
+    portClientSign: '48596'
+};
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZW52aXJvbm1lbnQuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi8uLi8uLi9wcm9qZWN0cy9uZ3gtY2ZuZy1jb3JlLWZpcm1hLWRpZ2l0YWwvc3JjL2xpYi9lbnZpcm9tZW50cy9lbnZpcm9ubWVudC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxNQUFNLENBQUMsTUFBTSxVQUFVLEdBQUc7SUFDeEIsVUFBVSxFQUFFLElBQUk7SUFDaEIsR0FBRyxFQUFDO1FBQ0YsS0FBSyxFQUFFLDZDQUE2QztRQUNwRCxVQUFVLEVBQUUsK0RBQStEO1FBQzNFLFVBQVUsRUFBRSwwREFBMEQ7S0FDdkU7SUFDRCxjQUFjLEVBQUUsT0FBTztDQUN4QixDQUFBIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0IGNvbnN0IGVudmlyb21lbnQgPSB7XHJcbiAgcHJvZHVjdGlvbjogdHJ1ZSxcclxuICBjZG46e1xyXG4gICAganF1ZXk6ICdodHRwczovL2NvZGUuanF1ZXJ5LmNvbS9qcXVlcnktMy42LjAubWluLmpzJyxcclxuICAgIGZpcm1hX3BlcnU6ICdodHRwczovL2FwcHMuZmlybWFwZXJ1LmdvYi5wZS93ZWIvY2xpZW50ZXdlYi9maXJtYXBlcnUubWluLmpzJyxcclxuICAgIGludGVncmFkb3I6ICdodHRwOi8vMTcyLjE2LjExMS4xMTI6ODA4NS9hc3NldHMvanMvaW50ZWdyYWRvci5maXJtYS5qcydcclxuICB9LFxyXG4gIHBvcnRDbGllbnRTaWduOiAnNDg1OTYnXHJcbn1cclxuIl19

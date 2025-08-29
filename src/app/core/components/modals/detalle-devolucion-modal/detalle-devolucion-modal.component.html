@@ -1,0 +1,67 @@
+<div class="cfe-modal">
+  <app-encabezado-modal
+    titulo="DETALLE DE DEVOLUCIÓN(ES) "
+    [referenciaModal]="referenciaModal"
+    [numeroCaso]="numeroCaso"
+  ></app-encabezado-modal>
+
+  <div class="cfe-tabla-white">
+    <p-table
+      [loading]="cargandoTabla"
+      [value]="detallesDevolucionFiltrados"
+      [rowHover]="true"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [breakpoint]="'992px'"
+      responsiveLayout="stack "
+      class="table_td_content_responsive"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="columna-orden">N°</th>
+          <th class="columna-motivo">Motivo</th>
+          <th class="columna-motivo-detalle">Motivo detalle</th>
+          <th class="columna-fecha">Fecha de devolución</th>
+          <th class="columna-documento">Documento</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-detalle>
+        <tr class="p-selectable-row">
+          <td>{{ detalle.orden }}</td>
+          <td>{{ detalle.motivo }}</td>
+          <td>{{ detalle.detalleMotivo }}</td>
+          <td>
+			<div>{{ detalle.fechaDevolucion | dateformat }}</div>
+            <div>{{ detalle.horaDevolucion | dateformat : "hour24" }}</div>
+		  </td>
+          <td>
+            <div
+              class="col-4 btn-accion"
+              pTooltip="Ver documento devolución"
+              tooltipEvent="hover"
+            >
+              <fn-icon
+                [ico]="icono('iEye')"
+                height="1.6rem"
+                (click)="verDocumentoDevolucion()"
+              ></fn-icon>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8">
+            No se encontró información de detalles de devolución.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <app-paginator
+      [query]="query"
+      [items]="itemPaginado"
+      [rowsPerPageOptions]="[]"
+      [resetPage]="resetPage"
+      (paginate)="onPaginate($event)"
+    ></app-paginator>
+  </div>
+</div>

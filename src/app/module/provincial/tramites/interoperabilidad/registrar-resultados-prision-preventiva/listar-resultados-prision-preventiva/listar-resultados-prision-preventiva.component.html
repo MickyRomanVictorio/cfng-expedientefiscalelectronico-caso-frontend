@@ -1,0 +1,141 @@
+<strong>Resultados agregados:</strong>
+<div class="mt-2">
+    <p-table
+        dataKey="id"
+        [expandedRowKeys]="expandedRow"
+        class="table-apelaciones"
+        responsiveLayout="stack"
+        [value]="resultadosPrisionPreventiva"
+        [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template pTemplate="header">
+            <tr>
+                <th id="Nº">Nº</th>
+                <th id="nombre">Nombres y apellidos</th>
+                <th id="resul">Resultado</th>
+                @if (!prolongacion && !adecuacion) {
+                  <th id="medida">Medida de coerción</th>
+                }
+                @if (!prolongacion && !cesacion && !adecuacion) {
+                  <th id="reo">Reo ausente / contumaz</th>
+                }
+                <th id="fechaini">Fecha de inicio</th>
+                <th id="plazo">Plazo otorgado</th>
+                @if (!adecuacion) {
+                  <th id="fechafin">Fecha fin</th>
+                }
+                @if (prolongacion) {
+                  <th id="plazoprolongado">Plazo prolongado</th>
+                  <th id="fechafinprolongado">Nueva fecha fin prolongada</th>
+                }
+                @if (adecuacion) {
+                  <th id="plazoprolongadoAdecuacion">Plazo prolongado</th>
+                  <th id="fechafinprolongadoAdecuacion">Fecha fin prolongada</th>
+                  <th id="plazoAdecuado">Plazo adecuado</th>
+                  <th id="fechafinAdecuada">Nueva fecha fin adecuada</th>
+                }
+                <th id="acciones" class="text-center">Acciones</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-resultado let-rowIndex="rowIndex" let-expanded="expanded">
+            <tr [ngClass]="{'bg-mode-edicion': resultado.enEdicion}">
+                <td>{{ (( query.page -1 ) * query.limit) + (rowIndex + 1) }}</td>
+                <td>{{ resultado.nombreSujetoCaso }}</td>
+                <td>{{ this.obtenerTipoResultadosNombre(resultado) }}</td>
+                @if (!prolongacion && !adecuacion) {
+                  <td>{{ resultado.medidaCoercion | capitalizar }}<br>({{ resultado.tipoMedidaCoercion }})</td>
+                }
+                @if (!prolongacion && !cesacion && !adecuacion) {
+                  <td class="text-center">{{ resultado.reoAusenteContumazNuevo ? 'Si' : 'No' }}</td>
+                  <td>{{ resultado.reoAusenteContumazNuevo || resultado.fechaInicio == null ? '-' : resultado.fechaInicio }}</td>
+                  <td class="text-center">{{ resultado.reoAusenteContumazNuevo ? '-': textoPlazoOtorgado(resultado) }}</td>
+                  <td>{{ resultado.reoAusenteContumazNuevo || resultado.fechaFin == null ? '-' : resultado.fechaFin }}</td>
+                }
+                @if (cesacion) {
+                  <td>{{ fechaInicio(resultado) }}</td>
+                  <td class="text-center">{{ textoPlazoOtorgado(resultado) }}</td>
+                  <td>{{ fechaFin(resultado) }}</td>
+                }
+                @if (prolongacion) {
+                  <td>{{ fechaInicioProlongado(resultado) }}</td>
+                  <td class="text-center">{{ textoPlazoProlongado(resultado) }}</td>
+                  <td>{{ fechaFinProlongado(resultado) }}</td>
+                  <td class="text-center">{{ textoPlazoOtorgado(resultado) }}</td>
+                  <td>{{ resultado.fechaFin }}</td>
+                }
+                @if (adecuacion) {
+                  <td>{{ fechaInicioAdecuacion(resultado) }}</td>
+                  <td>{{ textoPlazoOtorgadoAdecuacion(resultado) }}</td>
+                  <td class="text-center">{{ textoPlazoProlongado(resultado) }}</td>
+                  <td>{{ fechaFinProlongado(resultado) }}</td>
+                  <td class="text-center">{{ textoPlazoOtorgado(resultado) }}</td>
+                  <td>{{resultado.fechaFin }}</td>
+                }
+                <td>
+                    <div class="flex justify-content-center align-items-center">
+                        @if ( tramiteEnModoEdicion ) {
+                            @if (!actualizar) {
+                              <fn-icon onkeydown="" class="ml-1 cursor-pointer" [ico]="iconUtil.obtenerIcono('iTrash')" height="2rem" (click)="mensajeConfirmarEliminacion(resultado)"></fn-icon>
+                            }
+                            <fn-icon onkeydown="" class="ml-1 cursor-pointer" [ico]="iconUtil.obtenerIcono('iEdit')" height="1.5rem" (click)="editarResultado(resultado)"></fn-icon>
+                        }
+                        <fn-icon
+                                onkeydown=""
+                                (click)="onToggleExpand(resultado)"
+                                class="ml-1 cursor-pointer"
+                                [ico]="iconUtil.obtenerIcono(expandedRow === resultado ? 'iChevronUp' : 'iChevronDown')"
+                                height="2rem">
+                            </fn-icon>
+                    </div>
+
+                </td>
+            </tr>
+            @if ( expandedRow === resultado ) {
+                <tr>
+                    <td [attr.colspan]="9">
+                        <div class="grid">
+                            <div class="col-12">
+                                <strong>Delitos(s): </strong>
+                                <ul>
+                                    @for (delito of resultado.delitos; track $index) {
+                                        <ul>
+                                            <li>{{ delito | capitalizar }}</li>
+                                        </ul>
+                                      }
+                                </ul>
+                            </div>
+                            <div class="col-12">
+                                <strong>Regla(s) de conducta: </strong>
+                                <ul>
+                                  @if (resultado.reglasConducta.length > 0) {
+                                    @for (regla of resultado.reglasConducta; track $index) {
+                                      <ul>
+                                          <li>{{ regla }}</li>
+                                      </ul>
+                                    }
+                                  } @else {
+                                    -
+                                  }
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="9">
+                    <div class="text-center">No se encontraron registros de sujetos procesales</div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <app-paginator
+        [query]="query"
+        [items]="itemPaginado"
+        (paginate)="onPaginate($event)"
+        [resetPage]="resetPage"
+    ></app-paginator>
+</div>

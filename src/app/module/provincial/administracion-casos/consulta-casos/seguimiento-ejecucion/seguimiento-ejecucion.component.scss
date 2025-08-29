@@ -1,0 +1,32 @@
+::ng-deep .p-overlaypanel-content {
+  padding: 0.5rem !important;
+}
+.overlay-content {
+  max-width: 320px;
+  font-size: 14px;
+  position: relative;
+  padding: 1rem;
+
+  .overlay-close-button {
+    position: absolute;
+    top: 0.3rem;
+    right: 0.3rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+  }
+
+  .overlay-title {
+    margin: 0;
+    padding: 0 2rem 0.5rem 1rem;
+  }
+
+  .overlay-list {
+    padding-left: 1rem;
+    margin: 0;
+  }
+}
+.cfe-container .cfe_bandeja__table {
+  border: none;
+  background: var(--mpfn-background);
+}

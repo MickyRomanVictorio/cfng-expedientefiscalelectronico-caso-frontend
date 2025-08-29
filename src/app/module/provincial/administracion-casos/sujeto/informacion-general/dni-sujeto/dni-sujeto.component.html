@@ -1,0 +1,77 @@
+<div [formGroup]="form" class="w-full flex flex-column">
+    <div class="flex gap-2">
+        <div class="w-3">
+            <label for="profile" class="cfe-semi-bold">Foto de perfil</label>
+            @if (datosSujeto?.foto) {
+              <img class="w-full" alt="profile" id="profile"
+              [src]="'data:image/png;base64,' + datosSujeto.foto">
+            }
+
+        </div>
+        <div class="w-full flex flex-column justify-content-around">
+            <div class="w-full formgrid grid">
+                <div class="field col flex flex-column">
+                    <label for="name" class="cfe-semi-bold">Nombres</label>
+                    <input pInputText id="name" formControlName="nombresSujeto"/>
+                </div>
+                <div class="field col flex flex-column">
+                    <label for="fathername" class="cfe-semi-bold">Apellido Paterno</label>
+                    <input pInputText id="fathername" formControlName="paternoSujeto" />
+                </div>
+            </div>
+            <div class="w-full formgrid grid">
+                <div class="field col flex flex-column">
+                    <label for="mothername" class="cfe-semi-bold">Apellido Materno</label>
+                    <input pInputText id="mothername" formControlName="maternoSujeto"/>
+                </div>
+                <div class="field col flex flex-column">
+                    <label class="cfe-semi-bold" class="cfe-semi-bold">Fecha de nacimiento</label>
+                    <p-calendar class="p-inputtext-lg cfe-calendar h-56" [showIcon]="true" icon="cfe-calendar-icon"
+                        placeholder="dd/mm/aaaa" formControlName="fechaNacimiento"></p-calendar>
+                </div>
+                <div class="field col flex flex-column">
+                    <label for="integeronly" class="cfe-semi-bold">Edad</label>
+                    <p-inputNumber inputId="integeronly" formControlName="edadSujeto"></p-inputNumber>
+                </div>
+            </div>
+            <div class="w-full">
+                <label class="cfe-semi-bold">Sexo</label>
+                <div class="w-full flex gap-4">
+                  @if (sexos.length > 0) {
+                    <div class="flex align-items-center">
+                      <p-radioButton name="idSexo" [value]="sexos[0].value" [inputId]="sexos[0].label"
+                          formControlName="idSexo"></p-radioButton>
+                      <label [for]="sexos[0].label" class="ml-2">{{ sexos[0].label }}</label>
+                      <p-radioButton name="idSexo" [value]="sexos[1].value" [inputId]="sexos[1].label"
+                          formControlName="idSexo"></p-radioButton>
+                      <label [for]="sexos[1].label" class="ml-2">{{ sexos[1].label }}</label>
+                    </div>
+                  }
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-4 w-full formgrid grid">
+        <div class="field col flex flex-column">
+            <label class="cfe-semi-bold">Estado civil</label>
+            <p-dropdown
+            [options]="estadoCivil"
+            formControlName="idEstadoCivil"
+            optionLabel="label" optionValue="id"
+            ></p-dropdown>
+        </div>
+        <div class="field col flex flex-column">
+            <label class="cfe-semi-bold">Grado de instrucción</label>
+            <p-dropdown [options]="instruccion" formControlName="gradoInstruccion"></p-dropdown>
+        </div>
+        <div class="field col flex flex-column">
+            <label for="alias" class="cfe-semi-bold">Alias</label>
+            <input pInputText id="alias" formControlName="noAliasSujeto" placeholder="Ingrese un alias">
+        </div>
+    </div>
+</div>
+
+<app-guardar-sujeto [sujeto_inf]="idSujeto" [formDni]="form.value" [formEdicion]="formedicion" [coCaso]="coCasoSave">
+</app-guardar-sujeto>

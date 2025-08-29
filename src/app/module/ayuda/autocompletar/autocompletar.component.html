@@ -1,0 +1,27 @@
+<p-autoComplete
+  #autoComp
+  [(ngModel)]="pregunta"
+  [suggestions]="suggestions"
+  (completeMethod)="search($event)"
+  (onSelect)="autoCompleteSelect($event)"
+  styleClass="py-1 p-inputtext-lg w-full"
+  [style]="{width: '100%'}"
+  [inputStyle]="{'padding-left': '45px'}"
+  inputStyleClass="w-full">
+  <ng-template let-result pTemplate="item">
+    <div class="flex align-items-center gap-2">
+      <fn-icon
+        [ico]="iconUtil.obtenerIcono('iViewFile')"
+        height="1.6rem"
+      ></fn-icon>
+      <div>{{ result.noCategoria }}</div>
+    </div>
+  </ng-template>
+</p-autoComplete>
+
+<div class="icon-container">
+  <fn-icon
+    [ico]="iconUtil.obtenerIcono('iSearch')"
+    height="1.6rem"
+  ></fn-icon>
+</div>

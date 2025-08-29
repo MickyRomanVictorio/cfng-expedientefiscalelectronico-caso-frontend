@@ -1,0 +1,131 @@
+<form [formGroup]="formulario" class="formgrid grid mt-3">
+  <div class="field col-12 xl:col-6">
+    <label for="sujeto" class="font-semibold">Sujeto procesal:</label>
+    <div class="flex flex-row flex-wrap align-items-center">
+      <button
+        (click)="openModalSujetos()"
+        class="cfe-boton-primary cfe-boton-lg w-80 mr-2"
+      >
+        Seleccionar sujeto procesal
+      </button>
+      @if(tieneMinimoUnSujetoSeleccionado){
+      <img
+        alt="check"
+        [src]="iconAsset.obtenerRutaIcono('check-circle')"
+        style="width: 2rem; height: 2rem"
+      />
+      }
+    </div>
+  </div>
+  <div class="field col-12 xl:col-6">
+    <label for="incluye" class="font-semibold">Incluye:</label>
+    <p-checkbox
+      class="p-inputtext-lg w-full"
+      formControlName="incluye"
+      [binary]="true"
+      inputId="binary"
+      label="Agenda para reprogramación de citación"
+      (onChange)="cambioIncluye()"
+    ></p-checkbox>
+  </div>
+  @if(formulario.get('incluye')?.value){
+  <div class="field col-12 xl:col-6">
+    <label for="citaAgendada" class="font-semibold">Cita agendada</label>
+    <p-dropdown
+      formControlName="citasAgendadas"
+      optionValue="idAgendaFiscal"
+      (onChange)="cambiarCitaAgendada($event.value)"
+      [options]="listaCitasAgendadas"
+      optionLabel="fecha"
+      placeholder="Seleccione"
+      styleClass="p-inputtext-lg"
+      emptyMessage="Citas no encontradas"
+    >
+    </p-dropdown>
+  </div>
+  <div class="field col-12 xl:col-6">
+    <label for="fechaNuevaReunion" class="font-semibold"
+      >Fecha y hora de nueva reunión</label
+    >
+    <p-calendar
+      id="fechaNuevaReunion"
+      dateMask
+      [withDateTime]="true"
+      dateFormat="dd/mm/yy"
+      hourFormat="24"
+      [showTime]="true"
+      [showIcon]="true"
+      icon="cfe-calendar-icon"
+      placeholder="DD/MM/AAAA HH:MM"
+      formControlName="fechaNuevaReunion"
+      class="p-inputtext-lg cfe-calendar h-56"
+      [minDate]="fechaNuevaReunionMinima"
+    ></p-calendar>
+  </div>
+  <div class="field col-12 pb-2">
+    <div class="flex gap-3 mt-2">
+      @for (dataRadio of listaTipoCitacion; track $index) {
+      <div class="flex align-items-center">
+        <p-radioButton
+          name="tipoCitacion"
+          [value]="dataRadio.id"
+          formControlName="tipoCitacion"
+          (onClick)="tipoCitacionOnchange()"
+          inputId="or{{ false }}{{ dataRadio.id }}"
+        />
+        <label
+          for="or{{ false }}{{ dataRadio.id }}"
+          class="ml-2 text-sm cursor-pointer"
+          >Reunión {{ dataRadio.coDescripcion.toLowerCase() }}</label
+        >
+      </div>
+      }
+    </div>
+  </div>
+
+  @if(esReunionVirtual){
+  <div class="field col-12">
+    <label for="urlReunion" class="font-semibold">URL Reunión (opcional)</label>
+    <input
+      pInputText
+      id="urlReunion"
+      class="p-inputtext-md text-md py-3 w-full"
+      placeholder=""
+      formControlName="urlReunion"
+      [maxlength]="100"
+    />
+  </div>
+  }
+
+  <div class="field col-12">
+    <label for="lugar" class="font-semibold">Lugar (opcional)</label>
+    <input
+      pInputText
+      id="lugar"
+      class="p-inputtext-md text-md py-3 w-full"
+      placeholder=""
+      formControlName="lugar"
+      [maxlength]="100"
+    />
+  </div>
+  }
+
+  <div class="field col-12">
+    <label for="observaciones" class="font-semibold"
+      >Observaciones (opcional)</label
+    >
+    <textarea
+      id="observaciones"
+      type="text"
+      pInputTextarea
+      formControlName="observaciones"
+      class="w-full p-inputtext p-2"
+      rows="5"
+      [maxlength]="200"
+      placeholder="Escriba la observación"
+    ></textarea>
+    <small class="block text-right mt-1"
+      >Quedan {{ caracteresRestantes }} caracteres</small
+    >
+  </div>
+</form>

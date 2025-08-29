@@ -1,0 +1,189 @@
+<div class="cfe-container">
+  <div class="sujeto_procesal__header">
+    <div class="sujeto_procesal_header__content">
+      <h3 class="cfe-titulo-1">Lista de estudios</h3>
+    </div>
+  </div>
+
+  <div class="sujeto_procesal_table__content">
+    <p-table
+      [value]="estudiosSujetoProcesal"
+      [rowHover]="true"
+      [showCurrentPageReport]="true"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [breakpoint]="'992px'"
+      responsiveLayout="stack"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th id="nro">N°</th>
+          <th id="carrera">Carrera o situación académica</th>
+          <th id="centro">Centro educativo</th>
+          <th id="fechaInicio">F. Inicio</th>
+          <th id="fechaFin">F. Fin</th>
+          <th id="acciones">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-estudio let-rowIndex="rowIndex">
+        <tr>
+          <td class="table_td_content_start">
+            <span class="p-column-title">N°</span>
+            {{ rowIndex + 1 }}
+          </td>
+          <td class="table_td_content_start">
+            <span class="p-column-title">Carrera o situación académica</span>
+            <div>{{ estudio.carrera || "-" }}</div>
+          </td>
+          <td class="table_td_content_start">
+            <span class="p-column-title">Centro educativo</span>
+            <div>{{ estudio.institucionEducativa }}</div>
+          </td>
+          <td class="table_td_content_start">
+            <span class="p-column-title">F. Inicio</span>
+            <div>{{ estudio.fechaInicio || "-" }}</div>
+          </td>
+          <td class="table_td_content_start">
+            <span class="p-column-title">F. Fin</span>
+            <div>{{ estudio.fechaFin || "-" }}</div>
+          </td>
+          <td class="table_td_content_start">
+            <span class="p-column-title">Acciones</span>
+            <fn-icon
+              class="ml-1"
+              [ico]="iconUtil.obtenerIcono('iEdit')"
+              (click)="editarEstudioSujetoProcesal(estudio.idSujetoEstudio)"
+              height="1.5rem"
+              onkeypress=""
+            ></fn-icon>
+            &nbsp;&nbsp;
+            <fn-icon
+              class="ml-1"
+              [ico]="iconUtil.obtenerIcono('iTrash')"
+              (click)="eliminarEstudioSujetoProcesal(estudio.idSujetoEstudio)"
+              height="1.8rem"
+              onkeypress=""
+            ></fn-icon>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="9" style="text-align: center">
+            No se encontraron registros
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <button
+      class="cfe-boton-primary cfe-boton-m boton-w align-right mt-2"
+      (click)="openAgregarEstudio()"
+    >
+      <fn-icon
+        class="ml-1"
+        [ico]="iconUtil.obtenerIcono('iAdd')"
+        height="1.5rem"
+      ></fn-icon>
+      Agregar estudios
+    </button>
+  </div>
+
+  <div class="sujeto_procesal__header">
+    <div class="sujeto_procesal_header__content">
+      <h3 class="cfe-titulo-1">Lista de trabajos</h3>
+    </div>
+  </div>
+
+  <div class="sujeto_procesal_table__content">
+    <p-table
+      [value]="trabajosSujetoProcesal"
+      [rowHover]="true"
+      [showCurrentPageReport]="true"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [breakpoint]="'992px'"
+      responsiveLayout="stack"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th id="nro">N°</th>
+          <th id="cargo">Cargo</th>
+          <th id="centro">Centro de Trabajo</th>
+          <th id="fechaInicio">F. Inicio</th>
+          <th id="fechaFin">F. Fin</th>
+          <th id="acciones">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-trabajo let-rowIndex="rowIndex">
+        <tr>
+          <td class="table_td_content_start">
+            <span class="p-column-title">N°</span>
+            {{ rowIndex + 1 }}
+          </td>
+          <td class="table_td_content_start">
+            <span class="p-column-title">Cargo</span>
+            <div>
+              {{ trabajo.puesto }}
+            </div>
+          </td>
+          <td class="table_td_content_start">
+            <span class="p-column-title">Centro de trabajo</span>
+            <div>
+              {{ trabajo.centroTrabajo }}
+            </div>
+          </td>
+          <td class="table_td_content_start">
+            <span class="p-column-title">F. Inicio</span>
+            <div>
+              {{ trabajo.fechaInicio }}
+            </div>
+          </td>
+          <td class="table_td_content_start">
+            <span class="p-column-title">F. Fin</span>
+            <div>
+              {{ trabajo.fechaFin }}
+            </div>
+          </td>
+          <td class="table_td_content_start">
+            <span class="p-column-title">Acciones</span>
+            <fn-icon
+              class="ml-1"
+              [ico]="iconUtil.obtenerIcono('iEdit')"
+              (click)="
+                editarTrabajoSujetoProcesal(trabajo.idSujetoCentroTrabajo)
+              "
+              height="1.5rem"
+              onkeypress=""
+            ></fn-icon>
+            &nbsp;&nbsp;
+            <fn-icon
+              class="ml-1"
+              [ico]="iconUtil.obtenerIcono('iTrash')"
+              (click)="
+                eliminarTrabajoSujetoProcesal(trabajo.idSujetoCentroTrabajo)
+              "
+              height="1.8rem"
+              onkeypress=""
+            ></fn-icon>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="9" style="text-align: center">
+            No se encontraron registros ingresados
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <button
+      class="cfe-boton-primary cfe-boton-m boton-w align-right mt-2"
+      (click)="openAgregarTrabajo()"
+    >
+      <fn-icon
+        class="ml-1"
+        [ico]="iconUtil.obtenerIcono('iAdd')"
+        height="1.5rem"
+      ></fn-icon>
+      Agregar trabajo
+    </button>
+  </div>
+</div>

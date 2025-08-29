@@ -1,0 +1,36 @@
+.titulo {
+  font-family: var(--font-family);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.01em;
+  text-align: left;
+  color: var(--mpfn-primary) !important;
+}
+
+.subtitulo {
+  font-family: var(--mpfn-font-regular);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.02em;
+  text-align: left;
+  color: var(--mpfn-black) !important;
+}
+
+.cabecera {
+  font-family: var(--mpfn-font-regular);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: 0.02em;
+  color: var(--mpfn-gray1) !important;
+}
+
+.fila {
+  font-family: var(--mpfn-font-regular);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 32px;
+  color: var(--mpfn-black) !important;
+}

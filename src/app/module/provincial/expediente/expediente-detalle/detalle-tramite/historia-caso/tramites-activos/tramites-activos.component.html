@@ -1,0 +1,278 @@
+<div class="opciones-exportacion">
+    <button 
+        class="cfe-boton-secondary cfe-boton-m mr-3 cfe-boton-icono-izquierda" 
+        (click)="exportar('PDF')"
+    >
+        <fn-icon 
+            class="ml-1" 
+            [ico]="iconUtil.obtenerIcono('iFileDownload')" 
+            height="1.6rem"
+        ></fn-icon>
+        Exportar PDF
+    </button>
+    <button 
+        class="cfe-boton-secondary cfe-boton-m cfe-boton-icono-izquierda" 
+        (click)="exportar('Excel')"
+    >
+        <fn-icon 
+            class="ml-1" 
+            [ico]="iconUtil.obtenerIcono('iTable')" 
+            height="1.6rem"
+        ></fn-icon>
+        Exportar Excel
+    </button>
+</div>
+
+<div class="tramites-activos_table__content">
+    <p-table 
+        [value]="tramitesActivosFiltrado"
+        [rowHover]="true"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [breakpoint]="'992px'"
+        responsiveLayout="stack "
+        class="table_td_content_responsive"
+    >
+        <ng-template pTemplate="header">
+            <tr>
+                <th id="N°">N°</th>
+                <th id="Etapa">Etapa</th>
+                <th id="Acto">Acto Procesal</th>
+                <th id="Trámite">Trámite</th>
+                <th id="Estado">Estado</th>
+                <th id="Fecha">Fecha de emisión</th>
+                <th id="Acciones" style='width: 346px'>Acciones</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-tramite let-rowIndex="rowIndex">
+            @let esTramiteIngresadoMesa = tramite.tipoIngresoTramite === idIngresoPorMesa;
+            <tr>
+                <td class="table_td_content_start">
+                    <span class="p-column-title">N°</span>
+                    {{ tramite.nro }}
+                </td>
+                <td class="table_td_content_start">
+                    <span class="p-column-title">Etapa</span>
+                    <div class="">{{ tramite.descEtapa }}</div>
+                </td>
+                <td class="table_td_content_start">
+                    <span class="p-column-title">Acto procesal</span>
+                    <div class="">{{ tramite.descActoProcesal }}</div>
+                </td>
+                <td class="table_td_content_start">
+                    <span class="p-column-title">Trámite</span>
+                    <div class="">{{ tramite.descTramite }}</div>
+                    @if ( tramite.flgRevertido === FLAG_ACTIVO ) {
+                        <div class="mt-2">
+                            <span
+                                class="badge badge-rojo cfe-bold cursor-pointer"
+                                (click)="verMotivoReversion(tramite)"
+                                onKeyPress=""
+                            >Revertido</span>
+                        </div>
+                    }
+                    @if ( tramite.flgElevacionObservada === FLAG_ACTIVO ) {
+                        <div class="mt-2">
+                            <span class="badge badge-rojo cfe-bold">Observado por F. Superior</span>
+                        </div>
+                    }
+                    @if ( tramite.flgConActasAudiencia === FLAG_ACTIVO ) {
+                        <div class="mt-2">
+                            <span class="badge badge-gris cfe-bold">Acta de audiencia</span>
+                        </div>
+                    }
+                </td>
+                <td class="table_td_content_start">
+                    <span class="p-column-title">Estado</span>
+                    {{ tramite.estadoTramite }}
+                </td>
+                <td class="table_td_content_start caso-container">
+                    <span class="p-column-title">Fecha de emisión</span>
+                    @if ( !esTramiteIngresadoMesa ) {
+                        @if ( tramite.nombreFirmante ) {
+                            <div class="mb-1">{{ capitalized(tramite.nombreFirmante) }}</div>
+                        }
+                        <div>{{ formatoFechaF(tramite.fechaEmision) }}</div>
+                    } @else { - }
+                </td>
+                <td class="table_td_content_start">
+
+                    <span class="p-column-title">Acciones</span>
+
+                    <div class="flex flex-wrap">
+
+                        <button 
+                            class="cfe-boton-secondary cfe-boton-opcion"
+                            title="Ver sujetos procesales del trámite"
+                            (click)="verSujetosProcesalesTramite(tramite)"
+                        >
+                            <img 
+                                [src]="icon('usuarios-search')" 
+                                alt="Ver sujetos procesales"
+                            >
+                        </button>
+
+                        @if ( !esTramiteIngresadoMesa ) {
+                            <button 
+                                class="cfe-boton-secondary cfe-boton-opcion" 
+                                (click)="verHistorialTramite(tramite)" 
+                                title="Ver historial del trámite"
+                            >
+                                <fn-icon 
+                                    class="ml-1" 
+                                    [ico]="iconUtil.obtenerIcono('iRestaurar')" 
+                                    height="1.4rem"
+                                ></fn-icon>
+                            </button>
+                        }
+
+                        @if ( tramite.flgSecreto !== FLAG_ACTIVO ) {
+                            <button 
+                                class="cfe-boton-secondary cfe-boton-opcion" 
+                                title="Previsualizar trámite" 
+                                (click)="previsualizarTramite(tramite)"
+                            >
+                                <fn-icon 
+                                    class="ml-1" 
+                                    [ico]="iconUtil.obtenerIcono('iViewFile')" 
+                                    height="1.6rem"
+                                ></fn-icon>
+                            </button>
+                        } @else if ( tramite.flgSecreto === FLAG_ACTIVO && esFiscalProvincial ) {
+                            <button 
+                                class="cfe-boton-secondary cfe-boton-dark cfe-boton-opcion" 
+                                title="Previsualizar trámite" 
+                                (click)="previsualizarTramite(tramite)"
+                            >
+                                <fn-icon 
+                                    class="ml-1" 
+                                    [ico]="iconUtil.obtenerIcono('iViewFile')" 
+                                    height="2.2rem"
+                                ></fn-icon>
+                            </button>
+                        }
+
+                        @if ( tramite.nro === '1' ) {
+                            
+                            @if ( esPosibleEditarTramite(tramite.estadoTramite) ) {
+                                <button 
+                                    class="cfe-boton-secondary cfe-boton-opcion" 
+                                    (click)="editarTramite(tramite)" 
+                                    title="Editar trámite"
+                                >
+                                    <fn-icon 
+                                        class="ml-1" 
+                                        [ico]="iconUtil.obtenerIcono('iEdit')" 
+                                        height="1.6rem"
+                                    ></fn-icon>
+                                </button>
+                            }
+
+                            @if ( esPosibleEliminarTramite(tramite.tipoIngresoTramite, tramite.despacho, tramite.estadoTramite, tramite.origenTramite) ) {
+                                <button 
+                                    pButton 
+                                    class="p-button-danger cfe-boton-opcion" 
+                                    (click)="eliminarTramite(tramite)" 
+                                    title="Eliminar trámite"
+                                >
+                                    <fn-icon 
+                                        class="ml-1" 
+                                        [ico]="iconUtil.obtenerIcono('iTrash')" 
+                                        height="2.2rem"
+                                    ></fn-icon>
+                                </button>
+                            }
+
+                            @if ( esPosibleRevertirTramite(tramite.flgElevacion, tramite.flgElevacionAceptada, tramite.flgNoEfe) ) {
+                                <button 
+                                    pButton 
+                                    class="p-button-danger cfe-boton-opcion" 
+                                    title="Revertir trámite elevado"
+                                    (click)="revertirTramiteElevado(tramite)"
+                                >
+                                    <img 
+                                        [src]="icon('revertir')" 
+                                        alt="Revertir trámite elevado"
+                                    >
+                                </button>
+                            }
+
+                        }
+
+                        @if ( tramite.flgConActasAudiencia === FLAG_ACTIVO ) {
+                            <button 
+                                class="cfe-boton-secondary cfe-boton-opcion" 
+                                title="Ver documentos adjuntos"
+                                (click)="verDocumentosAdjuntos(tramite)"
+                            >
+                                <fn-icon 
+                                    class="ml-1" 
+                                    [ico]="iconUtil.obtenerIcono('iAttach')" 
+                                    height="1.6rem"
+                                ></fn-icon>
+                            </button>
+                        }
+
+                        @if ( tramite.flgElevacion === FLAG_ACTIVO && tramite.flgElevacionObservada === FLAG_ACTIVO ) { 
+                            <button 
+                                class="cfe-boton-transparente cfe-boton-opcion" 
+                                title="Ver detalle de la observación del Fiscal Superior"
+                                (click)="verDetalleObservacion(tramite)"
+                            >
+                                <fn-icon 
+                                    class="ml-1" 
+                                    [ico]="iconUtil.obtenerIcono('iEye')" 
+                                    height="2rem"
+                                ></fn-icon>
+                            </button>
+                        }
+                    </div>
+
+                </td>
+            </tr>
+            @if ( tramite.flgSecreto === FLAG_ACTIVO && this.esFiscalProvincial) {
+                <tr class="cfe-row-expansion">
+                    <td colspan="7">
+                        <div class="flex flex-wrap align-items-center">
+                            <img
+                                (click)="verMensajeTramiteOculto()"
+                                [src]="icon('secreto')"
+                                alt="Secreto"
+                                class="mr-3 cursor-pointer"
+                                onKeyPress=""
+                            >
+                            <fn-icon 
+                                class="ml-1 icon-plazo-secreto"
+                                [ico]="iconUtil.obtenerIcono('iTimer')"
+                                height="1.8rem"
+                            ></fn-icon>
+                            Plazo del secreto
+                            <div class="progressBarCaso progress-plazo-secreto mx-3">
+                                <p-progressBar
+                                    styleClass='redbar'
+                                    [value]="mathUtil.calcularPorcentaje(tramite.plazoSecretoTranscurrido, tramite.plazoSecreto)"
+                                    [showValue]="false"
+                                >
+                                </p-progressBar>
+                            </div>
+                            {{ tramite.plazoSecretoTranscurrido }}/{{ tramite.plazoSecreto }} días
+                        </div>
+                    </td>
+                </tr>
+            }
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="9" style="text-align: center;">No se encontraron registros con los criterios de búsqueda
+                    ingresados
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <app-paginator
+        [query]="query"
+        [items]="itemPaginado"
+        [rowsPerPageOptions]="[]"
+        [resetPage]="resetPage"
+        (paginate)="onPaginate($event)"
+      ></app-paginator>
+</div>

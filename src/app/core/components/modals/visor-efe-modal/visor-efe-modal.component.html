@@ -1,0 +1,66 @@
+<div class="cfe-container cfe-container-background-crema p-4 relative">
+  <fn-icon
+    class="absolute top-0 right-0 cursor-pointer mt-2 ml-3"
+    [ico]="obtenerIcono('iClose')"
+    height="2rem"
+    (click)="ref.close()"
+  ></fn-icon>
+
+  <div class="cfe-titulo-1 text-lg">
+    <fn-icon [ico]="obtenerIcono('iViewFile')" height="1.5rem"></fn-icon>
+    Visor documental del caso:
+    <span [innerHTML]="codigoHtml(datosGenerales.codigo)"></span>
+  </div>
+
+  <div class="py-3">
+    <div>
+      <span class="font-semibold">Despacho: </span>
+      <span>{{ datosGenerales.despacho }}</span>
+    </div>
+    @if (datosGenerales.fiscalAsignado) {
+    <div>
+      <span class="font-semibold">Fiscal asignado: </span>
+      <span>{{ datosGenerales.fiscalAsignado }}</span>
+    </div>
+    }
+    <div>
+      <span class="font-semibold">Fecha de denuncia: </span>
+      <span>{{ datosGenerales.fechaDenuncia }}</span>
+    </div>
+  </div>
+
+  <app-tabs-view class="font-bold"
+                 [tabs]="tabs"
+                 [indexSeleccionado]="indexTab"
+                 [ajustarAncho]="ajustarAncho"
+                 (onChangeIndex)="eventoCambiarTab($event)"></app-tabs-view>
+
+  <p-tabView class="cfe-tabs-view">
+
+    @if (idSeleccionadoTab === PrevisualizarDocumentoTab.CarpetaPrincipal) {
+      <p-tabPanel>
+        <app-carpeta-principal
+          [idCaso]="datosEntrada.idCaso"
+          (datosInicioEmisor)="datosInicioEmisor($event)"
+          (tieneCuadernos)="mostrarCuadernos($event)"
+          (datosEtapaCuaderno)="agregarCuadernos($event)"
+        />
+      </p-tabPanel>
+    }
+    @if (idSeleccionadoTab === PrevisualizarDocumentoTab.CuadernosIncidentales) {
+      <p-tabPanel>
+        <app-cuaderno-incidental [datoEtapaOriginal]="datoEtapaCuadernos"></app-cuaderno-incidental>
+      </p-tabPanel>
+    }
+    @if (idSeleccionadoTab === PrevisualizarDocumentoTab.CuadernosEjecucion) {
+      <p-tabPanel></p-tabPanel>
+    }
+    @if (idSeleccionadoTab === PrevisualizarDocumentoTab.CarpetaAuxiliar) {
+      <p-tabPanel>
+        <app-carpeta-auxiliar
+          [idCaso]="datosEntrada.idCaso"
+        />
+      </p-tabPanel>
+    }
+  </p-tabView>
+</div>

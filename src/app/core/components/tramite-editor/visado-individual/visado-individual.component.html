@@ -1,0 +1,9 @@
+@if (procesarVisado) {
+  <div class="p-3">
+    <div class="flex flex-column sm:flex-row justify-content-center">
+      <span class="cfe-titulo-1 family-poppin-bold mr-2">Procesando visado digital</span>
+      <fn-icon [ico]="iconUtil.obtenerIcono('iFirmaMasiva')" height="2rem"></fn-icon>
+    </div>
+    <cfe-lib-firma-digital-cliente></cfe-lib-firma-digital-cliente>
+  </div>
+}

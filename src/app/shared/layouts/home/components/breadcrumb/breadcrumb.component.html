@@ -1,0 +1,16 @@
+<div class="breadcrumb__container hidden lg:flex p-3">
+
+  <div *ngFor="let item of routes; let i = index">
+
+    <a *ngIf="routes.length !== i+1 || numeroCaso" class="breadcrumb__item" routerLink="{{ item.url }}"
+      (click)="eventoCambiarPagina(i)">{{ item.name }}</a>
+    <span *ngIf="routes.length === i+1 && !numeroCaso">
+      {{ item.name }}
+    </span>
+    <span *ngIf="routes.length !== i+1 || numeroCaso" class="separator"> / </span>
+
+  </div>
+
+  <span *ngIf="numeroCaso">{{ numeroCaso }}</span>
+
+</div>

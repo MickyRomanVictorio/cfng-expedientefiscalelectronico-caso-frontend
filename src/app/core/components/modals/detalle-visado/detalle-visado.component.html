@@ -1,0 +1,80 @@
+<div class="flex p-1 ml-1">
+  <div class="text-xl text-primary mb-1 mt-2 family-poppin-bold">
+    Detalle del visado
+  </div>
+  <div class="ml-auto">
+    <span class="cursor-pointer">
+      <fn-icon
+        [ico]="iconUtil.obtenerIcono('iClose')"
+        (click)="cerrarModal()"
+        onkeydown=""
+        height="1.5rem"
+      />
+    </span>
+  </div>
+</div>
+
+<p-table
+  [value]="detalleVisado"
+  [rowHover]="true"
+  responsiveLayout="stack">
+  <ng-template pTemplate="header">
+    <tr>
+      <th scope="col">Enviado a:</th>
+      <th scope="col">Estado:</th>
+      <th scope="col">Fecha de Visado:</th>
+      <th scope="col" class="text-center">Cancelar invitación de visado</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-detalle>
+    <tr class="">
+      <td>
+        <span>{{ detalle.nombreUsuarioDestino }}</span
+        ><br />
+        <strong>{{ detalle.nombreCargo }} </strong>
+      </td>
+      <td>
+        <span
+          class="font-semibold"
+          [ngClass]="{
+            'text-green-500': detalle.fgBandejaActoTramite === '1',
+            'text-red-500': detalle.fgBandejaActoTramite === '2',
+            'text-yellow-500': detalle.fgBandejaActoTramite === '0'
+          }"
+          >{{ detalle.estado }}</span
+        >
+      </td>
+      <td>
+        <span>{{ detalle.fechaProcesado ? (detalle.fechaProcesado | dateformat) : '-' }}</span
+        ><br />
+        <span>{{ detalle.horaProcesado ? (detalle.horaProcesado | dateformat : "hour24") : '' }}</span>
+      </td>
+
+      <td class="flex justify-content-center">
+        <button
+          pButton
+          class="cfe-boton-opcion"
+          [ngClass]="{
+            'p-button-danger': detalle.fgBandejaActoTramite === '0',
+            'p-button-secondary': detalle.fgBandejaActoTramite !== '0'
+          }"
+          title="Eliminar trámite"
+          [disabled]="detalle.fgBandejaActoTramite !== '0'"
+          (click)="confirmarCancelarInvitacion(detalle)"
+        >
+          <fn-icon
+            [ico]="iconUtil.obtenerIcono('iClose')"
+            height="2rem"
+          ></fn-icon>
+        </button>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="4" style="text-align: center">
+        No se encontraron resultados
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

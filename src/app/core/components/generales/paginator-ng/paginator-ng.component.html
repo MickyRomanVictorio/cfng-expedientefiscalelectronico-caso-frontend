@@ -1,0 +1,7 @@
+<p-paginator
+  [first]="(query.page - 1) * query.limit"
+  [rows]="query.limit"
+  [totalRecords]="items.data.total"
+  [rowsPerPageOptions]="rowsPerPageOptions"
+  (onPageChange)="onPageChange($event)"
+></p-paginator>

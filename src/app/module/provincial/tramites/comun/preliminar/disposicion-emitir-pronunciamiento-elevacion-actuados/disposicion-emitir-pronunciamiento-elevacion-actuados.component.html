@@ -1,0 +1,130 @@
+<app-alertas-tramite
+  [alertas]="alertas"
+  [idCaso]="idCaso"
+  urlClass="cfe-url cfe-url-black"
+></app-alertas-tramite>
+<div [formGroup]="formularioPronunciamiento">
+  <div *ngIf="alertas.length === 0" class="formulario-derivacion">
+    <div class="col-12 grid">
+      <div class="col-3 mb-2">
+        <label for="tipoResultado" class="font-semibold mb-2">Resultado:</label>
+        <p-dropdown
+          id="tipoResultado"
+          styleClass="p-inputtext-lg py-1"
+          [options]="tipoResultado"
+          optionValue="id"
+          optionLabel="noDescripcion"
+          placeholder="Seleccione un Resultado"
+          emptyMessage="Sin resultados"
+          formControlName="tipoResultado"
+          autoWidth="false"
+          [style]="{ width: '30%' }"
+          (onChange)="alSeleccionarTipoResultado()"
+        ></p-dropdown>
+      </div>
+      @if (mostrarConsecuencias) {
+      <div class="col-3 mb-2">
+        <label for="consecuencias" class="font-semibold mb-2"
+          >Consecuencia:</label
+        >
+        <p-dropdown
+          id="consecuencias"
+          styleClass="p-inputtext-lg py-1"
+          [options]="consecuencias"
+          optionValue="id"
+          optionLabel="noDescripcion"
+          placeholder="Seleccione una Consecuencia"
+          emptyMessage="Sin resultados"
+          formControlName="consecuencias"
+          autoWidth="false"
+          [style]="{ width: '30%' }"
+          (onChange)="alSeleccionarConsecuencia()"
+        ></p-dropdown>
+      </div>
+    }
+      @if (mostrarSeOrdena) {
+      <div class="col-6 mb-2">
+        <label for="seOrdena" class="font-semibold mb-2">Se ordena:</label>
+        <p-dropdown
+          id="seOrdena"
+          styleClass="p-inputtext-lg py-1"
+          [options]="seOrdena"
+          optionValue="id"
+          optionLabel="noDescripcion"
+          placeholder="Seleccione un tipo de orden"
+          emptyMessage="Sin resultados"
+          formControlName="seOrdena"
+          autoWidth="false"
+          [style]="{ width: '30%' }"
+          [panelStyle]="{ width: '300px' }"
+        ></p-dropdown>
+      </div>
+      } 
+    </div>
+
+    <div class="col-12 grid">
+
+      <div class="col-6 mb-2">
+        <label for="descripcion" class="font-semibold mb-2"
+          >¿Se excluye al fiscal?</label
+        >
+        <div class="field-checkbox mt-3">
+          <p-checkbox
+            formControlName="excluirFiscal"
+            [binary]="true"
+            inputId="binary"
+            label="Excluir fiscal"
+          ></p-checkbox>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+@if(idJerarquia == 1 && pdfUrlTramite!==null) {
+<iframe
+  title="Documento Trámite"
+  [src]="pdfUrlTramite"
+  width="100%"
+  style="height: 500px"
+></iframe>
+@if(idJerarquia === 1 && !ocultarBotones){
+  <div class="text-right pt-3">
+    <button
+      type="button"
+      class="cfe-boton-secondary cfe-boton-m inline"
+      (click)="eventoObservarTramite()"
+    >
+      Observar Trámite
+    </button>
+    <button
+      type="button"
+      class="cfe-boton-primary cfe-boton-m inline ml-2"
+      (click)="eventoRecibirTramite()"
+    >
+      Recibir Trámite
+    </button>
+  </div>
+}
+
+@if(verFormularioObservar()===true){
+  <hr>
+  <app-observar
+    [esModal]="false"
+    [datosPronunciamiento]="datosPronunciamiento"
+    [esSoloLectura]="false"
+    (cerrar)="eventoObservarCancelar()"
+    (observar)="eventoObservarEnviar($event)"
+  ></app-observar>
+}
+
+}
+
+@if(idJerarquia === 2 && idNode !== '' && observacionProvincial && observacionProvincial.length > 0){
+  <button type="button" class="cfe-boton-secondary cfe-boton-m inline" (click)="eventoObservarTramite(true)">
+    Ver Observación Provincial
+  </button>
+}
+
+<div #scrollInferior></div>

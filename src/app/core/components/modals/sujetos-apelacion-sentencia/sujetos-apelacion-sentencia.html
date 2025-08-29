@@ -1,0 +1,305 @@
+<div class="p-4">
+  <div class="cfe-encabezado-modal">
+    <h3 class="cfe-encabezado-titulo cfe-subtitulo-3">
+      {{ configuracion.titulo }}
+    </h3>
+    <fn-icon
+      (click)="cerrarModal()"
+      [ico]="obtenerIcono('iClose')"
+      class="cfe-encabezado-cerrar"
+      height="2rem">
+    </fn-icon>
+  </div>
+
+  <div class="mt-3">
+    <h6 class="cfe-encabezado-titulo cfe-subtitulo-3">
+      Pestaña de apelación N° 0{{ nuPestana }}
+    </h6>
+  </div>
+
+  <div class="mt-3">
+    <h6 class="cfe-encabezado-titulo cfe-subtitulo-3 cfe-semi-bold" [innerHTML]="tituloCaso"></h6>
+    <p class="cfe-body-2 mt-3 cfe-semi-bold">
+      {{ configuracion.subtitulo }}
+    </p>
+  </div>
+
+  <div class="mt-3">
+    <span class="cfe-body-2">
+       <i class="pi pi-circle-fill mr-2" [style.color]="'var(--mpfn-green)'"></i>
+       Recurso de apelación presentado por el fiscal ({{ nuApelacionFiscal }})
+    </span>
+    <span class="cfe-body-2 ml-3">
+       <i class="pi pi-circle-fill mr-2" [style.color]="'var(--mpfn-gray2)'"></i>
+       Apelaciones desistimadas ({{ nuDesistidas }})
+    </span>
+  </div>
+
+  <div class="cfe-tabla-white mt-3">
+    <p-table
+      class="cfe-table-primary"
+      [value]="listaSujetosConApelacion"
+      [tableStyle]="{ 'min-width': '70rem' }"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      [totalRecords]="listaSujetosConApelacion.length"
+      styleClass="p-datatable-sm"
+      responsiveLayout="stack">
+      <ng-template pTemplate="header">
+        <tr>
+          <th></th>
+          <th style="width: 3rem">N°</th>
+          <th>¿Quién apeló?</th>
+          <th>¿En contra de quién se apeló?</th>
+          <th>Delito</th>
+          <th>Tipo de sentencia (PPC)</th>
+          <th style="width: 8rem">Clase de pena</th>
+          <th style="width: 8rem">Reparación civil</th>
+          <th>Tipo de pena</th>
+          <th *ngIf="configuracion.posicion_petitorio === 'columna'">Petitorio</th>
+          <th *ngIf="isColumnVisible('idResultadoCalificacionApelacionSuperior')" style="width: 5rem">Resultado de la calificación (2da instancia)</th>
+          <th *ngIf="isColumnVisible('checkResultadoRecursoAbsolucionSeleccionar')" style="width: 5rem">Absuelve traslado</th>
+          <th *ngIf="isColumnVisible('checkResultadoResuelveRecursoAbsolucionSeleccionar')" style="width: 5rem">Absuelve</th>
+          <th *ngIf="isColumnVisible('checkResultadoRecursoReposicionSeleccionar')" style="width: 5rem">Realizar reposición</th>
+          <th *ngIf="isColumnVisible('idResultadoResuelveRecursoReposicion')" style="width: 5rem">Resultado de reposición</th>
+          <th *ngIf="isColumnVisible('idResultadoResuelveApelacionSentencia')" style="width: 5rem">Resultado de la resolución (2da instancia)</th>
+          <th *ngIf="isColumnVisible('checkResultadoEscritoDesistimientoSeleccionar')" style="width: 5rem">Realizar desistimiento</th>
+          <th *ngIf="isColumnVisible('idResultadoResuelveDesistimiento')" style="width: 5rem">Resultado desistimiento</th>
+        </tr>
+      </ng-template>
+      <ng-template let-item let-i="rowIndex" pTemplate="body">
+        <tr [ngClass]="{'bg-gray-200': item.idResultadoResuelveDesistimiento === 1506}">
+          <td class="text-center">
+            <span class="p-column-title font-semibold"></span>
+            <i *ngIf="item.flApelacionFiscal === 1" class="pi pi-circle-fill mr-2" [style.color]="'var(--mpfn-green)'"></i>
+          </td>
+          <td class="text-center">
+            <span class="p-column-title font-semibold">N°</span>
+            {{ i + 1 }}
+          </td>
+          <td>
+            <span class="p-column-title font-semibold">¿Quién apeló?</span>
+            <div>
+              <ng-container *ngIf="item.sujetoQuienApela?.trim(); else guion">
+                {{ item.sujetoQuienApela | capitalizar }}<br/>
+                ({{ item.noTipoParteSujetoApela | capitalizar }})
+              </ng-container>
+              <ng-template #guion>-</ng-template>
+            </div>
+            <div>
+              <small *ngIf="configuracion.posicion_petitorio === 'bajo_texto' && item.noPetitorio?.trim()" class="label-petitorio">
+                <b>Petitorio: {{ item.noPetitorio }}</b>
+              </small>
+            </div>
+          </td>
+          <td>
+            <span class="p-column-title font-semibold">¿En contra de quién se apeló?</span>
+            {{ item.sujeto }}
+          </td>
+          <td>
+            <span class="p-column-title font-semibold">Delito</span>
+            {{ item.noDelito }}
+          </td>
+          <td>
+            <span class="p-column-title font-semibold">Tipo de sentencia (PPC)</span>
+            {{ item.sentencia }}
+          </td>
+          <td class="text-center">
+            <span class="p-column-title font-semibold">Clase de pena</span>
+            <span class="ml-2">
+              {{ !item.tipoPena?.trim() ? '-' : item.tipoPena }}
+            </span>
+          </td>
+          <td class="text-center">
+            <span class="p-column-title font-semibold">Reparación civil</span>
+            <span class="ml-2">
+              {{ !item.checkReparacionCivilSeleccionar ? 'No' : 'Si' }}
+            </span>
+          </td>
+          <td>
+            <span class="p-column-title font-semibold">Tipo de pena</span>
+            <span class="ml-2">
+              {{ !item.pena?.trim() ? '-' : item.pena }}
+            </span>
+          </td>
+          <td *ngIf="configuracion.posicion_petitorio === 'columna'">
+            <span class="p-column-title font-semibold">Petitorio</span>
+            <span class="ml-2">
+              {{ !item.noPetitorio?.trim() ? '-' : item.noPetitorio }}
+            </span>
+          </td>
+          <td *ngIf="isColumnVisible('idResultadoCalificacionApelacionSuperior')" class="text-center">
+            <span class="p-column-title font-semibold">Resultado de la calificación (2da instancia)</span>
+            <ng-container *ngIf="isColumnEditable('idResultadoCalificacionApelacionSuperior', item); else vistaSoloLectura">
+              <p-dropdown styleClass="py-1 p-inputtext-lg" placeholder="Pendiente de respuesta"
+                          [options]="listaRespuestaCalificacion"
+                          optionLabel="nombre"
+                          optionValue="id"
+                          appendTo="body"
+                          [(ngModel)]="item.idResultadoCalificacionApelacionSuperior"
+                          [showClear]="true"
+                          [disabled]="soloLectura || !esEditable(item)">
+                <ng-template let-respuesta pTemplate="item">
+                  <div class="flex align-items-center gap-2">
+                    <div>{{ respuesta.nombre }}</div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </ng-container>
+            <ng-template #vistaSoloLectura>
+              {{ item.noResultadoCalificacionApelacionSuperior?.trim() || '-' }}
+            </ng-template>
+          </td>
+          <td *ngIf="isColumnVisible('checkResultadoRecursoAbsolucionSeleccionar')" class="text-center">
+            <span class="p-column-title font-semibold">Absuelve traslado</span>
+            <ng-container>
+                @if (isColumnEditable('checkResultadoRecursoAbsolucionSeleccionar', item)) {
+                  <p-checkbox
+                    [disabled]="!esEditable(item)"
+                    [(ngModel)]="item.checkResultadoRecursoAbsolucionSeleccionar"
+                    [binary]="true">
+                  </p-checkbox>
+                } @else { - }
+            </ng-container>
+          </td>
+          <td *ngIf="isColumnVisible('checkResultadoResuelveRecursoAbsolucionSeleccionar')" class="text-center">
+            <span class="p-column-title font-semibold">Absuelve</span>
+            <ng-container>
+              @if (isColumnEditable('checkResultadoResuelveRecursoAbsolucionSeleccionar', item)) {
+                <p-checkbox
+                  [disabled]="!esEditable(item)"
+                  [(ngModel)]="item.checkResultadoResuelveRecursoAbsolucionSeleccionar"
+                  [binary]="true">
+                </p-checkbox>
+              } @else { - }
+            </ng-container>
+          </td>
+          <td *ngIf="isColumnVisible('checkResultadoRecursoReposicionSeleccionar')" class="text-center">
+            <span class="p-column-title font-semibold">Realizar reposición</span>
+            <ng-container>
+              @if (isColumnEditable('checkResultadoRecursoReposicionSeleccionar', item)) {
+                <p-checkbox
+                  [disabled]="!esEditable(item)"
+                  [(ngModel)]="item.checkResultadoRecursoReposicionSeleccionar"
+                  [binary]="true">
+                </p-checkbox>
+              } @else { - }
+            </ng-container>
+          </td>
+          <td *ngIf="isColumnVisible('idResultadoResuelveRecursoReposicion')" class="text-center">
+            <span class="p-column-title font-semibold">Resultado de reposición</span>
+            <ng-container *ngIf="isColumnEditable('idResultadoResuelveRecursoReposicion', item); else vistaSoloLectura">
+              <p-dropdown styleClass="py-1 p-inputtext-lg" placeholder="Pendiente de respuesta"
+                          [options]="listaRespuestaResposicion"
+                          optionLabel="nombre"
+                          optionValue="id"
+                          appendTo="body"
+                          [(ngModel)]="item.idResultadoResuelveRecursoReposicion"
+                          [showClear]="true"
+                          [disabled]="soloLectura || !esEditable(item)">
+                <ng-template let-respuesta pTemplate="item">
+                  <div class="flex align-items-center gap-2">
+                    <div>{{ respuesta.nombre }}</div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </ng-container>
+            <ng-template #vistaSoloLectura>
+              {{ item.noResultadoResuelveRecursoReposicion?.trim() || '-' }}
+            </ng-template>
+          </td>
+          <td *ngIf="isColumnVisible('idResultadoResuelveApelacionSentencia')" class="text-center">
+            <span class="p-column-title font-semibold">Resultado de la resolución (2da instancia)</span>
+            <ng-container *ngIf="isColumnEditable('idResultadoResuelveApelacionSentencia', item); else vistaSoloLectura">
+              <p-dropdown styleClass="py-1 p-inputtext-lg" placeholder="Pendiente de respuesta"
+                          [options]="listaRespuestaSentencia"
+                          optionLabel="nombre"
+                          optionValue="id"
+                          appendTo="body"
+                          [(ngModel)]="item.idResultadoResuelveApelacionSentencia"
+                          [showClear]="true"
+                          [disabled]="soloLectura || !esEditable(item)">
+                <ng-template let-respuesta pTemplate="item">
+                  <div class="flex align-items-center gap-2">
+                    <div>{{ respuesta.nombre }}</div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </ng-container>
+            <ng-template #vistaSoloLectura>
+              {{ item.noResultadoResuelveApelacionSentencia?.trim() || '-' }}
+            </ng-template>
+          </td>
+          <td *ngIf="isColumnVisible('checkResultadoEscritoDesistimientoSeleccionar')" class="text-center">
+            <span class="p-column-title font-semibold">Realizar desistimiento</span>
+            <ng-container>
+              @if (isColumnEditable('checkResultadoEscritoDesistimientoSeleccionar', item)) {
+                <p-checkbox
+                  [disabled]="!esEditable(item)"
+                  [(ngModel)]="item.checkResultadoEscritoDesistimientoSeleccionar"
+                  [binary]="true">
+                </p-checkbox>
+              } @else if (item.checkResultadoEscritoDesistimientoSeleccionar) {
+                <p-checkbox
+                  [disabled]="true"
+                  [(ngModel)]="item.checkResultadoEscritoDesistimientoSeleccionar"
+                  [binary]="true">
+                </p-checkbox>
+              } @else { - }
+            </ng-container>
+          </td>
+          <td *ngIf="isColumnVisible('idResultadoResuelveDesistimiento')" class="text-center">
+            <span class="p-column-title font-semibold">Resultado desistimiento</span>
+            <ng-container *ngIf="isColumnEditable('idResultadoResuelveDesistimiento', item); else vistaSoloLectura">
+              <p-dropdown styleClass="py-1 p-inputtext-lg" placeholder="Pendiente de respuesta"
+                          [options]="listaRespuestaDesistiemiento"
+                          optionLabel="nombre"
+                          optionValue="id"
+                          appendTo="body"
+                          [(ngModel)]="item.idResultadoResuelveDesistimiento"
+                          [showClear]="true"
+                          [disabled]="soloLectura || !esEditable(item)">
+                <ng-template let-respuesta pTemplate="item">
+                  <div class="flex align-items-center gap-2">
+                    <div>{{ respuesta.nombre }}</div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </ng-container>
+            <ng-template #vistaSoloLectura>
+              {{ item.noResultadoResuelveDesistimiento?.trim() || '-' }}
+            </ng-template>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #noMostrar>
+        -
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="9" class="text-center">No se ha agregado ninguna apelación.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <div *ngIf="showMensajeInformativo()" class="flex align-items-center mt-3 p-3 border-round-sm" style="background-color: #FFFBEB;">
+    <i class="pi pi-info-circle mr-2" style="color: #F59E0B;"></i>
+    <p class="cfe-body-2" style="color: #6B4F04;">
+      {{ configuracion.mensaje_informativo.descripcion }}
+    </p>
+  </div>
+
+</div>
+<div class="col-12 flex align-items-center justify-content-center mt-3 mb-2">
+  <button class="cfe-boton-opcion cfe-boton-secondary cfe-boton-lg font-semibold with-button"
+          (click)="cancelar()">
+    Cancelar
+  </button>
+  <button class="ml-3 cfe-boton-primary cfe-boton-lg font-semibold with-button"
+          [disabled]="!showBtnAceptar()"
+          (click)="aceptar()">
+    Aceptar
+  </button>
+</div>

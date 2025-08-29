@@ -1,0 +1,20 @@
+.completar-denuncia-modal {
+    width: 650px;
+    .alert-title {
+        color: var(--mpfn-yellow-dark);
+        margin-top: 10px;
+        font-size: 1.5em !important;
+        text-align: left !important;
+    }
+    .alert-description {
+        text-align: left !important;
+    }
+    .alert-options {
+        display: flex;
+        justify-content: space-between !important;
+    }
+}
+
+.preliminar-completar-denuncia-modal {
+    @extend .completar-denuncia-modal;
+}

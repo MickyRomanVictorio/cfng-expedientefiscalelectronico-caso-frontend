@@ -1,0 +1,123 @@
+<div class="mt-4 w-full">
+  <span class="font-bold text-sm">Direcciones</span>
+
+  @if(this.ocultarBuscador){
+  <form [formGroup]="formDireccionSujetoProcesal">
+    <div class="grid mt-1">
+      <div class="col md:col-3">
+        <div class="field flex align-items-center gap-2">
+          <label class="text-sm mb-0">Buscar:</label>
+          <input pInputText lettersOnly upperCaseInput 
+            class="p-inputtext-md w-full" 
+            [maxLength]="60" 
+            formControlName="buscar" 
+            (keyup)="eventoBuscarSegunTexto()"
+            />
+        </div>
+      </div>
+    </div>
+  </form>
+  }
+  
+  <p-table
+    class="cfe-table-primary"
+    [value]="listaDirecciones"
+    [tableStyle]="{ 'min-width': '50rem' }"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th scope>N°</th>
+        <th scope>Tipo de dirección</th>
+        <th scope>Dirección</th>
+        <th scope>Distrito</th>
+        <th scope>Provincia</th>
+        <th scope>Departamento</th>
+        <th scope>Pais</th>
+        <th scope>Estado</th>
+        <th scope>Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-index="rowIndex" let-direccion>
+      <tr [class.font-bold]="!direccion.habilitado">
+        <td>{{ index + 1 }}</td>
+        <td>
+          <p class="font-bold">{{ direccion.tipoDireccionNombre }}</p>
+          <span
+            class="badge font-bold"
+            [ngClass]="direccion.habilitado ? 'badge-despacho' : 'badge-mup'"
+            >{{ direccion.habilitado ? "Activo" : "Inactivo" }}</span
+          >
+        </td>
+        <td>
+          {{ setTipoDireccion(direccion.tipoVia) }}
+          {{ direccion.nombre | uppercase }}
+        </td>
+        <td>{{ direccion.distritoNombre }}</td>
+        <td>{{ direccion.provinciaNombre }}</td>
+        <td>{{ direccion.dptoNombre }}</td>
+        <td>{{ direccion.paisNombre }}</td>
+        <td>
+          <div *ngIf="direccion.tipoDireccionNombre !== 'RENIEC'">
+              <p-inputSwitch
+                [(ngModel)]="direccion.habilitado" 
+                (onChange)="habilitar(direccion)"></p-inputSwitch>
+          </div>
+        </td>
+        <td>
+          <div class="flex">
+            @if(direccion.habilitado){
+            <fn-icon
+              class="ml-1 mt-1 cursor-pointer"
+              [ico]="iconUtil.obtenerIcono('iEdit')"
+              (click)="verModalDireccion('E', direccion, index)"
+              height="1.5rem"
+              onKeyPress
+            ></fn-icon>
+            } @if((direccion.tipoDireccion !== 'RENIEC' && direccion.length > 0)
+            || direccion.habilitado){
+            <fn-icon
+              class="cursor-pointer"
+              [ico]="iconUtil.obtenerIcono('iTrash')"
+              (click)="eliminarDireccion(index)"
+              height="2.1rem"
+              onKeyPress
+            ></fn-icon>
+            } @else {
+            <fn-icon
+              class="cursor-pointer"
+              [ico]="iconUtil.obtenerIcono('iTrash')"
+              (click)="eliminarDireccion(index)"
+              height="2.1rem"
+              onKeyPress
+            ></fn-icon>
+            }
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="7">
+          <div class="text-center">Aún no se ha registrado una dirección</div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <app-paginator
+      [query]="paginacionCondicion"
+      [items]="paginacionConfiguracion"
+      [rowsPerPageOptions]="[]"
+      [resetPage]="paginacionReiniciar"
+      (paginate)="eventoCambiarPagina($event)"
+    ></app-paginator>
+
+  <div class="w-full flex align-items-end justify-content-end gap-3 mt-3">
+    <p-button
+      (click)="verModalDireccion('R', null, 0)"
+      icon="pi pi-plus"
+      label="Agregar dirección"
+      styleClass="p-button cfe-boton-primary text-white font-semibold px-4 py-1.2"
+      onKeyPress
+    ></p-button>
+  </div>
+</div>

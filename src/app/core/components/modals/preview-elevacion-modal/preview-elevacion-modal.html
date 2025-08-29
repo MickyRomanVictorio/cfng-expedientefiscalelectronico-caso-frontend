@@ -1,0 +1,133 @@
+<div class="encabezado-modal w-12 mb-3 relative">
+  <h3
+    class="encabezado-titulo cfe-subtitulo-3 cfe-semi-bold family-poppin-bold"
+  >
+    PREVISUALIZAR TRÁMITE
+  </h3>
+  <a (click)="eventoCerrarModal()">
+    <fn-icon
+      class="encabezado-cerrar absolute cursor-pointer top-0 right-0"
+      [ico]="obtenerIcono('iClose')"
+      height="2rem"
+    ></fn-icon>
+  </a>
+</div>
+
+<div class="grid mt-3">
+  <div class="col-12 md:col-9">
+    <div class="text-lg text-blue-900">
+      <span class="font-bold">{{ datos?.coDocumento ? stringUtil.capitalizedFirstWord(datos.coDocumento) + ':' : '' }}</span>
+        {{ datos?.noTramite ? stringUtil.capitalizedFirstWord(datos.noTramite) : '' }}
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="formularioPronunciamiento">
+@if(esDisposicionContiendaSuperior()){
+  <div class="grid mt-3">
+    <div class="col-12 md:col-4">
+      <label class="font-semibold">Resultado</label>
+      <p-dropdown
+        styleClass="py-1 p-inputtext-lg" 
+        [options]="tipoResultado" 
+        optionValue="id"
+        optionLabel="noDescripcion" 
+        emptyMessage="Sin resultados" 
+        placeholder="Seleccione un tipo de resultado"
+        formControlName="tipoResultado" >
+      </p-dropdown>
+    </div>
+
+    <div class="col-12 md:col-4">
+      <label class="font-semibold">¿Se excluye al fiscal?</label>
+      <div class="field-checkbox mt-3">
+        <p-checkbox
+          formControlName="excluirFiscal" 
+          [binary]="true" 
+          inputId="binary"
+          label="Excluir fiscal">
+        </p-checkbox>
+      </div>
+    </div>
+
+    <div class="col-12 md:col-4">
+      <label class="font-semibold">Fecha de disposición</label>
+        <p-calendar 
+          dateMask 
+          appendTo="body" 
+          dateFormat="dd/mm/yy"
+          class="p-inputtext-md cfe-calendar h-40" 
+          [showIcon]="true " 
+          icon="cfe-calendar-icon" 
+          placeholder="dd/mm/aaaa"
+          formControlName="fechaDisposicion" >
+        </p-calendar>
+    </div>
+  </div>
+}
+@if(esDisposicionContiendaProvincial()){
+  <div class="formgrid grid col-12">
+    <div class="field col-12 md:col-4">
+      <label class="font-semibold">Resultado</label>
+      <p-dropdown
+        styleClass="py-1 p-inputtext-lg"
+        [options]="tipoResultado"
+        optionValue="id"
+        optionLabel="noDescripcion"
+        emptyMessage="Sin resultados"
+        placeholder="Seleccione un tipo de resultado"
+        formControlName="tipoResultado"
+      ></p-dropdown>
+    </div>
+
+    <div class="field col-12 md:col-4">
+      <label class="font-semibold">Fecha de disposición:</label
+      >
+      <p-calendar
+        dateMask
+        dateFormat="dd/mm/yy"
+        class="p-inputtext-lg cfe-calendar h-56"
+        [showIcon]="true"
+        icon="cfe-calendar-icon"
+        placeholder="dd/mm/aaaa"
+        formControlName="fechaDisposicion"
+      ></p-calendar>
+    </div>
+
+    <div class="field col-12 md:col-4">
+      <label class="font-semibold">Motivo</label>
+      <p-dropdown
+        styleClass="py-1 p-inputtext-lg"
+        [options]="motivos"
+        optionValue="id"
+        optionLabel="noDescripcion"
+        emptyMessage="Sin resultados"
+        placeholder="Seleccione un motivo"
+        formControlName="motivo"
+      ></p-dropdown>
+    </div>
+
+    <div class="field col-12">
+      <label class="font-semibold">Descripcion (opcional)</label>
+      <textarea
+        pInputTextarea
+        class="w-full"
+        rows="4"
+        formControlName="descripcion"
+        style="resize: none;"
+      ></textarea>
+    </div>
+  </div>
+}
+</form>
+
+@if (documentoRuta!=='' && documentoRuta!==null) {
+<iframe
+  [src]="documentoRuta"
+  class="w-full"
+  style="height: calc(100% - 100px)"
+  title="Documento"
+></iframe>
+} @if (documentoRuta===null) {
+<div class="text-center text-lg text-red-500 py-3">Documento sin contenido</div>
+}

@@ -1,0 +1,7 @@
+<div *ngIf="casoFiscal.flgAcumulado === '1' && casoFiscal.flgLectura == '0'">
+  <div class="cfe-etiqueta-accion flex align-items-center justify-content-between w-full">
+    <p class="boton-etiqueta boton-etiqueta--primary">Con acumulación</p>
+    <button type="button" class="boton-accion boton-accion--lightblue" (click)="obtenerMetodoCaso()">Ver acumulaciones
+    </button>
+  </div>
+</div>

@@ -1,0 +1,40 @@
+@if ( !tieneActoTramiteCasoDocumento ) {
+  <mensaje-interoperabilidad-pj />
+}
+
+@if ( tieneActoTramiteCasoDocumento ) {
+  @if ( !tramiteEstadoRecibido ) {
+    <mensaje-completar-informacion 
+        titulo = "Agenda múltiple de notificación de audiencia"
+    />
+  }
+
+  <app-agenda-multiple
+    [modoLectura]="!esPosibleEditarFormulario"
+    [mostrarFechaNotificacion]="mostrarFechaNotificacion"
+    [agendasMultiples]="agendasMultiples"
+    [esEditableRecibido]="esEditableRecibido"
+    (fechaNotificacion)="alCambiarFechaNotificacion($event)"
+    (validarListaAgenda)="alValidarListaAgenda($event)"
+  />
+
+  @if ( esPosibleEditarFormulario && esVisibleBoton ) {
+    <div class="field col-12 flex flex-column sm:flex-row justify-content-between mt-3">
+      @if ( !tramiteEstadoRecibido ) {
+        <a class="cfe-enlace" (click)="modalActualizarActoYTramite()">
+          ¿Este documento no pertenece a este trámite?</a>
+      } @else {
+        <span></span>
+      }
+
+      <p-button
+        [disabled]="!formularioValido"
+        (onClick)="validarGuardadoAgendasNotificacion()"
+        styleClass="p-button-lg cfe-boton-primary text-white family-poppin-bold btn-adjust-filter w-column-full">
+        <span class="ml-4 mr-4">Guardar</span>
+      </p-button>
+    </div>
+  }
+}
+
+

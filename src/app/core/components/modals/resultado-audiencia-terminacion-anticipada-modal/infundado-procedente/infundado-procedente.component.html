@@ -1,0 +1,71 @@
+<div class="fundada-procedente-desaprobado">
+  <app-apelacion-fiscalia [data]="data" [modoLectura]="modoLectura"></app-apelacion-fiscalia>
+  <div class="mt-4">
+    <div class="flex align-items-center">
+      <h6 class="cfe-titulo-1">Apelación a la terminación anticipada</h6>
+    </div>
+    <p-messages [(value)]="messageTA" [enableService]="false" *ngIf="showMessageTA" [closable]="true"></p-messages>
+    <form [formGroup]="formTerminacionAnticipada">
+      <div class="formgrid grid">
+        <div class="field col-4">
+          <label>¿Quién Apeló?</label>
+          <p-dropdown formControlName="sujetoApelo" [options]="listaSujetosApelantes" (onChange)="onChangeApelante()"
+            styleClass="p-inputtext-lg" [filter]="true" appendTo="body" placeholder="Seleccione un sujeto"
+            optionLabel="nombreSujeto" emptyMessage="Sin resultados" emptyFilterMessage="No se encontraron resultados"
+            optionValue="idSujetoCaso">
+          </p-dropdown>
+        </div>
+        <div class="col-8 flex justify-content-end align-items-center">
+          @if(!modoLectura) {
+          <button (click)="guardarApelacionTerminacionAnticipada()"  [disabled]="formTerminacionAnticipada.invalid" type="button" class="cfe-boton-primary cfe-boton-m" >
+            Agregar y guardar
+          </button>
+          }
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="mt-5">
+    <div class="flex align-items-center">
+      <h6 class="cfe-titulo-1">
+        Lista del Apelaciones realizadas a la terminación anticipada
+      </h6>
+    </div>
+    <p-table [value]="listaApelaciones" [rowHover]="true" [tableStyle]="{ 'min-width': '50rem' }"
+      [styleClass]="'table-apelaciones'" responsiveLayout="stack">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Nº</th>
+          <th>¿Quién apeló?</th>
+          <th>Tipo de sujeto</th>
+          <th>Quitar</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-apelacion let-rowIndex="rowIndex">
+        <tr>
+          <td>{{ rowIndex + 1 }}</td>
+          <td>{{ apelacion.nombreSujeto }}</td>
+          <td>{{ apelacion.nombreTipoParteSujeto }}</td>
+          <td>
+            @if(!modoLectura){
+            <fn-icon onKeyPress (click)="eliminarRegistroApelado(apelacion.idSujetoCasoResultado)"
+              [ico]="obtenerIcono('iTrash')" height="2.4rem" style="cursor: pointer">
+            </fn-icon>
+            }
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7">
+            <div class="text-center">
+              Aún no se ha seleccionado un sujeto procesal.
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <app-paginator [query]="query" [items]="itemPaginado" [rowsPerPageOptions]="[]" [resetPage]="resetPage"
+      (paginate)="onPaginate($event)"></app-paginator>
+  </div>
+</div>

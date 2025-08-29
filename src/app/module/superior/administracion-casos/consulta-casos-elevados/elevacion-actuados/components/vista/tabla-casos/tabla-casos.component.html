@@ -1,0 +1,229 @@
+<div class="col-12 tableView">
+  <p-table
+    [tableStyle]="{ 'min-width': '120rem' }"
+    [value]="listaCasos"
+    [rowHover]="true"
+    responsiveLayout="stack"
+    styleClass="p-datatable-striped"
+  >
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th scope="col">N°</th>
+        <th pSortableColumn="numeroCaso" scope="col">
+          Nro Caso
+          <p-sortIcon field="numeroCaso"></p-sortIcon>
+        </th>
+        <th pSortableColumn="etapa" scope="col">
+          Etapa
+          <p-sortIcon field="etapa"></p-sortIcon>
+        </th>
+        <th pSortableColumn="fiscal" scope="col">
+          Despacho de procedencia
+          <p-sortIcon field="fiscal"></p-sortIcon>
+        </th>
+        <th pSortableColumn="fiscalSuperiorAsignado" scope="col">
+          Fiscal superior asignado
+          <p-sortIcon field="fiscalSuperiorAsignado"></p-sortIcon>
+        </th>
+        <th pSortableColumn="fechaUltimoTramite" scope="col">
+          Último trámite / fecha de último trámite
+          <p-sortIcon field="fechaUltimoTramite"></p-sortIcon>
+        </th>
+        <th
+          pSortableColumn="fechaElevacion"
+          style="min-width: 11rem"
+          scope="col"
+        >
+          Fecha de elevación
+          <p-sortIcon field="fechaElevacion"></p-sortIcon>
+        </th>
+        <th scope="col">Plazo de pronunciamiento</th>
+        <th scope="col"></th>
+      </tr>
+    </ng-template>
+
+    <ng-template
+      pTemplate="body"
+      let-casofiscal
+      let-columns="columns"
+      let-rowIndex="rowIndex"
+    >
+      <tr
+        class="relative cursor-pointer p-selectable-row"
+        (click)="eventoCasoSeleccionado(casofiscal)"
+      >
+        <td
+          [style.border-left]="
+            '8px solid ' + getFilaEstilo(casofiscal) + ' !important'
+          "
+        >
+          {{
+            (paginacionCondicion.page - 1) * paginacionCondicion.limit +
+              rowIndex +
+              1
+          }}
+        </td>
+        <td>
+          <div class="p-column-title font-bold hidden">Nro Caso</div>
+          <div>
+            <div class="flex align-items-center mb-3">
+              @if(casofiscal.plazos.length > 0) {
+              <span
+                class="plazo-item {{
+                  consultaCasosGestionService.getLeyendaPlazosClasesCss()[
+                    casofiscal.plazos[0].indSemaforo
+                  ]
+                }}"
+              ></span>
+              }
+              <div
+                [innerHTML]="obtenerCasoHtml(casofiscal.numeroCaso)"
+                class="font-bold"
+                style="white-space: nowrap"
+              ></div>
+            </div>
+
+            @if (casofiscal.etiquetaColorNro !== null &&
+            casofiscal.etiqueta!=='') {
+            <span
+              class="py-1 px-2 text-xs border-round-md font-semibold {{
+                consultaCasosGestionService.getEtiquetaPlazosClasesCss()[
+                  casofiscal.etiquetaColorNro
+                ]
+              }}"
+              style="white-space: nowrap"
+            >
+              {{ casofiscal.etiqueta }}
+            </span>
+            }
+          </div>
+        </td>
+        <td>
+          <div class="p-column-title font-bold hidden">Etapa</div>
+          <div>
+            <span class="capitalize">{{
+              casofiscal.etapa ? casofiscal.etapa.toLowerCase() : ""
+            }}</span>
+          </div>
+        </td>
+        <td>
+          <div class="p-column-title font-bold hidden">Fiscalia Provincial</div>
+          <div>
+            <div class="font-semibold capitalize">
+              {{ casofiscal.fiscal ? casofiscal.fiscal.toLowerCase() : "" }}
+            </div>
+            <div class="text-700 capitalize">
+              {{ casofiscal.fiscalia ? casofiscal.fiscalia.toLowerCase() : "" }}
+            </div>
+            <div class="font-semibold capitalize">
+              {{ casofiscal.despacho ? casofiscal.despacho.toLowerCase() : "" }}
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="p-column-title font-bold hidden">
+            Fiscal superior asignado
+          </div>
+          <div class="capitalize">
+            {{
+              casofiscal.fiscalSuperiorAsignado
+                ? casofiscal.fiscalSuperiorAsignado.toLowerCase()
+                : ""
+            }}
+          </div>
+        </td>
+        <td>
+          <div class="p-column-title font-bold hidden">
+            Último trámite / fecha de último trámite
+          </div>
+          <div>
+            <div class="capitalize">
+              {{
+                casofiscal.ultimoTramite
+                  ? casofiscal.ultimoTramite.toLowerCase()
+                  : ""
+              }}
+            </div>
+            <div class="pt-1 font-semibold">
+              {{
+                casofiscal.fechaUltimoTramite
+                  ? (casofiscal.fechaUltimoTramite.split(" ")[0]
+                    | dateformat: "date")
+                  : ""
+              }}
+            </div>
+            <div class="pt-1 font-semibold">
+              {{
+                casofiscal.fechaUltimoTramite
+                  ? (casofiscal.fechaUltimoTramite.split(" ")[1]
+                    | dateformat : "hour")
+                  : ""
+              }}
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="p-column-title font-bold hidden">Fecha de elevación</div>
+          <div>
+            {{ casofiscal.fechaElevacion.split(" ")[0] | dateformat }}
+          </div>
+          <div class="pt-1">
+            {{
+              casofiscal.fechaElevacion
+                ? (casofiscal.fechaElevacion.split(" ")[1]
+                  | dateformat : "hour")
+                : ""
+            }}
+          </div>
+        </td>
+        <td>
+          <div class="p-column-title font-bold hidden">
+            Plazo de pronunciamiento
+          </div>
+          @for (plazo of casofiscal.plazos ; track $index) {
+          @if(plazo.idJerarquia===2){
+          <app-barra-progreso-caso
+            [titulo]="plazo.nombreActoProcesal"
+            [inicio]="plazo.diasTrasncurridos"
+            [diasPlazo]="plazo.diasPlazo"
+            [indicadorPlazo]="plazo.indSemaforo"
+          >
+          </app-barra-progreso-caso>
+          } }
+          @if(casofiscal.flPlazoPagos === '1'){
+            <div class="py-2">
+              <button class="cfe-boton-secondary cfe-boton-sm" routerLink="../listar-casos-anulados">Plazos y Pagos</button>
+            </div>
+          }
+        </td>
+        <td class="table_td_content_start">
+            <app-menu-opciones-caso
+              [opciones]="['Visor','Historial','Delitos']"
+              [idCaso]="casofiscal.idCaso"
+              [numeroCaso]="casofiscal.numeroCaso">
+            </app-menu-opciones-caso>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="8">
+          @if (listaCasos.length === 0) {
+          <div class="py-5 text-center text-600 border-300 font-semibold">
+            @if (procesadoCriterioBusqueda===false) { En estos momentos no hay
+            casos fiscales }@else { No se encontraron registros con los
+            criterios de búsqueda ingresados }
+          </div>
+          }
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <app-paginator
+    [query]="paginacionCondicion"
+    [items]="paginacionConfiguracion"
+    [rowsPerPageOptions]="[]"
+    [resetPage]="paginacionReiniciar"
+    (paginate)="eventoCambiarPagina($event)"
+  ></app-paginator>
+</div>

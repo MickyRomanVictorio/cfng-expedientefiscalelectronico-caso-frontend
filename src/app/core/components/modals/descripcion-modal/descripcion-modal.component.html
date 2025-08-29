@@ -1,0 +1,56 @@
+<div class="p-5 relative modal-width">
+  <fn-icon
+    class="absolute right-0 top-0 mt-2 ml-3 cursor-pointer"
+    [ico]="obtenerIcono('iClose')"
+    height="2rem"
+    (click)="referenciaModal.close()"
+  ></fn-icon>
+
+  <div class="grid">
+    <div class="col-12">
+      <h3
+        class="encabezado-titulo cfe-subtitulo-3 cfe-semi-bold"
+        [innerHTML]="tituloCaso"
+      ></h3>
+    </div>
+    <div class="col-12">
+      <p>{{ descripcion }}</p>
+    </div>
+    <div class="col-12">
+      <textarea
+        class="p-inputtext p-inputtextarea p-component w-full"
+        rows="5"
+        cols="30"
+        maxlength="300"
+        (input)="actualizarContadorInputTextArea($event)"
+        pInputTextarea
+        [formControl]="razon"
+      ></textarea>
+
+      <div class="grid">
+        <div class="col-12 sm:col-6 text-left">
+          <small
+            *ngIf="razon.invalid && razon.touched && razon.dirty"
+            class="p-error"
+          >
+            Campo obligatorio*
+          </small>
+        </div>
+        <div class="col-12 sm:col-6 text-right">
+          <p>Quedan {{ caracteresRestantes }} caracteres</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-content-end flex-wrap mt-3">
+    <button
+      class="cfe-boton-primary cfe-boton-m w-full md:w-auto"
+      [ngClass]="{ 'btn-invalid': !isValidForm }"
+      (click)="guardar()"
+      [disabled]="!isValidForm"
+    >
+      Guardar
+    </button>
+  </div>
+</div>

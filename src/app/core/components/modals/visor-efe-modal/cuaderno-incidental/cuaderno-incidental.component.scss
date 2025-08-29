@@ -1,0 +1,43 @@
+.accordion-item {
+  border: 1px solid #ccc;
+}
+
+.accordion-header {
+  background-color: #0E2E4A;
+}
+.sub-accordion-container {
+  background-color: #E7EAED;
+  border-bottom: #c9cccf solid 1px;
+}
+.sub-accordion-header {
+  color: #333333
+}
+.td-border{
+  border-width: 1px 0 0 0 !important;
+}
+
+
+/* Clases para el formato del documento */
+.formato {
+  color: white;
+  padding: 6px 6px;
+  border-radius: 4px;
+  font-size: 0.7em;
+}
+
+.formato-imagen {
+  background-color: #2196F3; /* Azul */
+}
+
+.formato-audio {
+  background-color: #4CAF50; /* Verde */
+}
+
+.formato-documento {
+  background-color: #F44336; /* Rojo */
+}
+
+.formato-video {
+  background-color: #009688; /* Verde agua */
+}
+

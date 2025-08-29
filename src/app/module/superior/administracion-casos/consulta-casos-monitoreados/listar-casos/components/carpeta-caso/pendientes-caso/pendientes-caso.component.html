@@ -1,0 +1,41 @@
+@if (metaInfo) {
+
+  <div class="my-3">
+
+    <div class="mb-4 flex align-items-center flex-wrap gap-2" (click)="eventoMostrarDetalle($event)">
+        <div class="flex align-items-center justify-content-center">
+            <p-badge severity="warning" styleClass="bg-orange-400" [value]="totalPendientes"></p-badge>
+            <span class="pl-2">Pendientes del Caso:</span>
+        </div>
+        <a href="javascript:void(0);" class="text-xl flex align-items-center justify-content-center openToggle">
+          <i [ngClass]="{'pi-angle-down': !mostrarDetalle, 'pi-angle-up': mostrarDetalle}" class="pi pi-angle-down font-bold" style="font-size: 1.6rem;"></i>
+        </a>
+    </div>
+
+    @if (mostrarDetalle) {
+      <div class="flex gap-2 justify-content-start flex-wrap mb-5">
+        @if (metaInfo[0]) {
+          <div class="align-items-center justify-content-center mr-2">
+            <app-file-info-caso [value] ="metaInfo[0].nuevos!"></app-file-info-caso>
+            <div class="text-xs text-blue-900">{{ metaInfo[0].total }} Escritos</div>
+          </div>
+        }
+
+        @if (metaInfo[1]) {
+          <div class="align-items-center justify-content-center mr-2">
+            <app-file-info-caso [value] ="metaInfo[1].nuevos!"></app-file-info-caso>
+            <div class="text-xs text-blue-900">{{ metaInfo[1].total }} Notif P.J.</div>
+          </div>
+        }
+
+        @if (metaInfo[2]) {
+          <div class="align-items-center justify-content-center">
+            <app-file-info-caso [value] ="metaInfo[2].nuevos!"></app-file-info-caso>
+            <div class="text-xs text-blue-900">{{ metaInfo[2].total }} Incidentes</div>
+          </div>
+        }
+      </div>
+    }
+</div>
+}
+

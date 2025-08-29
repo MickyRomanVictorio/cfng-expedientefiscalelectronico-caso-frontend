@@ -1,0 +1,21 @@
+.label-info-red {
+    color: var(--mpfn-red);
+}
+
+
+.cfe-opciones-botones {
+    display: flex;
+    margin-top: 1em;
+    justify-content: space-between;
+    align-items: center;
+
+    p {
+        font-size: 18px;
+        font-weight: normal;
+        color: black;
+        margin: 0;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+}

@@ -1,0 +1,19 @@
+<div class="cfe_bandeja__header">
+  <div class="cfe_bandeja_header__content">
+    <fn-icon [ico]="icono('iFolderSearch')" height="1.6rem"></fn-icon>
+    <h3 class="cfe-titulo-1">Plazos fiscales</h3>
+  </div>
+</div>
+
+<div class="cfe_bandeja__table transparent">
+  <div class="cfe_bandeja_table__content">
+    <p-tabView [(activeIndex)]="activeTab">
+      <p-tabPanel header="Despacho">
+        <app-despacho [tabActivo]="activeTab"></app-despacho>
+      </p-tabPanel>
+      <p-tabPanel header="Por etapas">
+        <app-etapas [tabActivo]="activeTab"></app-etapas>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+</div>

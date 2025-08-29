@@ -1,0 +1,59 @@
+<div class="cfe-titulo-1 text-lg">
+  DETALLE DE LA OBSERVACIÓN DEL TRÁMITE - Caso: {{datosPronunciamiento()?.numeroCaso}}
+</div>
+<div [ngClass]="{'grid': !esModal()}">
+  <div [ngClass]="{'col-12 md:col-6': !esModal(), 'pt-3': esModal()}">
+    <span class="font-semibold">Tramite: Disposicion que resuelve la exclusion fiscal</span>
+  </div>
+  <div [ngClass]="{'col-12 md:col-6': !esModal(), 'pt-2': esModal()}">
+    <span class="font-semibold">Fecha de observación:</span>
+    <div>{{ datosPronunciamiento()?.fechaDisposicion }}</div>
+  </div>
+    <div [ngClass]="{'col-12 md:col-6': !esModal(), 'pt-2': esModal()}">
+    <span class="font-semibold">Usuario que realiza la observación:</span>
+    <div>{{ datosPronunciamiento()?.nombreFiscalProvincial }}</div>
+  </div>
+</div>
+
+
+<form [formGroup]="formulario">
+  <div class="pt-4">
+    <span class="font-semibold">Detalles de la observación <small>(digite como mínimo 10 caracteres)</small></span>
+    <div>
+      <textarea
+        class="w-full"
+        rows="5"
+        [maxlength]="1000"
+        formControlName="observacion"
+        [disabled]="esSoloLectura()"
+        pInputTextarea (input)="eventoObservacion()">
+      </textarea>
+      @if(esSoloLectura()===false){
+        <div class="w-full formgrid grid mt-2 flex">
+          <p style="margin-left: auto">Quedan {{ caracteresRestantes }} carácteres</p>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="text-right pt-3">
+
+    <button type="button" class="cfe-boton-secondary cfe-boton-m inline" (click)="eventoCerrar()">
+      Cancelar
+    </button>
+
+    @if(!esSoloLectura()){
+      <button
+        type="button"
+        class="cfe-boton-primary cfe-boton-m ml-2 inline"
+        (click)="eventoObservar()"
+        [disabled]="!formulario.valid"
+      >
+        Observar
+      </button>
+    }
+
+  </div>
+
+
+</form>

@@ -1,0 +1,19 @@
+<div class="field mb-0">
+  <label class="font-semibold">Buscar:</label>
+  <input
+    pInputText
+    type="text"
+    class="p-inputtext-lg py-3 text-lg w-full"
+    placeholder="Indique número de caso"
+    [(ngModel)]="numeroCaso"
+    (keydown.enter)="buscar()"
+  />
+</div>
+
+<div class="flex flex-column sm:flex-row justify-content-end mt-3 mb-3 text-center">
+  <p-button (onClick)="buscar()"
+      styleClass="p-button-md cfe-boton-primary text-white family-poppin">
+      <span class="ml-3 mr-3">Buscar</span>
+  </p-button>
+</div>
+

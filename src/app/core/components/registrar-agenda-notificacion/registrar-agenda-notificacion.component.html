@@ -1,0 +1,153 @@
+@if ( servicioNoActivo ) {
+  <mensaje-interoperabilidad-pj />
+} @if ( !servicioNoActivo ) {
+<div class="mt-3">
+  @if(formRegistro.invalid){
+  <mensaje-completar-informacion [titulo]="nombreTramite()" />
+  }
+  <div class="mt-2">
+    @if(visibleMensajeValidacion){
+        <mensaje-generico
+        [titulo]="textoValidacion!"
+        [closable]="true"
+        [tipoAlerta]="'error'"
+        (cerrado)="visibleMensajeValidacion = false"
+      />
+    }
+  </div>
+
+  <form [formGroup]="formRegistro" class="mt-3">
+    <div class="col-12 mt-1">
+      <div class="formgrid grid">
+        <div class="field col-12 lg:col-3">
+          <label for="fechaPresentacion" class="font-semibold"
+            >Fecha de notificación</label
+          >
+          <p-calendar
+            id="fechaPresentacion"
+            dateMask
+            dateFormat="dd/mm/yy"
+            class="p-inputtext-lg cfe-calendar h-56"
+            [showIcon]="true"
+            icon="cfe-calendar-icon"
+            placeholder="dd/mm/aaaa"
+            formControlName="fechaPresentacion"
+            [minDate]="fechaIngreso"
+            [maxDate]="maxDate"
+          ></p-calendar>
+        </div>
+        <div class="field col-12 lg:col-3">
+          <label for="fechaAudiencia" class="font-semibold"
+            >Fecha y hora de audiencia</label
+          >
+          <p-calendar
+          dateMask
+          [withDateTime]="true"
+          dateFormat="dd/mm/yy"
+          hourFormat="24"
+          class="p-inputtext-lg cfe-calendar h-56"
+          [showIcon]="true"
+          icon="cfe-calendar-icon"
+          placeholder="DD/MM/AAAA HH:MM"
+          formControlName="fechaAudiencia"
+          [showTime]="true"
+          ></p-calendar>
+        </div>
+
+        <div class="field col-12 lg:col-6 mt-6">
+          <div class="flex gap-3">
+            <div class="flex align-items-center">
+              <p-radioButton
+                formControlName="tipoCitacion"
+                [value]="idTipoActividadVirtual"
+
+              ></p-radioButton>
+              <label for="Virtual" class="ml-2">Reunión Virtual</label>
+            </div>
+
+            <div class="flex align-items-center">
+              <p-radioButton
+                formControlName="tipoCitacion"
+                [value]="idTipoActividadPresencial"
+              ></p-radioButton>
+              <label for="Presencial" class="ml-2">Reunión Presencial</label>
+            </div>
+          </div>
+        </div>
+
+
+        @if(formRegistro.get('tipoCitacion')?.value === idTipoActividadVirtual){
+        <div class="field col-12">
+          <label for="urlReunion" class="font-semibold">URL Reunión:</label>
+          <input
+            pInputText
+            type="text"
+            class="p-inputtext-lg py-3 text-lg w-full"
+            placeholder="URL Reunión"
+            formControlName="urlReunion"
+            [maxlength]="100"
+          />
+        </div>
+        }
+        <div class="field col-12 lg:col-6">
+          <label for="cboDistritoJudicial" class="font-semibold">Distrito Judicial</label>
+          <p-dropdown
+            id="cboDistritoJudicial"
+            formControlName="cboDistritoJudicial"
+            styleClass="py-1 p-inputtext-lg"
+            [options]="distritoJudicialList"
+            placeholder="Seleccione el distrito judicial"
+            (ngModelChange)="listarJuzgadosPazLetrado($event)"
+            optionLabel="nombre"
+            optionValue="id"
+          >
+          </p-dropdown>
+        </div>
+
+        <div class="field col-12 lg:col-6">
+          <label for="cboJuzgado" class="font-semibold">Juzgado</label>
+          <p-dropdown
+            id="cboJuzgado"
+            formControlName="cboJuzgado"
+            styleClass="py-1 p-inputtext-lg"
+            [options]="juzgadosList"
+            placeholder="Seleccione el juzgado"
+            emptyMessage="No se han encontrado juzgados"
+            optionLabel="descEntidad"
+            optionValue="codEntidad"
+          >
+          </p-dropdown>
+        </div>
+
+        <div class="field col-12 lg:col-12">
+          <label for="txtObservacion" class="font-semibold"
+            >Observaciones (opcional)</label
+          >
+          <textarea
+            id="txtObservacion"
+            rows="5"
+            formControlName="txtObservacion"
+            class="p-inputtext p-2 w-full"
+            [maxLength]="1000"
+          ></textarea>
+          <small
+            class="block text-right mt-1"
+            [ngClass]="{ 'p-error': counterReportChar() > 1000 }"
+          >
+            {{ counterReportChar() }}/1000 caracteres
+          </small>
+        </div>
+      </div>
+    </div>
+  @if( !ocultarBotonGuardar  ){
+    <div class="flex justify-content-between">
+      <a class="cfe-enlace" (click)="openModalSelectTramite()"
+        >¿Este documento no pertenece a este trámite?</a
+      >
+      <button [disabled]="!formularioValido" (click)="registrarAgenda()" type="submit" class="cfe-boton-primary cfe-boton-lg ml-2 boton-w">Guardar</button>
+    </div>
+    }
+
+  </form>
+</div>
+}

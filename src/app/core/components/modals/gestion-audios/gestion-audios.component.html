@@ -1,0 +1,204 @@
+<div class="p-4">
+
+  <div class="relative">
+
+    <h3 class="cfe-subtitulo-3 family-poppin-bold mb-4">
+      {{tituloModal}}
+    </h3>
+
+    <fn-icon
+      (click)="cerrarModal()"
+      [ico]="obtenerIcono('iClose')"
+      class="absolute cursor-pointer top-0 right-0"
+      height="2rem"
+      onKeyPress=""
+    />
+
+  </div>
+
+  @if(!modoLectura){
+    <label for="descripcion" class="font-bold">Registrar audios</label>
+
+    <div
+      class="col-12 md:col-offset-3 md:col-6 pt-3 p-0"
+      [formGroup]="formAudio"
+    >
+
+      <label for="descripcion" class="font-bold">Descripcion de audio:</label>
+
+      <textarea
+        #descripcionInput
+        formControlName="descripcionAudio"
+        id="descripcion"
+        name="descripcion"
+        placeholder="Descripcion"
+        [maxlength]="maxLengthDescripcion"
+        class="w-12"
+        rows="4"
+        pInputTextarea
+      >
+      </textarea>
+
+      <div class="floatRigth">
+        Quedan <span class="font-bold">{{ caracteresRestantes }}</span> caracteres
+      </div>
+    </div>
+
+    <div class="col-12 md:col-offset-3 md:col-6 pt-3 p-0">
+      <app-subir-audio
+        (onRemove)="removeFileAttach()"
+        (onSelect)="onSelectFileAttach($event)"
+      />
+    </div>
+
+    <div class="flex justify-content-center my-3">
+      @if (nombreBoton == 'Actualizar'){
+        <p-button
+          (onClick)="eventoLimpiar()"
+          [styleClass]="'p-button-lg cfe-boton-secondary cfe-boton-lg'"
+          class="mr-3"
+          label="Cancelar"
+        />
+      }
+
+      <p-button
+        (onClick)="eventoGuardar()"
+        [disabled]="audioParaAgregar || !archivoAudioSubido"
+        [styleClass]="'p-button-lg cfe-boton-primary cfe-boton-lg'"
+        [label]="nombreBoton"
+      />
+
+    </div>
+
+    @if (mostrarTamanoError) {
+      <p class="text-red-500">
+        {{ mensajeErrorTamano }}
+      </p>
+    }
+  }
+
+  @if (listaAudiosFiltrados.length > 0) {
+    <div class="col-12">
+      <label for="descripcion" class="font-bold">Lista de audios</label>
+
+      <br>
+
+      <p-table
+        [rowHover]="true"
+        [value]="listaAudiosFiltrados"
+        [scrollable]="true"
+        scrollHeight="20rem"
+        [tableStyle]="{'min-width': '50rem'}">
+        responsiveLayout="stack"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="col-2 font-bold"> Nombre </th>
+            <th class="col-2 font-bold"> Archivo </th>
+            <th class="col-2 font-bold"> Duración </th>
+            <th class="col-2 font-bold"> Peso </th>
+            <th class="col-8 font-bold"> Descripción </th>
+            <th class="col-1 font-bold text-right"> Acciones </th>
+          </tr>
+        </ng-template>
+
+        <ng-template let-audio let-index="rowIndex" pTemplate="body">
+          <tr
+            (click)="setActiveRow(audio); reproducirAudio(audio)"
+            [ngClass]="{ 'tr-active': audio.nodeId === audioActualnodeId }"
+            class="p-selectable-row cursor-pointer"
+            onKeyPress=""
+          >
+            <td>
+              <span class="p-column-title">Nombre</span>
+
+              <div class="flex">
+                <img
+                  class="icono-mensaje mr-4"
+                  [src]="obtenerIconoReproductorAudio(audio.nodeId)"
+                  alt="Play"
+                  (click)="notificarEventoReproducirPausarAudio()"
+                  onKeyPress=""
+                />
+                {{ audio.coDocumento || 'Sin Nombre' }}
+              </div>
+
+            </td>
+
+            <td>
+              <span class="p-column-title">Archivo</span>
+              {{ audio.nuDocumento || 'Sin Nombre'}}
+            </td>
+
+            <td>
+              <span class="p-column-title">Duración/T</span>
+              {{ audio.duracion }}
+            </td>
+
+            <td>
+              <span class="p-column-title">Peso</span>
+              {{ getFormatFileSize(audio.nuPeso) }}
+            </td>
+
+            <td>
+              <span class="p-column-title">Descripción</span>
+              {{ audio.deObservacion || '-'}}
+            </td>
+
+            <td class="botonera">
+              @if(!modoLectura){
+                <img
+                  (click)="editarRegistro(audio)"
+                  class="cursor-pointer icono-mensaje"
+                  [src]="icon('pencil')"
+                  alt="Editar"
+                  title="Editar audio"
+                  onKeyPress=""
+                />
+              }
+              <img
+                (click)="descargarAudio(audio)"
+                class="cursor-pointer icono-mensaje"
+                [src]="icon('arrow-down-to-line')"
+                alt="Descargar"
+                title="Descargar audio"
+                onKeyPress=""
+              />
+              @if(!modoLectura){
+              <img
+                (click)="eliminarAudio(audio)"
+                class="cursor-pointer icono-mensaje"
+                [src]="icon('trash_1')"
+                alt="Eliminar"
+                title="Eliminar audio"
+                onKeyPress=""
+              />
+              }
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  }
+
+
+  @if (modoLectura && listaAudiosFiltrados.length == 0) {
+    <div class="no-data-container">
+      <i class="pi pi-ban" style="font-size: 2rem; color: gray;"></i>
+      <p>No se registraron audios de audiencia</p>
+    </div>
+  }
+
+  @if (listaAudiosFiltrados.length > 0 ){
+    <app-visor-archivo
+      [tipoArchivo]="tipoArchivo"
+      [archivoReproductor]="reproductorConfig"
+      [modoLectura]="modoLectura"
+      (eventoAnterior)="cambiarAudioReproductor(false)"
+      (eventoSiguiente)="cambiarAudioReproductor(true)"
+      (eventoDescargar)="descargarAudioReproductor()"
+      (eventoEliminar)="eliminarAudioReproductor()"
+    />
+  }
+
+</div>

@@ -1,0 +1,124 @@
+@if ( !tieneActoTramiteCasoDocumento ) {
+  <mensaje-interoperabilidad-pj />
+}
+
+@if ( tieneActoTramiteCasoDocumento ) {
+  @if ( !tramiteEstadoRecibido ) {
+    <mensaje-completar-informacion
+      [titulo] = "tramiteSeleccionado!.nombreTramite"
+    />
+  }
+
+  <form [formGroup]="formulario">
+    <div class="grid mt-3">
+      <div class="field col-12 lg:col-6">
+        <div class="formgrid grid">
+          <div class="field col-10">
+            <label for="fechaNotificacion" class="font-bold text-sm">Fecha de notificación</label>
+            <p-calendar
+              id="fechaNotificacion"
+              [dateFormat]="'dd/mm/yy'"
+              class="p-inputtext-lg cfe-calendar"
+              [showIcon]="true"
+              dateMask
+              icon="cfe-calendar-icon"
+              placeholder="dd/mm/aaaa"
+              formControlName="fechaNotificacion"
+              appendTo="body"
+              dataType="string"
+              [ngClass]="{'ng-invalid ng-dirty': formulario.get('fechaNotificacion')?.invalid && formulario.get('fechaNotificacion')?.touched}"
+            >
+            </p-calendar>
+          </div>
+          @if ( formulario.get('fechaNotificacion')?.value ) {
+            <div class="field col-2">
+                <label for="imgGuardado">&nbsp;</label>
+                <div class="mt-1">
+                  <img id="imgGuardado" [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+                </div>
+            </div>
+          }
+        </div>
+      </div>
+      <div class="field col-12 lg:col-6">
+        <div class="formgrid grid">
+          <div class="field col-10">
+            <label for="btnResultado" class="font-bold text-sm">Resultado</label>
+            <button id="btnResultado" class="cfe-boton-primary cfe-boton-lg w-full" (click)="openModalSujetos()" >Seleccionar resultado </button>
+          </div>
+          @if ( flCheckModal || esSoloLectura ) {
+            <div class="field col-2">
+              <label for="imgGuardado2">&nbsp;</label>
+              <div class="mt-1">
+                <img id="imgGuardado2" [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+    <div class="p-fluid grid">
+      <div class="col-12 sm:col-12 md:col-5 lg:col-5">
+        <label class="font-bold adjust-origin-label text-left">Número de expediente</label>
+        <input
+        pInputText
+        expedienteMask
+        formControlName="nroExpediente"
+        type="text"
+        class="p-inputtext-lg w-full"
+        autocomplete="off"
+      />
+      </div>
+      @if(flElevacionSuperior){
+      <div class="col-12 sm:col-12 md:col-6 lg:col-6" *ngIf="flElevacionSuperior">
+        <label class="font-bold adjust-origin-label text-left">Ficalía superior a elevar:</label>
+        <p-dropdown id="fiscalia" formControlName="codFiscaliaSuperior" class="p-inputtext-lg w-full"
+                    [options]="fiscalias" placeholder="Seleccione" optionLabel="nombre" optionValue="id">
+        </p-dropdown>
+      </div>}
+    </div>
+    <div class="p-fluid grid mt-3">
+      <div class="field col-11">
+        <label for="observaciones" class="font-bold text-sm">Observaciones (opcional)</label>
+        <textarea id="observaciones" pInputTextarea class="w-full text-md" rows="6" formControlName="observaciones" [maxLength]="longitudMaximaObservaciones"></textarea>
+        <small
+          class="block text-right mt-1"
+          [ngClass]="{'p-error': cantidadCaracteresObservacion > longitudMaximaObservaciones }">
+          {{cantidadCaracteresObservacion}}/{{longitudMaximaObservaciones}} máximo de caracteres
+        </small>
+      </div>
+      @if ( formulario.get('observaciones')?.value && formulario.get('observaciones')?.value!.length > 0 ) {
+        <div class="field col-1">
+          <label for="imgGuardado3">&nbsp;</label>
+          <div class="mt-1">
+            <img id="imgGuardado3" [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+          </div>
+        </div>
+      }
+    </div>
+    <div class="field col-11 flex flex-column sm:flex-row justify-content-between mt-3">
+      @if ( !tramiteEstadoRecibido ) {
+        <a class="cfe-enlace" (click)="modalActualizarActoYTramite()">
+          ¿Este documento no pertenece a este trámite?</a>
+      } @else {
+        <span></span>
+      }
+      @if (esPosibleEditarFormulario && !tramiteGuardado) {
+        <p-button
+          [disabled]="!formularioValido"
+          (onClick)="confirmarRegistroTramite()"
+          styleClass="p-button-lg cfe-boton-primary text-white family-poppin-bold btn-adjust-filter w-column-full">
+          <span class="ml-4 mr-4">Guardar</span>
+        </p-button>
+      }
+    </div>
+    <div class="field col-11 flex flex-column sm:flex-row justify-content-end mt-3"
+         *ngIf="tramiteGuardado && flElevacionSuperior && !esPestanaElevada">
+        <button class="cfe-boton-danger cfe-boton-lg align-items-center text-sm"
+                (click)="eventoElevarIncidenteAFiscalSuperior()">
+          Elevar {{tipoBoton}} a F.Superior
+        </button>
+    </div>
+  </form>
+}
+

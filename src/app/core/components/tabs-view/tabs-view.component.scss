@@ -1,0 +1,171 @@
+$skew-deg: skew(32deg);
+
+.tab-first-element {
+  height: 54px;
+  border-right: 32px solid transparent;
+  border-left: 0px solid transparent;
+  border-bottom: 52px solid var(--mpfn-background-opaque);
+  border-top-left-radius: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+
+  span {
+    position: absolute;
+    background-color: transparent;
+    font-family: var(--mpfn-font-semi-bold);
+    font-size: 1em;
+    top: 20px;
+    left: 25px;
+    padding-right: 30px;
+  }
+
+  &.tab-focused {
+    border-bottom-color: var(--mpfn-white);
+  }
+
+  .icon-previous {
+    top: 17px !important;
+    left: -35px !important;
+  }
+
+  .counter {
+    font-family: var(--mpfn-font-semi-bold);
+    color: var(--mpfn-white);
+    background-color: var(--mpfn-secondary);
+    font-size: 0.9em;
+    min-width: 25px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    position: absolute;
+    right: 0;
+    top: -4px;
+  }
+}
+
+.tab-element {
+  -moz-transform: $skew-deg;
+  -ms-transform: $skew-deg;
+  -o-transform: $skew-deg;
+  -webkit-transform: $skew-deg;
+  background: var(--mpfn-background-opaque);
+  cursor: pointer;
+  display: inline-block;
+  height: 53px;
+  min-width: 100px;
+  opacity: 1;
+  position: relative;
+  top: 2px;
+  transform: $skew-deg;
+
+  span {
+    position: absolute;
+    background-color: transparent;
+    font-family: var(--mpfn-font-semi-bold);
+    font-size: 1em;
+    top: 18px;
+    left: 25px;
+    left: 57%; // Coloca el texto en el centro horizontalmente
+    transform: translateX(-50%) skew(-32deg); // Ajusta la posición para centrar el texto y aplica el skew inverso
+
+    //transform: skew(-32deg);
+    padding-right: 30px;
+  }
+
+  &.tab-focused {
+    background: var(--mpfn-white);
+    top: 2px;
+  }
+
+  @for $i from 2 through 20 {
+    &:nth-child(#{$i}) {
+      left: -11px + (4px * ($i - 2));
+    }
+  }
+
+  .counter {
+    font-family: var(--mpfn-font-semi-bold);
+    color: var(--mpfn-white);
+    background-color: var(--mpfn-secondary);
+    font-size: 0.9em;
+    min-width: 25px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    position: absolute;
+    right: 0;
+    top: -4px;
+  }
+
+  .icon-next {
+    position: absolute;
+    background-color: transparent;
+    font-family: var(--mpfn-font-semi-bold);
+    font-size: 1em;
+    top: 15px;
+    left: 0px;
+    transform: skew(-20deg);
+    padding-right: 30px;
+  }
+}
+
+.tab-element-green {
+  height: 53px;
+  color: var(--mpfn-white);
+  background: var(--mpfn-green-dark);
+  position: relative;
+  -webkit-transform: $skew-deg;
+  -moz-transform: $skew-deg;
+  -ms-transform: $skew-deg;
+  -o-transform: $skew-deg;
+  transform: $skew-deg;
+  opacity: 1;
+  cursor: pointer;
+  top: 2px;
+
+  span {
+    position: absolute;
+    background-color: transparent;
+    font-family: var(--mpfn-font-semi-bold);
+    font-size: 1em;
+    top: 14px;
+    left: 30px;
+    transform: skew(-32deg);
+  }
+
+  &.tab-focused {
+    background: var(--mpfn-white);
+    color: var(--mpfn-green-dark);
+    top: 2px;
+  }
+
+  @for $i from 2 through 20 {
+    &:nth-child(#{$i}) {
+      left: -11px + (4px * ($i - 2));
+    }
+  }
+}
+
+.icono {
+  position: relative;
+  top: 27px;
+  left: 6px;
+}
+
+.tabs-wrapper {
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+}
+
+
+.tabs-desactivados {
+  pointer-events: none !important;
+  opacity: 0.5 !important;
+}

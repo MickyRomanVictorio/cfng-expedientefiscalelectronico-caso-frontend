@@ -1,0 +1,31 @@
+import { EventEmitter, OnInit } from '@angular/core';
+import { MenuNavegacion } from '../models/configuracion.model';
+import * as i0 from "@angular/core";
+export declare class NgxCfngCoreLayoutSidebarComponent implements OnInit {
+    baseAssetsUrl: string;
+    menuNavegacion: MenuNavegacion;
+    toggleSidebar: EventEmitter<boolean>;
+    prefijoURL: string;
+    anchoFijoSidebar: EventEmitter<boolean>;
+    menuNavegacionSeleccionado: EventEmitter<MenuNavegacion>;
+    protected mostrarSidebar: boolean;
+    protected opcionSeleccionadoCodigo: string;
+    protected opcionSeleccionadoCodigoAnterior: string;
+    protected opcionSeleccionadoCodigoSiguiente: string;
+    private readonly tamanioVentanaMediano;
+    private readonly sidebarService;
+    ngOnInit(): void;
+    onCambiarTamanioVentana(event: Event): void;
+    reiniciarValores(menuNavegacion: MenuNavegacion): void;
+    private verificarTamanioVentana;
+    private verificarAnchoFijoSidebar;
+    private verificarOpcionSeleccionada;
+    private verificarMenuObjetoSeleccionado;
+    protected eventoMostrarOcultarSidebar(): void;
+    protected eventoSeleccionarOpcion(e: Event, index: number, subIndex: number, nivel: number, submenu?: any): void;
+    private generarCodigoSeleccionado;
+    private generarCodigoSeleccionadoAnterior;
+    private generarCodigoSeleccionadoSiguiente;
+    static ɵfac: i0.ɵɵFactoryDeclaration<NgxCfngCoreLayoutSidebarComponent, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<NgxCfngCoreLayoutSidebarComponent, "ngx-cfng-core-layout-sidebar", never, { "baseAssetsUrl": { "alias": "baseAssetsUrl"; "required": true; }; "menuNavegacion": { "alias": "menuNavegacion"; "required": false; }; "prefijoURL": { "alias": "prefijoURL"; "required": false; }; }, { "toggleSidebar": "toggleSidebar"; "anchoFijoSidebar": "anchoFijoSidebar"; "menuNavegacionSeleccionado": "menuNavegacionSeleccionado"; }, never, never, true, never>;
+}

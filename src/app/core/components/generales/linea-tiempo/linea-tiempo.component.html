@@ -1,0 +1,22 @@
+<div class="mb-3 mt-3 w-full justify-content-center align-items-center ver_linea">
+    <div class="timeline flex m-auto">
+        <div *ngFor="let item of etapas; let i = index;" class="parares flex-column-point col">
+            <span class="point" [style]="colorize(item.codigo, i < etapas.length - 1, i)[0]">
+                <span *ngIf="labelManager(i)" class="pi pi-check" style="font-size: 1.8vh;font-weight:bold"></span>
+                <span *ngIf="labelManager(i) == false">{{ i + 1 }}</span>
+            </span>
+            <span class="info" [style]="colorize(item.label, i < etapas.length - 1, i)[1]">{{ item.label }}</span>
+            <div class="connect" [style]="colorize(item.label, i < etapas.length - 1, i)[2]" *ngIf="i < etapas.length - 1"></div>
+        </div>
+    </div>
+</div>
+
+<div class="col-fixed block lg:hidden" style="width:100%">
+    <div *ngFor="let item of etapas; let i = index;" class="parares flex-column-point col">
+        <span class="point" [style]="colorize(item.codigo, i < etapas.length - 1, i)[0]">
+            <span *ngIf="labelManager(i)" class="pi pi-check" style="font-size: 1.8vh;font-weight:bold"></span>
+            <span *ngIf="labelManager(i) == false">{{ i + 1 }}</span>
+        </span>
+        <span class="info" [style]="colorize(item.label, i < etapas.length - 1, i)[1]">{{ item.label }}</span>
+    </div>
+</div>

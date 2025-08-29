@@ -1,0 +1,91 @@
+.desacumular_caso_modal {
+    color: #0e2e4a;
+    //background-color: #ccc;
+    //font-size: 0.875rem;
+    .p-component {
+      //  font-size: 0.875rem;
+    }
+
+    &.p-dialog {
+        .p-dialog-content {
+            //background: #ffffff;
+            color: #212529;
+            padding: 0;
+            // border-bottom-left-radius: 10px;
+            // border-bottom-right-radius: 10px;
+            // border-top-left-radius: 0;
+            // border-top-right-radius: 0;
+            border-radius: 10px;
+            padding-bottom: 2rem;
+        }
+
+        .p-dialog-header {
+            border-bottom: 0;
+            padding-top: 2rem;
+            padding-left: 2rem;
+            padding-right: 2rem;
+            .p-dialog-title {
+                font-size: 1rem;
+            }
+
+        }
+
+        .secondary-tittle {
+            font-weight: 600;
+            font-size: 1rem;
+            font-weight: bold;
+
+        }
+
+        .select-chip {
+            max-width: 300px;
+
+        }
+
+        .p-multiselect-label {
+            display: block;
+            white-space: normal;
+            cursor: pointer;
+            overflow: hidden;
+            text-overflow: clip;
+        }
+
+        .p-multiselect.p-multiselect-chip .p-multiselect-token {
+            padding: 0.25rem 0.75rem;
+            background: #F7EED4;
+            color: #F19700;
+            border-radius: 4px;
+        }
+
+        .p-multiselect-panel {
+            .p-multiselect-items {
+                .p-multiselect-item {
+                    &.p-highlight {
+                        background: #DDEEF8;
+                        color: black;
+                    }
+                    &:not(.p-highlight):not(.p-disabled):hover {
+                        color: #212529;
+                        background: #DDEEF8;
+                    }
+                }
+            }
+        }
+
+    }
+}
+
+.desacumular_confirm_modal {
+    
+
+    &.p-dialog {
+        .p-dialog-content {
+            padding: 1rem;
+            background-color: #F7EED4;
+            color: #333333;
+            .confirm-title {
+                color: #0E2E4A;
+            }
+        }
+    }
+}

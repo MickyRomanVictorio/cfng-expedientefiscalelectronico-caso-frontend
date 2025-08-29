@@ -1,0 +1,54 @@
+<div class="encabezado-modal w-12 mb-3 relative">
+  <h3
+    class="encabezado-titulo cfe-subtitulo-3 cfe-semi-bold family-poppin-bold"
+  >
+    {{ titulo }}
+  </h3>
+  <a (click)="closeAction()">
+    <fn-icon
+      class="encabezado-cerrar absolute cursor-pointer top-0 right-0"
+      [ico]="obtenerIcono('iClose')"
+      height="2rem"
+    ></fn-icon>
+  </a>
+</div>
+
+<div class="col-12">
+  <label class="cfe-bold">Fecha de ingreso: </label> {{ fechaIngreso }}
+</div>
+
+<p-tabView (onChange)="cambiarTab($event)" class="cfe-tabs-view-anidado">
+  <!-- <p-tabPanel *ngFor="let tab of tabs" [header]="tab.header"> 
+  </p-tabPanel> -->
+  <p-tabPanel>
+    <ng-template pTemplate="header">
+      <span>Cargo de documento</span>
+    </ng-template>
+  </p-tabPanel>
+  <p-tabPanel>
+    <ng-template pTemplate="header">
+      <span>Documento</span>
+    </ng-template>
+  </p-tabPanel>
+</p-tabView>
+
+<div class="container">
+  <div class="h-full w-full flex flex-col">
+    <div class="flex-grow">
+      <ng-container *ngIf="pdfUrl; else noDocumento">
+        <iframe
+          [src]="pdfUrl"
+          class="w-full h-full border-none"
+          type="application/pdf"
+          title="Pdf reader"
+        >
+        </iframe>
+      </ng-container>
+      <ng-template #noDocumento>
+        <div class="text-center text-lg text-red-500 py-3">
+          Documento sin contenido
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

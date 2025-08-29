@@ -1,0 +1,103 @@
+<div class="flex justify-content-between">
+    <h3 class="encabezado-titulo cfe-subtitulo-3 cfe-semi-bold family-poppin-bold"
+    > {{ tituloModalElevacion }} </h3>
+    <fn-icon
+        class="cursor-pointer"
+        [ico]="obtenerIcono('iClose')"
+        height="2rem"
+        (click)="cerrarModal()"
+    ></fn-icon>
+</div>
+
+<div class="text-2xl mt-2 mb-2 font-semibold">
+    Caso N°: <span [innerHTML]="codigoCaso ? obtenerCasoHtml(codigoCaso) : ''"></span>
+</div>
+
+<div class="cfe-tabla-white">
+    <p-table [value]="historialElevaciones"      
+        [rowHover]="true"
+        [styleClass]="'p-datatable-sm'" responsiveLayout="stack">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th class="w-col-10">N°</th>
+                <th class="w-col-220">Acción</th>
+                <th>Usuario origen</th>
+                <th>Usuario destino</th>
+                <th class="w-col-250">Acto Procesal / Trámite</th>
+                <th class="w-col-250">Observaciones / Comentarios</th>
+                <th class="w-col-130">Fecha</th>
+                <th class="w-col-120">Ver</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-historial let-rowIndex="rowIndex">
+            <tr class="family-poppin">
+                <td class="table_td_content_start">
+                    <span class="p-column-title">Nro:</span>
+                    {{ (( query.page -1 ) * query.limit) + (rowIndex + 1) }}
+                </td>
+                <td class="table_td_content_start">
+                    <span class="p-column-title">Acción:</span>
+                    {{ historial.accion }}
+                </td>
+                <td class="table_td_content_start">
+                    <span class="p-column-title">Usuario origen:</span>
+                    <div class="flex flex-column">
+                        <span class="family-poppin-bold color-gray13">{{ historial.nombreFiscalOrigen }}</span>
+                        <span class="color-gray11">{{ historial.cargoFiscalOrigen }}</span>
+                        <span class="mt-2">{{ historial.entidadFiscalOrigen }}</span>
+                    </div>
+                </td>
+                <td class="table_td_content_start">
+                    <span class="p-column-title">Usuario destino:</span>
+                    <div class="flex flex-column">
+                        <span class="family-poppin-bold color-gray13">{{ historial.nombreFiscalDestino }}</span>
+                        <span class="color-gray11">{{ historial.cargoFiscalDestino }}</span>
+                        <span class="mt-2">{{ historial.entidadFiscalDestino }}</span>
+                    </div>
+                </td>
+                <td class="table_td_content_start">
+                    <span class="p-column-title">Acto Procesal / Trámite:</span>
+                    <div class="flex flex-column">
+                        <span class="family-poppin-bold">{{ historial.actoProcesal }}</span>
+                        <span class="mt-2">{{ historial.tramite }}</span>
+                        <span class="mt-2">{{ historial.resultado }}</span>
+                    </div>
+                </td>
+                <td class="table_td_content_start">
+                    <span class="p-column-title">Observaciones / Comentarios:</span>
+                    {{ historial.observacion }}
+                </td>
+                <td class="table_td_content_start">
+                    <span class="p-column-title">Fecha:</span>
+                    <span>{{ historial?.fechaRegistro ? (historial.fechaRegistro | dateformat) : '' }}</span>
+                    <span>{{ historial?.horaRegistro ? (historial.horaRegistro | dateformat : 'hour24') : '' }}</span>
+                </td>
+                <td class="table_td_content_start">
+                    <span class="p-column-title">Ver:</span>
+                    <div class="flex justify-content-left">
+                    <button
+                        *ngIf="validarDocumentopdf(historial)"
+                        class="btn-accion btn-accion--gris"
+                        (click)="verDocumentopdf(historial)"
+                        [ngStyle]="{ backgroundColor: '#f19700' }"
+                        >
+                        <fn-icon
+                            [ico]="iconUtil.obtenerIcono('iEye')"
+                            height="1.4rem"
+                            [ngStyle]="{ color: '#ffff' }"
+                        ></fn-icon>
+                    </button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="7" style="text-align: center;">No se encontraron resultados
+              </td>
+            </tr>
+          </ng-template>
+    </p-table>
+    <app-paginator [query]="query" [items]="itemPaginado" [rowsPerPageOptions]="[]"
+        (paginate)="onPaginate($event)"></app-paginator>
+</div>

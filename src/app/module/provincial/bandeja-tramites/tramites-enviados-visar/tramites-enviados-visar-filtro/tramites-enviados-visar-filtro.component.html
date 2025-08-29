@@ -1,0 +1,246 @@
+<div class="flex align-items-center lg:pt-3">
+  <fn-icon
+    [ico]="iconUtil.obtenerIcono('iFolderSearch')"
+    height="1.6rem"
+  ></fn-icon>
+  <h3 class="cfe-titulo-1 font-bold pl-1 pr-1">Trámites enviados para visar</h3>
+  <fn-icon [ico]="iconUtil.obtenerIcono('iTooltip')" height="1.3rem"></fn-icon>
+</div>
+
+<form class="w-full" [formGroup]="formularioFiltrarTramites">
+  <div class="grid mt-1">
+    <div class="col">
+      <div class="field mb-0">
+        <label for="textoBusqueda" class="font-semibold">Buscar:</label>
+        <input
+          pInputText
+          type="text"
+          class="p-inputtext-lg py-3 text-lg w-full"
+          placeholder="Ingrese algún texto para buscar sobre la tabla como número de caso, acto procesal, etc."
+          formControlName="textoBusqueda"
+          (keydown.enter)="buscarTramite()"
+        />
+      </div>
+    </div>
+    <div
+      class="col-fixed"
+      style="width: 70px"
+      [ngClass]="{ 'cfe-filtro-boton-fondo': mostrarFiltros }"
+    >
+      <div class="field mb-0">
+        <label for="" class="font-semibold">&nbsp;</label>
+        <button
+          class="cfe-filtro-boton"
+          type="button"
+          (click)="eventoMostrarOcultarFiltros()"
+        >
+          <fn-icon
+            [ico]="iconUtil.obtenerIcono('iFilterShow')"
+            height="2.1rem"
+          ></fn-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  @if (mostrarFiltros) {
+  <div class="grid cfe-filtros">
+    <div class="cfe-filtros-fondo px-3">
+      <div class="formgrid grid">
+        <div class="col-12">
+          <div class="flex flex-wrap flex-column md:flex-row mb-3">
+            <div class="flex align-items-center mb-2 sm:mb-0">
+              <p-radioButton
+                id="fechaCreacion"
+                value="0"
+                formControlName="tipoFecha"
+                inputId="fechaCreacion-tEnviadosVisar"
+              ></p-radioButton>
+              <label
+                for="fechaCreacion-tEnviadosVisar"
+                class="ml-1 font-semibold"
+                >Fecha de creación</label
+              >
+            </div>
+            <div class="flex align-items-center ml-0 md:ml-4 mt-1 md:mt-0">
+              <p-radioButton
+                id="fechaEnvio"
+                value="1"
+                formControlName="tipoFecha"
+                inputId="fechaEnvio-tEnviadosVisar"
+              ></p-radioButton>
+              <label for="fechaEnvio-tEnviadosVisar" class="ml-1 font-semibold"
+                >Fecha de envío</label
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-6 field">
+          <label for="" class="font-semibold mb-2"
+            >{{
+              formularioFiltrarTramites.get("tipoFecha")!.value === "0"
+                ? "Fecha de creación del trámite"
+                : "Fecha de envío de trámite"
+            }}:</label
+          >
+          <div class="grid">
+            <div class="col-12 sm:col-6">
+              <p-calendar
+                id="fechaDesde"
+                dateMask
+                dateFormat="dd/mm/yy"
+                class="p-inputtext-lg cfe-calendar h-56"
+                [showIcon]="true"
+                icon="cfe-calendar-icon"
+                placeholder="dd/mm/aaaa"
+                formControlName="fechaDesde"
+              ></p-calendar>
+            </div>
+            <div class="col-12 sm:col-6 mt-1 sm:mt-0">
+              <p-calendar
+                dateMask
+                dateFormat="dd/mm/yy"
+                class="p-inputtext-lg cfe-calendar h-56"
+                [showIcon]="true"
+                icon="cfe-calendar-icon"
+                placeholder="dd/mm/aaaa"
+                formControlName="fechaHasta"
+              ></p-calendar>
+            </div>
+          </div>
+          @if (formularioFiltrarTramites.errors?.['rangoFechaInvalidoMax']) {
+          <div class="p-error mt-2">
+            La fecha fin no debe ser posterior a la fecha actual.
+          </div>
+          } @if (formularioFiltrarTramites.errors?.['rangoFechaInvalido']) {
+          <div class="p-error mt-2">
+            El rango de fechas no debe exceder un mes.
+          </div>
+          }
+        </div>
+
+        <div class="col-12 md:col-3 field">
+          <label for="tipoProceso" class="font-semibold mb-0"
+            >Tipo Proceso</label
+          >
+          <p-dropdown
+            id="tipoProceso"
+            styleClass="py-1 p-inputtext-lg"
+            [options]="tipoProcesos"
+            optionValue="id"
+            optionLabel="nombre"
+            emptyMessage="Sin resultados"
+            placeholder="Todos"
+            [showClear]="true"
+            formControlName="tipoProceso"
+            (onChange)="eventoCambiarTipoProceso($event)"
+          ></p-dropdown>
+        </div>
+
+        <div class="col-12 md:col-3 field">
+          <label for="subtipoProceso" class="font-semibold mb-0"
+            >Subtipo Proceso</label
+          >
+          <p-dropdown
+            id="subtipoProceso"
+            styleClass="py-1 p-inputtext-lg"
+            [options]="subtipoProcesos"
+            optionValue="id"
+            optionLabel="nombre"
+            emptyMessage="Sin resultados"
+            placeholder="Todos"
+            [showClear]="true"
+            formControlName="subtipoProceso"
+            (onChange)="eventoCambiarSubtipoProceso($event)"
+          ></p-dropdown>
+        </div>
+
+        <div class="col-12 md:col-6 field">
+          <label for="etapa" class="font-semibold mb-0">Etapa:</label>
+          <p-dropdown
+            id="etapa"
+            styleClass="p-inputtext-lg py-1"
+            [options]="etapas"
+            optionValue="id"
+            optionLabel="nombre"
+            emptyMessage="Sin resultados"
+            placeholder="Todos"
+            [showClear]="true"
+            formControlName="etapa"
+            (onChange)="eventoCambiarEtapa($event)"
+          ></p-dropdown>
+        </div>
+
+        <div class="col-12 md:col-6 field">
+          <label for="actoProcesal" class="font-semibold mb-0"
+            >Acto Procesal:</label
+          >
+          <p-dropdown
+            id="actoProcesal"
+            styleClass="p-inputtext-lg py-1"
+            [options]="actosProcesales"
+            optionValue="id"
+            optionLabel="nombre"
+            emptyMessage="Sin resultados"
+            placeholder="Todos"
+            [showClear]="true"
+            formControlName="actoProcesal"
+            (onChange)="eventoCambiarActoProcesal($event)"
+          ></p-dropdown>
+        </div>
+
+        <div class="col-12 md:col-6 field">
+          <label for="tramite" class="font-semibold mb-0">Trámite:</label>
+          <p-dropdown
+            id="tramite"
+            styleClass="p-inputtext-lg py-1"
+            [options]="tramites"
+            optionValue="codigo"
+            optionLabel="nombre"
+            emptyMessage="Sin resultados"
+            placeholder="Todos"
+            [showClear]="true"
+            formControlName="tramite"
+          ></p-dropdown>
+        </div>
+
+        <div class="col-12 md:col-6 field">
+          <label for="tipoDocumentos" class="font-semibold mb-0"
+            >Tipo de documento:</label
+          >
+          <p-dropdown
+            id="tipoDocumentos"
+            styleClass="p-inputtext-lg py-1"
+            [options]="tipodocumentos"
+            optionValue="codigo"
+            optionLabel="nombre"
+            emptyMessage="Sin resultados"
+            placeholder="Todos"
+            [showClear]="true"
+            formControlName="tipodocumento"
+          ></p-dropdown>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+
+  <div class="field col-12 flex flex-column gap-2 sm:flex-row justify-content-end mt-1">
+    <button
+      class="cfe-boton-secondary cfe-boton-m boton-w"
+      type="button"
+      (click)="limpiarFiltros()"
+    >
+      Limpiar filtros
+    </button>
+    <button
+      class="cfe-boton-primary cfe-boton-m boton-w"
+      type="button"
+      [disabled]="formularioFiltrarTramites.invalid"
+      (click)="buscarTramite()"
+    >
+      Buscar
+    </button>
+  </div>
+</form>

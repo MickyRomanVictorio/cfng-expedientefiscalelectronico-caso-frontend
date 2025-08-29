@@ -1,0 +1,63 @@
+<div class="cfe-dropdown__menu" *ngIf="isActiveMenuAlertasGenericas">
+    <div class="cfe-dropdown__menu--header flex justify-content-between">
+        <div class="cfe-title">
+            <h2>Alertas</h2>
+            <p>Genéricas</p>
+        </div>
+        <div class="iconos" style="width: 20%;">
+            <div class="cfe-icon">
+                <fn-icon [ico]="obtenerIcono('iAlert')" height="28px"></fn-icon>
+                <fn-icon [ico]="obtenerIcono('iClose')" height="28px" (click)="closeMenuAlertas()"></fn-icon>
+            </div>
+        </div>
+    </div>
+    <div class="cfe-dropdown__menu--content">
+        <div class="cfe-tabs">
+            <p-tabMenu class="cfe-tabs--genericas"
+                       [model]="menuItemsAlertasGenericas"
+                       [activeItem]="activeItemAlertaGenerica"
+                       (activeItemChange)="onActiveItemAlertaGenericaChange($event)"></p-tabMenu>
+        </div>
+        <div class="cfe-tabs__container" *ngIf="activeItemAlertaGenerica.label == 'Pendientes'">
+            <div class="cfe-tabs__container--content">
+              <div (click)="irAlerta(2,item)" class="cfe-alerta__item alerta-generica-pendiente"
+                    *ngFor="let item of listaAlertasPendientes">
+                    <div class="cfe-alerta__item--header-alerta-generica-pendiente flex justify-content-between">
+                        <h2>{{ item.titulo }}</h2>
+                        <p-menu #menu [model]="items(item)" [popup]="true" class="menu-options"></p-menu>
+                        <div class="btn-more-options" (click)="menu.toggle($event)">
+                            <div class="btn-more-options-content">
+                                <span></span><span></span><span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cfe-alerta__item--content">
+                        <p>{{ item.texto | textoTiempoSegundos:item.fechaCreacion}}</p>
+                    </div>
+                    <div class="cfe-alerta__item--time">
+                        <span>{{item.fechaCreacion | tiempoSegundos}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cfe-tabs__container" *ngIf="activeItemAlertaGenerica.label == 'Solucionadas'">
+            <div class="cfe-tabs__container--content">
+                <div class="cfe-alerta__item alerta-plazo-solucionadas"
+                    *ngFor="let item of listaAlertasSolucionadas">
+                    <div class="cfe-alerta__item--header">
+                        <h2>{{ item.titulo }}</h2>
+                    </div>
+                    <div class="cfe-alerta__item--content">
+                        <p>{{ item.texto}}</p>
+                    </div>
+                    <div class="cfe-alerta__item--time">
+                        <span>{{item.fechaCreacion | tiempoSegundos}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cfe-tabs__actions_genericos" (click)="verAlertas()">
+            <span>Ver todas las alertas</span>
+        </div>
+    </div>
+</div>

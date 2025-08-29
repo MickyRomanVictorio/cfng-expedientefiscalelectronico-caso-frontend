@@ -1,0 +1,95 @@
+<div class="cfe-container cfe-container-background-crema p-5 relative">
+  @if(casoPestania(); as caso) {
+    <div *ngIf="casoPestania()">
+      <fn-icon
+    class="absolute top-0 right-0 cursor-pointer mt-2 ml-3"
+    [ico]="obtenerIcono('iClose')"
+    height="2rem"
+    (click)="ref.close()"
+    ></fn-icon>
+
+    <div class="cfe-titulo-1 tour-ma-1">
+      Pestaña de apelación N° {{caso.numeroPestania}}
+      <fn-icon
+        [ico]="iconUtil.obtenerIcono('iTooltip')"
+        height="1.6rem"
+        (click)="startTour()"
+      ></fn-icon>
+    </div>
+
+    <div class="font-bold py-3 tour-ma-2">
+      <div class="cfe-titulo-3">
+        <span [innerHTML]="tituloDelCaso(caso.cuadernoIncidental)"></span>
+      </div>
+      <div class="cfe-subtitulo-1 pt-1">
+        {{ caso.tipoCuaderno }}
+      </div>
+    </div>
+    <hr>
+    <div class="cfe-subtitulo-1 font-bold pb-2">INFORMACIÓN DE LA PESTAÑA DE APELACIÓN</div>
+
+    <div class="grid tour-ma-3">
+
+        <div class="col-12 md:col-6">
+            <div class="py-1">
+              <span>Etapa: </span>
+              <div class="font-semibold"> {{caso.etapa | capitalizar}} </div>
+            </div>
+
+            <div class="py-1">
+              <span>Fecha de elevación: </span>
+              <div class="font-semibold">  {{ formatoFechaF(caso.fechaElevacion) }} </div>
+            </div>
+
+            <div class="py-1">
+              <span>Estado: </span>
+              <div class="font-semibold">
+                {{caso.estado | capitalizar}}
+              </div>
+            </div>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <div class="py-1">
+            <span>N° de expediente: </span>
+            <div class="font-semibold"> {{ caso.numeroExpediente }}</div>
+          </div>
+
+          <div class="py-1">
+            <span>Último trámite: </span>
+            <div class="font-semibold"> {{casoPestania().ultimoTramite | capitalizar}}</div>
+          </div>
+
+        </div>
+
+    </div>
+    <hr>
+
+    <div class="cfe-subtitulo-1 font-bold pb-2">DETALLES DE LA PESTAÑA DE APELACIÓN</div>
+
+
+      <app-tabs-view class="font-bold tour-ma-4" [tabs]="tabs" [indexSeleccionado]="indexTab" (onChangeIndex)="eventoCambiarTab($event)"></app-tabs-view>
+
+      <p-tabView class="cfe-tabs-view" [(activeIndex)]="indexTab">
+        @if(indexTab===0){
+          <p-tabPanel class="tour-ma-5">
+            <app-tramite
+              [idActoTramiteCaso]="idActoTramiteCaso()"
+              [isTramiteEnModoEdicion]="isTramiteEnModoEdicion()"
+            ></app-tramite>
+          </p-tabPanel>
+        }
+        @if (indexTab===1) {
+          <p-tabPanel class="tour-ma-5">
+            <app-historial [idCaso]="datos.idCaso" (seleccionado)="eventoHistorialSeleccionado($event)"></app-historial>
+          </p-tabPanel>
+        }
+        @if (indexTab===2) {
+          <p-tabPanel>
+            <app-partes-delitos [idCaso]="datos.idCaso"></app-partes-delitos>
+          </p-tabPanel>
+        }
+      </p-tabView>
+    </div>
+  }
+</div>

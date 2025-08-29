@@ -1,0 +1,176 @@
+/************************************************************/
+
+
+/*  Archivo de variables de colores y tipografias del MPFN  */
+
+
+/************************************************************/
+
+:root {
+    // Nuevos colores institucionales
+    --mpfn-primary: #0e2e4a;
+    --mpfn-secondary: #f19700;
+    --mpfn-lightblue: #3f9fd6;
+    --mpfn-lightblue-dark: #2c95d2;
+    --mpfn-lightblue-background: #d9ecf7;
+    --mpfn-jade: #008087;
+    --mpfn-jade-background: #f1f6f6;
+    --mpfn-blue-gray: #e7eaed;
+    --mpfn-blue-focused: #26435C;
+    --mpfn-blue-hover: #27455fb4;
+    --mpfn-black: #333333;
+    --mpfn-black-2: #212529;
+    --mpfn-gray1: #666666;
+    --mpfn-gray2: #cccccc;
+    --mpfn-gray3: #e0e0e0;
+    --mpfn-gray4: #B7C0C999;
+    --mpfn-gray5: #5F6062;
+    --mpfn-gray6: #CFD5DB;
+    --mpfn-gray7: #E7EAED;
+    --mpfn-gray8: #f8f8f8;
+    --mpfn-gray9: #e0e0e052;
+    --mpfn-gray10: #ced4da;
+    --mpfn-gray11: #f1f1f1;
+    --mpfn-gray12: #e2e2e2;
+    --mpfn-gray13: #878787;
+    --mpfn-gray14: #525659;
+    --mpfn-gray15: #ADADAD;
+    --mpfn-white: #ffffff;
+    --mpfn-background: #f5f2e0;
+    --mpfn-background-opaque: #dddaca;
+    --mpfn-backgroud-transparent: #eae7d6;
+    --mpfn-background2: #F7EED4;
+    --mpfn-red: #C1292E;
+    --mpfn-red-dark: #FF0000;
+    --mpfn-green: #3CC85A;
+    --mpfn-yellow: #F19700;
+    --mpfn-yellow-light: #fcb53a;
+    --mpfn-yellow-dark: #D9A927;
+    --mpfn-red-wine: #C83C3C;
+    --mpfn-skyblue-pastel: #ddeef83d;
+    --mpfn-green-dark: #06A77D;
+    --mpfn-yellow-hover: #d98800;
+    --mpfn-gray-hover: #cfd5db;
+    --mpfn-gray-active: #e2e6e9;
+    --mpfn-green-hover: #058664;
+    --mpfn-table-hover: #f7eed43d;
+    --mpfn-purple-dark: #251392;
+    --mpfn-purple-dark-pastel: #D2CBFD;
+    // Colores MUP MD
+    --mpfn-lightblue-bg: #3f9fd62c;
+    --mpfn-green-bg: #3cc85a2f;
+    --mpfn-yellow-bg: #f1990028;
+    --mpfn-red-alert: #f8d7da;
+    --mpfn-red-wine2: #e63313;
+    --mpfn-red-wine2-bg: #e6601331;
+    --mpfn-badge-mp: #1b0883;
+    --mpfn-badge-mp-bg: #1a088327;
+    --mpfn-derivado-bg: #e1b7f4;
+    --mpfn-green-alert: #3cc85a34;
+    // Colores para estados
+    --mpfn-subsanado-pastel: #D8F4DE;
+    --mpfn-origen-pastel: #cecece;
+    --mpfn-despacho-pastel: #DDEEF8;
+    --mpfn-turno-pastel: #D8F4DE;
+    --mpfn-derivado-pastel: #e6d3ff;
+    --mpfn-rojo-dark-pastel: #FFD1D1;
+    --mpfn-mpe-pastel: #F7EED4;
+    --mpfn-mup-pastel: #f3cbfa;
+    --mpfn-reasignado-pastel: #05106c;
+    --mpfn-asignacion-permanente-pastel: #DDEEF8;
+    --mpfn-asignacion-temporal-pastel: #E6D3FF;
+    --mpfn-recibido-pastel: #FAEADC;
+    --mpfn-asignado-pastel: #FFE1E4;
+    --mpfn-en-transito-pastel: #CCF7F7;
+    --mpfn-notificado-pastel: #DDEEF8;
+    --mpfn-motivado-pastel: #DFF7E1;
+    --mpfn-en-casilla-pastel: #CFD5DB;
+    --mpfn-origen: #333333;
+    --mpfn-despacho: #3F9FD6;
+    --mpfn-turno: #3CC85A;
+    --mpfn-derivado: #963CBE;
+    --mpfn-mpe: #D9A927;
+    --mpfn-mup: #963CBE;
+    --mpfn-reasignado: white;
+    --mpfn-asignacion-permanente: #3F9FD6;
+    --mpfn-asignacion-temporal: #963CBE;
+    --mpfn-recibido: #E08532;
+    --mpfn-asignado: #FF697A;
+    --mpfn-en-transito: #00D8D8;
+    --mpfn-notificado: #3F9FD6;
+    --mpfn-motivado: #60D669;
+    --mpfn-en-casilla: #0E2E4A;
+    // Colores Detalle Notificacion Trámite
+    --mpfn-cedula-enviado: #3F9FD6;
+    --mpfn-cedula-generado: #E08532;
+    --mpfn-cedula-pendiente: #5F6062;
+    --mpfn-cedula-notificado: #3CC85A;
+    --mpfn-cedula-motivado: #963CBE;
+    --mpfn-cedula-texto: white;
+    --mpfn-estado-generado: #3F9FD6;
+    --mpfn-estado-enviado: #E08532;
+    --mpfn-estado-prescindido: #5F6062;
+    --mpfn-estado-recibido: #3CC85A;
+    --mpfn-estado-rechazado: white; //OK
+    --mpfn-estado-observado: #5F6062;
+    --mpfn-estado-asignado: #3CC85A;
+    --mpfn-estado-pendiente: white; //OK
+    --mpfn-estado-motivado: white; //OK
+    --mpfn-estado-segunda-visita: #F19700;
+    --mpfn-estado-bajo-puerta: white; //OK
+    --mpfn-estado-derivado: white; //OK
+    --mpfn-estado-recuperado: white; //OK
+    --mpfn-estado-devuelto: #E08532;
+    --mpfn-estado-primera-visita: #3CC85A;
+    --mpfn-estado-leido: #3CC85A;
+    --mpfn-estado-anulado: #C83C3C;
+    --mpfn-estado-recibir-cargo: #3CC85A;
+    --mpfn-estado-texto: black;
+    // Colores Número de Documento-Sujeto Procesal
+    --mpfn-numero-documento: white;
+    --mpfn-sp-dni: #3F9FD6;
+    --mpfn-sp-ruc: #D9A927;
+    --mpfn-sp-carnet-de-extranjeria: #3CC85A;
+    --mpfn-sp-pasaporte: #05106c;
+    --mpfn-sp-sin-documento: #5F6062;
+    --mpfn-sp-permiso-temporal-de-permanencia: #963CBE;
+    --mpfn-sp-libreta-electoral: #CECECE;
+    --mpfn-sp-partida-de-nacimiento: #C83C3C;
+    --mpfn-sp-libreta-militar: #D8F4DE;
+    --mpfn-sp-cédula: #F7EED4;
+    // Colores de turnos
+    --mpfn-por-asignar: #eb5e5e;
+    // Colores de semaforos
+    --mpfn-semaforo-rojo: #C1292E;
+    --mpfn-semaforo-amarillo: #F19700;
+    --mpfn-semaforo-verde: #3CC85A;
+    // Colores para alertas
+    --mpfn-alerta-generica-pendiente: #2B8DE3;
+    --mpfn-alerta-plazo-pendiente: #EA4C3A;
+    // Tipografias
+    --mpfn-font-bold: "Inter-Bold", sans-serif;
+    --mpfn-font-semi-bold: "Inter-SemiBold", sans-serif;
+    --mpfn-font-regular: "Inter-regular", sans-serif;
+    --mpfn-font-light: "Inter-Light", sans-serif;
+    --mpfn-poppins-semibold: 'Poppins-SemiBold', sans-serif;
+    --mpfn-poppins-bold: 'Poppins-Bold', sans-serif;
+    --mpfn-roboto: 'Roboto', sans-serif;
+    --header-height: 197.09px + 69px;
+    --sidebar-width: 320px;
+    --version-width: 150px;
+    --breakpoint-tablet: 992px;
+    // bandeja despacho superior
+    --mpfn-elevacion-actuados: #F19700;
+    --mpfn-apelaciones: #058664;
+    --mpfn-contienda: #05106c;
+    --mpfn-elevacion-consultas: #CFD5DB;
+    --mpfn-solicitud-exclusion: #C1292E;
+    --mpfn-denuncia-magistrado: #353535;
+    --mpfn-reportes-estadisticas: #963CBE;
+    --mpfn-verde-claro: #BCFC06;
+    --mpfn-rojo-pastel: #F4D8D8;
+    --mpfn-verde-pastel: #D8F4DE;
+}
+
+// breakpoints
+$mpfn-breakpoint-tablet: 992px;

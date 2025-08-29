@@ -1,0 +1,124 @@
+<div class="cfe-container">
+
+  <!--Ini - Título de la página -->
+    <div class="flex justify-content-start flex-wrap">
+        <div class="flex align-items-center justify-content-center mt-2 mb-4">
+            <fn-icon [ico]="iconUtil.obtenerIcono('iFolderSearch')" height="1.6rem"></fn-icon>
+            <h3 class="cfe-titulo-1 mx-2">Consultar casos fiscales elevados: Exclusion Fiscal</h3>
+        </div>
+    </div>
+  <!--Fin - Título de la página -->
+
+  <!--Ini - Componente Filtro -->
+     <app-filtrar-consulta-caso
+       [tipoVista]="tipoVista"
+       [datosRutaCondicion]="datosRutaCondicion"
+       (buscar)="eventoBuscar($event)"
+       (buscarPorTexto)="eventoBuscarPorTexto($event)"
+     ></app-filtrar-consulta-caso>
+  <!--Fin - Componente Filtro -->
+
+  <!--  Ini - Opciones Tipo Vista, Opciones para Exportar -->
+    <div class="mt-5" [ngClass]="{'container-view-list px-2': tipoVista === TipoVistaEnum.Tabla}">
+
+      <div class="grid py-3">
+        <div class="col-12 md:col-6">
+          <div class="flex align-items-center">
+            <img [src]="iconAsset.obtenerRutaIcono('exclamationFolder')" alt="Folder Icon" style="width: 22px"/>
+            <h4 class="casos_listados_count mt-2 mb-0">
+              {{ paginacionConfiguracion.data.total }} casos de exclusion fiscal pendientes de pronunciamiento
+            </h4>
+          </div>
+        </div>
+        <div class="col-12 md:col-6">
+          <div class="flex flex-column sm:flex-row justify-content-end">
+              @if (tipoVista === TipoVistaEnum.Tabla)
+              {
+                <div class="flex flex-column sm:flex-row justify-content-end mr-0 sm:mr-3">
+                  <div class="flex align-items-center gap-1 md:gap-2 flex-column sm:flex-row">
+                    <button [disabled]="listaCasos.length==0" class="cfe-boton-secondary cfe-boton-m w-full sm:w-auto mr-0 mb-2 sm:mb-0 justify-content-start" (click)="eventoExportar(TipoExportarEnum.Pdf)">
+                      <img [src]="iconAsset.obtenerRutaIcono('pdf')" alt="PDF Icon" class="mr-1"/>
+                      Exportar PDF
+                    </button>
+                    <button  [disabled]="listaCasos.length==0" class="cfe-boton-secondary cfe-boton-m w-full sm:w-auto mb-2 sm:mb-0 justify-content-start" (click)="eventoExportar(TipoExportarEnum.Excel)">
+                      <img [src]="iconAsset.obtenerRutaIcono('excel')" alt="Excel Icon" class="mr-1"/>
+                      Exportar Excel
+                    </button>
+                  </div>
+                </div>
+              }
+
+            <div class="flex gap-3 align-items-center mt-3 sm:mt-0">
+              <button aria-label="Vista tipo tarjetas" class="list-type border-none bg-transparent cursor-pointer" [ngClass]="{ active: tipoVista === TipoVistaEnum.Tarjeta }"
+                (click)="eventoTipoVista($event, TipoVistaEnum.Tarjeta)"
+              >
+                <i class="pi pi-table mt-1"></i>
+              </button>
+              <button aria-label="Vista tipo tabla" class="list-type border-none bg-transparent cursor-pointer" [ngClass]="{ active: tipoVista === TipoVistaEnum.Tabla }"
+                (click)="eventoTipoVista($event, TipoVistaEnum.Tabla)"
+              >
+                <i class="pi pi-bars mt-1"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      @if (tipoVista === TipoVistaEnum.Tabla) {
+        <!-- Ini - Leyenda  Plazos -->
+
+          <div class="flex flex-wrap pb-2 ">
+            <app-leyenda-listas [leyenda]="leyendaPlazos()">  </app-leyenda-listas>
+          
+          </div>
+        <!-- Fin - Leyenda  Plazos -->
+
+          <app-tabla-casos
+            [listaCasos]="listaCasos"
+            [paginacionCondicion]="paginacionCondicion"
+            [paginacionConfiguracion]="paginacionConfiguracion"
+            [paginacionReiniciar]="paginacionReiniciar"
+            (cambiarPagina)="eventoCambiarPagina($event)"
+            (casoSeleccionado)="eventoCasoSeleccionado($event)"
+            [procesadoCriterioBusqueda]="procesadoCriterioBusqueda"
+          ></app-tabla-casos>
+      }
+
+    </div>
+  <!--  Fin - Opciones Tipo Vista, Opciones para Exportar -->
+
+  @if (tipoVista === TipoVistaEnum.Tarjeta) {
+    <div>
+      <!-- Ini - Leyenda  Plazos -->
+        <div class="flex flex-wrap py-2 mb-1 ">
+          <app-leyenda-listas [leyenda]="leyendaPlazos()">  </app-leyenda-listas>
+        </div>
+      <!-- Fin - Leyenda  Plazos -->
+
+      <!-- Ini - Tarjeta Casos -->
+      <app-tarjeta-casos
+      [listaCasos]="listaCasos"
+      [paginacionCondicion]="paginacionCondicion"
+      [paginacionConfiguracion]="paginacionConfiguracion"
+      [paginacionReiniciar]="paginacionReiniciar"
+      (cambiarPagina)="eventoCambiarPagina($event)"
+      (casoSeleccionado)="eventoCasoSeleccionado($event)"
+      >
+      </app-tarjeta-casos>
+      <!-- Fin - Tarjeta Casos -->
+
+      @if (listaCasos.length === 0) {
+        <div class="mt-4 py-5 text-center bg-white px-2 text-600 border-300 border-1 border-round font-semibold">
+          @if (procesadoCriterioBusqueda===false) {
+            En estos momentos no hay casos fiscales
+          }@else {
+            No se encontraron registros con los criterios de búsqueda ingresados
+          }
+        </div>
+      }
+
+    </div>
+
+  }
+
+</div>

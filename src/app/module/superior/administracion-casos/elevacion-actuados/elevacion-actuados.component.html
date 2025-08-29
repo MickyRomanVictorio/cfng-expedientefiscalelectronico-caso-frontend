@@ -1,0 +1,22 @@
+<router-outlet></router-outlet>
+<div *ngIf="divSolicitudElevacion">
+  <div class="col-12" style="text-align: center;">
+    <iframe *ngIf="pdfUrl"  [src]="pdfUrl" style='width: 50%;height: 500px !important;'
+            title="Pdf reader"></iframe>
+  </div>
+</div>
+<div *ngIf="divDisposicionElevacion">
+  <h5>Fiscalia Superior a elevar:</h5>
+  <div class="col-12">
+    <select>
+      <option *ngFor="let dato of datosDependencias" value="{{dato.coDpndFiscal}}">
+          {{dato.noeEntidad}}
+      </option>
+    </select>
+  </div>
+  <div class="col-12">
+    <p-button *ngIf="btnElevar" (onClick)="registrarElevacion()">Elevar a F. Superior</p-button>
+  </div>
+</div>
+
+

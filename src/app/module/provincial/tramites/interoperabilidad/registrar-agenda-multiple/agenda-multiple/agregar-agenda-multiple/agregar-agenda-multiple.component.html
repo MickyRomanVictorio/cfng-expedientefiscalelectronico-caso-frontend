@@ -1,0 +1,108 @@
+<form [formGroup]="formAgendaMultiple">
+  <div class="col-12 mt-2">
+    <div class="formgrid grid">
+      <input class="hidden">
+      @if ( mostrarFechaNotificacion ) {
+        <div class="field col-12 md:col-3">
+          <label for="fechaNotificacion" class="font-bold text-sm">Fecha de notificación</label>
+          <p-calendar [dateFormat]="'dd/mm/yy'" class="p-inputtext-lg cfe-calendar" [showIcon]="true" dateMask
+             icon="cfe-calendar-icon" placeholder="dd/mm/aaaa" formControlName="fechaNotificacion" appendTo="body"
+             (ngModelChange)="alCambiarFechaNotificacion($event)" dataType="string"
+             [ngClass]="{'ng-invalid ng-dirty': formAgendaMultiple.get('fechaNotificacion')?.value === null }">
+           </p-calendar>
+        </div>
+      }
+      <div class="field col-12 md:col-4">
+        <label for="fechaHoraAudicencia" class="font-bold text-sm">Fecha y hora de audiencia</label>
+        <p-calendar [dateFormat]="'dd/mm/yy'" class="p-inputtext-lg cfe-calendar" [showIcon]="true"
+           [showTime]="true" [hourFormat]="'24'" dataType="string"
+           icon="cfe-calendar-icon" placeholder="dd/mm/aaaa hh:mm" formControlName="fechaHoraAudicencia" appendTo="body"
+           [ngClass]="{'ng-invalid ng-dirty': formAgendaMultiple.get('fechaHoraAudicencia')?.invalid && formAgendaMultiple.get('fechaHoraAudicencia')?.touched}"
+           >
+         </p-calendar>
+      </div>
+      <div class="field col-12 md:col-5">
+        <div class="flex flex-wrap gap-3 md:mt-6">
+          @for (dataRadio of tipoActividadAgenda; track $index) {
+              <div class="flex align-items-center">
+                  <p-radioButton name="idTipoActividadAgenda" [value]="dataRadio.id"
+                      formControlName="idTipoActividadAgenda" inputId="or{{modoLectura}}{{dataRadio.id}}"
+                      (onClick)="alCambiarTipoActividadAgenda($event)"
+                  ></p-radioButton>
+                  <label for="or{{modoLectura}}{{dataRadio.id}}" class="ml-2 text-sm cursor-pointer">Reunión {{ dataRadio.coDescripcion.toLowerCase() }}</label>
+              </div>
+          }
+        </div>
+      </div>
+      @if (formAgendaMultiple.get('idTipoActividadAgenda')?.value === ID_TIPO_ACTIVIDAD_AGENDA_VIRTUAL) {
+        <div class="field col-12 md:col-12">
+          <label for="urlReunion" class="font-bold text-sm">URL reunión (opcional)</label>
+          <input
+            pInputText
+            type="text"
+            class="p-inputtext-md text-md py-2 w-full"
+            formControlName="urlReunion"
+            [maxlength]="250"/>
+        </div>
+      }
+
+      <div class="field col-12 md:col-6">
+        <label for="idDistritoPJ" class="font-bold text-sm">Distrito Judicial</label>
+        <p-dropdown
+          styleClass="p-inputtext-md custom-dropdown"
+          [options]="distritoPoderJudicial"
+          optionValue="id"
+          optionLabel="nombre"
+          emptyMessage="No se encontraron resultados"
+          placeholder="Seleccionar"
+          formControlName="idDistritoPJ"
+          appendTo="body"
+          (onChange)="alCambiarDistritoJudicial($event)"
+          [ngClass]="{'ng-invalid ng-dirty': formAgendaMultiple.get('idDistritoPJ')?.invalid && formAgendaMultiple.get('idDistritoPJ')?.touched}"
+        ></p-dropdown>
+      </div>
+      <div class="field col-12 md:col-6">
+        <label for="idJuzgadoPJ" class="font-bold text-sm">Juzgado</label>
+        <p-dropdown
+          styleClass="p-inputtext-md custom-dropdown"
+          [options]="juzgadoPoderJudicial"
+          optionValue="codEntidad"
+          optionLabel="descEntidad"
+          emptyMessage="No se encontraron resultados"
+          placeholder="Seleccionar"
+          formControlName="idJuzgadoPJ"
+          appendTo="body"
+          [ngClass]="{'ng-invalid ng-dirty': formAgendaMultiple.get('idJuzgadoPJ')?.invalid && formAgendaMultiple.get('idJuzgadoPJ')?.touched}"
+        ></p-dropdown>
+      </div>
+      <div class="field col-12 md:col-12">
+        <label for="observacion" class="font-bold text-sm">Observaciones (opcional)</label>
+        <textarea pInputTextarea class="w-full text-md" rows="5" formControlName="observacion" [maxLength]="longitudMaximaObservaciones"
+        placeholder="Observaciones del juzgado."></textarea>
+        <small
+        class="block text-right mt-1"
+        [ngClass]="{'p-error': cantidadCaracteresObservacion > longitudMaximaObservaciones }">
+        {{cantidadCaracteresObservacion}}/{{longitudMaximaObservaciones}} máximo de caracteres
+        </small>
+      </div>
+      <div class="field col-12 flex flex-column sm:flex-row justify-content-end">
+        @if( !modoLectura ) {
+          <p-button
+            [disabled]="!formularioValido"
+            (onClick)="validarAgregarAgendaNotificacion()"
+            styleClass="p-button-lg cfe-boton-primary text-white family-poppin-bold btn-adjust-filter w-column-full">
+            <span class="ml-4 mr-4">{{ textoAccionARealizar }}</span>
+          </p-button>
+        }
+
+      </div>
+    </div>
+  </div>
+</form>
+
+
+
+
+
+
+

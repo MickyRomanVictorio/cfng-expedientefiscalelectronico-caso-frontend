@@ -1,0 +1,58 @@
+<div [formGroup]="form" class="w-full">
+    <h3 class="cfe-titulo-3 mb-3">Edición Sujeto Procesal</h3>
+    <div class="w-full formgrid grid">
+        <div class="field col">
+            <label class="cfe-semi-bold">Tipo de sujeto procesal</label>
+            <p-dropdown [disabled]="habilitado" placeholder="Seleccione un tipo de sujeto procesal" [options]="tipo_sujetos" formControlName="idTipoParteSujeto"></p-dropdown>
+        </div>
+        <div class="field col">
+            <label class="cfe-semi-bold">Tipo de persona</label>
+            <p-dropdown [disabled]="habilitado" [options]="tipo_persona"></p-dropdown>
+        </div>
+    </div>
+    <div class="w-full formgrid grid">
+        <div class="field col">
+            <label class="cfe-semi-bold">Origen</label>
+            <div class="w-full flex gap-4">
+                <div class="flex align-items-center">
+                    <p-radioButton name="flgExtranjero" value="0" inputId="peruano" formControlName="flgExtranjero" (ngModelChange)="actualizarOpcionesDocumento()"></p-radioButton>
+                    <label for="peruano" class="ml-2">Peruano</label>
+                </div>
+                <div class="flex align-items-center">
+                    <p-radioButton name="flgExtranjero" value="1" inputId="extranjero" formControlName="flgExtranjero" (ngModelChange)="actualizarOpcionesDocumento()"></p-radioButton>
+                    <label for="extranjero" class="ml-2">Extranjero</label>
+                </div>
+            </div>
+        </div>
+        <div class="field col">
+            <label class="cfe-semi-bold">País</label>
+            <p-dropdown [options]="pais" formControlName="idNacionalidad"></p-dropdown>
+        </div>
+    </div>
+    <div class="mb-4 w-full flex align-items-end gap-4">
+        <div class="flex flex-column w-5 mr-3">
+            <label class="cfe-semi-bold">Tipo de documento</label>
+            <p-dropdown [options]="documentoOpciones" formControlName="idTipoDocumento" (ngModelChange)="actualizarEstadoBoton()"></p-dropdown>
+        </div>
+        <div class="flex flex-column w-3">
+            <label htmlFor="numero-documento" class="cfe-semi-bold">Número de documento</label>
+            <input pInputText [disabled]="habilitado" id="numero-documento" [maxLength]="max_value" placeholder="Ingrese el número de documento" formControlName="nuDocumento" />
+        </div>
+        <div class="flex flex-column">
+            <p-button [disabled]="habilitado" icon="pi pi-search" label="Buscar" styleClass="p-button-warning text-blue-50" (click)="buscarDni()"></p-button>
+        </div>
+    </div>
+    <div class="mb-4 flex align-items-center gap-1">
+        <p-checkbox value="0" inputId="manual"></p-checkbox>
+        <label for="manual" class="cfe-semi-bold">Registro manual</label>
+    </div>
+
+    @if (documentoBoolean) {
+      <app-dni-sujeto [dniSujeto]="documento" [InfoSujeto]="infosujeto" [fatherFilter]="form.value" [coCaso]="coCaso"></app-dni-sujeto>
+    }
+
+    @if (!documentoBoolean) {
+      <app-ruc-sujeto [ruc]="documento"></app-ruc-sujeto>
+    }
+
+</div>

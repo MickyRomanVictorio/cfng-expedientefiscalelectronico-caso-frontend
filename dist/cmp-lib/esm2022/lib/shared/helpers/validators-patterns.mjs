@@ -1,0 +1,4 @@
+export const onlyNumbers = /^[0-9]+$/;
+export const validNames = /^(?! )(?!\s)[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]+(?<!\s)(?! )$/i;
+export const onlyLetterNumberDash = /^[a-zA-Z0-9-]+$/;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoidmFsaWRhdG9ycy1wYXR0ZXJucy5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uLy4uL3Byb2plY3RzL2NtcC1saWIvc3JjL2xpYi9zaGFyZWQvaGVscGVycy92YWxpZGF0b3JzLXBhdHRlcm5zLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLE1BQU0sQ0FBQyxNQUFNLFdBQVcsR0FBUSxVQUFVLENBQUM7QUFDM0MsTUFBTSxDQUFDLE1BQU0sVUFBVSxHQUFRLHFEQUFxRCxDQUFDO0FBQ3JGLE1BQU0sQ0FBQyxNQUFNLG9CQUFvQixHQUFRLGlCQUFpQixDQUFDIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0IGNvbnN0IG9ubHlOdW1iZXJzOiBhbnkgPSAvXlswLTldKyQvO1xyXG5leHBvcnQgY29uc3QgdmFsaWROYW1lczogYW55ID0gL14oPyEgKSg/IVxccylbQS1aYS16w6HDqcOtw7PDusO8w7HDgcOJw43Dk8Oaw5zDkVxcc10rKD88IVxccykoPyEgKSQvaTtcclxuZXhwb3J0IGNvbnN0IG9ubHlMZXR0ZXJOdW1iZXJEYXNoOiBhbnkgPSAvXlthLXpBLVowLTktXSskLzsiXX0=

@@ -1,0 +1,94 @@
+<div *ngIf="isRendered">
+  <app-encabezado-modal
+    titulo="Búsqueda de delitos"
+    [referenciaModal]="referenciaModal"
+    [numeroCaso]="numeroCaso"
+  ></app-encabezado-modal>
+
+  <h3 class="cfe-subtitulo-4 cfe-semi-bold mt-3">Descripción de los hechos</h3>
+
+  <p class="cfe-parrafo mt-2">{{ descripcionHechos }}</p>
+
+  <div class="field mb-0 relative">
+    <label
+      for="buscar"
+      class="font-semibold"
+    >Buscar</label>
+    <input
+      pInputText
+      type="text"
+      class="p-inputtext py-3 w-full"
+      placeholder="Ingrese artículo, nombre de delito genérico, delito sub-genérico, delito específico"
+      [formControl]="buscadorControl"
+    />
+  </div>
+  <div class="cfe-tabla-white mt-4">
+    <p-table
+      [value]="delitosFiltrados"
+      [rowHover]="true"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [breakpoint]="'992px'"
+      responsiveLayout="stack"
+      [(selection)]="delitosSeleccionados">
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th class="columna-seleccionar"></th>
+          <th class="columna-articulo">Artículo</th>
+          <th class="columna-generico">Delito genérico</th>
+          <th class="columna-subgenerico">Delito sub-genérico</th>
+          <th class="columna-especifico">Delito específico</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-delito>
+        <tr class="p-selectable-row">
+          <td>
+            <span class="p-column-title"></span>
+            <p-tableCheckbox [value]="delito"></p-tableCheckbox>
+          </td>
+          <td>
+            <span class="p-column-title">Artículo</span>
+            {{ (delito.articulo || '-') | capitalizar }}
+          </td>
+          <td>
+            <span class="p-column-title">Delito genérico</span>
+            {{ (delito.delitoGenerico || '-') | capitalizar }}
+          </td>
+          <td>
+            <span class="p-column-title">Delito sub-genérico</span>
+            {{ (delito.delitoSubgenerico || '-') | capitalizar }}
+          </td>
+          <td>
+            <span class="p-column-title">Delito específico</span>
+            {{ (delito.delitoEspecifico || '-') | capitalizar }}
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">
+            <div class="text-center">No se encontró información de delitos.</div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <app-paginator [query]="query" [items]="itemPaginado" [rowsPerPageOptions]="[]" (paginate)="onPaginate($event)"
+                   [resetPage]="resetPage"
+                   [hidden]="hiddenPaginator"></app-paginator>
+  </div>
+
+  <div class="flex justify-content-between mt-3">
+    <button
+      class="cfe-boton-secondary cfe-boton-m mb-1 mt-1"
+      (click)="cancelarAgregadoDeDelitos()">
+      Cancelar
+    </button>
+    <button
+      class="cfe-boton-primary cfe-boton-m mb-1 mt-1"
+      [disabled]="disableButtonAgregarDelitos"
+      (click)="actualizarDelitos()">
+      Agregar delitos
+      <!--      Actualizar delitos-->
+    </button>
+  </div>
+
+</div>

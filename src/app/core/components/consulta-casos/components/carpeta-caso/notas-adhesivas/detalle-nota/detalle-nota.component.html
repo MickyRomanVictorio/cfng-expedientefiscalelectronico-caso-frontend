@@ -1,0 +1,19 @@
+<div class="relative p-3" #detalleRef>
+
+  <p-button (click)="eventoCerrar()" icon="pi pi-times" tabindex="-1" styleClass="p-button-rounded text-color p-button-text absolute right-0 top-0">
+  </p-button>
+
+  <div class="py-5 descripcion">
+    {{ notaCaso.textoNota }}
+  </div>
+  @if(esSoloLectura()===false) {
+    <div class="flex flex-grow-1 gap-1" >
+      <a (click)="eventoEditar($event, notaCaso)" class="btn" href="javascript:void(0);">
+          <i class="pi pi-pencil"></i>
+      </a>
+      <a (click)="eventoBorrar($event, notaCaso)" class="btn" href="javascript:void(0);">
+          <i class="pi pi-trash"></i>
+      </a>
+    </div>
+  }
+</div>

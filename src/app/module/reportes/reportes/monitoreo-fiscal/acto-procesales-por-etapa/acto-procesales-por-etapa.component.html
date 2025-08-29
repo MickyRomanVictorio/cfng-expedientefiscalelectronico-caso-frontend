@@ -1,0 +1,296 @@
+<div class="cfe-container">
+  <!-- Filters Section -->
+
+  <div class="card background-white p-4">
+    <p-tabView [(activeIndex)]="activeTab">
+      <p-tabPanel header="Por etapas">
+        <form [formGroup]="filterForm" class="grid">
+          <!-- Período -->
+          <div class="col-12 md:col-3">
+            <div class="field">
+              <label for="" class="font-bold block mb-2">Período</label>
+              <p-dropdown
+                formControlName="periodo"
+                [options]="rangeOptions"
+                optionLabel="label"
+                [style]="{ width: '100%' }"
+                placeholder="Seleccione período"
+                (onChange)="onPeriodoChange($event)"
+              ></p-dropdown>
+            </div>
+          </div>
+
+          @if (periodoValue === 'A' || periodoValue === 'M') {
+
+          <div class="col-12 md:col-3">
+            <div class="field">
+              <label for="" class="font-bold block mb-2">Año</label>
+              <p-dropdown
+                formControlName="anio"
+                [options]="yearOptions"
+                optionLabel="label"
+                [style]="{ width: '100%' }"
+                placeholder="Seleccione el año"
+              ></p-dropdown>
+            </div>
+          </div>
+
+          @if (periodoValue === 'M') {
+
+          <div class="col-12 md:col-3">
+            <div class="field">
+              <label for="" class="font-bold block mb-2">Mes</label>
+              <p-dropdown
+                formControlName="mes"
+                [options]="mesOptions"
+                optionLabel="label"
+                [style]="{ width: '100%' }"
+                placeholder="Seleccione el año"
+              ></p-dropdown>
+            </div>
+          </div>
+
+          } } @else {
+
+          <!-- Fecha inicio -->
+          <div class="col-12 md:col-3">
+            <div class="field">
+              <label for="" class="font-bold block mb-2">Fecha inicio</label>
+              <p-calendar
+                formControlName="fechaInicio"
+                [showIcon]="true"
+                dateFormat="dd/mm/yy"
+                [style]="{ width: '100%' }"
+                placeholder="Seleccione fecha"
+              ></p-calendar>
+            </div>
+          </div>
+
+          <!-- Fecha fin -->
+          <div class="col-12 md:col-3">
+            <div class="field">
+              <label for="" class="font-bold block mb-2">Fecha fin</label>
+              <p-calendar
+                formControlName="fechaFin"
+                [showIcon]="true"
+                dateFormat="dd/mm/yy"
+                [style]="{ width: '100%' }"
+                placeholder="Seleccione fecha"
+              ></p-calendar>
+            </div>
+          </div>
+
+          }
+
+          <!-- Botones -->
+          <div class="col-12 flex justify-content-end gap-2">
+            <p-button
+              onKeyPress
+              label="Buscar"
+              styleClass="cfe-boton-primary cfe-boton-m mr-2 boton-w"
+              (click)="search()"
+            ></p-button>
+            <p-button
+              onKeyPress
+              label="Limpiar filtros"
+              styleClass="cfe-boton-secondary cfe-boton-m mr-3 boton-w"
+              (click)="clearFilters()"
+            ></p-button>
+          </div>
+        </form>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+
+  <!-- Indicadores Section -->
+  <div class="card background-white p-4">
+    <!-- Título -->
+    <div class="card-header flex align-items-center justify-content-between">
+      <p class="flex text-xl font-bold text-primary mb-3">
+        Monitoreo de Actos Procesales por Etapa
+      </p>
+      <ul>
+        <i
+          onKeyPress
+          class="pi pi-fw pi-chevron-down"
+          (click)="eventoMostrarOcultarMonitoreo()"
+        ></i>
+      </ul>
+    </div>
+
+    @if(!mostrarMonitoreo){
+    <!-- Línea divisoria -->
+    <hr class="border-t border-gray-200 mb-5" />
+    <div class="grid">
+      <!-- Tabla a la izquierda -->
+      <div class="col-12 md:col-4">
+        <div class="p-3 pt-0">
+          <p-table
+            [value]="etapasData"
+            [styleClass]="'p-datatable-gridlines table-chart'"
+            [(selection)]="selectedEtapa"
+            selectionMode="single"
+            dataKey="etapa"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th scope rowspan="2">ETAPAS</th>
+                <th scope colspan="2" style="width: 40%">CASOS</th>
+              </tr>
+              <tr>
+                <th scope>Concluidos</th>
+                <th scope>En proceso</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-etapa>
+              <tr>
+                <td>{{ etapa.etapa }}</td>
+                <td class="text-center">{{ etapa.concluidos }}</td>
+                <td class="text-center">{{ etapa.enProceso }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+
+      <!-- Contenedor derecha (Tabs + Gráficos + Lista) -->
+      <div class="col-12 md:col">
+        <p-tabView>
+          <!-- Primer Tab -->
+          <p-tabPanel header="Concluido">
+            <div class="grid">
+              <div class="col-8">
+                <p-chart
+                  type="bar"
+                  [data]="concluidoChart"
+                  [options]="chartOptions"
+                ></p-chart>
+              </div>
+            </div>
+          </p-tabPanel>
+
+          <!-- Segundo Tab -->
+          <p-tabPanel header="En proceso">
+            <div class="grid">
+              <div class="col-8">
+                <p-chart
+                  type="bar"
+                  [data]="enProcesoChart"
+                  [options]="chartOptions"
+                ></p-chart>
+              </div>
+            </div>
+          </p-tabPanel>
+        </p-tabView>
+      </div>
+    </div>
+
+    }
+  </div>
+
+  <div class="card background-white p-4">
+    <div class="num_casos_por_asignar_table_title__content col-12 md:col-6">
+      <div class="flex text-xl font-bold text-primary mb-3">
+        Reporte de Actos Procesales por Etapa
+      </div>
+    </div>
+
+    @if (visualizarTablas){
+    <div class="mb-5">
+      <h3 class="font-bold text-primary mb-3">Concluídos</h3>
+      <div class="grid-report-tables">
+        <div class="contenedor-tablas">
+          @for (etapa of etapas; track etapa) {
+          <div class="tabla-container">
+            <p-table [value]="actosPorEtapa[etapa]" class="tabla">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th scope colspan="2">{{ etapa }}</th>
+                </tr>
+                <tr>
+                  <th scope>Acto Procesal</th>
+                  <th scope>Cantidad</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-item>
+                <tr>
+                  <td>{{ item.actoProcesal || "-" }}</td>
+                  <td>{{ item.cantidad || 0 }}</td>
+                </tr>
+              </ng-template>
+              <!-- Footer con el total -->
+              <ng-template pTemplate="footer">
+                <tr>
+                  <td><strong>Total</strong></td>
+                  <td>
+                    <strong>{{
+                      actosPorEtapa[etapa]
+                        ? getTotalCantidad(actosPorEtapa[etapa])
+                        : 0
+                    }}</strong>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-5">
+      <h3 class="font-bold text-primary mb-3">En proceso</h3>
+      <div class="grid-report-tables">
+        <div class="contenedor-tablas">
+          @for (etapa of etapasProceso; track etapa) {
+          <div class="tabla-container">
+            <p-table [value]="actosPorEtapaProceso[etapa]" class="tabla">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th scope colspan="2">{{ etapa }}</th>
+                </tr>
+                <tr>
+                  <th scope>Acto Procesal</th>
+                  <th scope>Cantidad</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-item>
+                <tr>
+                  <td>{{ item.actoProcesal || "-" }}</td>
+                  <td>{{ item.cantidad || 0 }}</td>
+                </tr>
+              </ng-template>
+              <!-- Footer con el total -->
+              <ng-template pTemplate="footer">
+                <tr>
+                  <td><strong>Total</strong></td>
+                  <td>
+                    <strong>{{
+                      actosPorEtapaProceso[etapa]
+                        ? getTotalCantidad(actosPorEtapaProceso[etapa])
+                        : 0
+                    }}</strong>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    }@else {
+    <div class="no-records-message">
+      <table aria-describedby="no-resultado">
+        <th></th>
+        <tr>
+          <td class="no-before" colspan="8" style="text-align: center">
+            No se encontraron registros con los criterios de búsqueda ingresados
+          </td>
+        </tr>
+      </table>
+    </div>
+    }
+  </div>
+</div>

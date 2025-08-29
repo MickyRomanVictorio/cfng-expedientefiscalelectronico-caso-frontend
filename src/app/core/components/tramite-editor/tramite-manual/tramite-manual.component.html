@@ -1,0 +1,40 @@
+<div class="cfe-container">
+  <div class="grid m-4">
+    <div class="col">
+      <div class="field mb-0">
+        <label for="cbplantilla" class="font-semibold">Descargar Plantilla</label>
+        <p-dropdown
+          [options]="listaDocumentos"
+          optionLabel="nombrePlantillaPersonalizada"
+          optionValue="idNode"
+          id="cbplantilla"
+          placeholder="Seleccione una plantilla"
+          styleClass="py-1 p-inputtext-lg"
+          (onChange)="elegirPlantilla($event)">
+        </p-dropdown>
+      </div>
+    </div>
+    <div class="col-fixed" style="width: 200px;">
+      <div class="field mb-0">
+        <label for="btnplantilladescargar" class="font-semibold">&nbsp;</label>
+        <button id="btnplantilladescargar" class="cfe-boton-primary cfe-boton-lg w-full"
+                (click)="descargarPlantilla($event)"
+        >Descargar Plantilla
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="m-4">
+    <app-adjuntar-documento-manual [fileAceptadosMensaje]=fileAceptadosMensaje
+                                   (onSelect)="cargarArchivo($event)"
+                                   (onRemove)="eliminarArchivo()"></app-adjuntar-documento-manual>
+  </div>
+  <div class="flex flex-row-reverse flex-wrap m-4">
+    <div class="flex align-items-center justify-content-center w-8rem m-2">
+      <label for="btnsiguiente" class="font-semibold">&nbsp;</label>
+      <button id="btnsiguiente" class="cfe-boton-primary cfe-boton-lg w-full" [disabled]="!archivo" (click)="crearTramiteManual($event)">
+        Siguiente
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,436 @@
+@if(tramiteNoDespachadoMesa){
+<mensaje-interoperabilidad-pj />
+} @else{
+<div class="mt-4"></div>
+
+@if ( !tramiteEstadoRecibido && !esFormularioValido ) {
+<mensaje-completar-informacion [titulo]="nombreTramite()" />
+
+}
+
+<form [formGroup]="formRegistro" class="mt-2 flex flex-wrap align-items-center">
+  <div class="col-12 md:col-3">
+    <label for="fechaNotificacion" class="p-label-bottom font-bold text-sm"
+      >Fecha de notificación</label
+    >
+    <p-calendar
+      [dateFormat]="'dd/mm/yy'"
+      class="p-inputtext-md cfe-calendar h-40"
+      [showIcon]="true"
+      dateMask
+      icon="cfe-calendar-icon"
+      placeholder="dd/mm/aaaa"
+      formControlName="fechaNotificacion"
+      appendTo="body"
+      dataType="string"
+    >
+    </p-calendar>
+  </div>
+
+  <div class="col-12 md:col-9 flex align-items-center">
+    <div class="botones-grid">
+      <div class="acciones">
+        <div class="accion">
+          <p-button
+            [disabled]="ocultarBotonGestionVideos"
+            onKeyPress
+            styleClass="p-button-lg cfe-boton-secondary"
+          >
+            <span class="ml-5 mr-5">Videos de audiencia</span>
+          </p-button>
+          @if(!ocultarBotonGestionVideos){
+          <img
+            [src]="icono('check-circle')"
+            alt="validado"
+            class="icono-validacion"
+          />
+          }
+        </div>
+        <div class="accion">
+          <p-button
+            (click)="abrirModalVideosAudiencia()"
+            onKeyPress
+            styleClass="p-button-lg cfe-boton-secondary"
+          >
+            <span class="ml-5 mr-5">Audios de audiencia</span>
+          </p-button>
+          @if(audiosAudienciaCorrectos){
+          <img
+            [src]="icono('check-circle')"
+            alt="validado"
+            class="icono-validacion"
+          />
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 md:col-4">
+    <label
+      for="Id de Tipo de sentencia"
+      class="p-label-bottom font-bold text-sm"
+      >Tipo de sentencia</label
+    >
+    <p-dropdown
+      styleClass="p-inputtext-md custom-dropdown"
+      [options]="tiposSentencia"
+      optionValue="id"
+      optionLabel="nombre"
+      emptyMessage="No se encontraron resultados"
+      placeholder="Seleccionar"
+      formControlName="idTipoSentencia"
+      appendTo="body"
+      (ngModelChange)="cambiarTipoSentencia($event)"
+    ></p-dropdown>
+  </div>
+
+  @if ( esSentenciaCondenatoria && esPosibleEditarFormulario ) {
+  <div class="col-12 registrar-tipo-sentencia">
+    <h4 class="mt-2">PENA</h4>
+    <app-registrar-penas
+      [tipoSentencia]="ID_N_TIPO_SENTENCIA.CONDENATORIA"
+      [data]="dataPena"
+      [accion]="ACCION_CREAR"
+      [ejecucionInmediata]="true"
+      (respuestaFormulario)="respuestaFormularioPena($event)"
+      [tipoParteSujeto]="6"
+    />
+  </div>
+  } @if ( (esSentenciaAbsolutoria || esSentenciaReparacionExclusiva) &&
+  esPosibleEditarFormulario ) {
+  <div class="col-12 registrar-tipo-sentencia">
+    @if(esSentenciaAbsolutoria){
+    <h4 class="mt-2">ABSOLUCIÓN</h4>
+    } @if(esSentenciaReparacionExclusiva){
+    <div class="col-12 md:col-12 flex">
+      <div class="field mb-0">
+        <div class="checkbox-multimedia gap-3">
+          <p-checkbox
+            formControlName="reparacionExclusiva"
+            [binary]="true"
+            label="Absolver Reparación civil"
+          ></p-checkbox>
+        </div>
+      </div>
+    </div>
+    } @if(esSentenciaReparacionExclusiva || esSentenciaAbsolutoria){
+    <div class="grid mt-1">
+      <div class="col-12 md:col-6">
+        <label for="sujetoProcesal" class="p-label-bottom font-bold text-sm"
+          >Sujeto procesal</label
+        >
+        <p-dropdown
+          formControlName="sujetoProcesal"
+          [options]="listarSujetos"
+          styleClass="p-inputtext-md"
+          [filter]="true"
+          filterBy="nombre"
+          optionValue="idSujetoCaso"
+          optionLabel="nombre"
+          emptyMessage="Sin resultados"
+          placeholder="Seleccione el sujeto procesal"
+          emptyFilterMessage="No se encontraron resultados"
+          (onChange)="cambiarSujetoProcesal($event.value)"
+        ></p-dropdown>
+      </div>
+      <div class="col-12 md:col-6">
+        <label for="delito" class="p-label-bottom font-bold text-sm"
+          >Delito</label
+        >
+        <p-dropdown
+          formControlName="delito"
+          [options]="listarDelitos"
+          optionLabel="delito"
+          optionValue="id"
+          emptyMessage="No hay delitos disponibles"
+          placeholder="Seleccione"
+        ></p-dropdown>
+      </div>
+    </div>
+    @if(esSentenciaAbsolutoria){
+    <div class="grid mt-1">
+      <div class="col-12 md:col-12">
+        <div class="w-full pb-1">
+          <label for="observacionesSujetoDelito" class="font-bold text-sm"
+            >Observaciones (opcional)</label
+          >
+        </div>
+        <div class="w-full">
+          <textarea
+            formControlName="observacionesSujetoDelito"
+            pInputTextarea
+            id="observacionesSujetoDelito"
+            class="w-full p-inputtextarea p-inputtext p-component p-element"
+            rows="6"
+            [maxlength]="longitudMaximaObservaciones"
+          ></textarea>
+          <contador-footer-textarea
+            [textarea]="formRegistro.get('observacionesSujetoDelito')"
+            [size]="longitudMaximaObservaciones"
+          ></contador-footer-textarea>
+        </div>
+      </div>
+    </div>
+    }
+    <div class="cfe-opciones-botones">
+      <button
+        type="button"
+        [disabled]="validarAgregarSujetoDelito"
+        (click)="agregarSujetoDelitoSentencia()"
+        class="cfe-boton-primary cfe-boton-m mr-2 boton-w font-bold"
+      >
+        Agregar
+      </button>
+    </div>
+    }
+  </div>
+  }
+  <div class="col-12 mt-4">
+    <p-table
+      class="table-penas"
+      [value]="listaSentencias"
+      [rowHover]="true"
+      responsiveLayout="stack"
+      [paginator]="true"
+      dataKey="nombre"
+      [paginator]="true"
+      [rows]="10"
+      [showCurrentPageReport]="true"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      currentPageReportTemplate="{first} de {last} registros"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th id="Sujetos Procesales">Sujetos procesales (Acusado)</th>
+          <th id="Delito">Delito</th>
+          <th id="Tipo de sentencia">Tipo de sentencia</th>
+          <th id="Tipo Pena">Clase de pena</th>
+          <th id="Pena">Tipo de pena</th>
+          <th id="Acciones">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-pena let-rowIndex="rowIndex">
+        <tr>
+          <td>{{ pena.sujeto }}</td>
+          <td>{{ pena.delito }}</td>
+          <td>{{ pena.tipoSentencia }}</td>
+          <td>{{ validarColumnasTabla(pena.pena) }}</td>
+          <td>{{ validarColumnasTabla(pena.tipoPena) }}</td>
+          <td>
+            <div class="flex justify-content-center align-items-center">
+              @if(pena.idPena){
+              <fn-icon
+                (click)="
+                  abrirVerEditarModal(
+                    pena.idActoTramiteDelitoSujeto,
+                    pena.idPena,
+                    ACCION_VER
+                  )
+                "
+                [ico]="iconUtil.obtenerIcono('iEye')"
+                height="2rem"
+                style="cursor: pointer"
+                onKeyPress=""
+              >
+              </fn-icon>
+              @if ( esPosibleEditarFormulario ) {
+              <fn-icon
+                (click)="
+                  abrirVerEditarModal(
+                    pena.idActoTramiteDelitoSujeto,
+                    pena.idPena,
+                    ACCION_EDITAR
+                  )
+                "
+                [ico]="iconUtil.obtenerIcono('iEdit')"
+                height="1.8rem"
+                style="cursor: pointer"
+                onKeyPress=""
+              >
+              </fn-icon>
+              <fn-icon
+                (click)="eliminarPena(pena)"
+                [ico]="iconUtil.obtenerIcono('iTrash')"
+                height="2.5rem"
+                style="cursor: pointer; margin-left: -5px"
+                onKeyPress=""
+              >
+              </fn-icon>
+              } } @else { @if ( esPosibleEditarFormulario ) {
+              <fn-icon
+                (click)="eliminarSentenciaSujetoDelito(pena)"
+                [ico]="iconUtil.obtenerIcono('iTrash')"
+                height="2.5rem"
+                style="cursor: pointer; margin-left: -5px"
+                onKeyPress=""
+              >
+              </fn-icon>
+              } @else {
+              <span>-</span>
+              } }
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6">
+            <div class="text-center">Ninguna pena agregada</div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <div class="col-12 md:col-6 flex align-items-center mb-5">
+    <p-checkbox
+      class="checkbox cursor-pointer"
+      labelStyleClass="cursor-pointer"
+      formControlName="reparacionCivil"
+      label="Reparación civil"
+      [binary]="true"
+      inputId="binary"
+      (ngModelChange)="seleccionarReparacionCivil($event)"
+    />
+  </div>
+
+  @if ( tieneReparacionCivil ) {
+
+  <div class="col-12 registrar-tipo-sentencia">
+    <h4 class="mb-0">REPARACIÓN CIVIL</h4>
+    <div
+      class="reparacion-civil flex align-items-center justify-content-center px-5 py-4"
+    >
+      <p-button
+        styleClass="p-button-lg {{
+          esPosibleEditarFormulario
+            ? 'cfe-boton-primary text-white'
+            : 'cfe-boton-secondary'
+        }} family-poppin-bold btn-adjust-filter w-column-full"
+        (click)="registrarReparacionCivil()"
+        onKeyPress=""
+      >
+        <span class="ml-4 mr-4"
+          >{{ esPosibleEditarFormulario ? "Registrar" : "Ver" }} reparación
+          civil</span
+        >
+      </p-button>
+      @if ( this.existenRegistrosReparcionCivil ) {
+      <div class="field col-1">
+        <label for="">&nbsp;</label>
+        <div class="mt-1">
+          <fn-icon
+            class="color-icon-success"
+            [ico]="iconUtil.obtenerIcono('iCheckCircle')"
+            height="1.6rem"
+          ></fn-icon>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+  }
+  <div class="col-12 md:col-12 flex">
+    <div class="col">
+      <label for="" class="p-label-bottom font-bold text-sm"
+        >Observaciones (opcional)</label
+      >
+      <textarea
+        pInputTextarea
+        formControlName="observaciones"
+        class="w-full text-md"
+        [maxlength]="longitudMaximaObservaciones"
+        rows="5"
+      ></textarea>
+      <contador-footer-textarea
+        [textarea]="formRegistro.get('observaciones')"
+        [size]="longitudMaximaObservaciones"
+      ></contador-footer-textarea>
+    </div>
+  </div>
+  <div
+    class="field col-12 flex flex-column sm:flex-row justify-content-between mt-3"
+  >
+    @if ( !tramiteEstadoRecibido ) {
+    <a class="cfe-enlace" (click)="abrirModalSeleccionarTramite()">
+      ¿Este documento no pertenece a este trámite?</a
+    >
+    } @else {
+    <span></span>
+    } @if ( esPosibleEditarFormulario ) {
+
+    <p-button
+      [disabled]="!esFormularioValido"
+      (onClick)="guardarTramite()"
+      styleClass="p-button-lg cfe-boton-primary text-white family-poppin-bold btn-adjust-filter w-column-full"
+    >
+      <span class="ml-4 mr-4">Guardar</span>
+    </p-button>
+    }
+  </div>
+</form>
+}
+
+<p-dialog
+  [(visible)]="mostrarModalVerEditar"
+  [modal]="true"
+  [showHeader]="false"
+  [closable]="false"
+  [dismissableMask]="true"
+  styleClass="custom-dialog registrar-pena-dialog"
+>
+  <button class="close-button" (click)="mostrarModalVerEditar = false">
+    ×
+  </button>
+  <ng-template pTemplate="content">
+    @if ( mostrarModalVerEditar ) {
+    <ng-container>
+      <div class="dialog-content">
+        <app-registrar-penas
+          [tipoSentencia]="ID_N_TIPO_SENTENCIA.CONDENATORIA"
+          [idPena]="idPena"
+          [data]="dataPena"
+          [accion]="accionPena"
+          (respuestaFormulario)="respuestaFormularioPena($event)"
+          [idActoTramiteDelitoSujeto]="idActoTramiteDelitoSujeto"
+          [ejecucionInmediata]="true"
+          [tipoParteSujeto]="6"
+        />
+      </div>
+    </ng-container>
+    }
+  </ng-template>
+</p-dialog>
+
+<p-dialog
+  [(visible)]="mostrarReparacionCivil"
+  [modal]="true"
+  [showHeader]="false"
+  [closable]="false"
+  [dismissableMask]="true"
+  styleClass="reparacion-civil-dialog"
+>
+  <app-encabezado-modal
+    titulo="Registro de la reparación civil - Caso : "
+    [numeroCaso]="numeroCaso"
+    [tituloSinEtiquetaCaso]="true"
+    [sinReferencia]="true"
+    [alCerrarModal]="cerrarReparacionCivil"
+    tituloSize="1.3rem"
+  />
+  <ng-template pTemplate="content">
+    @if ( mostrarReparacionCivil ) {
+    <ng-container>
+      <div class="dialog-content">
+        <app-registrar-reparacion-civil
+          [data]="dataPena"
+          [delitosTramiteSujeto]="true"
+          [tipoSentencia]="true"
+          [modoLectura]="!esPosibleEditarFormulario"
+        />
+      </div>
+    </ng-container>
+    }
+  </ng-template>
+</p-dialog>

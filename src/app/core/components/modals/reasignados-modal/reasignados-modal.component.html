@@ -1,0 +1,48 @@
+
+
+<div class="cfe-modal">
+
+  <app-encabezado-modal
+    [titulo]="titulo"
+    [referenciaModal]="ref"
+    [numeroCaso]="numeroCaso"
+  ></app-encabezado-modal>
+
+
+  <div class="crime-parts-table">
+    <p-table
+      [value]="parts"
+      [paginator]="true"
+      [rowHover]="true"
+      [rows]="5"
+      [showCurrentPageReport]="true"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      currentPageReportTemplate="{first} de {last} registros"
+      [rowsPerPageOptions]="[5, 15, 30]"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>N°</th>
+          <th>Origen</th>
+          <th>Destino</th>
+          <th>Tipo de asignación</th>
+          <th>Fecha de reasignacion</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-parts>
+        <tr class="p-selectable-row">
+          <td>{{ parts.numero }}</td>
+          <td>{{ parts.origen }}</td>
+          <td>{{ parts.destino }}</td>
+          <td>{{ parts.tipoAsignacion }}</td>
+          <td>{{ parts.fechaAsignacion }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8">No se encontró información de Reasignados.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

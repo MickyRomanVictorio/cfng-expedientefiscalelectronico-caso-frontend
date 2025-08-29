@@ -1,0 +1,11 @@
+.tarjeta-cabecera-contenedor, .card-body-z{
+  cursor: pointer;
+}
+.card-body-z{
+  transition: border 0.3s ease,
+  box-shadow 0.3s ease;
+}
+.tarjeta-cabecera-contenedor:hover + .card-body-z, .card-body-z:hover {
+  border: #3F9FD6 solid 1px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}

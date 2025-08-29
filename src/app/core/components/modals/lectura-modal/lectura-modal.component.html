@@ -1,0 +1,23 @@
+<div class="cfe-modal">
+  <app-encabezado-modal
+    titulo="Asunto Observaciones"
+    [referenciaModal]="ref"
+    [numeroCaso]="numeroCaso"
+  ></app-encabezado-modal>
+  <div class="cfe-container cfe-container-background-blanco">
+    <div class="text-xl pb-2" [innerHTML]="getCaso()"></div>
+    <p><strong>Nota:</strong> Solo se podrá anular un caso cuando es por "error material" que proviene de la MUP o
+      Denuncias a Despacho.</p>
+
+    <div class="grid border-1 border-round border-black-alpha-10 h-10rem p-3">
+      <p>{{ content }}</p>
+    </div>
+
+    <div class="flex justify-content-end option-container">
+      <button class="cfe-boton-primary cfe-boton-lg mt-3"
+        (click)="confirmAction()"
+      >OK</button>
+    </div>
+  </div>
+</div>
+

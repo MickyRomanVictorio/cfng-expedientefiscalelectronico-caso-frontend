@@ -1,0 +1,257 @@
+<div class="cfe-container">
+
+  <div class="cfe_bandeja__header grid">
+    <div class="cfe_bandeja_header__content col-12 md:col-9">
+      <fn-icon [ico]="icono('iFolderSearch')" height="1.6rem"></fn-icon>
+      <h3 class="cfe-titulo-1">Bandeja de Contienda de Competencia</h3>
+      <fn-icon [ico]="icono('iTooltip')" height="1.6rem"></fn-icon>
+    </div>
+    <div class="col-12 md:col-3 flex flex-column sm:flex-row justify-content-end align-items-center pr-0">
+      <button
+        class="cfe-boton-secondary cfe-boton-sm w-full sm:w-auto mb-2 sm:mb-0 justify-content-start family-poppin-bold"
+        routerLink="../contiendas-observadas">
+        Ver casos observados
+        <fn-icon [ico]="icono('iChevronRight')" height="1.5rem"></fn-icon>
+      </button>
+    </div>
+  </div>
+
+  <form class="cfe_bandeja__filters" [formGroup]="formularioFiltrarCasos">
+    <div class="grid mt-1">
+      <div class="col">
+        <div class="field mb-0">
+          <label for="buscar" class="font-semibold">Buscar</label>
+          <input pInputText type="text" class="p-inputtext-lg py-3 text-lg w-full" (keyup)="filtrarCasos()"
+            placeholder="Ingrese algún texto para buscar, por ejemplo el número de caso, nombre de las partes, etc"
+            formControlName="buscar" />
+        </div>
+      </div>
+      <div class="col-fixed" [ngClass]="{'cfe-filtro-boton-fondo': mostrarFiltros}">
+        <div class="field mb-0">
+          <label for="button" class="font-semibold">&nbsp;</label>
+          <button class="cfe-filtro-boton" (click)="eventoMostrarOcultarFiltros()">
+            <fn-icon [ico]="icono('iFilterShow')" height="2.1rem"></fn-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid mt-3 mb-4" *ngIf="!mostrarFiltros">
+      <div class="col">
+        <div class="flex flex-wrap gap-3">
+          <div class="flex align-items-center">
+            <p-radioButton value="ultimoSeisMeses" formControlName="tiempoAFiltrar" (onClick)="buscarDataPorMeses()"
+              inputId="ultimoSeisMeses"></p-radioButton>
+            <label for="ultimoSeisMeses" class="ml-2">Últimos 6 meses</label>
+          </div>
+          <div class="flex align-items-center">
+            <p-radioButton value="todosLosMeses" formControlName="tiempoAFiltrar" (onClick)="buscarDataPorMeses()"
+              inputId="todosLosMeses"></p-radioButton>
+            <label for="todosLosMeses" class="ml-2">Todos los meses</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid mt-1 cfe-filtros" *ngIf="mostrarFiltros">
+      <div class="cfe-filtros-fondo px-3">
+        <div class="formgrid grid col-12">
+          <div class="col-12 md:col-6 field">
+            <label for="Fecha de asignacion" class="font-semibold">
+              Fiscalia
+            </label>
+            <p-dropdown id="fiscalia" formControlName="fiscalia" styleClass="py-1 p-inputtext-lg" [options]="fiscalias"
+              placeholder="Seleccione" (ngModelChange)="changeFiscalia($event)" optionLabel="nombre" optionValue="id">
+            </p-dropdown>
+          </div>
+          <div class="col-12 md:col-6 field">
+            <label for="despacho" class="font-semibold">Despacho</label>
+            <p-dropdown styleClass="p-inputtext-lg py-1" [options]="despachos" optionValue="codigo" optionLabel="nombre"
+              emptyMessage="Sin resultados" placeholder="Selecione" [showClear]="true"
+              formControlName="despacho"></p-dropdown>
+          </div>
+        </div>
+      </div>
+      <!-- Fila abajo -->
+      <div class=" cfe-filtros-fondo px-3">
+        <div class="formgrid grid col-12">
+          <div class="col-12 md:col-6 field">
+            <label for="Fecha de asignacion" class="font-semibold mb-2">
+              Fecha de elevación al despacho(búsqueda por periodo):
+            </label>
+            <div class="grid">
+              <div class="col-12 sm:col-6">
+                <p-calendar (onSelect)="seleccionarFechaInicio($event)" dateMask dateFormat="dd/mm/yy"
+                  class="p-inputtext-lg cfe-calendar h-56" [showIcon]="true" icon="cfe-calendar-icon"
+                  placeholder="dd/mm/aaaa" formControlName="fechaDesde"></p-calendar>
+              </div>
+              <div class="col-12 sm:col-6 sm:mt-0 mt-3">
+                <p-calendar (onSelect)="seleccionarFechaFin($event)" dateMask dateFormat="dd/mm/yy"
+                  class="p-inputtext-lg cfe-calendar h-56" [showIcon]="true" icon="cfe-calendar-icon"
+                  placeholder="dd/mm/aaaa" formControlName="fechaHasta"></p-calendar>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cfe-filtros-fondo cfe-filtros-opciones px-4">
+        <button class="cfe-boton-secondary cfe-boton-lg family-poppin-bold mr-3" (click)="limpiarFiltros()">Limpiar
+          filtros</button>
+        <button class="cfe-boton-primary cfe-boton-lg family-poppin-bold" (click)="listarContiendas()">Buscar</button>
+      </div>
+    </div>
+
+  </form>
+
+  <div class="cfe_bandeja__table">
+    <div class="cfe_bandeja_table__title grid">
+      <div class="num_casos_por_asignar_table_title__content col-12 md:col-6">
+        <fn-icon [ico]="icono('iFolderExclamation')" height="1.8rem" [style]="{'margin-left': '-12px'}"></fn-icon>
+        <h4 class="cfe-subtitulo-1">{{ contiendasCompetenciasList.length }} Casos de elevación de actuados por responder
+        </h4>
+      </div>
+      <div class="col-12 md:col-6 flex flex-column sm:flex-row justify-content-end align-items-center pr-0">
+        <button class="cfe-boton-secondary cfe-boton-m w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start"
+          (click)="exportarPdfExcel('PDF')">
+          <fn-icon class="ml-1" [ico]="icono('iFileDownload')" height="1.6rem"></fn-icon>
+          Exportar PDF
+        </button>
+        <button class="cfe-boton-secondary cfe-boton-m w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start"
+          (click)="exportarPdfExcel('Excel')">
+          <fn-icon class="ml-1" [ico]="icono('iTable')" height="1.6rem"></fn-icon>
+          Exportar Excel
+        </button>
+      </div>
+    </div>
+    <div class="cfe_bandeja__legend">
+      <div *ngFor="let item of leyenda; index as i" class="term-item">
+        <span class="{{ obtenerClaseDeOrigen( (i+1)+'' ) }}"></span> {{ item.nombrePlazo }}
+        <div class="quantity">({{ item.cantidad }})</div>
+      </div>
+
+      <div class="term-item">
+        <div class="tooltip">
+          <fn-icon [ico]="icono('iInfoCircle')" height="1.3rem"></fn-icon>
+          <div class="top">
+            <app-encabezado-tooltip [titulo]="tituloTootip" [referenciaModal]="referenciaModal" />
+            <ul>
+              <li>
+                <b>"Verde":</b> cuando las horas transcurridas sean "igual o mayor a 0"
+              </li>
+              <li>
+                <b>"Amarillo":</b> cuando las horas transcurridas está al "75% (en adelante)" del plazo de 24 horas.
+              </li>
+              <li>
+                <b>"Rojo":</b> cuando las horas transcurridas está en "24 horas (en adelante)".
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="cfe_bandeja_table__content">
+      <p-table [value]="contiendasFiltrados" [rowHover]="true" [tableStyle]="{ 'min-width': '50rem' }"
+        [breakpoint]="'992px'" responsiveLayout="stack" [(selection)]="casosSeleccionados">
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="w-col-20">
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th pSortableColumn="numeroCaso">Número de caso
+              <p-sortIcon field="numeroCaso"></p-sortIcon>
+            </th>
+            <th pSortableColumn="motivoTipo">Motivo - Tipo
+              <p-sortIcon field="motivoTipo"></p-sortIcon>
+            </th>
+            <th pSortableColumn="fiscaliaProcedencia">Fiscalía de procedencia
+              <p-sortIcon field="fiscaliaProcedencia"></p-sortIcon>
+            </th>
+            <th class="col-width-172" pSortableColumn="fechaElevacion">Fecha elevacíón al despacho
+              <p-sortIcon field="fechaElevacion"></p-sortIcon>
+            </th>
+            <th class="col-width-172" pSortableColumn="delitos">Delitos y partes
+              <p-sortIcon field="delitos"></p-sortIcon>
+            </th>
+            <th class="w-col-10"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-caso>
+          <tr class="p-selectable-row" [ngClass]="{'cfe-fondo-gris-leido': caso.leido == LECTURA_CASO.LEIDO}">
+
+            <td class="table_td_content_start">
+              <div class="col-offset-3">
+                <p-tableCheckbox [value]="caso"></p-tableCheckbox>
+              </div>
+            </td>
+            <td class="table_td_content_start caso-container">
+              <span class="p-column-title">Número de caso</span>
+              <div class="plazo-item-row">
+                <div><span [innerHTML]="obtenerNumeroCaso(caso.codCaso, caso.semaforoNumero)"></span></div>
+                <div>
+                  <span><i class="pi pi-clock mt-17"></i> {{ caso.semaforoTiempo }}</span>
+                </div>
+              </div>
+            </td>
+            <td class="table_td_content_start">
+              <span class="p-column-title">Motivo - Tipo</span>
+              <div>
+                <div class="mb-1">
+                  <span>{{ caso.descripContienda }} - </span>
+                  <strong>{{ caso.tipoContienda }}</strong>
+                </div>
+              </div>
+            </td>
+            <td class="table_td_content_start">
+              <span class="p-column-title">Fiscalía de Procedencia</span>
+              <div>
+                <div class="mb-1">
+                  <div><strong>{{ caso.fiscalAsignado }}</strong></div>
+                  <div class="cfe-row-top">{{ caso.despacho }}</div>
+                  <div class="cfe-row-top">{{ caso.entidad }}</div>
+                  <div class="cfe-row-top">{{ caso.jerarquia }}</div>
+                </div>
+              </div>
+            </td>
+            <td class="fecha-container table_td_content_start">
+              <span class="p-column-title">Fecha elevación al Despacho</span>
+              <div>
+                <div>{{ caso.fechaIngreso | dateformat }}</div>
+                <div class="cfe-row-top">{{ caso.hora | dateformat : 'hour' }}</div>
+              </div>
+              <div>
+                <span><i class="pi pi-clock mt-17"></i> {{ caso.semaforoTiempo }}</span>
+              </div>
+            </td>
+            <td class="table_td_content_start">
+              <span class="p-column-title">Delitos y partes</span>
+              <div class="cfe-btn-crimes-parts family-poppin-bold"
+                (click)="verDelitosPartes(caso.codCaso, caso.idCaso,caso.leido)">
+                <strong>Ver delitos y partes ({{ caso.cantidadPartes }})</strong>
+              </div>
+            </td>
+            <td class="table_td_content_start no-before">
+              <div class="block lg:hidden col-offset-6">
+              </div>
+              <div>
+                <div class="cfe-btn-more-options" (click)="menu2.toggle($event)">
+                  <div class="cfe-btn-more-options-content">
+                    <span></span><span></span><span></span>
+                  </div>
+                </div>
+                <p-menu #menu2 [model]="opcionesMenu(caso)" [popup]="true" class="cfe-menu-options"></p-menu>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      @if (itemPaginado.data.total > 0) {
+        <app-paginator [query]="query" [items]="itemPaginado" [rowsPerPageOptions]="[]"
+                       (paginate)="onPaginate($event)"></app-paginator>
+      }
+    </div>
+  </div>
+
+</div>
+
+<p-toast></p-toast>

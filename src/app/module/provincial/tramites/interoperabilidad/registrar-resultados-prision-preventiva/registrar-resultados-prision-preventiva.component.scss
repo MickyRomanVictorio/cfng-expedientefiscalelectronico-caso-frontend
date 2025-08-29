@@ -1,0 +1,67 @@
+::ng-deep .p-multiselect-panel {
+  word-wrap: break-word !important;
+  white-space: normal !important;
+}
+
+::ng-deep .p-multiselect-item {
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  display: block !important;
+  font-size: 14px !important;
+}
+
+:host ::ng-deep .p-multiselect.p-disabled {
+  background-color: #d9d9d9;
+  color: #6c757d;
+  opacity: 1;
+}
+
+.custom-delitos-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 100%;
+  .delito-item {
+    background-color: #BEBEBE;
+    color: #333333;
+    border-radius: 15px;
+    margin-top: 4px;
+    font-weight: 400;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    cursor: pointer;
+    font-size: 0.8em;
+    i {
+      color: #333333;
+      cursor: pointer;
+      font-size: 14px;
+    }
+  }
+  .no-seleccionado {
+    color: #9e9e9e;
+    font-size: 14px;
+  }
+}
+
+.scroll-delitos {
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.bg-mpfn-gray8 {
+    background-color: var(--mpfn-gray8);
+}
+
+.bg-mode-edicion {
+  background-color: #FDFBA4 !important;
+  border-radius: 0.5rem;
+  -webkit-border-radius: 0.5rem;
+  -moz-border-radius: 0.5rem;
+  -ms-border-radius: 0.5rem;
+  -o-border-radius: 0.5rem;
+}

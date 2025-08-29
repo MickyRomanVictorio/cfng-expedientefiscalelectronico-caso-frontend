@@ -1,0 +1,28 @@
+
+.alert-content {
+  display: flex;
+  align-items: flex-start;
+  text-align: left;
+  font-size: 14px;
+  font-family: var(--mpfn-font-regular);
+  border: 1.5px solid var(--gray2);
+}
+
+.alert-icon{
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+.alert-error {
+  background: #f7b6da;
+}
+
+.alert-success {
+  background: #d5efc4;
+}
+
+.alert-warn {
+  background: #FAD7A0;
+}
+
+

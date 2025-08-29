@@ -1,0 +1,98 @@
+<div>
+  <fn-icon class="absolute top-0 right-0 cursor-pointer mt-2 mr-2" [ico]="iconUtil.obtenerIcono('iClose')" height="2rem" (click)="eventoCerrar()"></fn-icon>
+  <!--Artificio para ubicar el focus-->
+  <input type="text" style="width: 0; height: 0; overflow: hidden; visibility: hidden;" class="absolute top-0 right-0">
+  
+  <div class="cfe-titulo-1 text-xl">
+    @if (datosEntrada.tipoAlerta === TipoAlertaEnum.Apelacion) {
+      Ver fechas para apelar el resultado del requerimiento
+    }
+    @if (datosEntrada.tipoAlerta === TipoAlertaEnum.Queja) {
+      Ver fechas para presentar queja por denegatoria
+    }
+  </div>
+  
+  <div class="flex align-content-center mt-2">
+    <div class="border-circle bg-red-500 w-1rem h-1rem mt-1"></div>
+    <div class="pl-2 text-600">
+      @if (datosEntrada.tipoAlerta === TipoAlertaEnum.Apelacion) {
+        Plazo para apelar está próximo a vencer
+      }
+      @if (datosEntrada.tipoAlerta === TipoAlertaEnum.Queja) {
+        Plazo para presentar queja está próximo a vencer
+      }
+    </div>
+  </div>
+  
+  <div class="tableView pt-3">
+    <p-table
+      [loading]="false"
+      [paginator]="true"
+      [rows]="paginacionFilas"
+      [first]="0"
+      [value]="listaImputados"
+      [rowHover]="true"
+      responsiveLayout="stack"
+      (onPage)="eventoPaginacion($event)"
+      styleClass="paginacion-general"
+    >
+      
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th>N°</th>
+          <th class="ancho-maximo-imputados">Nombre y tipo de sujeto procesal</th>
+          <th>Fecha de notificación</th>
+          <th style="width: 200px">Conteo regresivo</th>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="body" let-imputado let-columns="columns" let-i="rowIndex">
+        <tr>
+          <td>{{ i + 1 }}</td>
+          <td class="ancho-maximo-imputados">
+            <div>
+              <div class="p-column-title font-bold block lg:hidden">Imputado</div>
+              <div class="flex align-content-center">
+                @if (imputado.fechaVencimiento !== null && imputado.plazoVencer === true) {
+                  <div class="border-circle bg-red-500 w-1rem h-1rem mr-2 mt-1" style="min-width: 1rem;"></div>
+                }
+                {{imputado.nombreCompletoSujetos}}
+              </div>
+            </div>
+          </td>
+          <td>
+            <div>
+              <div class="p-column-title font-bold block lg:hidden">Fecha de notificacion</div>
+              {{imputado.fechaNotificacion}}
+            </div>
+          </td>
+          <td>
+            <div>
+              <div class="p-column-title font-bold block lg:hidden">Conteo regresivo</div>
+              @if (imputado.fechaVencimiento !== null) {
+                <div class="flex align-content-center color-conteo-regresivo">
+                  @if (imputado.cronometro) {
+                    <div [innerHTML]="iconoRelojSvg" class="pr-2"></div>
+                    <div>{{imputado.cronometro}}</div>
+                  }
+                  @else {
+                    <div [innerHTML]="iconoRelojSvg" class="pr-2"></div>
+                    <div>{{calcularCronometroPorDefecto(imputado.fechaVencimiento)}}</div>
+                  }
+                </div>
+              }
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="paginatorleft" let-state>
+        <div class="text-gray-700">{{(state.first + state.rows) > state.totalRecords ? state.totalRecords : (state.first + state.rows)}} de {{state.totalRecords}} registros</div>
+      </ng-template>
+    </p-table>
+  </div>
+  
+  <div class="text-center pt-3">
+    <button type="button" class="cfe-boton-primary cfe-boton-m inline" (click)="eventoCerrar()">Aceptar</button>
+  </div>
+
+</div>

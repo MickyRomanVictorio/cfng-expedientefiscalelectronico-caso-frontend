@@ -1,0 +1,12 @@
+:host::ng-deep .boton-hora{
+    .p-button {
+      height: 54px
+    }
+}
+
+:host::ng-deep .botones-accion {
+    .p-button {
+        width: 200px;
+        font-family: "Poppins", sans-serif !important;
+    }
+}

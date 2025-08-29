@@ -1,0 +1,29 @@
+<div class="formgrid grid">
+    <div class="field col-12" (dragenter)="onDragEnter($event)"
+     (drop)="onDrop($event)" (dragover)="onDragLeave($event)" >
+
+        <div class="border-dashed border-round border-2 surface-border text-center p-5">
+            <p-messages></p-messages>
+
+            <div class="center" >
+
+                    <button type="button" class="cfe-boton-secondary cfe-boton-lg" (click)="openInputFile($event)" >
+                        <fn-icon
+                        [ico]="icono('iAttach')"
+                        height="1.5rem">
+                    </fn-icon>Subir Archivo
+                    </button>
+            </div>
+            <div>O jale los archivos a esta seccion : Word</div>
+
+            <input #inputFile class="hidden" type="file" accept="fileAceptados" (change)="onSelectFile($event)">
+            <div class="font-semibold text-sm text-700">Máximo tamaño de archivo 100MB</div>
+            <div *ngIf="uploading" class="mt-4">
+                <p-progressBar class="cargo-progressbar" [value]="uploadProgress"></p-progressBar>
+            </div>
+            <p *ngIf="selectedFile"><strong> Archivo Seleccionado:{{selectedFile.name}}</strong></p>
+        </div>
+
+    </div>
+
+</div>

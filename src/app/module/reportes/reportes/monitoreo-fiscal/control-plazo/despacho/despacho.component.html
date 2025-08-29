@@ -1,0 +1,415 @@
+<form class="cfe_bandeja__filters p-4 mb-4" [formGroup]="filterForm">
+  <div class="grid mt-1">
+    <div class="col">
+      <div class="field mb-0">
+        <label for="buscar" class="font-semibold">Buscar:</label>
+        <input
+          pInputText
+          id="buscar"
+          type="text"
+          class="p-inputtext-lg py-3 text-lg w-full"
+          [placeholder]="placeholderBusqueda"
+          formControlName="buscar"
+          (input)="buscarSegunTexto()"
+        />
+      </div>
+    </div>
+    <div class="col-fixed" style="width: 70px">
+      <div class="field mb-0">
+        <label class="font-semibold">&nbsp;</label>
+        <button
+          class="cfe-filtro-boton"
+          (click)="eventoMostrarOcultarFiltros()"
+        >
+          <fn-icon [ico]="icono('iFilterShow')" height="2.1rem"></fn-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  @if(!mostrarFiltros){
+  <div class="grid mt-3 mb-4">
+    <div class="col"></div>
+  </div>
+  } @else {
+  <div class="grid mt-1 cfe-filtros">
+    <div class="cfe-filtros-fondo background-white">
+      <div class="formgrid grid w-full">
+        <div class="col-12 md:col-3 field">
+          <label class="font-semibold mb-3">Fiscales</label>
+          <div class="grid">
+            <div class="col">
+              <p-multiSelect
+                id="delitos"
+                [options]="resultsFiscales"
+                optionLabel="nombreFiscal"
+                optionValue="fiscal"
+                formControlName="fiscales"
+                [ngClass]="{ 'sin-seleccion': sinSeleccionFiscales }"
+                styleClass="w-full lista-ancho-maximo"
+                (onChange)="onChangeFiscalesSeleccionados($event)"
+                emptyMessage="Resultados no encontrados"
+                class="lista-ancho-maximo"
+                [panelStyle]="{ 'max-width': '750px' }"
+              ></p-multiSelect>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-3">
+          <div class="field">
+            <label for="periodo" class="font-bold block mb-2">Período</label>
+            <p-dropdown
+              id="periodo"
+              formControlName="periodo"
+              [options]="rangeOptions"
+              optionLabel="label"
+              [style]="{ width: '100%' }"
+              placeholder="Seleccione período"
+              (onChange)="onPeriodoChange($event)"
+            ></p-dropdown>
+          </div>
+        </div>
+
+        @if (periodoValue === 'A' || periodoValue === 'M') {
+
+        <div class="col-12 md:col-3">
+          <div class="field">
+            <label for="anho" class="font-bold block mb-2">Año</label>
+            <p-dropdown
+              id="anho"
+              formControlName="anio"
+              [options]="yearOptions"
+              optionLabel="label"
+              optionValue="value"
+              [style]="{ width: '100%' }"
+              placeholder="Seleccione el año"
+            ></p-dropdown>
+          </div>
+        </div>
+
+        @if (periodoValue === 'M') {
+
+        <div class="col-12 md:col-3">
+          <div class="field">
+            <label for="mes" class="font-bold block mb-2">Mes</label>
+            <p-dropdown
+              id="mes"
+              formControlName="mes"
+              [options]="mesOptions"
+              optionLabel="label"
+              optionValue="value"
+              [style]="{ width: '100%' }"
+              placeholder="Seleccione el año"
+            ></p-dropdown>
+          </div>
+        </div>
+
+        } } @else {
+
+        <!-- Fecha inicio -->
+        <div class="col-12 md:col-3">
+          <div class="field">
+            <label for="fechaInicio" class="font-bold block mb-2"
+              >Fecha inicio</label
+            >
+            <p-calendar
+              id="fechaInicio"
+              formControlName="fechaInicio"
+              [showIcon]="true"
+              dateFormat="dd/mm/yy"
+              [style]="{ width: '100%' }"
+              placeholder="Seleccione fecha"
+            ></p-calendar>
+          </div>
+        </div>
+
+        <!-- Fecha fin -->
+        <div class="col-12 md:col-3">
+          <div class="field">
+            <label for="fechaFin" class="font-bold block mb-2">Fecha fin</label>
+            <p-calendar
+              id="fechaFin"
+              formControlName="fechaFin"
+              [showIcon]="true"
+              dateFormat="dd/mm/yy"
+              [style]="{ width: '100%' }"
+              placeholder="Seleccione fecha"
+            ></p-calendar>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    <div class="cfe-filtros-fondo background-white">
+      <div class="col-12 md:col-3 field">
+        <label for="etapa" class="font-semibold">Etapa Caso</label>
+        <p-dropdown
+          id="etapa"
+          styleClass="h-10"
+          [options]="resultsEtapas"
+          optionValue="idEtapa"
+          optionLabel="nombreEtapa"
+          emptyMessage="Resultados no encontrados"
+          placeholder="Todos"
+          [showClear]="true"
+          formControlName="idEtapa"
+        ></p-dropdown>
+      </div>
+      <div class="col-12 md:col-3 field" *ngIf="activeTab === 1">
+        <label for="acto" class="font-semibold">Acto Procesal</label>
+        <p-dropdown
+          id="acto"
+          styleClass="p-inputtext-lg py-1"
+          [options]="resultsActo"
+          optionValue="idActoProcesalConfigura"
+          optionLabel="nomActoProcesal"
+          emptyMessage="Resultados no encontrados"
+          placeholder="Todos"
+          [showClear]="true"
+          formControlName="idActoProcesal"
+        ></p-dropdown>
+      </div>
+      <div class="col-12 md:col-3 field" *ngIf="activeTab === 1">
+        <label for="tramite" class="font-semibold">Trámite</label>
+        <p-dropdown
+          id="tramite"
+          styleClass="p-inputtext-lg py-1"
+          [options]="resultsTramite"
+          optionValue="idTramite"
+          optionLabel="nombreTramite"
+          emptyMessage="Resultados no encontrados"
+          placeholder="Todos"
+          [showClear]="true"
+          formControlName="tramite"
+        ></p-dropdown>
+      </div>
+      <div class="col-12 md:col-3 field">
+        <label for="indicador" class="font-semibold">Indicador</label>
+        <p-dropdown
+          id="indicador"
+          styleClass="p-inputtext-lg py-1"
+          [options]="colorOptions"
+          optionValue="value"
+          optionLabel="label"
+          emptyMessage="Resultados no encontrados"
+          placeholder="Todos"
+          [showClear]="true"
+          formControlName="indicador"
+        ></p-dropdown>
+      </div>
+      <div class="col-12 md:col-3 field" *ngIf="!cargo">
+        <label for="fiscalia" class="font-semibold">Fiscalía</label>
+        <p-dropdown
+          id="fiscalia"
+          styleClass="p-inputtext-lg py-1"
+          [options]="resultsFiscalias"
+          optionValue="codigo"
+          optionLabel="nombre"
+          emptyMessage="Resultados no encontrados"
+          placeholder="Todos"
+          [showClear]="true"
+          formControlName="fiscalia"
+        ></p-dropdown>
+      </div>
+      <div class="col-12 md:col-3 field" *ngIf="!cargo">
+        <label for="despacho" class="font-semibold">Despacho</label>
+        <p-dropdown
+          id="despacho"
+          styleClass="p-inputtext-lg py-1"
+          [options]="resultsDespachos"
+          optionValue="codigoDespacho"
+          optionLabel="nombreDespacho"
+          emptyMessage="Resultados no encontrados"
+          placeholder="Todos"
+          [showClear]="true"
+          formControlName="despacho"
+        ></p-dropdown>
+      </div>
+    </div>
+    <div class="cfe-filtros-fondo background-white cfe-filtros-opciones">
+      <button
+        class="cfe-boton-secondary cfe-boton-m mr-3 boton-w"
+        (click)="limpiar()"
+      >
+        Limpiar filtros
+      </button>
+      <button
+        class="cfe-boton-primary cfe-boton-m mr-2 boton-w"
+        (click)="buscar()"
+      >
+        Buscar
+      </button>
+    </div>
+  </div>
+  }
+</form>
+
+<div class="card background-white p-4">
+  <div class="card-header flex align-items-center justify-content-between">
+    <p>Monitoreo de plazos fiscales del despacho del {{ fechaInicio }} al {{ fechaFin }}</p>
+    <i
+      class="pi pi-fw pi-chevron-down"
+      (click)="eventoMostrarOcultarMonitoreo()"
+    ></i>
+  </div>
+  @if(!mostrarMonitoreo){
+  <div class="card-body">
+    <div class="container-monitoreo gap-5" [ngClass]="{ superior: !cargo }">
+      <div class="grid-monitoreo gap-3">
+        <div class="monitoreo-item">
+          <div class="flex align-items-center mb-2">
+            <span class="monitoreo-status red"></span>
+            <div class="monitoreo-content">
+              <h2 class="red">Plazo vencido</h2>
+              <h3>{{ plazoVencido }}%</h3>
+            </div>
+          </div>
+          <p>
+            <strong>{{ countVencido }} </strong>del rango consultado
+          </p>
+        </div>
+        <div class="monitoreo-item">
+          <div class="flex align-items-center mb-2">
+            <span class="monitoreo-status orange"></span>
+            <div class="monitoreo-content">
+              <h2 class="orange">Plazo por vencer</h2>
+              <h3>{{ plazoPorVencer }}%</h3>
+            </div>
+          </div>
+          <p>
+            <strong>{{ countPorVencer }} </strong>del rango consultado
+          </p>
+        </div>
+        <div class="monitoreo-item">
+          <div class="flex align-items-center mb-2">
+            <span class="monitoreo-status green"></span>
+            <div class="monitoreo-content">
+              <h2 class="green">Dentro del plazo</h2>
+              <h3>{{ dentroDelPlazo }}%</h3>
+            </div>
+          </div>
+          <p>
+            <strong>{{ countDentro }} </strong>del rango consultado
+          </p>
+        </div>
+      </div>
+      @if(!cargo){
+      <div class="chart-container">
+        <p-card>
+          <div class="chart w-full">
+            <p-chart
+              type="bar"
+              [data]="data"
+              [options]="options"
+              class="w-full h-[30rem]"
+            />
+          </div>
+        </p-card>
+      </div>
+      }
+    </div>
+  </div>
+  }
+</div>
+
+<div class="cfe_bandeja__table">
+  <div class="cfe_bandeja_table__title grid">
+    <div class="num_casos_por_asignar_table_title__content col-12 md:col-6">
+      <div class="flex text-xl font-bold text-primary mb-3">
+        Reporte de plazos fiscales del despacho
+      </div>
+    </div>
+    <div
+      class="col-12 md:col-6 flex flex-column sm:flex-row justify-content-end align-items-center pr-0"
+    >
+      <button
+        class="cfe-boton-secondary cfe-boton-m cfe-boton-m w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start"
+        (click)="exportar('Excel')"
+      >
+        <fn-icon
+          class="ml-1"
+          [ico]="iconUtil.obtenerIcono('iTable')"
+          height="1.6rem"
+        ></fn-icon>
+        Exportar Excel
+      </button>
+    </div>
+  </div>
+  <div class="flex align-items-center justify-content-between">
+    <div class="cfe_bandeja__legend">
+      <div class="term-item">
+        <span class="plazo-vencido"></span>
+        Plazo vencido &nbsp;&nbsp;&nbsp;
+        <span class="plazo-por-vencer"></span>
+        Plazo por Vencer &nbsp;&nbsp;&nbsp;
+        <span class="dentro-del-plazo"></span>
+        Dentro del plazo
+      </div>
+
+      <div class="tooltipNew" [ngClass]="{ visible: tooltipVisible }">
+        <fn-icon
+          [ico]="iconUtil.obtenerIcono('iInfoCircle')"
+          height="1.6rem"
+          (click)="showTooltip()"
+        ></fn-icon>
+        <div class="top">
+          <app-encabezado-tooltip
+            [titulo]="tituloTootip"
+            [alCerrarModal]="toggleTooltip"
+            [referenciaModal]="referenciaModal"
+          />
+          <ul>
+            <li>
+              <b><span style="color: green">Verde</span>:</b> cuando los días
+              transcurridos sean "igual o mayor que 0"
+            </li>
+            <li>
+              <b><span style="color: gold">Amarillo</span>:</b> cuando los días
+              transcurridos está al "75% (en adelante)" del plazo total.
+            </li>
+            <li>
+              <b><span style="color: red">Rojo</span>:</b> cuando los días que
+              han transcurrido está "en el último día del plazo total ( en
+              adelante )".
+            </li>
+          </ul>
+          <i></i>
+        </div>
+      </div>
+    </div>
+    <div class="term-item p-4">
+      <p>Total: {{ totalRegistros }} casos</p>
+    </div>
+  </div>
+
+  <div class="cfe_bandeja_table__content">
+    @if(cargo) {
+    <p-tabView [(activeIndex)]="activeTab" (onChange)="onTabChange($event)">
+      <p-tabPanel header="Resumen">
+        <app-bandeja
+          [tabActivo]="activeTab"
+          [titleDocumento]="'Reporte de plazos fiscales (Resumen)'"
+          [registrosBandeja]="filteredResumenData"
+        >
+        </app-bandeja>
+      </p-tabPanel>
+      <p-tabPanel header="Detalle">
+        <app-bandeja
+          [tabActivo]="activeTab"
+          [titleDocumento]="'Reporte de plazos fiscales (Detalle)'"
+          [registrosBandeja]="filteredDetalleData"
+        >
+        </app-bandeja>
+      </p-tabPanel>
+    </p-tabView>
+    } @else {
+    <app-bandeja-superior
+      [registrosBandeja]="superiorData"
+      [titleDocumento]="'Reporte de plazos fiscales (Detalle)'"
+      [registrosBandeja]="filteredSuperiorData"
+    >
+    </app-bandeja-superior>
+    }
+  </div>
+</div>

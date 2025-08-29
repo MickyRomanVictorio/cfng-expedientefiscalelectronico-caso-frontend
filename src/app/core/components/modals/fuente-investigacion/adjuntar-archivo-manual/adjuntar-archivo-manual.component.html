@@ -1,0 +1,47 @@
+<div class="formgrid grid">
+  <div *ngIf="!selectedFile" class="field col-12">
+    <label>Subir archivo</label>
+    <div class="border-dashed border-round border-2 surface-border text-center p-5">
+      <p-messages></p-messages>
+      <div class="text-600 text-2xl">
+        <i class="pi pi-file-pdf text-4xl"></i>
+      </div>
+      <div>
+        Arrastra y suelta el archivo subir o
+        <br>
+        <a (click)="openInputFile($event)" class="text-blue-400 underline cursor-pointer" href="#">
+          haz click aquí
+        </a>
+      </div>
+      <div>Formatos aceptados: .mp3 .mp4 .jpg .png .pdf</div>
+      <input
+        #inputFile
+        (change)="onSelectFileAttach($event)"
+        accept=".mp3, .mp4, .jpg, .png, .pdf"
+        class="hidden"
+        type="file">
+      <div class="font-semibold text-sm text-700">Máximo tamaño de archivo 100MB</div>
+      <div *ngIf="uploading" class="mt-4">
+        <p-progressBar [value]="uploadProgress" class="cargo-progressbar"></p-progressBar>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="selectedFile" class="field col-12">
+    <label>Archivo seleccionado</label>
+    <div class="border-dashed border-round border-2 surface-border text-center p-5">
+      <div class="flex align-items-center justify-content-between">
+        <div class="flex align-items-center gap-2">
+          <i class="pi pi-file"></i>
+          <span>{{ selectedFile.name }}</span>
+        </div>
+        <div class="flex align-items-center">
+          <span>{{ getFormatFileSize(selectedFile.size) }}</span>
+        </div>
+        <div class="flex align-items-center">
+          <a (click)="removeSelectedFile($event)" class="deleteFile" href="#"><i class="pi pi-trash"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

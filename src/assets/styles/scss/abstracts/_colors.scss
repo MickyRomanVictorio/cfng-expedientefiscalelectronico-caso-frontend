@@ -1,0 +1,48 @@
+
+$primary: var(--mpfn-primary);
+$secondary: var(--mpfn-secondary);
+
+$lightblue: var(--mpfn-lightblue);
+$lightblue-background: var(--mpfn-lightblue-background);
+$jade: var(--mpfn-jade);
+$jadebackground: var(--mpfn-jade-background);
+$bluegray: var(--mpfn-blue-gray);
+
+$blue-focused: var(--mpfn-blue-focused);
+$blue-hover: var(--mpfn-blue-hover);
+$black: var(--mpfn-black);
+$gray1: var(--mpfn-gray1);
+$gray2: var(--mpfn-gray2);
+$gray3: var(--mpfn-gray3);
+$gray4: var(--mpfn-gray4);
+$gray5: var(--mpfn-gray5);
+$gray6: var(--mpfn-gray6);
+$gray7: var(--mpfn-gray7);
+$gray8: var(--mpfn-gray8);
+$gray9: var(--mpfn-gray9);
+$white: var(--mpfn-white);
+$background: var(--mpfn-background);
+$grayBackground: var(--mpfn-background-opaque);
+$red: var(--mpfn-red);
+$green: var(--mpfn-green);
+$red-wine: var(--mpfn-red);
+
+$badge-background-colors: (
+    "origen": var(--mpfn-origen-pastel),
+    "despacho": var(--mpfn-despacho-pastel),
+    "turno": var(--mpfn-turno-pastel),
+    "derivado": var(--mpfn-derivado-pastel),
+    "mpe": var(--mpfn-mpe-pastel),
+    "mup": var(--mpfn-mup-pastel),
+    "reasignado": var(--mpfn-reasignado-pastel),
+);
+
+$badge-colors: (
+    "origen": var(--mpfn-origen),
+    "despacho": var(--mpfn-despacho),
+    "turno": var(--mpfn-turno),
+    "derivado": var(--mpfn-derivado),
+    "mpe": var(--mpfn-mpe),
+    "mup": var(--mpfn-mup),
+    "reasignado":var(--mpfn-reasignado),
+);

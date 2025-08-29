@@ -1,0 +1,1 @@
+export type EstadoVisorType = 'visualizar' | 'nofirmado' | 'firmado';

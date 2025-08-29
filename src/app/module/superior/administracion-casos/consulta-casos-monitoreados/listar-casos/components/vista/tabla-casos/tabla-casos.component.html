@@ -1,0 +1,136 @@
+<div class="col-12 tableView">
+  <p-table
+    [tableStyle]="{'min-width': '110rem'}"
+    [value]="listaCasos"
+    [rowHover]="true"
+    responsiveLayout="stack"
+    styleClass="p-datatable-striped"
+  >
+
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th scope="col">N°</th>
+        <th pSortableColumn="numeroCaso" scope="col">Nro Caso
+          <p-sortIcon field="numeroCaso"></p-sortIcon>
+        </th>
+        <th pSortableColumn="etapa" scope="col">Etapa
+          <p-sortIcon field="etapa"></p-sortIcon>
+        </th>
+        <th pSortableColumn="fiscal" scope="col">Fiscalia Provincial
+          <p-sortIcon field="fiscal"></p-sortIcon>
+        </th>
+        <th pSortableColumn="ultimoTramite" style="min-width: 11rem;" scope="col">Último trámite
+          <p-sortIcon field="ultimoTramite"></p-sortIcon>
+        </th>
+        <th scope="col">Delitos</th>
+        <th pSortableColumn="fechaIngreso" style="min-width: 11rem;" scope="col">F. Ingreso
+          <p-sortIcon field="fechaIngreso"></p-sortIcon>
+        </th>
+        <th pSortableColumn="fechaUltimoTramite" style="min-width: 12rem;" scope="col">F. Último trámite
+          <p-sortIcon field="fechaUltimoTramite"></p-sortIcon>
+        </th>
+        <th scope="col">Plazo de etapa</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-casofiscal let-columns="columns" let-rowIndex="rowIndex">
+      <tr  class="relative cursor-pointer p-selectable-row" (click)="eventoCasoSeleccionado(casofiscal)">
+        <td [style.border-left]="'8px solid '+ getFilaEstilo(casofiscal)+' !important'" >
+          {{(paginacionCondicion.page-1)*paginacionCondicion.limit +  rowIndex + 1}}
+        </td>
+        <td>
+            <div>
+              <div class="p-column-title font-bold hidden">Nro Caso</div>
+              <div class="flex align-items-center">
+                <span class="mr-2" [ngClass]="'plazo-item ' + getLeyenda(casofiscal)"></span>
+                <div class="font-bold" [innerHTML]="obtenerCasoHtml(casofiscal.numeroCaso)" style="white-space: nowrap"></div>
+              </div>
+              <div class="mt-1">
+                <app-etiqueta-acciones [casoFiscal]="casofiscal"></app-etiqueta-acciones>
+              </div>
+            </div>
+        </td>
+        <td>
+          <div>
+              <div class="p-column-title font-bold hidden">Etapa</div>
+              {{ casofiscal.etapa }}
+          </div>
+        </td>
+        <td>
+          <div>
+            <div class="p-column-title font-bold hidden">Fiscalia Provincial</div>
+            <div class="font-semibold">
+              {{ casofiscal.fiscal }}
+            </div>
+            <div class="text-700">
+              {{ casofiscal.fiscalia }}
+            </div>
+          </div>
+        </td>
+        <td>
+          <div>
+            <div class="p-column-title font-bold hidden" >Último trámite</div>
+            {{casofiscal.ultimoTramite?.toLowerCase() || "-"}}
+          </div>
+        </td>
+        <td>
+          <div>
+            <div class="p-column-title font-bold hidden">Delitos</div>
+            <div class="btn-crimes-parts w-7rem px-3 font-bold" (click)="eventoVerDelitosPartes($event, casofiscal)">
+              Ver delitos y partes
+            </div>
+           </div>
+        </td>
+        <td>
+          <div>
+            <div class="p-column-title font-bold hidden">F. Ingreso</div>
+            {{ casofiscal.fechaIngreso }}
+          </div>
+        </td>
+        <td>
+          <div>
+            <div class="p-column-title font-bold hidden">F. Último trámite</div>
+            {{ casofiscal.fechaUltimoTramite }}
+          </div>
+        </td>
+        <td>
+          <div class="w-full">
+            <div class="p-column-title font-bold hidden">Plazo de etapa</div>
+            <div class="custom-progressbar">
+              @for (plazo of casofiscal.plazos; track $index) {
+                <app-barra-progreso-caso [titulo]="plazo.nombreActoProcesal" [inicio]="plazo.diasTrasncurridos"
+                  [diasPlazo]="plazo.diasPlazo" [indicadorPlazo]="plazo.indSemaforo">
+                </app-barra-progreso-caso>
+              }
+            </div>
+            <div class="py-2 mt-2">
+              <app-etiqueta-botones [casoFiscal]="casofiscal"></app-etiqueta-botones>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+       <tr>
+        <td colspan="8">
+          @if (listaCasos.length === 0) {
+            <div class="py-5 text-center text-600 border-300 font-semibold">
+              @if (procesadoCriterioBusqueda===false) {
+                En estos momentos no hay casos fiscales por monitorear
+              }@else {
+                No se encontraron registros con los criterios de búsqueda ingresados
+              }
+            </div>
+          }
+        </td>
+       </tr>
+    </ng-template>
+  </p-table>
+  <app-paginator
+    [query]="paginacionCondicion"
+    [items]="paginacionConfiguracion"
+    [rowsPerPageOptions]="[]"
+    [resetPage]="paginacionReiniciar"
+    (paginate)="eventoCambiarPagina($event)"
+  ></app-paginator>
+</div>

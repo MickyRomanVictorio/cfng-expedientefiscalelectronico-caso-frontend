@@ -1,0 +1,165 @@
+<div class="cfe-container">
+  <div class="derivado__table">
+    <div class="derivado_table__title grid nested-grid"> 
+      <div class="derivado_table_title__content col-6 flex">
+        <fn-icon [ico]="icono('iFolderSearch')" height="1.6rem"></fn-icon>
+        <h4 class="cfe-subtitulo-1 ml-1">
+          Lista de casos que me han derivado para revisar
+        </h4>
+      </div>
+      <div
+        class="col-12 md:col-6 flex flex-column sm:flex-row justify-content-end align-items-center pr-0"
+      >
+        <button
+          class="cfe-boton-secondary cfe-boton-m cfe-boton-icono-izquierda w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start"
+          (click)="exportar('PDF')"
+        >
+          <fn-icon
+            class="ml-1"
+            [ico]="icono('iFileDownload')"
+            height="1.6rem "
+          ></fn-icon>
+          Exportar PDF
+        </button>
+        <button
+          class="cfe-boton-secondary cfe-boton-m cfe-boton-icono-izquierda w-full sm:w-auto justify-content-start"
+          (click)="exportar('Excel')"
+        >
+          <fn-icon
+            class="ml-1"
+            [ico]="icono('iTable')"
+            height="1.6rem "
+          ></fn-icon>
+          Exportar Excel
+        </button>
+      </div>
+    </div>
+
+    <div class="casos_por_asignar__table">
+      <div class="term-item flex">
+        <span class="circulo circulo--verde mr-1 mt-1"></span>
+        Dentro del Plazo &nbsp;&nbsp;&nbsp;
+        <span class="circulo circulo--amarillo ml-1 mt-1 mr-1"></span>
+        Plazo por Vencer &nbsp;&nbsp;&nbsp;
+        <span class="circulo circulo--rojo ml-1 mt-1 mr-1"></span>
+        Plazo vencido
+      </div>
+      <div class="derivado_table__content">
+        <p-table
+          [value]="lisCasosRecibidos"
+          [rowHover]="true"
+          [tableStyle]="{ 'min-width': '50rem' }"
+          [breakpoint]="'992px'"
+          responsiveLayout="stack "
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th>N°</th>
+              <th class="w-15rem" pSortableColumn="numeroCaso">
+                Número de caso <p-sortIcon field="numeroCaso"></p-sortIcon>
+              </th>
+              <th pSortableColumn="remitente">
+                Remitente <p-sortIcon field="remitente"></p-sortIcon>
+              </th>
+              <th pSortableColumn="origen">
+                Origen <p-sortIcon field="origen"></p-sortIcon>
+              </th>
+              <th class="w-10rem" pSortableColumn="fechaDerivacion">
+                Fecha derivación
+                <p-sortIcon field="fechaDerivacion"></p-sortIcon>
+              </th>
+              <th class="w-13rem">Devolver - Detalles - Visor</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+            <tr>
+              <td data-column-name="N°">
+                {{ indexPag(rowIndex) }}
+              </td>
+              <td data-column-name="Número de caso">
+                <div class="cell-num-caso">
+                  <span
+                    *ngIf="item.tipoPlazo === 'DENTRO DEL PLAZO'"
+                    class="circulo circulo--verde"
+                  ></span>
+                  <span
+                    *ngIf="item.tipoPlazo === 'PLAZO POR VENCER'"
+                    class="circulo circulo--amarillo" 
+                  ></span>
+                  <span
+                    *ngIf="item.tipoPlazo === 'PLAZO VENCIDO'"
+                    class="circulo circulo--rojo"
+                  ></span>
+                  <view-numero-caso [numeroCaso]="item.codigoCaso" />
+                </div>
+                <button *ngIf="item.tipoDerivacion" class="btn-derivacion">{{item.tipoDerivacion}}</button>
+              </td>
+              <td data-column-name="Remitente">
+                {{
+                  item.remitentedenuncia
+                    ? "Fiscal: " + item.remitentedenuncia.trim()
+                    : ""
+                }}
+              </td>
+              <td data-column-name="Origen">
+                {{ item.origen | capitalizar }}
+              </td>
+              <td data-column-name="Fecha derivación">
+                <div *ngIf="item.fechaResultado">
+                  <div>{{ item.fechaResultado | dateformat }}</div>
+                  <div>{{ item.horaResultado | dateformat : "hour" }}</div>
+                </div>
+                <div *ngIf="!item.fechaResultado">-</div>
+              </td>
+              <td data-column-name="Devolver - Detalles - Visor">
+                <div class="opciones">
+                  <p-button
+                    class="btn-devolver"
+                    icon="pi pi-undo"
+                    (click)="
+                      devolverDerivacion(
+                        item.idCaso,
+                        item.codigoCaso,
+                        item.idBandejaDerivacion
+                      )
+                    "
+                  ></p-button>
+                  <p-button
+                    class="btn-detalle"
+                    icon="pi pi-eye"
+                    (click)="abrirModalInformacionCaso(item)"
+                  ></p-button>
+
+                  <!-- file-search-icon --> 
+                  <p-button
+                  class="btn-visor"
+                  icon="pi file-search-icon"
+                  (click)="
+                    mostrarVisorDocumental(item.idCaso, item.codigoCaso)
+                  "
+                ></p-button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td class="no-before text-center" colspan="6">
+                No se encontraron registros con los criterios de búsqueda
+                ingresados
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+        <app-paginator
+          [query]="query"
+          [items]="itemPaginado"
+          [rowsPerPageOptions]="[]"
+          (paginate)="onPaginate($event)"
+        ></app-paginator>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-toast></p-toast>

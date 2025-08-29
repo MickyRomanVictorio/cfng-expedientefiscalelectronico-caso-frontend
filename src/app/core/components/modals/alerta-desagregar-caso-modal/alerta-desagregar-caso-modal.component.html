@@ -1,0 +1,67 @@
+<div class="alert-container" [ngClass]="containerClass">
+  <a class="flex justify-content-end cursor-pointer" (click)="closeAction()">
+    <img [src]="closeIcon" alt="Close Icon" />
+  </a>
+
+  <div *ngIf="icon" class="flex justify-content-center alert-icon">
+    <img [src]="alertIcon" alt="Alert Icon" />
+  </div>
+
+  <h3 class="flex justify-content-center alert-title">{{ title }}</h3>
+
+  <p>Esta acción de desagregar generará 1 caso nuevo.</p>
+  <ng-container *ngFor="let grupo of gruposDesagregados">
+    <p
+      *ngIf="grupo.nombreGrupo === 'Grupo 1'"
+      class="alert-description"
+      style="text-align: justify"
+    >
+      El caso actual ({{ grupo.nombreGrupo }})
+      <strong>{{ grupo.numeroCaso }}</strong> mantendrá como partes y delitos lo
+      siguiente:
+    </p>
+    <p
+      *ngIf="grupo.nombreGrupo !== 'Grupo 1'"
+      class="alert-description"
+      style="text-align: justify"
+    >
+      El {{ grupo.nombreGrupo }} tendrá las siguientes partes y delitos:
+    </p>
+    <ul>
+      <ng-container *ngFor="let sujeto of grupo.sujetos">
+        <li>
+          <strong>{{ sujeto.nombres }} ({{ sujeto.numeroDocumento }})</strong>
+        </li>
+      </ng-container>
+      <p>Con los delitos:</p>
+      <ul>
+        <ng-container *ngFor="let delito of grupo.delitos">
+          <li>
+            <strong>{{ delito.nombreLabel }}</strong>
+          </li>
+        </ng-container>
+      </ul>
+    </ul>
+  </ng-container>
+
+  <p class="alert-description" style="text-align: justify">
+    ¿Está seguro de realizar esta acción?
+  </p>
+
+  <div class="flex justify-content-between">
+    <button
+      *ngIf="confirm"
+      class="cfe-boton-opcion cfe-boton-secondary cfe-boton-lg"
+      (click)="cancelAction()"
+    >
+      {{ cancelButtonText }}
+    </button>
+
+    <button
+      class="cfe-boton-opcion cfe-boton-primary cfe-boton-lg"
+      (click)="confirmAction()"
+    >
+      {{ confirmButtonText }}
+    </button>
+  </div>
+</div>

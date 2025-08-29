@@ -1,0 +1,59 @@
+$poppins-semibold: 'Poppins-SemiBold', sans-serif;
+$roboto: 'Roboto', sans-serif;
+
+.subetapas-titulo {
+    margin: 40px 0 5px 0;
+    color: var(--mpfn-primary);
+    font-family: $poppins-semibold;
+    width: 100%;
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.subetapas {
+    list-style: none;
+    padding-left: 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    fn-icon {
+        margin: 0 5px;
+    }
+    li {
+        display: flex;
+        align-items: center;
+        &:last-child {
+            fn-icon {
+                display: none;
+            }
+        }
+    }
+}
+
+.subetapa-anterior {
+    color: var(--mpfn-black);
+    font-weight: 500;
+    fn-icon {
+        color: var(--mpfn-jade);
+    }
+}
+
+.subetapa-actual {
+    color: var(--mpfn-jade);
+    font-family: $poppins-semibold;
+    .icon-completado {
+        display: none;
+    }
+    fn-icon {
+        color: var(--mpfn-gray1);
+    }
+}
+
+.subetapa-posterior {
+    color: var(--mpfn-black);
+    font-weight: 500;
+    .icon-completado {
+        display: none;
+    }
+}

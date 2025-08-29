@@ -1,0 +1,260 @@
+<div class="cfe-encabezado-modal">
+
+  <h3
+    class="cfe-encabezado-titulo cfe-subtitulo-3 cfe-semi-bold"
+  >
+    {{ titulo }}
+    <numero-caso 
+      [numeroCaso]="calificarCaso.numeroCaso!"
+      fontSize="1em"
+    />
+  </h3>
+
+  <fn-icon
+    class="cfe-encabezado-cerrar"
+    [ico]="obtenerIcono('iClose')"
+    height="2rem"
+    (click)="cerrarModal()"
+    onKeyPress=""
+  ></fn-icon>
+</div>
+
+@if ( esDeclararComplejo ) {
+  <div class="col-12">
+    <p-messages 
+      [(value)]="msgs1"
+      [enableService]="false"
+      [escape]="false"
+    ></p-messages>
+  </div>
+}
+
+<div class="formgrid grid" [formGroup]="formRegistro">
+  @if ( mostrarPlazoAntesDespues ) {
+    <h5 class="subtitulo-plazos">Plazos actuales</h5>
+    <div class="field col-12 lg:col-6">
+      <label for="feciniinvpre" class="font-semibold">Fecha de inicio {{ etiquetaPlazoActual }}</label>
+      <input 
+        pInputText
+        id="feciniinvpre"
+        type="text"
+        formControlName="fechaInicio"
+        readonly
+        [disabled]="true"
+        class="p-inputtext py-3 w-full"
+      >
+    </div>
+    <div class="field col-12 lg:col-6">
+      <label for="fecfininvpre" class="font-semibold">Fecha de fin {{ etiquetaPlazoActualFin }}</label>
+      <input 
+        pInputText
+        id="fecfininvpre"
+        type="text"
+        formControlName="fechaFin"
+        readonly
+        [disabled]="true"
+        class="p-inputtext py-3 w-full"
+      >
+    </div>
+
+    <h5 class="subtitulo-plazos">Asignar nuevo plazo</h5>
+  }
+  @if ( !mostrarPlazoAntesDespues ) {
+    <div class="field col-12 lg:col-6">
+      <label for="complejidad" class="font-semibold">Complejidad</label>
+      <p-dropdown
+        id="complejidad"
+        formControlName="complejidad"
+        styleClass="py-1 p-inputtext-lg"
+        [options]="complejidades"
+        optionLabel="label"
+        optionValue="value"
+      >
+      </p-dropdown>
+      <small
+        class="error-message"
+        *ngIf="
+          formRegistro.get('complejidad')!.touched &&
+          formRegistro.get('complejidad')!.hasError('required')
+        "
+      >
+        Seleccione Complejidad
+      </small>
+    </div>
+    <div class="field col-12 lg:col-6" *ngIf="this.mostrarSedeYunidades">
+      <label for="sede" class="font-semibold">Sede de investigación</label>
+      <p-dropdown
+        id="sede"
+        formControlName="sede"
+        styleClass="py-1 p-inputtext-lg"
+        [options]="sedes"
+        placeholder="Seleccione sede de investigación"
+        optionLabel="label"
+        optionValue="value"
+      >
+      </p-dropdown>
+      <small
+        class="error-message"
+        *ngIf="
+          formRegistro.get('sede')!.touched &&
+          formRegistro.get('sede')!.hasError('required')
+        "
+      >
+        Seleccione Sede
+      </small>
+    </div>
+    <div class="col-12">
+      <p-messages 
+        [(value)]="msgs1"
+        [enableService]="false"
+        [escape]="false"
+      ></p-messages>
+    </div>
+  }
+
+  <div class="field col-12 lg:col-2">
+    <label for="plazo" class="font-semibold">{{ labelPlazo }}</label>
+    <input
+      pInputText
+      id="plazo"
+      maxlength="4"
+      digitOnly
+      formControlName="plazo"
+      type="text"
+      class="p-inputtext py-3 w-full"
+      required
+      (input)="eliminarCerosIniciales($event)"
+    />
+    <small
+      class="error-message"
+      *ngIf="
+        formRegistro.get('plazo')!.touched &&
+        (formRegistro.get('plazo')!.hasError('required') ||
+          formRegistro.get('plazo')!.hasError('minlength'))
+      "
+    >
+      Ingrese un valor mayor a cero (4 caracteres)
+    </small>
+    <small
+      class="error-message"
+      *ngIf="
+        formRegistro.errors &&
+        formRegistro.errors['unidadMedidaCheck'] &&
+        (formRegistro.touched || formRegistro.dirty)
+      "
+    >
+      Seleccione unidad de medida
+    </small>
+    <small
+      class="error-message"
+      *ngIf="
+        formRegistro.get('plazo')!.touched &&
+        formRegistro.get('plazo')!.hasError('min')
+      "
+    >
+      Ingrese un valor mayor a cero
+    </small>
+  </div>
+  <div class="field col-12 lg:col-4">
+    <label for="unidadMedida" class="font-semibold">Unidad de medida</label>
+    <p-dropdown
+      id="unidadMedida"
+      formControlName="unidadMedida"
+      placeholder="Seleccione unidad de medida"
+      styleClass="py-1 p-inputtext-lg"
+      [options]="unidadesMedidas"
+      optionLabel="label"
+      optionValue="value"
+    >
+    </p-dropdown>
+    <small
+      class="error-message"
+      *ngIf="
+        formRegistro.get('unidadMedida')!.touched &&
+        formRegistro.get('unidadMedida')!.hasError('required')
+      "
+    >
+      Seleccione Unidad de Medida
+    </small>
+  </div>
+  <div class="field col-12 lg:col-6">
+    <label for="fechaFinCalculada" class="font-semibold"
+      >{{ labelFechaFinCalculada }}</label
+    >
+    <input
+      pInputText
+      id="fechaFinCalculada"
+      formControlName="fechaFinCalculada"
+      type="text"
+      class="p-inputtext py-3 w-full"
+    />
+  </div>
+  <div class="col-12">
+    <p-messages
+      [(value)]="msgs2"
+      [enableService]="false"
+      [escape]="false"
+    ></p-messages>
+  </div>
+
+  @if ( mostrarSedeInvestigacion ) {
+    <div class="field col-12">
+      <label for="sede" class="font-semibold">Sede de investigación</label>
+      <p-dropdown
+        id="sede"
+        formControlName="sede"
+        styleClass="py-1 p-inputtext-lg"
+        [options]="sedes"
+        placeholder="Seleccione sede de investigación"
+        optionLabel="label"
+        optionValue="value"
+      >
+      </p-dropdown>
+      <small
+        class="error-message"
+        *ngIf="
+          formRegistro.get('sede')!.touched &&
+          formRegistro.get('sede')!.hasError('required')
+        "
+      >
+        Seleccione Sede
+      </small>
+    </div>
+  }
+
+  <div class="field col-12">
+    <label for="descripcion" class="font-semibold">Descripción (opcional)</label>
+    <textarea
+      rows="5"
+      cols="30"
+      pInputTextarea
+      id="descripcion"
+      formControlName="descripcion"
+      #descripcion
+      class="p-inputtext-lg py-3 text-lg w-full"
+      placeholder="Ingrese descripción"
+      [maxLength]="200"
+    >
+    </textarea>
+    <small
+      class="error-message"
+      *ngIf="
+        formRegistro.get('descripcion')!.touched &&
+        formRegistro.get('descripcion')!.hasError('required')
+      "
+    >
+      Ingrese Descripción
+    </small>
+    <small class="longitud-descripcion">{{ longitudCampoDescripcion }}/200</small>
+  </div>
+</div>
+
+<div class="flex justify-content-end option-container">
+  <p-button
+    styleClass="cfe-boton-primary text-white font-semibold with-button px-8 py-3"
+    [label]="labelBoton"
+    [disabled]="!this.formRegistro.valid"
+    (onClick)="asignar()"
+    size="large"
+  ></p-button>
+</div>

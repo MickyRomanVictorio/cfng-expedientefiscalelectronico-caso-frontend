@@ -1,0 +1,328 @@
+<div class="cfe-container">
+  <div class="cfe_bandeja__header grid">
+    <div class="col-12 md:col-9 cfe_bandeja_header__content">
+      <fn-icon
+        [ico]="iconUtil.obtenerIcono('iFolderSearch')"
+        height="1.6rem"
+      ></fn-icon>
+      <h3 class="cfe-titulo-1">Bandeja de contiendas</h3>
+    </div>
+  </div>
+
+  <form class="cfe_bandeja__filters" [formGroup]="formularioFiltrarCasos">
+    <div class="grid mt-1">
+      <div class="col">
+        <div class="field mb-0">
+          <label for="texto" class="font-semibold">Buscar:</label>
+          <input
+            pInputText
+            (keyup)="filtrarCasos()"
+            type="text"
+            class="p-inputtext-lg py-3 text-lg w-full"
+            placeholder="Ingrese algún texto para buscar, por ejemplo el número de caso, destino, nombre de fiscal, etc"
+            formControlName="texto"
+          />
+        </div>
+      </div>
+      <div
+        class="col-fixed"
+        [ngClass]="{ 'cfe-filtro-boton-fondo': mostrarFiltros }"
+      >
+        <div class="field mb-0">
+          <label class="font-semibold">&nbsp;</label>
+          <button
+            id="btnMostrarFiltros"
+            class="cfe-filtro-boton"
+            (click)="eventoMostrarOcultarFiltros()"
+          >
+            <fn-icon
+              [ico]="iconUtil.obtenerIcono('iFilterShow')"
+              height="2.1rem"
+            ></fn-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    @if (mostrarFiltros) {
+    <div class="grid cfe-filtros">
+      <div class="cfe-filtros-fondo">
+        <div class="formgrid grid w-full">
+          <div class="col-12 md:col-6 field">
+            <label for="Fecha de asignacion" class="font-semibold mb-2"
+              >Fecha de elevación</label
+            >
+            <div class="grid">
+              <div class="col-12 sm:col-6">
+                <p-calendar
+                  dateMask
+                  id="fechaDesde"
+                  dateFormat="dd/mm/yy"
+                  class="p-inputtext-lg cfe-calendar h-56"
+                  [showIcon]="true"
+                  icon="cfe-calendar-icon"
+                  placeholder="dd/mm/aaaa"
+                  formControlName="fechaDesde"
+                ></p-calendar>
+              </div>
+              <div class="col-12 sm:col-6 sm:mt-0 mt-1">
+                <p-calendar
+                  dateMask
+                  dateFormat="dd/mm/yy"
+                  class="p-inputtext-lg cfe-calendar h-56"
+                  [showIcon]="true"
+                  icon="cfe-calendar-icon"
+                  placeholder="dd/mm/aaaa"
+                  formControlName="fechaHasta"
+                ></p-calendar>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 md:col-6 field">
+            <label for="extras" class="font-semibold mb-0"
+              >Tipo de contienda</label
+            >
+            <p-dropdown
+              styleClass="p-inputtext-lg py-1"
+              id="idTipoContienda"
+              [options]="tiposContiendas"
+              optionValue="id"
+              optionLabel="name"
+              placeholder="Todos"
+              emptyMessage="Sin resultados"
+              [showClear]="true"
+              formControlName="idTipoContienda"
+            ></p-dropdown>
+          </div>
+        </div>
+      </div>
+      <div class="cfe-filtros-fondo cfe-filtros-opciones">
+        <button
+          class="cfe-boton-primary cfe-boton-m mr-2 boton-w"
+          (click)="obtenerBandejaContiendas()"
+        >
+          Buscar
+        </button>
+      </div>
+    </div>
+    }
+  </form>
+
+  <div class="cfe_bandeja__table">
+    <div class="cfe_bandeja_table__title grid">
+      <div class="num_casos_por_asignar_table_title__content col-12 md:col-6">
+        <fn-icon
+          [ico]="iconUtil.obtenerIcono('iFolderExclamation')"
+          height="1.8rem"
+          [style]="{ 'margin-left': '-12px' }"
+        ></fn-icon>
+        <h4 class="cfe-subtitulo-1">
+          Solicitudes de contiendas que he realizado
+        </h4>
+      </div>
+      <div
+        class="col-12 md:col-6 flex flex-column sm:flex-row justify-content-end align-items-center pr-0"
+      >
+        <button
+          class="cfe-boton-secondary cfe-boton-m cfe-boton-m w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start"
+          (click)="exportar('PDF')"
+        >
+          <fn-icon
+            class="ml-1"
+            [ico]="iconUtil.obtenerIcono('iFileDownload')"
+            height="1.6rem"
+          ></fn-icon>
+          Exportar PDF
+        </button>
+        <button
+          class="cfe-boton-secondary cfe-boton-m cfe-boton-m w-full sm:w-auto mr-0 sm:mr-3 mb-2 sm:mb-0 justify-content-start"
+          (click)="exportar('Excel')"
+        >
+          <fn-icon
+            class="ml-1"
+            [ico]="iconUtil.obtenerIcono('iTable')"
+            height="1.6rem"
+          ></fn-icon>
+          Exportar Excel
+        </button>
+      </div>
+    </div>
+
+    <div class="cfe_bandeja_table__content">
+      <p-table
+        [value]="casosPorContiendas"
+        [rowHover]="true"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [breakpoint]="'992px'"
+        responsiveLayout="stack"
+        [(selection)]="casosSeleccionados"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>N°</th>
+            <th pSortableColumn="coCaso">
+              Número de caso
+              <p-sortIcon field="coCaso"></p-sortIcon>
+            </th>
+            <th pSortableColumn="destino">
+              Destino
+              <p-sortIcon field="destino"></p-sortIcon>
+            </th>
+            <th pSortableColumn="asignado">
+              Asignado a
+              <p-sortIcon field="asignado"></p-sortIcon>
+            </th>
+            <th pSortableColumn="idTipoContienda">
+              Tipo
+              <p-sortIcon field="idTipoContienda"></p-sortIcon>
+            </th>
+            <th class="col-width-176" pSortableColumn="fechaElevacion">
+              Fecha de elevación
+              <p-sortIcon field="fechaElevacion"></p-sortIcon>
+            </th>
+            <th class="w-col-11">Revertir - Historial - Ver caso</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-casoContienda let-i="rowIndex">
+          <tr class="p-selectable-row">
+            <td class="table_td_content_start">
+              {{ (query.page - 1) * query.limit + (i + 1) }}
+            </td>
+            <td class="table_td_content_start caso-container">
+              <span class="p-column-title">Número de caso</span>
+              <div class="plazo-item-row">
+                <div>
+                  <span
+                    [innerHTML]="
+                      stringUtil.obtenerNumeroCaso(casoContienda.coCaso)
+                    "
+                  ></span>
+                </div>
+              </div>
+            </td>
+            <td class="table_td_content_start">
+              <span class="p-column-title">Destino</span>
+              <span class="block mb-2">
+                {{ casoContienda.noEntidad }}
+              </span>
+              @if (casoContienda.flgTieneEfe === 0) {
+              <span class="badge-contiendas badge-manual">
+                Elevación manual
+              </span>
+              }
+            </td>
+            <td class="table_td_content_start remitente-container">
+              <span class="p-column-title">Asignado a</span>
+              <span class="block">
+                {{ casoContienda?.noFiscalAsignado || "-" }}
+              </span>
+              <b class="block item-cargo">{{ casoContienda?.noCargo }}</b>
+            </td>
+            <td class="table_td_content_start">
+              <span class="p-column-title">Tipo</span>
+              <span
+                class="badge-contiendas"
+                [class.badge-positiva]="casoContienda.idTipoContienda === 987"
+                [class.badge-negativa]="casoContienda.idTipoContienda === 988"
+              >
+                {{
+                  casoContienda.idTipoContienda === 987
+                    ? "Positiva"
+                    : "Negativa"
+                }}
+              </span>
+            </td>
+            <td class="table_td_content_start fecha-container">
+              <span class="p-column-title">Fecha de elevación</span>
+              <div>
+                <div>{{ casoContienda.fechaElevacion }}</div>
+                <div>
+                  {{ casoContienda.horaElevacion | dateformat : "hour" }}
+                </div>
+              </div>
+            </td>
+            <td class="table_td_content_start flex align-items-center gap-2">
+              <span class="p-column-title"
+                >Revertir - Historial - Ver caso</span
+              >
+              @if (casoContienda.flgTieneEfe === 0) {
+              <div
+                class="cfe-btn-clasification"
+                [class.disabled]="casoContienda.idFiscalAsignado"
+                (click)="
+                  actualizarInformacion(
+                    casoContienda.idCaso,
+                    casoContienda.idBandejaElevacion,
+                    casoContienda.coEntidad,
+                    casoContienda.idTipoEntidad,
+                    casoContienda.noEntidad
+                  )
+                "
+              >
+                <fn-icon
+                  [ico]="iconUtil.obtenerIcono('iEdit')"
+                  height="1.4rem"
+                ></fn-icon>
+              </div>
+              } @if (casoContienda.flgTieneEfe === 1) {
+              <div
+                class="cfe-btn-clasification cfe-btn-reversion"
+                [class.disabled]="vaidarBotonRevertir(casoContienda.idFiscalAsignado, casoContienda.estadoRegistro)"
+                (click)="
+                  revertirElevacion(
+                    casoContienda.coCaso,
+                    casoContienda.idCaso,
+                    casoContienda.idBandejaDerivacion,
+                    casoContienda.noEntidad,
+                    casoContienda.idBandejaElevacion,
+                    casoContienda.idEtapa,
+                    casoContienda.idActoTramiteCaso
+                  )
+                "
+              >
+                <fn-icon
+                  [ico]="iconUtil.obtenerIcono('iReset')"
+                  height="1.4rem"
+                ></fn-icon>
+              </div>
+              }
+
+              <div
+                class="cfe-btn-clasification"
+                (click)="abrirModalHistorial(casoContienda)"
+              >
+                <fn-icon
+                  [ico]="iconUtil.obtenerIcono('iRestaurar')"
+                  height="1.4rem"
+                ></fn-icon>
+              </div>
+              <div
+                class="cfe-btn-clasification"
+                (click)="
+                  redirectActoProcesal(
+                    casoContienda.idEtapa,
+                    casoContienda.idCaso,
+                    casoContienda.idActoTramiteCaso
+                  )
+                "
+              >
+                <fn-icon
+                  [ico]="iconUtil.obtenerIcono('iChevronRight')"
+                  height="1.4rem"
+                ></fn-icon>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <app-paginator
+        [query]="query"
+        [items]="itemPaginado"
+        [rowsPerPageOptions]="[]"
+        [resetPage]="resetPage"
+        (paginate)="onPaginate($event)"
+      ></app-paginator>
+    </div>
+  </div>
+</div>
+<p-toast></p-toast>

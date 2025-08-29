@@ -1,0 +1,42 @@
+<div class="indice_iconos__container">
+  <h3>Indice Iconos</h3>
+  <span class="close" (click)="close()">X</span>
+  <form class="indice_iconos__filters" [formGroup]="filter">
+    <div class="grid row-magin-top">
+      <div class="col">
+        <div class="field mb-0">
+          <label for="buscar" class="font-semibold">Buscar</label>
+          <input
+            pInputText
+            type="text"
+            class="p-inputtext-lg py-3 text-lg w-full"
+            placeholder="Ingrese texto de búsqueda"
+            formControlName="buscar"
+            (keydown.enter)="buscarIconos()"
+          />
+        </div>
+      </div>
+      <div class="col-fixed" style="width: 200px">
+        <div class="field mb-0">
+          <label for="button" class="font-semibold">&nbsp;</label>
+          <p-button
+            styleClass="p-button-lg w-full font-semibold btn-mpfn-secondary"
+            label="BUSCAR"
+            (click)="buscarIconos()"
+          ></p-button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div class="grid">
+    <div class="col-2" *ngFor="let icon of icons">
+      <div class="text-center p-3 border-round-sm font-bold">
+        <svg [attr.viewBox]="icon.viewBox" xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+          <path [attr.d]="icon.path"></path>
+        </svg>
+        <p>{{ icon.name }}</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,34 @@
+.evidencia-container {
+  display: flex;
+  align-items: center;
+}
+
+.evidencia-text {
+  margin-left: 8px;
+}
+
+.badge-fuente-investigacion-pdf {
+  background-color: var(--mpfn-green-dark);
+  color: var(--mpfn-cedula-texto)
+}
+
+.badge-fuente-investigacion-mp3 {
+  background-color: var(--mpfn-secondary);
+  color: var(--mpfn-cedula-texto)
+}
+
+.badge-fuente-investigacion-jpg {
+  background-color: var(--mpfn-estado-texto);
+  color: var(--mpfn-cedula-texto)
+}
+
+.badge-fuente-investigacion-png {
+  background-color: var(--mpfn-estado-texto);
+  color: var(--mpfn-cedula-texto)
+}
+
+.badge-fuente-investigacion-mp4 {
+  background-color: var(--mpfn-semaforo-rojo);
+  color: var(--mpfn-cedula-texto)
+}
+

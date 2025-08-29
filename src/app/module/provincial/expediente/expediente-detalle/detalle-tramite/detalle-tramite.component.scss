@@ -1,0 +1,17 @@
+// Vacío intencional
+
+.nuevo-label {
+    display: block;
+    width: 15px; /* Ancho de la bolita */
+    height: 15px; /* Alto de la bolita */
+    background-color: #06A77D; /* Color de fondo verde */
+    border-radius: 50%; /* Hace que el span sea redondo */
+    position: absolute; /* Posicionamiento absoluto */
+    top: 1rem; /* Coloca el span en la parte superior */
+    right: 1rem; /* Coloca el span en la esquina derecha */
+    transform: translate(50%, -50%); /* Ajusta el posicionamiento */
+  }
+
+  .apelacion{
+    color: #06A77D !important;  
+  }

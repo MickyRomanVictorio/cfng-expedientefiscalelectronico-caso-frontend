@@ -1,0 +1,13 @@
+@if (alertas && alertas.length > 0) {
+  <ul>
+    @for (alerta of alertas; track $index) {
+      <li>
+        <div class="border-round-lg cfe-mensaje-amarillo">
+            <fn-icon [ico]="obtenerIcono('iAlert')" height="1.4rem"></fn-icon>
+            <div [innerHTML]="obtenerTexto(alerta.texto)"></div>
+            <a [class]="urlClass" routerLink="{{ obtenerUrl(alerta.urlRedireccion) }}">{{ alerta.descripcionUrlRedireccion }}</a>
+        </div>
+      </li>
+    }
+  </ul>
+}

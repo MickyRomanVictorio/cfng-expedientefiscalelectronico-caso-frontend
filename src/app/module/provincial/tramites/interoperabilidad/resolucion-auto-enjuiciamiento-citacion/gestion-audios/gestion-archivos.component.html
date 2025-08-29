@@ -1,0 +1,179 @@
+<div class="p-4">
+
+  <div class="relative">
+
+    <h3 class="cfe-subtitulo-3 family-poppin-bold mb-4">
+      Medios probatorios
+    </h3>
+
+    <fn-icon
+      (click)="cerrarModal()"
+      [ico]="obtenerIcono('iClose')"
+      class="absolute cursor-pointer top-0 right-0"
+      height="2rem"
+      onKeyPress=""
+    />
+
+  </div>
+  @if(!modoLectura && listaAudiosFiltrados.length == 5){
+    <div class="mb-2">
+        <mensaje-generico [titulo]="'Ha superado la cantidad de documentos permitidos'"></mensaje-generico>
+    </div>
+  }
+  @if(!modoLectura && listaAudiosFiltrados.length < 5){
+    <label for="descripcion" class="font-bold">Registrar medios probatorios admitidos</label>
+
+    <div
+      class="col-12 md:col-offset-3 md:col-6 pt-3 p-0"
+      [formGroup]="formAudio"
+    >
+
+      <label for="descripcion" class="font-bold">Descripcion del medio probatorio:</label>
+
+      <textarea
+        #descripcionInput
+        formControlName="descripcionAudio"
+        id="descripcion"
+        name="descripcion"
+        placeholder="Descripcion"
+        [maxlength]="maxLengthDescripcion"
+        class="w-12"
+        rows="4"
+        pInputTextarea
+      >
+      </textarea>
+
+      <div class="floatRigth">
+        Quedan <span class="font-bold">{{ caracteresRestantes }}</span> caracteres
+      </div>
+    </div>
+
+    <div class="col-12 md:col-offset-3 md:col-6 pt-3 p-0">
+      <app-subir-archivo
+        (onRemove)="removeFileAttach()"
+        (onSelect)="onSelectFileAttach($event)"
+      />
+    </div>
+
+    <div class="flex justify-content-center my-3">
+      @if (nombreBoton == 'Actualizar'){
+        <p-button
+          (onClick)="eventoLimpiar()"
+          [styleClass]="'p-button-lg cfe-boton-secondary cfe-boton-lg'"
+          class="mr-3"
+          label="Cancelar"
+        />
+      }
+
+      <p-button
+        (onClick)="eventoGuardar()"
+        [disabled]="audioParaAgregar || !archivoAudioSubido || formAudio.invalid"
+        [styleClass]="'p-button-lg cfe-boton-primary cfe-boton-lg'" 
+        [label]="nombreBoton"
+      />
+
+    </div>
+
+    @if (mostrarTamanoError) {
+      <p class="text-red-500">
+        {{ mensajeErrorTamano }}
+      </p>
+    }
+  }
+
+  @if (listaAudiosFiltrados.length > 0) {
+    <div class="col-12">
+      <label for="descripcion" class="font-bold">Lista de medios aprobatorios</label>
+
+      <br>
+
+      <p-table
+        [rowHover]="true"
+        [rows]="5"
+        [value]="listaAudiosFiltrados"
+        scrollable="true"
+        responsiveLayout="stack"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <!--<th class="col-2 font-bold"> Nombre </th>-->
+            <th class="col-2 font-bold"> Archivo </th>
+            <th class="col-2 font-bold"> Peso </th>
+            <th class="col-8 font-bold"> Descripción </th>
+            <th class="col-1 font-bold text-right"> Acciones </th>
+          </tr>
+        </ng-template>
+
+        <ng-template let-audio let-index="rowIndex" pTemplate="body">
+          <tr
+            class="p-selectable-row cursor-pointer"
+            onKeyPress=""
+          >
+            <!--<td>
+              <span class="p-column-title">Nombre</span>
+
+              <div class="flex">
+                {{ audio.coDocumento || 'Sin Nombre' }}
+              </div>
+
+            </td>-->
+            <td>
+              <span class="p-column-title">Archivo</span>
+              {{ audio.nuDocumento || 'Sin Nombre'}}
+            </td>
+
+            <td>
+              <span class="p-column-title">Peso</span>
+              {{ getFormatFileSize(audio.nuPeso) }}
+            </td>
+
+            <td>
+              <span class="p-column-title">Descripción</span>
+              {{ audio.deObservacion || '-'}}
+            </td>
+
+            <td class="botonera">
+              <img
+                (click)="descargarAudio(audio)"
+                class="cursor-pointer icono-mensaje"
+                [src]="icon('arrow-down-to-line')"
+                alt="Descargar"
+                title="Descargar audio"
+                onKeyPress=""
+              />
+              @if(!modoLectura){
+              <img
+                (click)="eliminarAudio(audio)"
+                class="cursor-pointer icono-mensaje"
+                [src]="icon('trash_1')"
+                alt="Eliminar"
+                title="Eliminar audio"
+                onKeyPress=""
+              />
+              }
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <app-paginator
+        #paginator
+        [query]="query"
+        [items]="itemPaginado"
+        [rowsPerPageOptions]="[]"
+        (paginate)="onPaginate($event)"
+      />
+
+    </div>
+  }
+ 
+
+  @if (modoLectura && listaAudiosFiltrados.length == 0) {
+    <div class="no-data-container">
+      <i class="pi pi-ban" style="font-size: 2rem; color: gray;"></i>
+      <p>No se registraron medios probatorios</p>
+    </div>
+  }
+
+
+</div>

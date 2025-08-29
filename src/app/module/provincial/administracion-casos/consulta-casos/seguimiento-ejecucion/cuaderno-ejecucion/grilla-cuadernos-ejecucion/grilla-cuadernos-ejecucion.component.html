@@ -1,0 +1,281 @@
+<p-dataView
+  [loading]="false"
+  [first]="0"
+  [rows]="10"
+  [value]="listaCuadernos"
+  layout="grid"
+  styleClass="paginacion-general"
+>
+  <ng-template pTemplate="gridItem" let-cuadernoLista>
+    @for (cuaderno of cuadernoLista; track cuaderno.idCaso) {
+    <div
+      class="grilla-cuaderno cursor-pointer"
+      (click)="eventoDetalle($event, cuaderno)"
+      onKeyPress=""
+    >
+      <div class="grilla-cuaderno__cabecera">
+        <div class="grilla-cuaderno__cabecera-borde">
+          @if (cuaderno?.codigoCaso) {
+          <div
+            class="grilla-cuaderno__cabecera-contenido py-3 px-3 font-bold"
+            [innerHTML]="obtenerCasoHtml(cuaderno.codigoCaso)"
+          ></div>
+          }
+        </div>
+      </div>
+
+      <div class="grilla-cuaderno__cuerpo py-2 px-3">
+        <div class="line-height-3">
+          <div class="text-primary font-bold pb-2 pt-2">
+            {{ cuaderno.sujetoProcesal }}
+          </div>
+          <div>
+            <span class="text-primary font-bold">Acto procesal:</span>
+            {{ capitalizedFirstWord(cuaderno.actoProcesalEjecucion) }}
+          </div>
+          @if(cuaderno.idTipoSentencia){
+          <div class="mt-1">
+            <span class="text-primary font-bold">Tipo sentencia:</span>
+            {{
+              capitalizedFirstWord(
+                removerSentenciaPalabra(cuaderno.descripcionSentencia)
+              )
+            }}
+          </div>
+          }
+          <div class="mt-1">
+            <span class="text-primary font-bold">Delito:</span>
+            {{ cuaderno.delito }}
+          </div>
+          @if(cuaderno.numeroClasesPenas == 1){
+          <div class="mt-1">
+            <span class="text-primary font-bold">Clase de pena:</span>
+            {{ cuaderno.clasePena }}
+          </div>
+          <div class="mt-1">
+            <span class="text-primary font-bold">Tipo de pena:</span>
+            {{ cuaderno.tiposPenas }}
+          </div>
+          } @if(cuaderno.numeroReparacionCivil > 1 || cuaderno.numeroClasesPenas
+          > 1){
+          <ul class="lista-enlaces mt-2">
+            @if(cuaderno.numeroClasesPenas > 1 ){
+            <li onKeyPress (click)="eventoMostrarPenas($event, cuaderno)">
+              Ver penas
+            </li>
+            } @if(cuaderno.numeroReparacionCivil > 1 ){
+            <li
+              onKeyPress
+              (click)="eventoMostrarReparacionesCiviles($event, cuaderno)"
+              class="mt-2"
+            >
+              Ver Reparación civil
+            </li>
+            }
+          </ul>
+          } @if(cuaderno.idTipoSentencia ==
+          ID_N_TIPO_SENTENCIA.REPARACION_CIVIL_EXCLUSIVA &&
+          cuaderno.numeroReparacionCivil == 1){
+          <div class="mt-1">
+            <span class="text-primary font-bold"
+              >Tipo de reparación civil:</span
+            >
+            {{ capitalizedFirstWord(cuaderno.tipoRcExclusiva) }}
+          </div>
+          <div class="mt-1">
+            <span class="text-primary font-bold">Monto:</span>
+            {{ cuaderno.montoRcExclusiva }} soles
+          </div>
+          }
+          <div class="mt-1">
+            <span class="text-primary font-bold">Fecha de notificación:</span>
+            {{ cuaderno.fechaNotificacion }}
+          </div>
+          @if([ID_N_TIPO_SENTENCIA.ABSOLUTORIA,ID_N_TIPO_SENTENCIA.CONDENATORIA].includes(cuaderno.idTipoSentencia)
+          && cuaderno.numeroReparacionCivil <= 1){
+          <div class="mt-1">
+            <span class="text-primary font-bold">Con reparación civil:</span>
+            {{ cuaderno.numeroReparacionCivil == 1 ? "SI" : "NO" }}
+          </div>
+          }
+        </div>
+        @if (mostrarEliminar) {
+        <div class="flex align-items-center pt-1">
+          <fn-icon
+            [ico]="iconUtil.obtenerIcono('iTrash')"
+            height="2.4rem"
+            style="margin-left: -0.8rem"
+            class="opacity-60 icono-accion"
+            (click)="eventoBorrar($event, cuaderno)"
+            onKeyPress=""
+          ></fn-icon>
+        </div>
+        }
+
+        <div class="flex justify-content-between py-3">
+          <button class="border-1 border-solid border-round py-2 px-3 bg-white">
+            Cuaderno Ejecución:
+            {{ cuaderno.tipoClasificadorExpediente | uppercase }}
+          </button>
+        </div>
+      </div>
+    </div>
+    }
+  </ng-template>
+</p-dataView>
+
+<p-dialog
+  [(visible)]="mostrarModalPenas"
+  [modal]="true"
+  [showHeader]="false"
+  [closable]="false"
+  [dismissableMask]="true"
+  styleClass="custom-dialog mostrar-pena-dialog"
+>
+  <app-encabezado-modal
+    titulo="Lista de penas de Cuaderno de Ejecución"
+    [soloTitulo]="true"
+    [alCerrarModal]="cerrarPenas"
+    tituloSize="1.3rem"
+    [sinReferencia]="true"
+  />
+  <ng-template pTemplate="content">
+    @if ( mostrarModalPenas ) {
+    <ng-container>
+      <div class="dialog-content">
+        <p-table
+          class="cfe-table-primary"
+          [value]="listaPenas"
+          responsiveLayout="stack"
+          [paginator]="true"
+          dataKey="idCuotas"
+          [paginator]="true"
+          [rows]="5"
+          [showCurrentPageReport]="true"
+          [tableStyle]="{ 'min-width': '50rem' }"
+          currentPageReportTemplate="{first} de {last} registros"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th scope>N°</th>
+              <th scope class="text-center">Clase de pena</th>
+              <th scope class="text-center">Tipo de pena</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-pena let-i="rowIndex">
+            <tr>
+              <td>
+                {{ i + 1 }}
+              </td>
+              <td class="text-center">
+                {{ pena.clasePena }}
+              </td>
+              <td class="text-center">
+                {{ pena.tipoPena }}
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="4">
+                <div class="text-center">No se han encontrado penas</div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+        <div class="flex justify-content-center align-items-center gap-3 mt-1">
+          <button
+            (click)="mostrarModalPenas = false"
+            type="button"
+            class="cfe-boton-secondary cfe-boton-m"
+          >
+            Aceptar
+          </button>
+        </div>
+      </div>
+    </ng-container>
+    }
+  </ng-template>
+</p-dialog>
+
+<p-dialog
+  [(visible)]="mostrarModalReparacionCivil"
+  [modal]="true"
+  [showHeader]="false"
+  [closable]="false"
+  [dismissableMask]="true"
+  styleClass="custom-dialog mostrar-reparacion-dialog"
+>
+  <app-encabezado-modal
+    titulo="Lista de reparaciones civiles del Cuaderno de ejecución"
+    [soloTitulo]="true"
+    [alCerrarModal]="cerrarReparacionesCiviles"
+    tituloSize="1.3rem"
+    [sinReferencia]="true"
+  />
+  <ng-template pTemplate="content">
+    @if ( mostrarModalReparacionCivil ) {
+    <ng-container>
+      <div class="dialog-content">
+        <p-table
+          class="cfe-table-primary"
+          [value]="listaReparacionesCiviles"
+          responsiveLayout="stack"
+          [paginator]="true"
+          dataKey="idCuotas"
+          [paginator]="true"
+          [rows]="5"
+          [showCurrentPageReport]="true"
+          [tableStyle]="{ 'min-width': '50rem' }"
+          currentPageReportTemplate="{first} de {last} registros"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th scope>N°</th>
+              <th scope class="text-center">Código de reparación civil</th>
+              <th scope class="text-center">Tipo de reparación civil</th>
+              <th scope class="text-center">Forma de Pago</th>
+              <th scope class="text-center">Monto</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-repa let-i="rowIndex">
+            <tr>
+              <td>
+                {{ i + 1 }}
+              </td>
+              <td class="text-center">
+                {{ repa.codigo }}
+              </td>
+              <td class="text-center">
+                {{ capitalizedFirstWord(repa.tipo) }}
+              </td>
+              <td class="text-center">
+                {{ capitalizedFirstWord(repa.tipoPago) }}
+              </td>
+              <td class="text-center">
+                {{ repa.monto | solPeruano }}
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="4">
+                <div class="text-center">No se han encontrado penas</div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+        <div class="flex justify-content-center align-items-center gap-3 mt-1">
+          <button
+            (click)="mostrarModalReparacionCivil = false"
+            type="button"
+            class="cfe-boton-secondary cfe-boton-m"
+          >
+            Aceptar
+          </button>
+        </div>
+      </div>
+    </ng-container>
+    }
+  </ng-template>
+</p-dialog>

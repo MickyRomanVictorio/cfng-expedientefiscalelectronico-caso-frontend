@@ -1,0 +1,64 @@
+$padding: 12px 20px;
+
+.tramite_a_realizar {
+    width: 100%;
+    position: relative;
+    .acto_tramite_seleccionado {
+        width: 100%;
+        border: 1px solid var( --mpfn-gray3);
+        cursor: pointer;
+        padding: $padding;
+        border-radius: 5px;
+        position: relative;
+        &.modo_lectura {
+            background-color: #ebebeb;
+            cursor: not-allowed;
+        }
+        .acto_tramite_seleccionado_contenedor {
+            max-width: calc(100% - 20px);
+            // display: flex;
+            // align-items: center;
+            // $width-acto-procesal: 200px;
+            // .acto-procesal-nombre {
+            //     display: inline-block;
+            //     max-width: $width-acto-procesal;
+            // }
+            // .tramite-nombre{
+            //     display: inline-block;
+            //     max-width: 100%;
+            // }
+            .tramite-nombre {
+                &.tramite {
+                    font-weight: 700;
+                    color: #222222;
+                }
+            }
+            b {
+                padding: 0 5px;
+                color: var(--mpfn-gray1);
+            }
+            .placeholder {
+                color: #A4A4A5;
+            }
+        }
+   
+        fn-icon {
+            position: absolute;
+            right: 5px;
+            top: 10px;
+        }
+    }
+    .selectores_contenedor {
+        display: flex;
+        .selector_acto_procesal,
+        .selector_tramite {
+            width: 50%;
+        }
+    }
+}
+
+.icono-guardado {
+    position: absolute;
+    right: -50px;
+    top: 8px;
+}

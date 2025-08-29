@@ -1,0 +1,171 @@
+.background-white {
+  background-color: #ffffff;
+}
+
+:host ::ng-deep {
+  .p-datatable {
+    th {
+      background-color: #f8f9fa;
+      color: #495057;
+      font-weight: 700;
+    }
+
+    td {
+      padding: 1rem;
+    }
+  }
+
+  .p-chart {
+    canvas {
+      width: 100% !important;
+    }
+  }
+}
+
+:host ::ng-deep {
+  .p-datatable {
+    th {
+      background-color: #f8f9fa !important;
+      font-weight: 700;
+      text-align: center;
+
+      &[rowspan="2"] {
+        vertical-align: middle;
+      }
+    }
+
+    td {
+      text-align: center;
+      padding: 1rem;
+    }
+  }
+
+  .bg-blue-100 {
+    background-color: #e3f2fd;
+    border: 1px solid #90caf9;
+  }
+
+  .p-chart {
+    height: 300px;
+  }
+}
+
+:host ::ng-deep {
+  .p-datatable {
+    th {
+      background-color: #f8f9fa !important;
+      font-weight: 700;
+      text-align: center;
+      vertical-align: middle;
+
+      &[rowspan="2"] {
+        border-right: 2px solid #dee2e6;
+      }
+    }
+
+    td {
+      text-align: center;
+      padding: 0.75rem;
+      border-right: 1px solid #dee2e6;
+    }
+
+    .p-datatable-footer {
+      td {
+        font-weight: 700;
+        background-color: #e9ecef;
+      }
+    }
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    border-bottom: 2px solid #2196f3;
+    padding-bottom: 0.5rem;
+  }
+}
+
+:host ::ng-deep .p-element.p-ripple.p-tabview-nav-link {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+:host ::ng-deep .table-chart .p-datatable-table {
+  border: 1px solid #dee2e6;
+  table-layout: fixed;
+}
+:host ::ng-deep .table-chart .p-datatable-thead {
+  font-size: 12px;
+  & th {
+    padding: 0.5rem 0.7rem;
+    text-align: center;
+    background-color: #f1f6f6;
+  }
+}
+:host
+  ::ng-deep
+  .p-datatable.p-datatable-hoverable-rows
+  .p-datatable-tbody
+  > tr
+  > td:first-child {
+  background: #afeafc30;
+}
+:host
+  ::ng-deep
+  .p-datatable.p-datatable-hoverable-rows
+  .p-datatable-tbody
+  > tr:not(.p-highlight):hover {
+  font-weight: bold;
+  & td:nth-child(2) {
+    color: green;
+  }
+  & td:nth-child(3) {
+    color: rgb(231, 208, 2);
+  }
+}
+
+.grid-report-tables {
+  display: flex;
+  gap: 10px; // Espacio entre tablas
+  align-items: start;
+  overflow: auto;
+}
+:host ::ng-deep .grid-report-tables .p-datatable-table {
+  border: 1px solid #dee2e6;
+}
+
+.contenedor-tablas {
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100%;
+}
+
+.tabla-container {
+  flex: 1; /* Todas las tablas ocuparán el mismo espacio */
+}
+
+.tabla {
+  width: 100%;
+  table-layout: fixed; /* Fija el ancho de las celdas */
+}
+
+.tabla th, .tabla td {
+  text-align: left;
+  padding: 8px;
+  border: 1px solid #ccc;
+  vertical-align: middle;
+  word-wrap: break-word;
+}
+
+.tabla tr {
+  height: 95px; /* Asegura que todas las filas tengan la misma altura */
+}
+
+.no-records-message {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+  height: 100%; /* Asegúrate de que el contenedor tenga un alto definido */
+}
+
+.no-before {
+  padding: 1rem; /* Añade un poco de espacio alrededor del mensaje */
+}

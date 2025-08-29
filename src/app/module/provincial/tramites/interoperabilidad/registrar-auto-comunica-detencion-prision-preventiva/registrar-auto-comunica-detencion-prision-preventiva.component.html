@@ -1,0 +1,98 @@
+@if ( !tieneActoTramiteCasoDocumento ) {
+  <mensaje-interoperabilidad-pj />
+}
+@if ( tieneActoTramiteCasoDocumento ) {
+  @if ( !tramiteEstadoRecibido ) {
+    <mensaje-completar-informacion
+      [titulo] = "tramiteSeleccionado!.nombreTramite"
+    />
+  }
+
+  <form [formGroup]="formularioAutoCommunica">
+    <div class="grid mt-3">
+      <div class="field col-12">
+        <div class="formgrid grid">
+          <div class="field col-12 md:col-4">
+            <label for="fechaNotificacion" class="font-bold text-sm">Fecha de notificación</label>
+            <p-calendar
+              [dateFormat]="'dd/mm/yy'"
+              class="p-inputtext-lg cfe-calendar h-40"
+              [showIcon]="true"
+              dateMask
+              icon="cfe-calendar-icon"
+              placeholder="dd/mm/aaaa"
+              formControlName="fechaNotificacion"
+              appendTo="body"
+              dataType="string"
+              [minDate]="fechaHecho"
+              [maxDate]="fechaActual"
+              [ngClass]="{'ng-invalid ng-dirty': formularioAutoCommunica.get('fechaNotificacion')?.invalid && formularioAutoCommunica.get('fechaNotificacion')?.touched}"
+            >
+            </p-calendar>
+          </div>
+          @if ( formularioAutoCommunica.get('fechaNotificacion')?.value ) {
+            <div class="field col-1">
+              <label for="">&nbsp;</label>
+              <div class="mt-1">
+                <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+              </div>
+            </div>
+          }
+          <div class="col-12 md:col-4">
+            <label for="">&nbsp;</label>
+            <div class="formgrid flex align-items-center">
+              <div class="field col-10">
+                <button class="cfe-boton-primary cfe-boton-lg w-full family-poppin-bold btn-adjust-filter"
+                        (click)="modalResultadosPrisionPreventiva()">Actualizar resultado
+                </button>
+              </div>
+              @if ( formularioAutoCommunica.get('resultadoComunicaDetencion')?.value ) {
+                <div class="field col-1">
+                  <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field col-12">
+        <label for="observaciones" class="font-bold text-sm">Observaciones (opcional)</label>
+        <textarea pInputTextarea class="w-full text-md" rows="6" formControlName="observaciones" [maxLength]="maxLongObs"></textarea>
+        <small
+          class="block text-right mt-1"
+          [ngClass]="{'p-error': longitudObservacion > maxLongObs }">
+          {{longitudObservacion}}/{{maxLongObs}} máximo de caracteres
+        </small>
+      </div>
+      @if ( formularioAutoCommunica.get('observaciones')?.value && formularioAutoCommunica.get('observaciones')?.value > 0 ) {
+        <div class="field col-1">
+          <label for="">&nbsp;</label>
+          <div class="mt-1">
+            <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="field col-11 flex flex-column sm:flex-row justify-content-between mt-3">
+      @if ( !tramiteEstadoRecibido ) {
+        <a class="cfe-enlace" (click)="modalActualizarActoYTramite()">
+          ¿Este documento no pertenece a este trámite?</a>
+      } @else {
+        <span></span>
+      }
+
+      @if ( esPosibleEditarFormulario ) {
+        <p-button
+          [disabled]="!formularioValido"
+          (onClick)="confirmarRegistroTramite()"
+          styleClass="p-button-lg cfe-boton-primary text-white family-poppin-bold btn-adjust-filter w-column-full">
+          <span class="ml-4 mr-4">Guardar</span>
+        </p-button>
+      }
+
+    </div>
+
+  </form>
+}

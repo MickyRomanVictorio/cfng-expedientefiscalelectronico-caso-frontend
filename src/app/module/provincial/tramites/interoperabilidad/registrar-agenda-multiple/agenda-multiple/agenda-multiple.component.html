@@ -1,0 +1,16 @@
+
+<app-agregar-agenda-multiple
+  [mostrarFechaNotificacion]="mostrarFechaNotificacion"
+  [modoLectura]="modoLectura"
+  [agendasMultiples]="agendasMultiples"
+  [esEditableRecibido]="esEditableRecibido"
+  (fechaNotificacion)="alCambiarFechaNotificacion($event)"
+  (validarListaAgenda)="alValidarListaAgenda($event)"
+/>
+
+<app-listar-agenda-multiple
+  [modoLectura]="modoLectura"
+  [agendasMultiples]="agendasMultiples"
+  (validarListaAgenda)="alValidarListaAgenda($event)"
+/>
+

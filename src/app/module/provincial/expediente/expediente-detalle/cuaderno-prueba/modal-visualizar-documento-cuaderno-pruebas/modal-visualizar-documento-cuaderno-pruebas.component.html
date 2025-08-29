@@ -1,0 +1,15 @@
+<div class="encabezado-modal w-12 mb-3 relative">
+  <h3
+    class="encabezado-titulo cfe-subtitulo-3 cfe-semi-bold family-poppin-bold"
+  >
+    &nbsp;
+  </h3>
+  <fn-icon
+    class="encabezado-cerrar absolute cursor-pointer top-0 right-0"
+    [ico]="obtenerIcono('iClose')"
+    height="2rem"
+    (click)="cancelar()"
+  ></fn-icon>
+</div>
+
+<app-tab-documentos [idDocumentos]="idDocumentos"></app-tab-documentos>

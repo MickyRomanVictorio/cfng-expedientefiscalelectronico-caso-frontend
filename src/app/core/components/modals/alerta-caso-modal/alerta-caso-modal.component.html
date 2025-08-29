@@ -1,0 +1,103 @@
+<div class="">
+
+    <div class="alertas-casos-container">
+
+        <div class="header flex justify-content-between flex-wrap ">
+            <span class="flex align-items-left justify-content-left font-semibold">
+
+
+              <h5 style="width: 100% !important;"> Alertas </h5>
+
+            </span>
+
+            <div class="flex align-items-center justify-content-center">
+                <p-button (click)="close()" icon="pi pi-times" styleClass="p-button-rounded text-color p-button-text"></p-button>
+            </div>
+        </div>
+
+        <div style="margin-top: -20px;">
+            <h6 class="mt-1"> {{nombreAlerta}} </h6>
+        </div>
+
+        <div class=" mt-1">
+
+            <app-tabs-view [tabs]="tabs" (onChangeIndex)="indexActivo = $event"></app-tabs-view>
+
+
+            <p-tabView class="cfe-tabs-view" [(activeIndex)]="indexActivo">
+                <p-tabPanel>
+
+                    <div *ngFor="let item of bandejaPLazosPendiente" [ngClass]="itemTipoAlerta==0 ? 'fondoMensajePlazos' : 'fondoMensajeGenericas'">
+                        <div>
+
+                            <div class="grid">
+                                <div class="col flex">
+                                    <span [ngClass]="itemTipoAlerta==0 ? 'tituloAlerta' : 'tituloGenericas'">
+                                        {{item.asuntoAlerta }}
+                                    </span>
+                                </div>
+
+                                <div class="col flex2">
+                                    <div class="">
+                                        <div class="btn-more-options" (click)="menu.toggle($event)">
+                                            <div class="btn-more-options-content">
+                                                <span></span><span></span><span></span>
+                                            </div>
+                                        </div>
+                                        <p-menu #menu [model]="items()" [popup]="true" class="menu-options"></p-menu>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+                        <div class="mt-1">
+                            <label class="" for="">
+                                    El tiempo de la investigación preliminar para el caso <span style="font-weight: bold;"> {{item.caso}}</span> está por...
+                                </label>
+                        </div>
+                        <div class="mt-2">
+                            <label for="" class="tiempo">  {{item.tiempo | tiempoSegundos}}  </label>
+                        </div>
+                        <hr>
+                    </div>
+                </p-tabPanel>
+
+                <p-tabPanel>
+
+                    <div *ngFor="let item of bandejaPLazosSolucionadas" class="">
+                        <div>
+                            <label class="tituloAlertaSolucionadas" for="">
+                                    Tiempo de la etapa preliminar está por vencer
+                                </label>
+                        </div>
+                        <div class="mt-1">
+                            <label class="" for="">
+                                    El tiempo de la investigación preliminar para el caso <span style="font-weight: bold;"> {{item.caso}}</span> está por...
+                                </label>
+                        </div>
+                        <div class="mt-2">
+                            <label for="" class="tiempo">  {{item.tiempo | tiempoSegundos}}  </label>
+                        </div>
+                        <hr>
+                    </div>
+
+                </p-tabPanel>
+
+
+            </p-tabView>
+        </div>
+
+
+
+        <div class="p-fluid p-formgrid grid ">
+            <div class="col-12 md:col-12 ">
+                <div class="flex  ">
+                    <button (click)="close()" routerLink="../bandeja-alertas" class="cfe-boton-primary cfe-boton-m mr-2 boton-w "> Ver todas las alertas</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,86 @@
+.opciones-exportacion {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: end;
+}
+
+$color-dark: #545b62;
+$color-white: #fff;
+
+.cfe-boton-dark {
+    background: $color-dark;
+    color: $color-white;
+    border-color: $color-dark;
+    opacity: 1;
+    transition: 300ms all ease;
+    position: relative;
+    top: 5px;
+    &:hover {
+        opacity: 0.8;
+        background: $color-dark !important;
+        color: $color-white !important;
+        border-color: $color-dark !important;
+    }
+}
+
+.p-button-secondary {
+    &:hover {
+        img {
+            filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(5deg) brightness(102%) contrast(102%);
+        }
+    }
+}
+
+.cfe-boton-transparente {
+    outline: none;
+    font-family: var(--mpfn-font-semi-bold);
+    transition: 300ms background-color, border, color ease;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--mpfn-primary);
+    background-color: transparent;
+    border: none;
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background-color: var(--mpfn-gray3) !important;
+        border: 1px solid var(--mpfn-gray3) !important;
+        color: var(--mpfn-gray15) !important;
+        &:hover {
+            background-color: var(--mpfn-gray3) !important;
+            border: 1px solid var(--mpfn-gray3) !important;
+            color: var(--mpfn-gray15) !important;
+        }
+    }
+    &:hover {
+        background-color: transparent !important;
+        border: none !important;
+    }
+}
+
+:host::ng-deep {
+    .p-datatable .p-datatable-tbody > .cfe-row-expansion > td {
+        border-width: 0 !important;
+    }
+}
+
+.progress-plazo-secreto {
+    width: 180px;
+}
+
+.icon-plazo-secreto {
+    color: var(--mpfn-red);
+}
+
+.cfe-boton-opcion {
+    width: 50px;
+    height: 45px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 4px 15px 4px 0;
+    &:last-child {
+        margin: 4px 0px 4px 0;
+    } 
+}

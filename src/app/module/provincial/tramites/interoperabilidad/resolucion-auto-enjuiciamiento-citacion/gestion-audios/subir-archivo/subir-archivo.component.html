@@ -1,0 +1,71 @@
+<br>
+
+@if (!selectedFile) {
+
+  <div class="subir-audio-contenedor">
+
+    <div
+      class="border-dashed border-round border-2 surface-border text-center p-5"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave()"
+      (drop)="onDrop($event)"
+    >
+
+      <p-messages />
+
+      <div class="text-600 text-2xl">
+        <i class="pi pi-file-arrow-up text-4xl"></i>
+      </div>
+
+      <div class="font-bold">
+        Arrastra y suelta el archivo <br>
+        <span
+          (click)="seleccionarArchivoAudio($event)"
+          class="text-primary-400 underline cursor-pointer"
+          onKeyPress=""
+        >
+          haz click aquí</span> para subirlo
+      </div>
+
+      <br>
+      <div>Máximo 5 documentos de <strong>{{ TAMANIO_EN_MEGABYTES }}MB cada uno</strong>. Formatos aceptados: {{ formatosConPunto }}</div>
+
+      <input
+        #inputFile
+        (change)="alSeleccionarArchivoAdjunto($event)"
+        [accept]="formatosConPunto"
+        class="hidden"
+        type="file"
+      >
+
+
+      <div *ngIf="uploading" class="mt-4">
+        <p-progressBar [value]="uploadProgress" class="cargo-progressbar"></p-progressBar>
+      </div>
+    </div>
+
+  </div>
+
+} @else if (selectedFile) {
+  <div class="border-dashed border-2 surface-border p-5">
+
+    <div class="flex justify-content-between">
+
+      <div>
+        <i class="pi pi-file"></i> {{ selectedFile.name }}
+      </div>
+
+      <div>
+        {{ obtenerFormatoTamano(selectedFile.size) }}
+      </div>
+
+      <div>
+        <span (click)="removerArchivoSeleccionado($event)" class="deleteFile cursor-pointer" onKeyPress="">
+          <i class="pi pi-trash"></i>
+        </span>
+      </div>
+
+    </div>
+
+  </div>
+}

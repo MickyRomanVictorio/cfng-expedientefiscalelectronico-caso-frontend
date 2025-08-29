@@ -1,0 +1,63 @@
+:host ::ng-deep .table-penas {
+    .p-datatable-thead {
+        background: var(--mpfn-jade-background) !important;
+        font-weight: bold;
+
+        tr {
+            th {
+                border: 1px solid rgb(179, 179, 179) !important;
+            }
+        }
+    }
+
+    .p-datatable-tbody {
+        tr {
+            background-color: var(--mpfn-white) !important;
+            margin-bottom: 20px !important;
+            cursor: pointer;
+
+            td {
+                border: 1px solid rgb(179, 179, 179) !important;
+            }
+
+        }
+    }
+}
+
+.color-icon-success {
+    color: var(--mpfn-green-dark);
+}
+
+:host {
+    ::ng-deep {
+        .custom-dialog {
+            .close-button {
+                position: absolute;
+                top: 33px;
+                right: 20px;
+                background: none;
+                border: none;
+                font-size: 35px;
+                cursor: pointer;
+                color: #333;
+
+                &:hover {
+                    color: #4b4b4b;
+                }
+            }
+        }
+    }
+}
+
+.acciones {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: nowrap;
+
+    .accion {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+    }
+}

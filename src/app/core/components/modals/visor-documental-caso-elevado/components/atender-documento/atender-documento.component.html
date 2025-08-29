@@ -1,0 +1,84 @@
+<div class="cfe-container">
+  <form [formGroup]="formulario">
+    <div class="w-full formgrid grid">
+      <h6 class="etiqueta-azul">
+        @if(tipoVisor === TipoVisorEnum.AtenderCaso){
+          1. Acciones a realizar
+        }@else if (tipoVisor === TipoVisorEnum.VerObservacion){
+          1. Acción realizada
+        }
+      </h6>
+      <div class="w-full formgrid grid">
+        <div class="field col-6 col-sm-6">
+          <p-radioButton
+            value="A"
+            inputId="opcion1"
+            formControlName="accion"
+            class="custom-radio-button"
+          ></p-radioButton>
+          <label class="ml-2" for="opcion1">Aceptar caso</label>
+        </div>
+        @if(mostrarObservarCaso===true){
+          <div class="field col-6 col-sm-6">
+            <p-radioButton
+              value="O"
+              inputId="opcion2"
+              formControlName="accion"
+              class="custom-radio-button"
+            ></p-radioButton>
+            <label class="ml-2" for="opcion2">Observar caso</label>
+          </div>
+        }
+      </div>
+      <div class="w-full formgrid grid mb-2">
+        <div class="flex flex-column">
+          <div class="etiqueta-nota">Nota:</div>
+          <div class="etiqueta-nota">
+            <b >"ACEPTAR"</b>, <span>el caso será aceptado por su despacho y se visualizará en la sección "Asignación".</span>
+            @if(mostrarObservarCaso===true){
+              <div>
+                <b >"OBSERVAR"</b>, <span>permite devolver el caso elevado al despacho provincial que realizó la elevación.</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+      @if(formulario.get('accion')!.value == 'O'){
+        <div class="flex flex-column observacion">
+          <h6 class="etiqueta-azul my-3">
+            2. Detalle de la observación
+          </h6>
+
+          @if(tipoVisor === TipoVisorEnum.VerObservacion){
+            <p class="text-secondary">
+              {{ datosObservacion?.descripcion }}
+            </p>
+          }@else if(tipoVisor === TipoVisorEnum.AtenderCaso){
+            <textarea
+              rows="5" cols="100" [maxlength]="1000"
+              pInputTextarea formControlName="descripcion" (input)="onInputDescripcionChange()">
+            </textarea>
+          }
+        </div>
+
+        @if(tipoVisor === TipoVisorEnum.AtenderCaso){
+          <div class="w-full formgrid grid mt-2 flex">
+              <p style="margin-left: auto">Quedan {{ remainingChars }} carácteres</p>
+          </div>
+        }
+      }
+
+      @if (tipoVisor === TipoVisorEnum.AtenderCaso) {
+        <div class="w-full formgrid grid mt-4 flex">
+          <button
+            pButton
+            class="cfe-boton-primary cfe-boton-lg"
+            style="margin-left: auto"
+            label="Responder caso"
+            (click)="onResponder()"
+          ></button>
+        </div>
+      }
+    </div>
+  </form>
+</div>

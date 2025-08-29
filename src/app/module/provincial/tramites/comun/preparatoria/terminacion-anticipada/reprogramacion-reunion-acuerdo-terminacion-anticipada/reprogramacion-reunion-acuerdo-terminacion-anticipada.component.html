@@ -1,0 +1,163 @@
+<div class="solicitar_terminacion_anticipada__container mt-3">
+  @if ((this.formRegistro.invalid ||
+  this.sujetosProcesalesSeleccionadosIds.length == 0)) {
+  <div class="mb-3">
+    <mensaje-completar-informacion [titulo]="nombreTramite()" />
+  </div>
+  }
+  <form [formGroup]="formRegistro">
+    <div class="col-12">
+      <div class="grid">
+        <div class="col-12 md:col-5">
+          <div class="field mb-0">
+            <label for="citasAgendadas" class="p-label-bottom font-semibold"
+              >Cita agendada</label
+            >
+            <p-dropdown
+              formControlName="citasAgendadas"
+              optionValue="idAgendaFiscal"
+              (onChange)="cambiarCitaAgendada($event.value)"
+              [options]="listaCitasAgendadas"
+              optionLabel="fecha"
+              placeholder="Seleccione"
+              styleClass="p-inputtext-lg"
+              emptyMessage="Citas no encontradas"
+            >
+            </p-dropdown>
+          </div>
+        </div>
+        <div class="col-12 md:col-5">
+          <div class="field mb-0">
+            <label for="fechaHoraReunion" class="p-label-bottom font-semibold"
+              >Fecha y hora de nueva reunión</label
+            >
+            <p-calendar
+              formControlName="fechaHoraReunion"
+              dateMask
+              [withDateTime]="true"
+              dateFormat="dd/mm/yy"
+              hourFormat="24"
+              class="p-inputtext-lg cfe-calendar h-42"
+              [showIcon]="true"
+              icon="cfe-calendar-icon"
+              placeholder="DD/MM/AAAA HH:MM"
+              [showTime]="true"
+              [minDate]="fechaCitacion"
+              (onBlur)="validarSeleccionProgramacion()"
+              (onSelect)="validarSeleccionProgramacion()"
+            >
+            </p-calendar>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="grid">
+        <div class="col-12 md:col-4 flex">
+          <div>
+            <label for="fechaAcuerdo" class="p-label-bottom font-semibold"
+              >Sujeto procesal:</label
+            >
+            <button
+              class="cfe-boton-primary cfe-boton-lg mt-1"
+              (click)="abrirModalAgregarEditarSujeto()"
+            >
+              <span class="font-bold">Seleccionar sujeto procesal</span>
+            </button>
+          </div>
+          @if(sujetosProcesalesSeleccionadosIds.length > 0){
+          <div class="flex align-items-center">
+            <img
+              [src]="icono('check-circle')"
+              alt="validado"
+              class="mt-5 ml-2 pr-2 h-2rem"
+            />
+          </div>
+          }
+        </div>
+        <div
+          class="col-12 md:col-6 flex justify-content-start align-items-center"
+        >
+          <div class="flex gap-3 mt-5">
+            <div class="flex align-items-center">
+              <p-radioButton
+                formControlName="tipoCitacion"
+                [value]="TERMINACION_ANTICIPADA.CITACION_VIRTUAL"
+                (onClick)="cambiarTipoCitacion($event)"
+                id="virtual"
+              ></p-radioButton>
+              <label for="virtual" class="ml-2">Reunión Virtual</label>
+            </div>
+            <div class="flex align-items-center">
+              <p-radioButton
+                formControlName="tipoCitacion"
+                [value]="TERMINACION_ANTICIPADA.CITACION_PRESENCIAL"
+                (onClick)="cambiarTipoCitacion($event)"
+                id="presencial"
+              ></p-radioButton>
+              <label for="presencial" class="ml-2">Reunión Presencial</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    @if(formRegistro.get('tipoCitacion')?.value ===
+    TERMINACION_ANTICIPADA.CITACION_VIRTUAL){
+    <div class="col-12">
+      <div class="grid">
+        <div class="col-12 md:col-12">
+          <label for="fechaNotificacion" class="p-label-bottom font-semibold"
+            >URL Reunión</label
+          >
+          <input
+            pInputText
+            type="text"
+            class="p-inputtext-lg py-3 text-lg w-full"
+            placeholder="Ingrese URL de reunión"
+            formControlName="urlReunion"
+          />
+        </div>
+      </div>
+    </div>
+    }
+    <div class="col-12">
+      <div class="grid">
+        <div class="col-12 md:col-12">
+          <label for="fechaNotificacion" class="p-label-bottom font-semibold"
+            >Lugar</label
+          >
+          <input
+            pInputText
+            type="text"
+            class="p-inputtext-lg py-3 text-lg w-full"
+            placeholder="Ingrese lugar"
+            formControlName="lugar"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="w-full pb-2">
+        <label for="observaciones" class="cfe-semi-bold"
+          >Observaciones (opcional)</label
+        >
+      </div>
+      <div class="w-full">
+        <textarea
+          formControlName="observaciones"
+          pInputTextarea
+          id="observaciones"
+          class="w-full p-inputtextarea p-inputtext p-component p-element"
+          rows="4"
+          [maxLength]="200"
+        ></textarea>
+        <small
+          class="block text-right mt-1"
+          [ngClass]="{ 'p-error': counterReportChar() > 200 }"
+        >
+          {{ counterReportChar() }}/200 caracteres
+        </small>
+      </div>
+    </div>
+  </form>
+</div>

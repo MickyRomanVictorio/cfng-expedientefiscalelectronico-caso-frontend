@@ -1,0 +1,139 @@
+@if ( servicioNoActivo ) {
+
+  <mensaje-interoperabilidad-pj />
+
+} @if ( !servicioNoActivo ) {
+
+<div class="mt-3">
+
+  @if ( formulario.invalid ) {
+    <mensaje-completar-informacion [titulo]="nombreTramite()" />
+  }
+
+  <form [formGroup]="formulario">
+
+    <div class="formgrid grid mt-6">
+      <div class="field col-12">
+        <div class="flex gap-3">
+          <div class="flex align-items-center">
+            <label class="text-subtitulo">Resultado:</label>
+          </div>
+          <div class="flex align-items-center">
+            <p-radioButton [value]="codFundado" formControlName="idResultado"></p-radioButton>
+            <label for="Fundado" class="ml-2">Fundado/Procedente</label>
+          </div>
+
+          <div class="flex align-items-center">
+            <p-radioButton [value]="codFundadoParte" formControlName="idResultado"></p-radioButton>
+            <label for="Fundado en parte" class="ml-2">Fundado en parte/Procedente en parte</label>
+          </div>
+
+          <div class="flex align-items-center">
+            <p-radioButton [value]="codInfundado" formControlName="idResultado"></p-radioButton>
+            <label for="Infundado" class="ml-2">Infundado/Improcedente</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    @if ( esFundadoEnParte ) {
+    <div class="formgrid grid mt-3">
+        <div class="field col-12">
+          <div class="grid">
+            <div class="field col-7">
+              <button
+                class="cfe-boton-primary cfe-boton-lg w-full"
+                (click)="abrirModalAmpliarPlazo()"
+                [disabled]="tramiteGuardado"
+              >
+                <span class="family-poppin-bold">Ampliar Plazo</span>
+              </button>
+            </div>
+            @if ( seRegistraronPlazos ) {
+              <div class="icono-guardado">
+                  <img
+                      [src]="iconAsset.obtenerRutaIcono('check-circle')"
+                      alt="guardado"
+                      class="pr-2 h-2rem"
+                  >
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+ 
+
+    <div class="formgrid grid mt-2">
+      <div class="field col-12">
+        <div class="grid">
+          <div class="field col-3">
+            <label for="fechaPresentacion" class="font-semibold">Fecha de notificación</label>
+            <p-calendar 
+              id="fechaNotificacion"
+              dateMask
+              dateFormat="dd/mm/yy"
+              class="p-inputtext-lg cfe-calendar h-56"
+              [showIcon]="true"
+              icon="cfe-calendar-icon"
+              placeholder="dd/mm/aaaa"
+              formControlName="fechaNotificacion"
+            ></p-calendar>
+          </div>
+          <div class="field col-9 flex align-items-center justify-content-start">
+            <label class="cfe-semi-bold align-self-center ml-3 mt-1">
+              <p-checkbox 
+                formControlName="conAudio"
+                [binary]="true"
+                inputId="manual"
+              ></p-checkbox>
+              Cuenta con audio</label>
+            <label class="cfe-semi-bold align-self-center ml-3 mt-1">
+              <p-checkbox 
+                formControlName="conVideo"
+                [binary]="true"
+                inputId="manual"
+              ></p-checkbox>
+              Cuenta con video</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="formgrid grid mt-2">
+      <div class="field col-12">
+        <label for="observacion" class="font-semibold">Observaciones (opcional)</label>
+        <textarea 
+          id="observacion"
+          rows="5"
+          formControlName="observacion"
+          class="p-inputtext p-2 w-full"
+          [maxLength]="1000"
+        ></textarea>
+        <small 
+          class="block text-right mt-1" 
+          [ngClass]="{'p-error': contarDescripcionObservacion() > 1000 }"
+        >
+          {{contarDescripcionObservacion()}}/1000 caracteres
+        </small>
+      </div>
+    </div>
+
+    @if( !ocultarBotonGuardar  ){
+      <div class="flex justify-content-between">
+        <a class="cfe-enlace" (click)="openModalSelectTramite()"
+          >¿Este documento no pertenece a este trámite?</a
+        >
+        <button 
+          [disabled]="!formularioValido"
+          (click)="registrarAutoResuelveRequerimientoProrroga()"
+          type="submit"
+          class="cfe-boton-primary cfe-boton-lg ml-2 boton-w"
+        >Guardar</button>
+      </div>
+    }
+
+  </form>
+
+  </div>
+}

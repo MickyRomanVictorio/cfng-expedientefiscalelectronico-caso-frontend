@@ -1,0 +1,17 @@
+    <form class="col-8 mt-3 mb-4" [formGroup]="formRegistro">
+        <label for="fiscaliaSuperiorSeleccionada" class="font-semibold mb-2">Fiscalia Superior a elevar:</label>
+        <p-dropdown
+            styleClass="p-inputtext-m py-1 mt-2"
+            [options]="fiscaliasSuperiores"
+            optionValue="codigoEntidad"
+            optionLabel="nombreEntidad"
+            placeholder="Seleccione"
+            emptyMessage="Sin resultados"
+            formControlName="fiscaliaSuperiorSeleccionada"
+            autoWidth="false"
+            [style]="{'width':'100%'}"
+            dataKey="value"
+            id="fiscaliaSuperiorSeleccionada"
+            (onChange)="alSeleccionarFiscaliaSuperior($event.value)"
+        ></p-dropdown>
+    </form>

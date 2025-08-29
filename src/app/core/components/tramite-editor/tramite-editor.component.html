@@ -1,0 +1,16 @@
+<p-tabView class="cfe-tabs-view-anidado" [(activeIndex)]="activeIndex">
+  <p-tabPanel header="Trámite en línea" class="p-6" [disabled]="esFirmado">
+    <app-tramite-linea
+      [tramiteResponse]="tramiteResponse"
+      [activeIndex]="0"
+      [esFirmado]="esFirmado"
+    ></app-tramite-linea>
+  </p-tabPanel>
+  <p-tabPanel header="Trámite manual" [disabled]="esFirmado">
+    <app-tramite-manual
+      [codigoDespacho]="codigoDespacho"
+      [idActoTramiteEstado]="tramiteSeleccionado!.idActoTramiteEstado"
+      (indexManual)="indexEmitted($event)"
+    ></app-tramite-manual>
+  </p-tabPanel>
+</p-tabView>

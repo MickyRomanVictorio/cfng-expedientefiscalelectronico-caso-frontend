@@ -1,0 +1,24 @@
+@if (listaCasos.length > 0) {
+  <div class="col-12">
+    <div class="carpeta-container">
+      @for (caso of listaCasos; track $index) {
+      <div class="px-2 pb-6">
+          <app-tarjetas-cuadernos-extremos 
+              [casoPadre]="casoPadre"
+              [casofiscal]="caso"
+              (casoSeleccionado)="casoSeleccionado.emit($event)"
+              (actualizarListaCuadernos)="actualizarListaCuadernos.emit($event)"
+              />
+      </div>
+      }
+    </div>
+    <app-paginator
+      [query]="paginacionCondicion"
+      [items]="paginacionConfiguracion"
+      [rowsPerPageOptions]="[]"
+      [resetPage]="paginacionReiniciar"
+      (paginate)="eventoCambiarPagina($event)"
+    ></app-paginator>
+  </div>
+}
+

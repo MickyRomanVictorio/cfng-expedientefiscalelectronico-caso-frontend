@@ -1,0 +1,225 @@
+@if (!tieneActoTramiteCasoDocumento) {
+<mensaje-interoperabilidad-pj />
+}
+
+@if (tieneActoTramiteCasoDocumento) {
+<fn-icon [ico]="iconUtil.obtenerIcono('iTooltip')" height="1.6rem" (click)="startTour()"></fn-icon>
+@if (!tramiteEstadoRecibido) {
+<mensaje-completar-informacion [titulo]="tramiteSeleccionado!.nombreTramite" />
+}
+
+<form [formGroup]="formularioAutoResuelve">
+  <div class="formgrid grid mt-3">
+    <div class="field col-12 lg:col-3">
+      <div class="formgrid grid">
+        <div class="field col-10 tour-f-1">
+          <label for="fechaNotificacion" class="font-bold text-sm">Fecha de notificación</label>
+          <p-calendar [dateFormat]="'dd/mm/yy'" class="p-inputtext-lg cfe-calendar h-40" [showIcon]="true" dateMask
+            icon="cfe-calendar-icon" placeholder="dd/mm/aaaa" formControlName="fechaNotificacion" appendTo="body"
+            dataType="string"
+            [ngClass]="{'ng-invalid ng-dirty': formularioAutoResuelve.get('fechaNotificacion')?.invalid && formularioAutoResuelve.get('fechaNotificacion')?.touched}">
+          </p-calendar>
+        </div>
+        @if (formularioAutoResuelve.get('fechaNotificacion')?.value) {
+        <div class="field col-1">
+          <label for="">&nbsp;</label>
+          <div class="mt-1">
+            <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    <div class="field col-12 lg:col-6">
+      <div class="formgrid grid">
+        <div class="field col-12 tour-f-2">
+          <label for="resultado" class="font-bold text-sm">Seleccione resultado:</label>
+          <div class="formgrid grid">
+            @if(!esTerminacionAnticipada && !esApelacionProceso){
+            <div class="field col-11">
+              <button class="cfe-boton-primary cfe-boton-lg w-full" (click)="openModalSujetos(1)">
+                Sujetos
+              </button>
+            </div>
+            @if (this.selectedSujetos && selectedSujetos.length > 0) {
+            <div class="field col-1">
+              <div class="mt-1">
+                <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+              </div>
+            </div>
+            }
+            }
+            @if(esTerminacionAnticipada){
+            <div class="field col-4">
+              <button class="cfe-boton-primary cfe-boton-lg w-full" (click)="openModalSujetos(2)">
+                Penas
+              </button>
+            </div>
+            @if (this.selectedSujetosPena && selectedSujetosPena.length > 0) {
+            <div class="field col-1">
+              <div class="mt-1">
+                <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+              </div>
+            </div>
+            }
+            <div class="field col-4">
+              <button class="cfe-boton-primary cfe-boton-lg w-full" (click)="openModalSujetos(3)">
+                Rep. Civil
+              </button>
+            </div>
+            @if (this.selectedSujetosSalidaExterna && selectedSujetosSalidaExterna.length > 0) {
+            <div class="field col-1">
+              <div class="mt-1">
+                <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+              </div>
+            </div>
+            }
+            }
+            @if(esApelacionProceso){
+            <div class="field col-11">
+              <button class="cfe-boton-primary cfe-boton-lg w-full" (click)="openModalSujetos(4)">
+                Proceso
+              </button>
+            </div>
+            @if (this.selectedSujetosProceso && selectedSujetosProceso.length > 0) {
+            <div class="field col-1">
+              <div class="mt-1">
+                <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+              </div>
+            </div>
+            }
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="field col-12 lg:col-3 tour-f-3">
+      <label class="font-bold text-sm">Incluye (opcional)</label>
+      <div class="formgrid grid">
+        <p-checkbox (onChange)="changeAgendaAudiencia($event)" binary="true" inputId="binary"
+          label="Agenda para audiencia" formControlName="chkAgenda">
+        </p-checkbox>
+      </div>
+    </div>
+    <div class="formgrid grid mt-3" *ngIf="formularioAutoResuelve.get('chkAgenda')?.value">
+      <div class="field col-4">
+        <label class="font-bold text-sm">Fecha y hora de audiencia</label>
+        <p-calendar [dateFormat]="'dd/mm/yy'" class="p-inputtext-lg cfe-calendar h-40" [showIcon]="true" dateMask
+          icon="cfe-calendar-icon" placeholder="dd/mm/aaaa" formControlName="fechaAudiencia" appendTo="body"
+          dataType="string"
+          [ngClass]="{'ng-invalid ng-dirty': formularioAutoResuelve.get('fechaAudiencia')?.invalid && formularioAutoResuelve.get('fechaAudiencia')?.touched}">
+        </p-calendar>
+      </div>
+      <div class="field col-4">
+        <label class="font-bold text-sm">Reunión</label>
+        <div class="formgrid grid">
+          <label class="cfe-semi-bold text-sm">
+            <p-radioButton
+              name="idTipoReunion"
+              [value]="'1223'"
+              inputId="reunionVirtual"
+              formControlName="idTipoReunion"/>
+            Reunión Virtual
+          </label>
+          <label class="cfe-semi-bold text-sm">
+            <p-radioButton
+              name="idTipoReunion"
+              [value]="'1222'"
+              inputId="reunionPresencial"
+              formControlName="idTipoReunion"/>
+            Reunión Presencial
+          </label>
+        </div>
+      </div>
+      <div class="field col-12 lg:col-11">
+        <label class="font-bold text-sm">URL Reunión (opcional)</label>
+        <input pInputText class="p-inputtext-md w-full" placeholder="Ingrese el número de documento"
+          formControlName="urlReunion" />
+      </div>
+      <div class="field col-12 lg:col-5">
+        <label class="font-bold text-sm">Distrito Judicial</label>
+        <p-dropdown id="idDistritoJudicial" formControlName="idDistritoJudicial" styleClass="py-1 p-inputtext-lg"
+          [options]="distritoJudicialList" placeholder="Seleccione el distrito judicial"
+          (ngModelChange)="listarJuzgadosPazLetrado($event)" optionLabel="nombre" optionValue="id">
+        </p-dropdown>
+      </div>
+      <div class="field col-12 lg:col-5">
+        <label class="font-bold text-sm">Juzgado</label>
+        <p-dropdown id="idEntidad" formControlName="idEntidad" styleClass="py-1 p-inputtext-lg" [options]="juzgadosList"
+          placeholder="Seleccione el juzgado" emptyMessage="No se han encontrado juzgados" optionLabel="descEntidad"
+          optionValue="codEntidad">
+        </p-dropdown>
+      </div>
+    </div>
+    <div class="field col-11 tour-f-4">
+      <label for="observaciones" class="font-bold text-sm">Observaciones (opcional)</label>
+      <textarea pInputTextarea class="w-full text-md" rows="6" formControlName="observaciones"
+        [maxLength]="longitudMaximaObservaciones"></textarea>
+      <small class="block text-right mt-1"
+        [ngClass]="{'p-error': cantidadCaracteresObservacion > longitudMaximaObservaciones }">
+        {{ cantidadCaracteresObservacion }}/{{ longitudMaximaObservaciones }} máximo de caracteres
+      </small>
+    </div>
+    @if (formularioAutoResuelve.get('observaciones')?.value && formularioAutoResuelve.get('observaciones')?.value.length
+    > 0) {
+    <div class="field col-1">
+      <label for="">&nbsp;</label>
+      <div class="mt-1">
+        <img [src]="iconAsset.obtenerRutaIcono('check-circle')" alt="guardado" class="pr-2 h-2rem">
+      </div>
+    </div>
+    }
+  </div>
+
+  <div class="field col-11 flex flex-column sm:flex-row justify-content-between mt-3">
+    @if (!tramiteEstadoRecibido) {
+    <a class="cfe-enlace tour-f-5" (click)="modalActualizarActoYTramite()">
+      ¿Este documento no pertenece a este trámite?</a>
+    } @else {
+    <span></span>
+    }
+
+    @if (esPosibleEditarFormulario) {
+    <p-button [disabled]="!formularioValido" (onClick)="confirmarRegistroTramite()"
+      styleClass="p-button-lg cfe-boton-primary text-white family-poppin-bold btn-adjust-filter w-column-full tour-f-6">
+      <span class="ml-4 mr-4">Guardar</span>
+    </p-button>
+    }
+    @if( botonDevolverProvincial  ){
+    <div class="flex justify-content-between">
+      <p-button styleClass="cfe-boton-lg cfe-boton-danger" label="Devolver al Fiscal Provincial"
+        (onClick)="devolverAlFiscalProvincial()">
+      </p-button>
+    </div>
+    }
+
+  </div>
+
+</form>
+@if(codJerarquia === '01'){
+@if(codJerarquia === '01' && !ocultarBotones){
+<div class="text-right pt-3">
+  <button type="button" class="cfe-boton-secondary cfe-boton-m inline" (click)="eventoObservarTramite()">
+    Observar Trámite
+  </button>
+  <button type="button" class="cfe-boton-primary cfe-boton-m inline ml-2" (click)="eventoRecibirTramite()">
+    Recibir Trámite
+  </button>
+</div>
+}
+
+@if(verFormularioObservar()===true){
+<hr>
+<app-observar [esModal]="false" [datosPronunciamiento]="datosPronunciamiento" [esSoloLectura]="false"
+  (cerrar)="eventoObservarCancelar()" (observar)="eventoObservarEnviar($event)"></app-observar>
+}
+
+}
+
+@if(codJerarquia === '02' && observacionProvincial && observacionProvincial.length > 0){
+<button type="button" class="cfe-boton-secondary cfe-boton-m inline" (click)="eventoObservarTramite(true)">
+  Ver Observación Provincial
+</button>
+}
+
+}
